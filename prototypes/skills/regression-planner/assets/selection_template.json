@@ -1,0 +1,1 @@
+{"$comment":"回归选择。由 scripts/regression_check.py 校验。","all_impacted_assets":[],"selected_assets":[],"exclusions":[{"asset_id":"","reason":""}],"breaking_drift_assets":[],"high_risk_assets":[],"total_suite_size":0,"$codes":["FULL_REGRESSION_DEFAULT","BREAKING_DRIFT_EXCLUDED","EXCLUSION_WITHOUT_REASON","HIGH_RISK_EXCLUDED"]}

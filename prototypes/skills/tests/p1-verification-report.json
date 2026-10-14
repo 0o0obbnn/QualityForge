@@ -1,0 +1,96 @@
+{
+  "phase": "P1 Gate 0 Golden chain closure",
+  "record_type": "historical point-in-time attestation",
+  "verified_on": "2026-08-03",
+  "superseded_by": "make test-skills (live suite); this file is history, not a gate",
+  "note": "Counts below describe the repository as of verified_on and are NOT updated. The live suite is larger; do not cite these numbers as current coverage.",
+  "scope": {
+    "hardened_skills": [
+      "domain-model-extractor",
+      "strategy-planner",
+      "scenario-generator",
+      "test-case-generator"
+    ],
+    "gate0_core_skills": 13,
+    "standard_eval_manifests": 13,
+    "standard_eval_cases": 56
+  },
+  "tdd": {
+    "red_baseline": "14 tests produced 10 failures and 4 errors before implementation",
+    "final_regression_tests": 57,
+    "hash_seeds": [
+      0,
+      1,
+      42
+    ],
+    "result_per_seed": "57 passed, 0 failed",
+    "adversarial_reject_checks": 15,
+    "adversarial_reject_failures": 0
+  },
+  "static_verification": {
+    "prototype_json_files_parsed": 162,
+    "skill_python_scripts_ast_parsed": 30,
+    "skill_cli_help_passed": 30,
+    "openapi_yaml_parsed": true,
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS"
+  },
+  "e2e": {
+    "golden_chain": {
+      "checker_exit_codes": {
+        "ir": 0,
+        "scenario": 0,
+        "case": 0,
+        "assertion_batch": 0,
+        "assertion_static": 0,
+        "coverage": 0
+      },
+      "coverage": {
+        "rule": 1.0,
+        "scenario": 1.0,
+        "state": 1.0,
+        "assertion": 1.0
+      },
+      "overall_verdict": "GATE_PASS"
+    },
+    "negative_chain": {
+      "coverage_exit_code": 2,
+      "overall_verdict": "GATE_FAILURE",
+      "coverage": {
+        "rule": 0.75,
+        "scenario": 0.333,
+        "state": 0.25,
+        "assertion": 0.667
+      }
+    }
+  },
+  "sha256": {
+    "_note": "Digests as of verified_on. Keys are bare basenames, resolved against the owning skill's scripts/ dir (see test_attestations.py). All five still match.",
+    "prototypes/skills/domain-model-extractor/scripts/entity_check.py": "e101f4c4b86651a3e3ab725983990adaf427c9a63b666801f052f94cd54cc285",
+    "prototypes/skills/strategy-planner/scripts/strategy_check.py": "8f1571bcbe6f943ee6e52cfcb875c399b503c9d35e4e89657949e609ed09368a",
+    "prototypes/skills/scenario-generator/scripts/scenario_check.py": "494ac99fb1e0a226bdbad7a71f2523cd41feb74cdf6ead60e4688e392bddd472",
+    "prototypes/skills/test-case-generator/scripts/case_check.py": "7531e619b529551bbb336ae6921f2b236928603fc75c88e0ffc86e4bf6d514af",
+    "prototypes/skills/tests/test_p1_gate0.py": "7ae14522ca82a37f008030b6e0eba6550e608d93b9efb3915084291113e2f79e",
+    "_known_drift_since_attestation": [
+      "prototypes/skills/scenario-generator/scripts/scenario_check.py",
+      "prototypes/skills/test-case-generator/scripts/case_check.py",
+      "prototypes/skills/domain-model-extractor/scripts/entity_check.py",
+      "prototypes/skills/strategy-planner/scripts/strategy_check.py"
+    ],
+    "_drift_declared_on": "2026-08-27",
+    "_drift_reason": "Authorized evolution: coverage-family checks added (CONTRACT_UNCOVERED/WEAK_ASSERTION/BOUNDARY_CONSTRAINT_UNCOVERED in case_check; FACET_IMBALANCE in scenario_check). Live suite re-run green (127 tests)."
+  },
+  "independent_python_review": {
+    "status": "PASS",
+    "reviewer_scope": "Four P1 checkers and P1 regression tests",
+    "review_rounds": 2,
+    "final_findings": "No CRITICAL, HIGH, or MEDIUM findings",
+    "counterexamples_verified": 15
+  },
+  "known_out_of_scope_issue": {
+    "file": "docs/05-audits/current/概念权威基线.json",
+    "issue": "Pre-existing JSON syntax error at line 51 caused by unquoted Chinese conjunction tokens",
+    "p1_impact": "None; all 161 prototype and E2E JSON artifacts parse successfully",
+    "action": "Not modified because it is outside the P1 Skill scope"
+  }
+}

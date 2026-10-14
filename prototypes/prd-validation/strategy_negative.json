@@ -1,0 +1,23 @@
+{
+  "strategy_id": "STRAT-NEG-CTRL",
+  "In_Scope": [
+    {"feature_id": "F-A", "name": "特性A", "risk_level": "high"},
+    {"feature_id": "F-A", "name": "重复特性", "risk_level": "urgent"}
+  ],
+  "Out_Of_Scope": [
+    {"item": "缺少理由的排除项"}
+  ],
+  "Critical_Paths": [
+    {"path_id": "CP-X", "disposition": "IN_SCOPE", "feature_ids": ["F-NOT-DECLARED"]},
+    {"path_id": "CP-X", "disposition": "OUT_OF_SCOPE"}
+  ],
+  "Quality_Gates": [
+    {"gate_name": "case_pass_rate", "threshold": 1.5},
+    {"gate_name": "case_pass_rate", "threshold": "high"}
+  ],
+  "Pyramid_Distribution": {"unit": 0.2, "integration": 0.3, "e2e": 0.6},
+  "Mock_Policy": {
+    "mock_targets": ["database", "third_party"],
+    "no_mock_targets": []
+  }
+}

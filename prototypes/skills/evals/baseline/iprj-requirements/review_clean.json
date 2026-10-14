@@ -1,0 +1,39 @@
+{
+  "review_id": "qg-iprj-20260811-pos1",
+  "source_ids": [
+    "iprj-prd-demo.md"
+  ],
+  "assessments": [
+    {
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "示例：无模糊表述。"
+    },
+    {
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "示例：跨来源一致。"
+    },
+    {
+      "dimension": "testability",
+      "status": "CLEAR",
+      "rationale": "示例：全部可测。"
+    },
+    {
+      "dimension": "completeness",
+      "status": "CLEAR",
+      "rationale": "示例：覆盖完整。"
+    },
+    {
+      "dimension": "nfr_measurability",
+      "status": "CLEAR",
+      "rationale": "示例：NFR 可度量。"
+    },
+    {
+      "dimension": "role_permission",
+      "status": "CLEAR",
+      "rationale": "示例：权限无冲突。"
+    }
+  ],
+  "findings": []
+}

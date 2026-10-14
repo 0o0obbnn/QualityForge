@@ -1,0 +1,125 @@
+{
+  "skill": "09",
+  "checked_at": "2026-09-06T06:56:08.460091+00:00",
+  "total_cases": 35,
+  "conformant_cases": 32,
+  "total_findings": 19,
+  "findings": [
+    {
+      "code": "MALFORMED_CASE_ID",
+      "severity": "REJECT",
+      "target": "BADID",
+      "msg": "case_id 'BADID' 格式不正确"
+    },
+    {
+      "code": "EMPTY_CASE_STEPS",
+      "severity": "REJECT",
+      "target": "BADID",
+      "msg": "steps 必须是非空数组"
+    },
+    {
+      "code": "EMPTY_EXPECTED_RESULTS",
+      "severity": "REJECT",
+      "target": "BADID",
+      "msg": "expected_results 必须是非空数组"
+    },
+    {
+      "code": "SCENARIO_NOT_IN_GRAPH",
+      "severity": "REJECT",
+      "target": "TC-NEG-001",
+      "msg": "scenario_id 'S-NOT-EXIST' 不在场景图中"
+    },
+    {
+      "code": "INVALID_FIXTURE_CATEGORY",
+      "severity": "REJECT",
+      "target": "TC-NEG-001",
+      "msg": "fixture_category 'Fluid' 无效"
+    },
+    {
+      "code": "STEP_ENDPOINT_NOT_IN_IR",
+      "severity": "REJECT",
+      "target": "TC-NEG-001.steps[0]",
+      "msg": "endpoint '/api/ghost' 不在 IR 中"
+    },
+    {
+      "code": "STATE_MACHINE_NOT_IN_IR",
+      "severity": "REJECT",
+      "target": "TC-NEG-001",
+      "msg": "state_machine_id 'SM-999' 不在 IR 中"
+    },
+    {
+      "code": "INVALID_EXPECTED_RESULT",
+      "severity": "REJECT",
+      "target": "TC-NEG-001.expected_results[0]",
+      "msg": "expected result 必须是非空对象"
+    },
+    {
+      "code": "CASE_SCENARIO_BINDING_MISMATCH",
+      "severity": "REJECT",
+      "target": "TC-NEG-002",
+      "msg": "case 与 scenario 在 rule_id 上不一致"
+    },
+    {
+      "code": "EXPECTED_STATE_INVALID",
+      "severity": "REJECT",
+      "target": "TC-NEG-002.expected_results[0]",
+      "msg": "state '飞行中' 无效"
+    },
+    {
+      "code": "CONTRACT_UNCOVERED",
+      "severity": "REJECT",
+      "target": "interface_contracts:IC-001",
+      "msg": "POST 未提供（历史接口：接口明细数据上报，PRD未给契约） 没有任何 case step 覆盖"
+    },
+    {
+      "code": "CONTRACT_UNCOVERED",
+      "severity": "REJECT",
+      "target": "interface_contracts:IC-002",
+      "msg": "POST 未提供（历史接口：接口明细上报情况查询） 没有任何 case step 覆盖"
+    },
+    {
+      "code": "CONTRACT_UNCOVERED",
+      "severity": "REJECT",
+      "target": "interface_contracts:IC-003",
+      "msg": "POST 未提供（历史接口：接口信贷交易信息查询） 没有任何 case step 覆盖"
+    },
+    {
+      "code": "CONTRACT_UNCOVERED",
+      "severity": "REJECT",
+      "target": "interface_contracts:IC-004",
+      "msg": "POST 未提供（历史接口：检索次数接口） 没有任何 case step 覆盖"
+    },
+    {
+      "code": "CONTRACT_UNCOVERED",
+      "severity": "REJECT",
+      "target": "interface_contracts:IC-005",
+      "msg": "POST 未提供（新增升级产品调用接口，国密算法，PRD未给设计） 没有任何 case step 覆盖"
+    },
+    {
+      "code": "WEAK_ASSERTION",
+      "severity": "REVIEW",
+      "target": "TC-NEG-002.expected_results[0]",
+      "msg": "断言措辞含糊：'返回类似成功的结果'"
+    },
+    {
+      "code": "WEAK_ASSERTION",
+      "severity": "REVIEW",
+      "target": "TC-NEG-002.expected_results[1]",
+      "msg": "纯否定断言只声明了不期望什么"
+    },
+    {
+      "code": "BOUNDARY_CONSTRAINT_UNCOVERED",
+      "severity": "REVIEW",
+      "target": "constraints:CON-002",
+      "msg": "边界表达式 '文件大小<=50M' 未被任何 case 的 constraint_refs 引用"
+    },
+    {
+      "code": "BOUNDARY_CONSTRAINT_UNCOVERED",
+      "severity": "REVIEW",
+      "target": "constraints:CON-004",
+      "msg": "边界表达式 '峰值>=6000笔/秒 且 平均响应<=500ms 且 成功率>=99.9%' 未被任何 case 的 constraint_refs 引用"
+    }
+  ],
+  "verdict": "REJECT",
+  "routing": "退回生成器"
+}

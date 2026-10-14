@@ -1,0 +1,47 @@
+{
+  "skill_name": "hitl-gatekeeper",
+  "evals": [
+    {
+      "id": 1,
+      "name": "formal-test-case-high-confidence-still-blocks",
+      "prompt": "路由一个 confidence 为 0.99 的 TestCase formal artifact。artifact_id=tc-42、artifact_version_id=tcv-7、content_digest=<sha256>、policy_type=SINGLE_REVIEW、source_trace=Skill09:TC-42:req-PAY-1。",
+      "expected_output": "BLOCK_HUMAN,因为 TestCase 是 formal artifact。ReviewTask 必须绑定 artifact id、精确版本、digest 和 policy。Confidence 不是授权。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "test-plan-always-human",
+      "prompt": "TestPlanVersion tpv-2 的全部确定性检查已通过。Agent 能自动发布它吗?按 artifact_id=tp-1、content_digest=<sha256>、policy_type=FOUR_EYES 路由。",
+      "expected_output": "BLOCK_HUMAN,不得自动发布。机器 PASS 结果只是评审输入。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "ambiguity-flag-overrides-confidence",
+      "prompt": "一个 rule extractor 发现相互矛盾的退款规则,输出了 NEED_HUMAN_REVIEW 和 confidence 0.88。source_trace=Skill02:refund:req-2,proposed_action=choose rule。",
+      "expected_output": "BLOCK_HUMAN,因为 ambiguity_flag 是强制检查点;保留两个来源,不得编造裁决。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "contract-mutation-requires-target",
+      "prompt": "一个 drift detector 想为 IFC-007 新增可选字段 coupon_code。带上 source trace 和精确的 ir_element_id 路由 contract_mutation。",
+      "expected_output": "BLOCK_HUMAN,因为 contract mutation 改变共享语义,即使兼容也不例外。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "non-formal-confidence-does-not-authorize",
+      "prompt": "一个 assertion candidate 的 confidence 为 0.55 且 source trace 完整。它是中间产物 assertion,不是 formal artifact。路由它。",
+      "expected_output": "PASS 可以让机器 workflow 继续,但该分数不批准任何 formal asset,后续的 TestCase gate 仍然强制。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "name": "formal-binding-is-required",
+      "prompt": "路由一个缺少 artifact_version_id 或 content_digest 的 formal Defect。",
+      "expected_output": "将 router 输入判为无效并拒绝;不得生成不完整的 ReviewTask,也不得批准或发布该 Defect。",
+      "files": []
+    }
+  ]
+}

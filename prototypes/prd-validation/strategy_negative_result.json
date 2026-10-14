@@ -1,0 +1,95 @@
+{
+  "skill": "06",
+  "checked_at": "2026-09-06T06:52:45.618439+00:00",
+  "verdict": "REJECT",
+  "total_findings": 12,
+  "reject_count": 12,
+  "review_count": 0,
+  "findings": [
+    {
+      "check": 5,
+      "code": "INVALID_RISK_LEVEL",
+      "severity": "REJECT",
+      "target": "F-A",
+      "msg": "risk_level 必须是 ['critical', 'high', 'low', 'medium'] 之一"
+    },
+    {
+      "check": 5,
+      "code": "DUPLICATE_FEATURE_ID",
+      "severity": "REJECT",
+      "target": "F-A",
+      "msg": "feature_id 出现多次"
+    },
+    {
+      "check": 1,
+      "code": "MISSING_EXCLUSION_REASON",
+      "severity": "REJECT",
+      "target": "Out_Of_Scope[0]",
+      "msg": "exclusion_reason 为必填项"
+    },
+    {
+      "check": 1,
+      "code": "CRITICAL_PATH_FEATURE_NOT_IN_SCOPE",
+      "severity": "REJECT",
+      "target": "CP-X",
+      "msg": "feature_id 'F-NOT-DECLARED' 未在 In_Scope 中声明"
+    },
+    {
+      "check": 1,
+      "code": "MISSING_CRITICAL_PATH_EXCLUSION_REASON",
+      "severity": "REJECT",
+      "target": "CP-X",
+      "msg": "OUT_OF_SCOPE 路径需要 exclusion_reason"
+    },
+    {
+      "check": 1,
+      "code": "DUPLICATE_CRITICAL_PATH_ID",
+      "severity": "REJECT",
+      "target": "CP-X",
+      "msg": "path_id 出现多次"
+    },
+    {
+      "check": 2,
+      "code": "GATE_THRESHOLD_OUT_OF_RANGE",
+      "severity": "REJECT",
+      "target": "case_pass_rate",
+      "msg": "threshold 必须在 [0,1] 范围内"
+    },
+    {
+      "check": 2,
+      "code": "GATE_THRESHOLD_NON_NUMERIC",
+      "severity": "REJECT",
+      "target": "case_pass_rate",
+      "msg": "threshold 必须是有限的非布尔数值"
+    },
+    {
+      "check": 2,
+      "code": "DUPLICATE_GATE_NAME",
+      "severity": "REJECT",
+      "target": "case_pass_rate",
+      "msg": "gate_name 出现多次"
+    },
+    {
+      "check": 3,
+      "code": "PYRAMID_SUM_INVALID",
+      "severity": "REJECT",
+      "target": "pyramid",
+      "msg": "pyramid 占比之和为 1.1，应为 1.0 ± 0.001"
+    },
+    {
+      "check": 3,
+      "code": "PYRAMID_INVERTED",
+      "severity": "REJECT",
+      "target": "pyramid",
+      "msg": "e2e (0.6) 大于 unit (0.2)"
+    },
+    {
+      "check": 4,
+      "code": "CORE_LAYER_MOCKED",
+      "severity": "REJECT",
+      "target": "mock_targets:database",
+      "msg": "核心层 'database' 被 mock"
+    }
+  ],
+  "routing": "在测试设计开始前重新起草 strategy"
+}

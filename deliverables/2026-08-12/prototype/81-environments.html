@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>环境与资源 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="platform">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item active" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>平台级</button></div>
+    <div class="spacer"></div>
+    <button class="btn btn-sm btn-ghost" onclick="location.href='80-workspaces.html'">项目</button>
+    <button class="btn btn-sm btn-ghost" onclick="location.href='82-governance.html'">集成与权限</button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>环境与资源</h1><div class="sub">Environment / Secret 引用 / Runner / 配额 · Secret 永不显示明文 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="qf.openModal('m-new-env')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>新建环境</button>
+    </div>
+
+    <div class="panel">
+      <div class="phead"><h2>环境</h2></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>环境</th><th>类型</th><th>Endpoint</th><th>Secret 引用</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr onclick="qf.openModal('m-env')"><td><div class="t-title">staging</div><div class="t-sub">测试环境 · 数据策略: 合成</div></td><td><span class="type-tag">测试</span></td><td class="mono">https://staging.settle.internal</td><td class="mono">secret:stg-db · V2</td><td><span class="status st-done"><span class="d"></span>可用</span></td></tr>
+          <tr onclick="qf.openModal('m-env')"><td><div class="t-title">dev</div><div class="t-sub">开发环境</div></td><td><span class="type-tag">开发</span></td><td class="mono">https://dev.settle.internal</td><td class="mono">secret:dev-db · V1</td><td><span class="status st-done"><span class="d"></span>可用</span></td></tr>
+          <tr onclick="qf.openModal('m-env')"><td><div class="t-title">prod-staging</div><div class="t-sub">生产预发 · 高风险</div></td><td><span class="type-tag">预发</span></td><td class="mono">https://pre.settle.internal</td><td class="mono">secret:pre-db · V3</td><td><span class="status st-blocked"><span class="d"></span>Secret 过期</span></td></tr>
+        </tbody>
+      </table>
+        <div class="empty-note" hidden><div class="en-title">暂无环境</div>点击「新建环境」创建</div>
+      </div>
+    </div>
+
+    <div class="grid g3 mt-6">
+      <div class="panel">
+        <div class="phead"><h2>Runner</h2></div>
+        <div class="pbody">
+          <div class="row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--qf-border)"><span class="muted">runner-01</span><span class="status st-done"><span class="d"></span>ONLINE_IDLE</span></div>
+          <div class="row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--qf-border)"><span class="muted">runner-02</span><span class="status st-run"><span class="d"></span>ONLINE_BUSY</span></div>
+          <div class="row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--qf-border)"><span class="muted">runner-03</span><span class="status st-blocked"><span class="d"></span>HEARTBEAT_LOST</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>Secret</h2><span class="hint">只显示引用</span></div>
+        <div class="pbody">
+          <div class="row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--qf-border)"><span class="muted">stg-db</span><span class="mono small">V2 · 30 天后过期</span></div>
+          <div class="row" style="display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--qf-border)"><span class="muted">pre-db</span><span class="mono small" style="color:var(--qf-error-500)">已过期</span></div>
+          <button class="btn btn-sm btn-ghost mt-3" onclick="qf.openModal('m-secret')">轮换 Secret</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="phead"><h2>配额</h2></div>
+        <div class="pbody">
+          <div class="cov-row"><div class="top"><span class="name">并发 Runner</span><span class="val">2 / 8</span></div><div class="bar"><i style="width:25%"></i></div></div>
+          <div class="cov-row" style="margin-bottom:0"><div class="top"><span class="name">月度成本</span><span class="val">¥342 / ¥2000</span></div><div class="bar"><i style="width:17%"></i></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="m-new-env" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>新建环境</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="envForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「新建环境」按钮</div>
+        <div class="field"><label>环境名称 <span class="req">*</span></label><input class="input" required placeholder="例如: pre-prod"><div class="err">请输入名称</div></div>
+        <div class="field"><label>类型</label><select class="input"><option>测试</option><option>预发</option><option>生产</option></select></div>
+        <div class="field"><label>Endpoint</label><input class="input" type="url" placeholder="https://api.example.com"></div>
+        <div class="field"><label>Secret 引用</label><select class="input"><option>选择 Secret…</option><option>stg-db</option><option>dev-db</option></select></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-env')">取消</button>
+        <button type="submit" class="btn btn-primary">创建</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal" id="m-env" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>环境详情</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击环境行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">能力</span><span>Web/API · 故障注入</span>
+        <span class="muted">数据策略</span><span>合成数据 · 24h 清理</span>
+        <span class="muted">连接</span><span class="mono">secret:stg-db V2 (引用)</span>
+      </div>
+      <p class="small muted mt-4">环境不保存连接串明文;Secret 元数据与使用权限分离。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-env')">关闭</button></div>
+  </div>
+</div>
+<div class="modal" id="m-secret" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box narrow">
+    <div class="modal-head"><h3>轮换 Secret</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「轮换 Secret」按钮 · 危险操作确认</div>
+      <p class="body-text">轮换后旧密钥保留至宽限期结束;业务接口永不返回明文。影响范围: 引用此 Secret 的执行计划将阻塞并提示。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-secret')">取消</button><button class="btn btn-danger" onclick="qf.closeModal('m-secret');qf.toast('Secret 轮换已发起(演示)','err')">确认轮换</button></div>
+  </div>
+</div>
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('envForm', function () { qf.closeModal('m-new-env'); qf.toast('环境已创建(演示)','ok'); });
+</script>
+</body>
+</html>

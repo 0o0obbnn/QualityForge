@@ -1,0 +1,18 @@
+{
+  "ir_version": "1.0.0",
+  "interface_contracts": [{
+    "contract_id": "IFC-ORD", "endpoint": "/orders/{id}", "method": "GET",
+    "response_schema": {"properties": {"order_id": {}, "status": {}, "total": {}, "items": {}}}
+  }],
+  "entities": [{"entity_id": "ENT-ORD", "name": "Order",
+    "fields": [{"name": "order_id", "type": "str"}, {"name": "status", "type": "enum"}]}],
+  "business_rules": [
+    {"rule_id": "R-014", "condition": "total > 0", "action": "validate"},
+    {"rule_id": "R-PAY-001", "condition": "payment received", "action": "mark PAID"}
+  ],
+  "state_machines": [{
+    "sm_id": "SM-ORD", "entity_id": "ENT-ORD",
+    "states": ["PENDING", "PAID", "SHIPPED", "REFUNDED"],
+    "transitions": [{"from": "PENDING", "to": "PAID", "trigger": "payment", "guard": null}]
+  }]
+}

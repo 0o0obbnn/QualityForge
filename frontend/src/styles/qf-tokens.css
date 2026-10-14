@@ -1,0 +1,160 @@
+/* ============================================================
+   QualityForge 重设计 · Design Tokens (Build 呼吸感极简)
+   版本: V1 · 2026-08-12
+   禁色声明: 全 token 色相避开蓝紫禁带 (hue 190-320°),
+   含带蓝紫倾向的中性色 (原 slate 系全部替换为暖石墨系)。
+   取色验证: 由 scripts/verify_palette.py 自动校验。
+   ============================================================ */
+
+:root {
+  /* ---------- 主强调色 · 锻炉琥珀铜 (Forge Amber) ----------
+     单一强调色战略使用: 主按钮 / 当前导航 / 关键 CTA / 进行中状态。
+     色相 25-28°, 远离蓝紫禁带。 */
+  --qf-accent-50:  #FDF4EA;   /* 暖橙白 · 强调浅底 */
+  --qf-accent-100: #F9E5CD;   /* 浅杏 */
+  --qf-accent-200: #F2CD9E;   /* 杏 */
+  --qf-accent-300: #E9AC66;   /* 琥珀 */
+  --qf-accent-400: #E08E3C;   /* 琥珀铜 */
+  --qf-accent-500: #D96C1F;   /* 锻炉火橙 · 主强调 */
+  --qf-accent-600: #B8551A;   /* 深铜 (文字用) */
+  --qf-accent-700: #934214;   /* 铜棕 */
+  --qf-accent-800: #6C3110;   /* 深棕铜 */
+  --qf-accent-900: #47200A;   /* 炭铜 */
+
+  /* ---------- 辅助色 · 墨茶绿 (Ink Tea) ----------
+     AI 相关点缀 / 次强调 / 数据可视化第 2 色。
+     低饱和灰绿, 与成功绿(鲜明)区分。色相 ~95°。 */
+  --qf-secondary-100: #E6E9DF;
+  --qf-secondary-300: #A9B39B;
+  --qf-secondary-500: #6B7A5E;   /* 墨茶 */
+  --qf-secondary-700: #4C5743;   /* 深墨茶 */
+
+  /* ---------- 中性色 · 暖石墨 (Warm Graphite) ----------
+     替代原 slate 蓝灰系; 全部色相 30-45° (暖), 无蓝紫倾向。 */
+  --qf-neutral-0:   #FFFFFF;
+  --qf-neutral-50:  #FAFAF7;   /* 暖白背景 */
+  --qf-neutral-100: #F4F2ED;   /* 暖灰白表面 */
+  --qf-neutral-200: #E9E6DE;   /* 暖浅灰边框 */
+  --qf-neutral-300: #D8D4C8;   /* 暖灰 */
+  --qf-neutral-400: #A9A395;   /* 中灰 */
+  --qf-neutral-500: #817B6E;   /* 深灰 */
+  --qf-neutral-600: #625D52;   /* 暖深灰 */
+  --qf-neutral-700: #47433B;   /* 石墨 */
+  --qf-neutral-800: #2F2C27;   /* 深石墨 */
+  --qf-neutral-900: #1D1B18;   /* 暖炭黑 */
+  --qf-neutral-950: #141210;   /* 近黑 */
+
+  /* ---------- 语义色 (测试平台核心: 状态必须一眼可辨) ---------- */
+  --qf-success-500: #47875A;   /* 通过 · 绿 hue~140 */
+  --qf-success-600: #356B45;   /* 深绿 */
+  --qf-success-100: #E4EFE6;   /* 淡绿底 */
+  --qf-warning-500: #B98E2A;   /* 警告 · 金黄 hue~44 */
+  --qf-warning-600: #96701E;   /* 深金 */
+  --qf-warning-100: #F5EDD8;   /* 淡金底 */
+  --qf-error-500:   #C0442F;   /* 失败 · 暖红 hue~8 */
+  --qf-error-600:   #9C3624;   /* 深红 */
+  --qf-error-100:   #F7E3DE;   /* 淡红底 */
+  /* 信息/进行中 = 主强调铜 (AI 工作中即"炉火燃烧中") */
+  --qf-info-500: var(--qf-accent-500);
+  --qf-info-100: var(--qf-accent-50);
+
+  /* ---------- 数据可视化色板 (全部 hue ≤160, 无蓝紫) ---------- */
+  --qf-chart-1: #D96C1F;  /* 琥珀 */
+  --qf-chart-2: #4E7A5A;  /* 墨绿 */
+  --qf-chart-3: #C0442F;  /* 暖红 */
+  --qf-chart-4: #B98E2A;  /* 金黄 */
+  --qf-chart-5: #8A8378;  /* 暖灰 */
+  --qf-chart-6: #9C6B3F;  /* 赭石棕 */
+
+  /* ---------- 主题映射 (亮色默认 · Build 呼吸感) ---------- */
+  --qf-background:       var(--qf-neutral-50);
+  --qf-foreground:       var(--qf-neutral-900);
+  --qf-card:             var(--qf-neutral-0);
+  --qf-card-foreground:  var(--qf-neutral-900);
+  --qf-popover:          var(--qf-neutral-0);
+  --qf-popover-foreground: var(--qf-neutral-900);
+  --qf-primary:          var(--qf-accent-600);
+  --qf-primary-hover:    var(--qf-accent-700);
+  --qf-primary-foreground: var(--qf-neutral-0);
+  --qf-secondary-surface: var(--qf-neutral-100);
+  --qf-secondary-foreground: var(--qf-neutral-800);
+  --qf-muted:            var(--qf-neutral-100);
+  --qf-muted-foreground: var(--qf-neutral-600);
+  --qf-border:           var(--qf-neutral-200);
+  --qf-input:            var(--qf-neutral-200);
+  --qf-ring:             var(--qf-accent-400);
+  --qf-focus-ring:       0 0 0 3px rgba(217, 108, 31, 0.25);
+
+  /* ---------- 字体 ---------- */
+  --qf-font-ui: "Avenir Next", "PingFang SC", "Noto Sans SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --qf-font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+  --qf-font-display: "Avenir Next", "PingFang SC", "Noto Sans SC", -apple-system, sans-serif;
+
+  --qf-text-xs: 12px;   /* caption */
+  --qf-text-sm: 13px;
+  --qf-text-base: 14px; /* UI 正文 */
+  --qf-text-md: 16px;
+  --qf-text-lg: 20px;   /* 页面标题 */
+  --qf-text-xl: 26px;   /* 页面大标题 */
+  --qf-text-2xl: 34px;  /* display */
+
+  --qf-weight-light: 300;
+  --qf-weight-regular: 400;
+  --qf-weight-medium: 500;
+  --qf-weight-semibold: 600;
+
+  --qf-leading-tight: 1.25;
+  --qf-leading-snug: 1.4;
+  --qf-leading-normal: 1.6;
+
+  /* ---------- 间距 (8pt 节奏 · Build 呼吸感: 组内 8-12, 组间 32-48) ---------- */
+  --qf-space-1: 4px;
+  --qf-space-2: 8px;
+  --qf-space-3: 12px;
+  --qf-space-4: 16px;
+  --qf-space-5: 20px;
+  --qf-space-6: 24px;
+  --qf-space-8: 32px;
+  --qf-space-10: 40px;
+  --qf-space-12: 48px;
+  --qf-space-16: 64px;
+
+  /* ---------- 圆角 (克制: 4-12, 全圆仅胶囊) ---------- */
+  --qf-radius-sm: 6px;
+  --qf-radius-md: 10px;
+  --qf-radius-lg: 14px;
+  --qf-radius-full: 9999px;
+
+  /* ---------- 阴影 (柔和 · α ≤ 0.06) ---------- */
+  --qf-shadow-sm: 0 1px 2px rgba(29, 27, 24, 0.05);
+  --qf-shadow-md: 0 4px 12px rgba(29, 27, 24, 0.06);
+  --qf-shadow-lg: 0 12px 28px rgba(29, 27, 24, 0.08);
+  --qf-shadow-float: 0 20px 40px rgba(29, 27, 24, 0.12);
+
+  /* ---------- 过渡 ---------- */
+  --qf-transition-fast: 120ms ease;
+  --qf-transition-base: 200ms ease;
+}
+
+/* 暗色变体 (暖炭 · 可选, 非本轮视觉稿主路径) */
+[data-theme="dark"] {
+  --qf-background: var(--qf-neutral-900);
+  --qf-foreground: var(--qf-neutral-50);
+  --qf-card: var(--qf-neutral-800);
+  --qf-card-foreground: var(--qf-neutral-50);
+  --qf-popover: var(--qf-neutral-800);
+  --qf-popover-foreground: var(--qf-neutral-50);
+  --qf-primary: var(--qf-accent-400);
+  --qf-primary-hover: var(--qf-accent-300);
+  --qf-primary-foreground: var(--qf-neutral-950);
+  --qf-secondary-surface: var(--qf-neutral-700);
+  --qf-secondary-foreground: var(--qf-neutral-50);
+  --qf-muted: var(--qf-neutral-800);
+  --qf-muted-foreground: var(--qf-neutral-400);
+  --qf-border: var(--qf-neutral-700);
+  --qf-input: var(--qf-neutral-700);
+  --qf-ring: var(--qf-accent-300);
+  --qf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --qf-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
+  --qf-shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.3);
+}

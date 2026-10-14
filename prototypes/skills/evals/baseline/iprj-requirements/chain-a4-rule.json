@@ -1,0 +1,19 @@
+{
+  "business_rules": [
+    {
+      "rule_id": "RULE-001",
+      "condition": "institution.status == ENABLED",
+      "action": "include in monthly reporting task",
+      "source": "iprj-prd.md:数据上报(管理侧):任务记录",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "RULE-002",
+      "condition": "instance.query_usage > max_query_quota",
+      "action": "next_day_noon_suspend_query_service",
+      "source": "inferred",
+      "confidence": 0.5,
+      "inferred": true
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "eval_id": 1,
+  "eval_name": "eval-1-static-check-rejects-hallucinated-field",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "verdict_is_REJECT",
+      "passed": true
+    },
+    {
+      "text": "violation_code_is_FIELD_NOT_IN_CONTRACT",
+      "passed": true
+    },
+    {
+      "text": "classified_as_hallucinated",
+      "passed": true
+    },
+    {
+      "text": "routes_to_Skill_10",
+      "passed": true
+    }
+  ],
+  "passed": 4,
+  "total": 4,
+  "pass_rate": 1.0
+}

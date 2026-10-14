@@ -1,0 +1,19 @@
+{
+  "declared_sources": [
+    {"source_id": "iprj-prd.md", "availability": "AVAILABLE"}
+  ],
+  "ir_draft": {
+    "requirements": [
+      {
+        "req_id": "REQ-FAB-1",
+        "title": "伪造来源的需求",
+        "source_trace": "some-fake-source.md:不存在章节",
+        "confidence": 0.85,
+        "confidence_rationale": "故意使用未声明来源。"
+      }
+    ],
+    "business_rules": [],
+    "constraints": [],
+    "entities": []
+  }
+}

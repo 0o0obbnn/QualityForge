@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualityForge 原型 · impeccable 设计评审报告 · 2026-08-12</title>
+<style>
+  :root{--bg:#FAFAF7;--card:#FFFFFF;--fg:#1D1B18;--muted:#625D52;--border:#E9E6DE;--accent:#B8551A;--accent-100:#FDF4EA;--ok:#47875A;--ok-100:#E4EFE6;--warn:#96701E;--warn-100:#F5EDD8;--err:#C0442F;--err-100:#F7E3DE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;padding:40px 24px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{border-bottom:2px solid var(--fg);padding-bottom:24px;margin-bottom:32px;}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  h1{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin-top:10px;}
+  .sub{color:var(--muted);margin-top:8px;font-size:15px;}
+  h2{font-size:21px;font-weight:600;margin:40px 0 6px;}
+  h3{font-size:15.5px;font-weight:600;margin:22px 0 8px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border-radius:12px;overflow:hidden;margin:10px 0 18px;}
+  th{background:#F4F2ED;text-align:left;padding:9px 12px;font-weight:600;font-size:12px;}
+  td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top;}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr);}}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .metric .v{font-size:28px;font-weight:300;letter-spacing:-0.02em;}
+  .metric .k{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .b-ok{background:var(--ok-100);color:#356B45;} .b-warn{background:var(--warn-100);color:var(--warn);} .b-err{background:var(--err-100);color:#9C3624;} .b-acc{background:var(--accent-100);color:var(--accent);}
+  .callout{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;background:var(--card);margin:14px 0;font-size:14px;}
+  code{font-family:"JetBrains Mono",Menlo,monospace;font-size:12px;background:#F4F2ED;border-radius:4px;padding:1px 6px;}
+  ul.tight{padding-left:20px;margin:6px 0;} ul.tight li{margin-bottom:4px;font-size:13.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Impeccable Critique Report · 2026-08-12</div>
+  <h1>原型设计评审报告(impeccable 独立视角)</h1>
+  <p class="sub">评审对象: deliverables/2026-08-12/prototype/ 27 页 · 方法: 双独立评估(设计评审 30/40 Good + 检测器取证)+ 问题修复与复验 · 与既有走查台账对照</p>
+</header>
+
+<div class="metrics">
+  <div class="metric"><div class="v">30/40</div><div class="k">Nielsen 启发式总分(Good)</div></div>
+  <div class="metric"><div class="v">13 项</div><div class="k">AI slop 禁令核对: 仅 2 处边缘命中</div></div>
+  <div class="metric"><div class="v">3+3+2</div><div class="k">优先问题: P1×3 / P2×3 / P3×2</div></div>
+  <div class="metric"><div class="v">8/8</div><div class="k">P1/P2 修复后复验: 冒烟 9/9 + 对比度全达标</div></div>
+</div>
+
+<h2>一、总体裁决</h2>
+<div class="callout"><b>非 AI slop,人类刻意设计通过反模板压力测试。</b>「事实/推断/决定」三层语义被做成贯穿 27 页的可见视觉语法(AI 墨茶绿标签 / 来源可信度节点 / 人工硬门按钮 / digest 绑定提示),设计系统纪律性极强(单强调色、半径 ≤14、8pt 节奏、禁蓝紫无死角)。缺陷集中在「效率路径」(批量操作/快捷键/键盘可达)与「原型脚手架泄漏」(触发入口标注)。</div>
+
+<h2>二、Nielsen 启发式评分(10 项)</h2>
+<table>
+  <tr><th>启发式</th><th>分</th><th>要点</th></tr>
+  <tr><td>错误预防</td><td><b>4</b></td><td>全量校验、危险操作双重确认、阻断项不可人工放行——全场最完整</td></tr>
+  <tr><td>美观与极简</td><td><b>4</b></td><td>呼吸感成立,每像素有职责</td></tr>
+  <tr><td>系统状态可见性</td><td>3</td><td>步骤条/AI 进度/事件流齐全;静态骨架屏与「实时」承诺有落差</td></tr>
+  <tr><td>系统与现实匹配</td><td>3</td><td>术语正确;内部码(digest/trace)高频出现,对非专家用户偏重</td></tr>
+  <tr><td>用户控制与自由</td><td>3</td><td>弹窗三关齐全;无批量/无撤销(追加制已披露)</td></tr>
+  <tr><td>一致性与标准</td><td>3</td><td>27 页高度统一;待审核计数跨页口径不一致</td></tr>
+  <tr><td>识别而非回忆</td><td>3</td><td>diff 并排、来源同屏;行可点性线索弱</td></tr>
+  <tr><td>错误识别与恢复</td><td>3</td><td>ERROR 弹窗教科书级;校验失败未定位首个错误字段</td></tr>
+  <tr><td>灵活高效</td><td>2</td><td>无快捷键/批量/收藏——TestLead 高吞吐路径缺失</td></tr>
+  <tr><td>帮助与文档</td><td>2</td><td>内联提示好;无帮助中心/术语表</td></tr>
+</table>
+
+<h2>三、优先问题与修复状态</h2>
+<table>
+  <tr><th>级别</th><th>问题</th><th>位置</th><th>修复</th><th>状态</th></tr>
+  <tr><td><span class="badge b-err">P1</span></td><td>重试按钮 JS 失效(内联函数写在带 src 的 script 内,浏览器忽略)</td><td>51-execution-monitor.html</td><td>拆独立 script 块</td><td><span class="badge b-ok">已修复(冒烟 ✅)</span></td></tr>
+  <tr><td><span class="badge b-err">P1</span></td><td>待审核计数跨页不一致(6 vs 24,无口径标注)</td><td>10-board / 11-reviews / 32-cases</td><td>口径标注「24 条用例 · 审核包 6」+ title 提示</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td><span class="badge b-err">P1</span></td><td>表格行无键盘可达、弹窗无焦点圈定</td><td>全站 + qf-shell.js</td><td>行 tabindex+Enter 委托;焦点圈定+关闭恢复</td><td><span class="badge b-ok">已修复(冒烟 ✅)</span></td></tr>
+  <tr><td><span class="badge b-warn">P2</span></td><td>三处 AA 对比度不达标(muted 4.0:1 / 主按钮 3.4:1 / 警告文字 3.0:1)</td><td>qf-tokens.css</td><td>muted→neutral-600(6.55:1)、primary→accent-600(4.82:1)</td><td><span class="badge b-ok">已修复(复验全达标)</span></td></tr>
+  <tr><td><span class="badge b-warn">P2</span></td><td>选中态 3px 侧边色条(禁令字面命中)</td><td>11-reviews.html L62</td><td>—</td><td><span class="badge b-warn">已记录</span>(选中态语义,收进组件库待办)</td></tr>
+  <tr><td><span class="badge b-warn">P2</span></td><td>「触发入口」原型脚手架泄漏(~70 处)</td><td>全站弹窗</td><td>—</td><td><span class="badge b-warn">待确认</span>(展示/产品模式切换方案)</td></tr>
+  <tr><td><span class="badge b-acc">P3</span></td><td>隐私政策死链</td><td>01-login.html</td><td>补 onclick 反馈</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td><span class="badge b-acc">P3</span></td><td>内联样式漂移</td><td>11-reviews / 32-cases / 10-board</td><td>—</td><td><span class="badge b-warn">已记录</span>(组件库唯一事实源待办)</td></tr>
+</table>
+
+<h2>四、检测器证据(Assessment B)</h2>
+<ul class="tight">
+  <li>detect.mjs 退出码 2: 12 条发现(编号节标 advisory×6、单字体 warning×3、扁平层级 warning×2、侧边色条 warning×1);对比度/布局反模式 0 条</li>
+  <li>对比度: #817B6E 在白底 4.21:1 ❌ → 修复后 #625D52 = 6.55:1 ✅</li>
+  <li>标题层级: h1 单页单用 27/27 ✅;h2 仅 2 个,h1→h3 跳级 25/27 ❌(结构性,已记入待办)</li>
+  <li>禁蓝紫: verify_palette.py 0 违例 ✅</li>
+  <li>浏览器证据: 本环境无浏览器,已声明 unavailable,以源码静态证据替代</li>
+</ul>
+
+<h2>五、与既有走查台账的对照</h2>
+<table>
+  <tr><th>维度</th><th>上轮组件走查(66 条)</th><th>impeccable 评审(本轮)</th><th>关系</th></tr>
+  <tr><td>方法</td><td>4 路组件分线(字段/表格/弹窗/状态)</td><td>双独立评估(设计评审+检测器)</td><td>互补</td></tr>
+  <tr><td>共同发现</td><td>h2 跳级(D7)、对比度、内联样式</td><td>h2 跳级、对比度、内联样式</td><td><span class="badge b-ok">互证</span></td></tr>
+  <tr><td>本轮新增</td><td>—</td><td>重试按钮 JS 真 bug、计数口径、键盘可达、焦点陷阱、隐私死链、AI slop 裁决、Nielsen 评分</td><td><span class="badge b-err">新增 6 项</span></td></tr>
+  <tr><td>本轮未覆盖</td><td>组件级状态细节(已修)</td><td>效率路径(批量/快捷键)、帮助体系、脚手架去留</td><td>待确认项</td></tr>
+</table>
+
+<h2>六、评审结论与建议</h2>
+<div class="callout">
+<b>结论: 原型达到可评审/可交接的 Good 档水准。</b>修复闭环后(3 个 P1 + 2 个 P2 + 1 个 P3),建议下一步: ① 决定「触发入口/演示」脚手架去留(data-proto 开关);② 设计 TestLead 批量审核路径与「批准后发现错误」的撤销语义(产品决策);③ 补齐帮助中心/术语表;④ 待浏览器环境补渲染级验证。
+</div>
+<div class="callout" style="border-left-color:var(--warn)">
+<b>评审范围声明</b>: 设计评审与检测证据为两个隔离 Agent 独立产出;无浏览器渲染验证(环境限制);评审未修改文件,修复由主流程按台账执行并复验(冒烟 9/9、对比度全达标、取色 0 违例、结构全过)。
+</div>
+</div>
+</body>
+</html>

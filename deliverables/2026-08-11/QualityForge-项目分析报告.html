@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 项目分析报告</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --border:#2a2f3a;
+    --text:#e6e9ef; --muted:#9aa3b2; --accent:#4f8cff; --green:#3ecf8e;
+    --yellow:#f5b83d; --red:#f25c5c; --purple:#a78bfa;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; line-height:1.7; padding:40px 20px;}
+  .wrap{max-width:980px; margin:0 auto;}
+  header{border-bottom:1px solid var(--border); padding-bottom:24px; margin-bottom:28px;}
+  .kicker{color:var(--accent); font-size:13px; letter-spacing:2px; font-weight:600; text-transform:uppercase;}
+  h1{font-size:30px; margin:8px 0 6px;}
+  .sub{color:var(--muted); font-size:15px;}
+  h2{font-size:20px; margin:36px 0 14px; padding-left:12px; border-left:4px solid var(--accent);}
+  h3{font-size:16px; margin:20px 0 10px; color:#c8d2e0;}
+  .metrics{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:20px 0;}
+  .metric{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
+  .metric .num{font-size:26px; font-weight:700; color:var(--accent);}
+  .metric .num.warn{color:var(--yellow);} .metric .num.bad{color:var(--red);} .metric .num.good{color:var(--green);}
+  .metric .lbl{font-size:12px; color:var(--muted); margin-top:2px;}
+  table{width:100%; border-collapse:collapse; margin:14px 0; background:var(--panel); border-radius:10px; overflow:hidden; font-size:14px;}
+  th{background:var(--panel2); color:#c8d2e0; text-align:left; padding:10px 12px; font-weight:600; white-space:nowrap;}
+  td{padding:9px 12px; border-top:1px solid var(--border); vertical-align:top;}
+  .tag{display:inline-block; padding:2px 10px; border-radius:20px; font-size:12px; font-weight:600; white-space:nowrap;}
+  .tag.red{background:rgba(242,92,92,.15); color:var(--red);}
+  .tag.yellow{background:rgba(245,184,61,.15); color:var(--yellow);}
+  .tag.green{background:rgba(62,207,142,.15); color:var(--green);}
+  .tag.blue{background:rgba(79,140,255,.15); color:var(--accent);}
+  .tag.purple{background:rgba(167,139,250,.15); color:var(--purple);}
+  .timeline{position:relative; margin:20px 0 20px 8px; padding-left:28px;}
+  .timeline::before{content:""; position:absolute; left:8px; top:6px; bottom:6px; width:2px; background:var(--border);}
+  .step{position:relative; margin-bottom:18px;}
+  .step::before{content:""; position:absolute; left:-28px; top:6px; width:12px; height:12px; border-radius:50%; background:var(--accent); border:3px solid var(--bg);}
+  .step .t{font-weight:600; color:#dbe3ee;}
+  .step .d{color:var(--muted); font-size:13.5px; margin-top:2px;}
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; margin:16px 0;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px;}
+  .card h4{font-size:15px; margin-bottom:8px; color:var(--accent);}
+  .card ul{padding-left:18px; font-size:13.5px; color:#c4cdda;}
+  .card li{margin-bottom:4px;}
+  .note{background:rgba(245,184,61,.08); border:1px solid rgba(245,184,61,.3); border-radius:10px; padding:14px 16px; font-size:14px; margin:16px 0;}
+  .note b{color:var(--yellow);}
+  .code{background:#0b0d11; border:1px solid var(--border); border-radius:8px; padding:14px 16px; font-family:"SF Mono",Menlo,monospace; font-size:12.5px; color:#9fd3a8; overflow-x:auto; margin:12px 0; white-space:pre;}
+  footer{margin-top:40px; padding-top:16px; border-top:1px solid var(--border); color:var(--muted); font-size:12.5px;}
+  a{color:var(--accent); text-decoration:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Project Analysis Report</div>
+  <h1>QualityForge 项目分析报告</h1>
+  <div class="sub">AI 原生端到端测试平台 · 当前阶段:纯文档/设计,无应用代码 · 分析日期:2026-08-11</div>
+</header>
+
+<div class="metrics">
+  <div class="metric"><div class="num warn">3.2/5.0</div><div class="lbl">需求成熟度(最新审计)</div></div>
+  <div class="metric"><div class="num bad">REVISE_AND_FOCUS</div><div class="lbl">全平台裁决 · 未过开发准入</div></div>
+  <div class="metric"><div class="num">9+1</div><div class="lbl">一级模块(9 大模块+平台设置)</div></div>
+  <div class="metric"><div class="num">42</div><div class="lbl">领域实体 · 5 个状态机</div></div>
+  <div class="metric"><div class="num">98</div><div class="lbl">API 路径 / 164 ops / 44 schema</div></div>
+  <div class="metric"><div class="num">50</div><div class="lbl">数据库表(PostgreSQL DDL)</div></div>
+  <div class="metric"><div class="num">30</div><div class="lbl">Skill 原型(20 个含 evals)</div></div>
+  <div class="metric"><div class="num">6</div><div class="lbl">Blocker(3 已补契约待复审)</div></div>
+</div>
+
+<h2>一、项目是什么</h2>
+<p>QualityForge 定位为 <b>AI-Native 智能化端到端测试平台</b>:把 LLM 与 Agent 深度整合进测试全生命周期——需求解析、用例设计、脚本编写、自愈执行、根因诊断(RCA)、知识沉淀,形成闭环。核心理念是"AI 是无感的能力底座",所有 AI 能力都镶嵌在测试工作流中,而不是一个游离的聊天窗口。</p>
+<p style="margin-top:8px;">当前<b>没有任何应用代码</b>:全部产出是 Markdown 设计文档 + 1 份 OpenAPI + 30 个 Skill 原型 + Gate 0 Agent 治理配置。技术栈(规划中):Python 3.12 + FastAPI + LangGraph + React 18 + PostgreSQL 16 + PGVector + Redis 7 + RabbitMQ。</p>
+
+<h2>二、核心业务闭环(平台工作流)</h2>
+<div class="timeline">
+  <div class="step"><div class="t">1. 创建工作空间</div><div class="d">Workspace:项目入口与全局上下文容器,含系统信息、环境、AI 上下文;Saga 保证"空间+AI 上下文+默认环境"原子创建</div></div>
+  <div class="step"><div class="t">2. 导入 PRD / Swagger 契约</div><div class="d">需求文档解析,编译为结构化 TestingIR(需求项/业务规则/实体模型/状态机/接口契约/约束)</div></div>
+  <div class="step"><div class="t">3. AI 解析需求并生成测试方案</div><div class="d">TestDesign:场景树 → DesignTestCase 草稿 → 工程师审批 → 迁移为正式 TestCase</div></div>
+  <div class="step"><div class="t">4. 生成资产并配置执行</div><div class="d">TestAsset:用例、自动化脚本、Locator、Mock、测试数据</div></div>
+  <div class="step"><div class="t">5. 分布式执行</div><div class="d">Execution:Runner 节点池并发调度、WebSocket 实时日志流、状态机 Pending→Running→Completed/Failed/Cancelled</div></div>
+  <div class="step"><div class="t">6. AI 根因分析与聚类</div><div class="d">QualityIntelligence:RCA 归类 ProductBug/ScriptIssue/EnvIssue/FlakyTest,失败聚类,写 Jira 需人工确认</div></div>
+  <div class="step"><div class="t">7. 知识沉淀闭环</div><div class="d">KnowledgeCenter:经验 → PendingReview → 审核 → Published 向量化,支撑 RAG 越用越聪明</div></div>
+  <div class="step"><div class="t">8. CI/CD 质量门禁</div><div class="d">三级卡口:Warning 放行 / Blocked 拦截 / Quarantined 隔离,AI 智能测试选择(TIA)</div></div>
+</div>
+
+<h2>三、九大模块体系</h2>
+<table>
+  <tr><th>模块</th><th>核心职责</th><th>审计裁决</th></tr>
+  <tr><td>Workspace(10)</td><td>工作空间、环境、凭证双信封加密、AI 上下文</td><td><span class="tag yellow">支撑模块</span></td></tr>
+  <tr><td>TestDesign(11)</td><td>需求解析 → 测试方案/场景/用例生成(核心价值链)</td><td><span class="tag red">REVISE · 3 Blocker</span></td></tr>
+  <tr><td>TestAsset(12)</td><td>用例/脚本/Locator/Mock/数据资产</td><td><span class="tag red">REVISE · 1 Blocker</span></td></tr>
+  <tr><td>Execution(13)</td><td>Runner 调度、并发执行、实时日志</td><td><span class="tag yellow">PASS_WITH_ACTIONS</span></td></tr>
+  <tr><td>QualityIntelligence(14)</td><td>RCA、失败聚类、报告与风险评级</td><td><span class="tag red">REVISE_AND_FOCUS · 2 Critical</span></td></tr>
+  <tr><td>SkillCenter(15)</td><td>测试能力插件化(Playwright/K6/ZAP)</td><td><span class="tag yellow">PASS_WITH_ACTIONS</span></td></tr>
+  <tr><td>AgentCenter(16)</td><td>Agent 配置、Prompt 版本、Trace、多智能体编排</td><td><span class="tag yellow">PASS_WITH_ACTIONS</span></td></tr>
+  <tr><td>KnowledgeCenter(17)</td><td>知识条目、向量库、API Schema 基线</td><td><span class="tag yellow">PASS_WITH_ACTIONS</span></td></tr>
+  <tr><td>CICD(18)</td><td>Webhook 触发、质量门禁、TIA 智能选择</td><td><span class="tag yellow">PASS_WITH_ACTIONS</span></td></tr>
+  <tr><td>PlatformSettings(19)</td><td>LLM 网关密钥、审计日志、Runner 池</td><td><span class="tag green">PASS_WITH_ACTIONS</span></td></tr>
+</table>
+<div class="note"><b>注意:</b>PASS_WITH_ACTIONS 表示存在必须执行的整改项,不代表已具备生产实现条件;全平台裁决为 REVISE_AND_FOCUS,开发准入未通过。</div>
+
+<h2>四、架构与技术选型</h2>
+<div class="cards">
+  <div class="card"><h4>纯 Python 微服务(7 个服务)</h4><ul>
+    <li>gateway / workspace / test-asset / settings</li>
+    <li>test-design / execution / intelligence / agent</li>
+    <li>FastAPI + SQLAlchemy 2.0 async + Pydantic v2</li>
+    <li>LangGraph 做 Agent DAG 编排</li>
+  </ul></div>
+  <div class="card"><h4>存储与中间件</h4><ul>
+    <li>PostgreSQL 16 + RLS 多租户 + PGVector</li>
+    <li>知识图谱用邻接表建模,不引入 Neo4j</li>
+    <li>Redis 7 缓存/锁 + Redis Streams 日志总线</li>
+    <li>RabbitMQ 事件驱动 + Saga 分布式事务</li>
+  </ul></div>
+  <div class="card"><h4>前端</h4><ul>
+    <li>React 18 + TypeScript + Vite</li>
+    <li>Zustand 状态管理 · Radix UI</li>
+    <li>Vanilla CSS + CSS Modules(禁 Tailwind)</li>
+  </ul></div>
+  <div class="card"><h4>LLM 网关降级链</h4><ul>
+    <li>主通道 → 备用通道 → 备用通道 → 本地规则(L3)</li>
+    <li>置信度不达标视为失败继续降级</li>
+    <li>无兜底规则的介入点显式转人工</li>
+    <li>阈值由 21 号矩阵单一事实源提供</li>
+  </ul></div>
+</div>
+
+<h2>五、AI 治理:介入点降级矩阵(核心设计)</h2>
+<p>全平台每个 AI 介入点都有 L1(全自动)/L2(AI+人工确认)/L3(纯人工)三级降级策略,遵循<b>"默认安全、可选激进"</b>:默认级别由"动作可逆性 × 影响范围"决定。绝大多数介入点默认 L2,只有只读/可逆且高阈值兜底的动作为 L1。</p>
+<table>
+  <tr><th>介入点</th><th>默认级别</th><th>阈值</th><th>关键依据</th></tr>
+  <tr><td>Locator 自愈</td><td><span class="tag green">L1</span></td><td>0.92</td><td>可逆 + 失败回退</td></tr>
+  <tr><td>运行期异常检测</td><td><span class="tag green">L1</span></td><td>0.85</td><td>只读观测</td></tr>
+  <tr><td>Multi-Agent 编排</td><td><span class="tag green">L1</span></td><td>0.85</td><td>可中断、只写草稿</td></tr>
+  <tr><td>需求分析与用例生成</td><td><span class="tag blue">L2</span></td><td>0.80</td><td>写草稿库,人工终审</td></tr>
+  <tr><td>覆盖率补齐</td><td><span class="tag blue">L2</span></td><td>0.90</td><td>禁止静默合成入库</td></tr>
+  <tr><td>用例优化重构</td><td><span class="tag blue">L2</span></td><td>0.88</td><td>改动既有资产须 diff</td></tr>
+  <tr><td>RCA 与缺陷提交</td><td><span class="tag blue">L2</span></td><td>0.85</td><td>写外部系统(Jira)</td></tr>
+  <tr><td>发布风险预测/门禁</td><td><span class="tag blue">L2</span></td><td>0.80</td><td>控制发布闸门,最高危</td></tr>
+  <tr><td>Skill 生成与发布</td><td><span class="tag blue">L2</span></td><td>100% 校验</td><td>RCE 攻击面</td></tr>
+  <tr><td>CI/CD 智能选择与门禁</td><td><span class="tag blue">L2</span></td><td>0.90</td><td>同发布闸门</td></tr>
+</table>
+
+<h2>六、Gate 0:Agent/Skill 运行治理(机器可读)</h2>
+<p>当前落地的最小治理模型:<b>1 个监督者 + 3 个受限 Subagent + 13 个 Gate 0 核心 Skill</b>,配置在 <code>prototypes/agent-governance/</code> 下,可被机器验证(<code>validate.py</code>)。</p>
+<table>
+  <tr><th>Agent</th><th>职责</th><th>Skill allowlist</th><th>关键禁止</th></tr>
+  <tr><td>qf-supervisor</td><td>分类、预检、派发、终止、汇总</td><td>plan-orchestrator</td><td>不生成业务资产、不审批</td></tr>
+  <tr><td>qf-requirement-ir</td><td>需求评审包 + TestingIR 草稿</td><td>requirement-quality-gate / business-rule-extractor / domain-model-extractor / state-machine-builder / requirement-compiler</td><td>不改原始需求、不批准自己产出</td></tr>
+  <tr><td>qf-test-design</td><td>策略/场景/用例/断言草稿</td><td>strategy-planner / scenario-generator / test-case-generator / assertion-generator</td><td>不执行测试、不改已验证 IR</td></tr>
+  <tr><td>qf-independent-verifier</td><td>独立验证 + 人工路由</td><td>ir-validator / assertion-verifier / coverage-analyzer / hitl-gatekeeper</td><td>不修复被审资产、不代替人工批准</td></tr>
+</table>
+<p style="margin-top:10px;">核心原则:<b>生成者与验证者分离</b>;Subagent 只读权威资料、只写单次运行目录、默认零网络零 Secret;任何 AI 无权批准自己的结果、写正式资产或控制发布门禁。工作流 DAG 覆盖 需求质量 → 业务规则/领域模型/状态机 → 编译 IR → 验证 IR → 策略 → 场景 → 用例 → 断言 → Coverage → HITL,遇到 REJECT/ERROR/TIMEOUT 即停止并保留证据。</p>
+
+<h2>七、E2E 正反样例链(技术验证证据)</h2>
+<div class="cards">
+  <div class="card"><h4>负向链 prototypes/e2e-validation/</h4><ul>
+    <li>故意保留缺失用例、迁移缺口、失败断言</li>
+    <li>证明 Coverage Gate 能阻断"虚假完成"</li>
+    <li>5 阶段:IR → 场景 → 用例 → 断言 → Coverage</li>
+  </ul></div>
+  <div class="card"><h4>Golden 正向链 prototypes/e2e-validation-golden/</h4><ul>
+    <li>独立数据贯通 IR→Scenario→Case→Assertion→Coverage</li>
+    <li>6 个 checker 全部 PASS,四维覆盖率 1.0,GATE_PASS</li>
+    <li>证明合法输入不会被误封死</li>
+  </ul></div>
+</div>
+
+<h2>八、审计现状:6 Blocker + 7 Critical 与修复进展</h2>
+<table>
+  <tr><th>ID</th><th>缺陷</th><th>级别</th><th>修复状态(截至 2026-08-10)</th></tr>
+  <tr><td>B-1</td><td>RequirementDocument 状态枚举冲突</td><td><span class="tag red">Blocker</span></td><td>已对齐 4 值枚举,待复审</td></tr>
+  <tr><td>B-2</td><td>DesignTestCase 未进正式契约 + 双状态机冲突</td><td><span class="tag red">Blocker</span></td><td>已补入四源,草稿→正式迁移已定义,待复审</td></tr>
+  <tr><td>B-3</td><td>可信链 6 概念零契约(TestingIR/Assertion/Coverage 等)</td><td><span class="tag red">Blocker</span></td><td>已全部补入术语/领域/API/DB(8-04 收尾),待复审</td></tr>
+  <tr><td>B-4</td><td>6 种 AI 阈值散落无校准集</td><td><span class="tag red">Blocker</span></td><td>未解决(21 号矩阵为单一事实源)</td></tr>
+  <tr><td>B-5</td><td>LLM 输出无外部 oracle(AI 自评循环)</td><td><span class="tag red">Blocker</span></td><td>未解决(需要金标准集)</td></tr>
+  <tr><td>B-6</td><td>四大收益指标全部不可验收(80%/80%/95%/60%)</td><td><span class="tag red">Blocker</span></td><td>未解决(缺基线+测量方法)</td></tr>
+  <tr><td>C-1~C-7</td><td>TestPlan 追踪断裂/覆盖率无语义/自治冲突/evals 仅 10.3%/评测协议缺失/角色矛盾/无 MVP 降级路径</td><td><span class="tag yellow">Critical</span></td><td>C-1/C-2/C-3/C-6 部分修复,其余待整改</td></tr>
+</table>
+<div class="note"><b>关键判断:</b>① 方向正确但"可信链"曾有物理断层——现已补契约但仍需独立复审,不能把"已写入文档"等同于"审计已关闭";② AI 能力宣称领先于可验证性——收益不可验收、无外部 oracle、阈值无校准是开发前必须解决的地基问题;③ 一致性根源在总纲"用户只有一个"的角色矛盾(C-6)。</div>
+
+<h2>九、版本规划(V1→V3)</h2>
+<table>
+  <tr><th>版本</th><th>周期</th><th>核心目标</th><th>关键能力</th></tr>
+  <tr><td>V1</td><td>1-3 月</td><td>核心闭环跑通</td><td>空间创建、AI 用例生成、API/Playwright 单机执行、基础报告、硬编码 2 个 Skill、基础 RAG</td></tr>
+  <tr><td>V2</td><td>4-6 月</td><td>智能增强</td><td>知识图谱扫描、覆盖率补齐、Locator 自愈、分布式 Runner、深度 RCA、Skill 上传、TIA、质量门禁</td></tr>
+  <tr><td>V3</td><td>7-12 月</td><td>企业级规模化</td><td>脚本自动合成、Mock/数据合成、K8s 弹性 Runner、发布风险预测、视觉回归、Multi-Agent、PR 自动反馈</td></tr>
+</table>
+
+<h2>十、下一步建议(项目自身已指明)</h2>
+<p>项目资料已经具备继续工作的基础,下一份有效产物不应是新的平台总纲,而应是:</p>
+<div class="code">"测试用例设计生成验证功能"的范围与技术 Spike 决策包:
+1. 脱敏真实需求样本
+2. 字段/跨字段/状态/数据质量/破坏性规则金标
+3. 第一版必须做/不做清单
+4. AI、确定性规则、人工的责任边界
+5. 五个技术 Spike 及通过标准
+6. 模块化单体技术基线候选
+7. 人工 vs AI+人工 对照测量方案
+8. Go / Revise / Stop 条件</div>
+
+<h2>十一、资料使用红线(改文档前必读)</h2>
+<table>
+  <tr><th>动作</th><th>必须同步的文件</th></tr>
+  <tr><td>改术语/实体名</td><td>先改 03 术语表,再全局同步 04 领域模型、32 API、33 DB</td></tr>
+  <tr><td>改状态枚举</td><td>04 领域模型 + 对应模块 PRD + 32 API + 33 DB(四处)</td></tr>
+  <tr><td>改 AI 阈值/自治等级</td><td>只改 21 号矩阵,PRD 内不得另立阈值</td></tr>
+  <tr><td>新增实体</td><td>必须同时进入 03/04/32/33,否则产生可信链断层</td></tr>
+  <tr><td>写验收标准</td><td>Given/When/Then + 量化阈值 + 基线和测量方法</td></tr>
+  <tr><td>40-52 号历史报告</td><td>禁止修改内容,已被 current/ 取代,只作追溯</td></tr>
+</table>
+
+<footer>
+  报告生成:2026-08-11 · 数据来源:docs/00-navigation/54 总索引、01-04 产品层、02-prd 10 份 PRD、03-governance 治理文档、04-architecture 技术契约、05-audits/current 最新审计、prototypes 原型证据
+</footer>
+
+</div>
+</body>
+</html>

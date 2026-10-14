@@ -1,0 +1,63 @@
+{
+  "skill_name": "test-case-generator",
+  "evals": [
+    {
+      "id": 0,
+      "name": "generate-and-validate-test-case-ir",
+      "prompt": "从已放行的 test_design_input 2.0 切片生成 Test Case IR，并投影 CSV。",
+      "expected_output": "JSON 只覆盖 functional 与 field_validation READY 维度，保留 permission BLOCKED；校验 PASS；CSV 与 JSON 的 case_id 和数量一致。",
+      "files": [
+        "evals/files/synthetic_reset_slice_test_design_input.json",
+        "evals/files/synthetic_reset_slice_case_ir.json"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "reject-broken-case-batch",
+      "prompt": "对照提供的 IR 和 scenarios 校验 cases_bad.json。",
+      "expected_output": "REJECT,给出重复、绑定、fixture 和 execution-contract 相关 findings。",
+      "files": [
+        "evals/files/cases_bad.json",
+        "evals/files/ir.json",
+        "evals/files/scenarios.json"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "reject-case-scenario-binding-drift",
+      "prompt": "一个 case 绑定到已存在的 scenario,却使用了不同的 requirement ID。",
+      "expected_output": "REJECT 并给出 CASE_SCENARIO_BINDING_MISMATCH。",
+      "files": ["evals/files/ir.json", "evals/files/scenarios.json"]
+    },
+    {
+      "id": 3,
+      "name": "reject-empty-execution-contract",
+      "prompt": "一个已溯源的 case 的 steps 为空且 expected_results 为空。",
+      "expected_output": "REJECT 并给出 EMPTY_CASE_STEPS 和 EMPTY_EXPECTED_RESULTS。",
+      "files": ["evals/files/ir.json", "evals/files/scenarios.json"]
+    },
+    {
+      "id": 4,
+      "name": "accept-conformant-cases",
+      "prompt": "对照提供的 IR 和 scenarios 校验 cases_good.json。",
+      "expected_output": "PASS,trace、fixture、step、endpoint 和 state 检查全部满足。",
+      "files": [
+        "evals/files/cases_good.json",
+        "evals/files/ir.json",
+        "evals/files/scenarios.json"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "full-ready-scope-generation",
+      "prompt": "对 test_design_input 2.0 的全部 READY 范围生成正式 Test Case IR 和 CSV，不得覆盖任何未放行维度。",
+      "expected_output": "FULL_READY_SCOPE 精确选择 2 个最小功能和 4 个 READY 维度；生成 4 条用例；4 条 READY 范围规则全部绑定 Oracle；校验 PASS 且 CSV 身份一致。",
+      "files": [
+        "evals/files/synthetic_full_ready_test_design_input.json",
+        "evals/files/synthetic_full_ready_case_ir.json",
+        "evals/files/synthetic_full_ready_validation.json",
+        "evals/files/synthetic_full_ready_cases.csv"
+      ]
+    }
+  ]
+}

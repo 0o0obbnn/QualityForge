@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI 设计 Skill 清单与选型 · QualityForge</title>
+<style>
+  :root{--bg:#FAFAF7;--card:#FFFFFF;--fg:#1D1B18;--muted:#817B6E;--border:#E9E6DE;--accent:#D96C1F;--accent-600:#B8551A;--accent-100:#FDF4EA;--sec:#6B7A5E;--sec-100:#E6E9DF;--ok:#47875A;--ok-100:#E4EFE6;--warn:#B98E2A;--warn-100:#F5EDD8;--err:#C0442F;--err-100:#F7E3DE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;padding:40px 24px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{border-bottom:2px solid var(--fg);padding-bottom:24px;margin-bottom:36px;}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-600);font-weight:600;}
+  h1{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin-top:10px;}
+  .sub{color:var(--muted);margin-top:8px;font-size:15px;}
+  h2{font-size:21px;font-weight:600;margin:44px 0 6px;letter-spacing:-0.01em;}
+  h3{font-size:15.5px;font-weight:600;margin:24px 0 8px;}
+  p.lead{color:var(--muted);font-size:14px;margin-bottom:18px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);border-radius:12px;overflow:hidden;margin:10px 0 20px;}
+  th{background:#F4F2ED;text-align:left;padding:10px 14px;font-weight:600;font-size:12.5px;}
+  td{padding:10px 14px;border-top:1px solid var(--border);vertical-align:top;}
+  code{font-family:"JetBrains Mono",Menlo,monospace;font-size:12px;background:#F4F2ED;border-radius:4px;padding:1px 6px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 10px;border-radius:999px;font-weight:600;}
+  .b-in{background:var(--ok-100);color:#356B45;} .b-out{background:var(--err-100);color:#9C3624;} .b-ref{background:var(--warn-100);color:#96701E;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:12px 0;}
+  .grid{display:grid;gap:14px;}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  @media(max-width:900px){.g3{grid-template-columns:1fr;}}
+  .callout{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;background:var(--card);margin:14px 0;font-size:14px;}
+  ul.tight{padding-left:20px;margin:8px 0;} ul.tight li{margin-bottom:5px;font-size:13.5px;}
+  .note{font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">UI Skill Inventory &amp; Selection · 2026-08-12</div>
+  <h1>UI 设计 Skill 清单与选型</h1>
+  <p class="sub">目标项目: QualityForge(AI 原生端到端测试平台, B 端 Web) · 走查对象: 27 页 HTML 高保真原型 · 已有视觉体系: 锻炉琥珀铜 × 暖石墨(禁蓝紫)</p>
+</header>
+
+<h2>一、已安装 UI 设计相关 Skill 清单</h2>
+<p class="lead">共 2 层资产:① OpenClaw 平台级 UI 技能;② 工作区「审美相关skill」设计库(106+ 技能 / 84 骨架 / 149 品牌库 / 11 条工艺规则 / 本地原型生成器)。</p>
+
+<h3>1.1 平台级 UI 设计技能(已安装)</h3>
+<table>
+  <tr><th>技能</th><th>定位</th><th>适用场景</th><th>选择建议</th></tr>
+  <tr><td><code>ui-ux-pro-max</code></td><td>UI/UX 模式库 + 启发式检查</td><td>组件走查、可用性启发式审计、状态覆盖检查</td><td><span class="badge b-in">核心入选</span></td></tr>
+  <tr><td><code>aesthetic-preset-library</code></td><td>20 种设计哲学风格库(5 流派 × 4 设计师)</td><td>视觉方向锚定、风格 DNA 提取</td><td><span class="badge b-in">核心入选</span>(10 Müller-Brockmann 精密网格)</td></tr>
+  <tr><td><code>autoclaw-design-capability</code></td><td>设计能力工作流(含 QA 变体)</td><td>设计任务全流程执行</td><td><span class="badge b-ref">参考</span></td></tr>
+  <tr><td><code>design-taste-frontend</code></td><td>前端设计品味与审美判断</td><td>视觉细节调优、反模板化</td><td><span class="badge b-ref">参考</span></td></tr>
+  <tr><td><code>frontend-design</code></td><td>生产级前端 UI/UX</td><td>从零建页面、组件落地</td><td><span class="badge b-out">排除</span>(本项目是既有原型优化,非新建)</td></tr>
+  <tr><td><code>frontend-page-design</code></td><td>前端页面设计</td><td>单页高保真设计</td><td><span class="badge b-out">排除</span></td></tr>
+  <tr><td><code>website-builder</code></td><td>网站构建</td><td>从零搭站、部署</td><td><span class="badge b-out">排除</span>(超出走查优化范围)</td></tr>
+  <tr><td><code>infinite-canvas-output</code></td><td>无限画布输出(设计全景交付)</td><td>App 类双交付、画布式交付</td><td><span class="badge b-out">排除</span>(本轮为走查修复,非新画布)</td></tr>
+  <tr><td><code>autoglm-image-recognition</code></td><td>图片识别理解</td><td>截图留证、设计稿识图</td><td><span class="badge b-ref">辅助</span>(环境无浏览器截图,暂用源码定位)</td></tr>
+</table>
+
+<h3>1.2 工作区设计库(审美相关skill)</h3>
+<table>
+  <tr><th>类别</th><th>技能</th><th>选择建议</th></tr>
+  <tr><td>走查与评审</td><td><code>design-review</code>(视觉审计+原子修复) · <code>plan-design-review</code>(多维打分评审) · <code>ui-ux-pro-max</code>(启发式检查)</td><td><span class="badge b-in">design-review 入选</span>;plan-design-review 参考</td></tr>
+  <tr><td>调参与品味</td><td><code>taste-skill</code>(density/motion/variance 调参) · <code>color-expert</code>(配色科学) · <code>creative-director</code>(创意总监整体把控)</td><td><span class="badge b-in">taste-skill 入选</span>;color-expert 参考(已有 token);creative-director 排除(非概念重构)</td></tr>
+  <tr><td>咨询与系统</td><td><code>design-consultation</code>(从零构建设计系统) · <code>apple-hig</code>(移动端规范)</td><td><span class="badge b-out">排除</span>: 项目已有 token 体系;B 端桌面场景</td></tr>
+  <tr><td>前端落地</td><td><code>frontend-design</code> / <code>frontend-dev</code> / <code>frontend-skill</code> / <code>artifacts-builder</code> / <code>canvas-design</code> / <code>login-flow</code></td><td><span class="badge b-out">排除</span>: 既有 HTML 原型直接改,不重写</td></tr>
+  <tr><td>Figma 系列</td><td><code>figma-use</code> / <code>figma-generate-design</code> / <code>figma-implement-design</code> 等 7 个</td><td><span class="badge b-out">排除</span>: 环境无 Figma 凭据,交付形态为 HTML</td></tr>
+  <tr><td>数据可视化</td><td><code>d3-visualization</code> / <code>hand-drawn-diagrams</code> / <code>algorithmic-art</code></td><td><span class="badge b-out">排除</span>: 图表已用内联 SVG,无新增需求</td></tr>
+  <tr><td>本地原型生成</td><td><code>ui-prototype-generator-1.0.0</code>(HTML/Figma 原型生成)</td><td><span class="badge b-in">入选</span>: 与现有 HTML 原型同构</td></tr>
+  <tr><td>骨架参考</td><td><code>dashboard</code> / <code>web-prototype</code> / <code>kanban-board</code> / <code>live-dashboard</code> 等骨架</td><td><span class="badge b-ref">仅参考</span>,不换皮</td></tr>
+  <tr><td>工艺规则 Craft</td><td><code>form-validation</code> / <code>state-coverage</code> / <code>accessibility-baseline</code> / <code>typography-hierarchy</code> / <code>laws-of-ux</code> / <code>anti-ai-slop</code> / <code>color</code> / <code>typography</code></td><td><span class="badge b-in">全量入选</span>: 走查判据来源</td></tr>
+</table>
+
+<h2>二、技能选型说明</h2>
+<h3>2.1 推荐组合(针对 QualityForge 27 页原型走查优化)</h3>
+<div class="grid g3">
+  <div class="card"><b>① 走查标准层</b><ul class="tight"><li><code>ui-ux-pro-max</code> — 启发式检查框架</li><li>Craft: <code>state-coverage</code>(五态) + <code>form-validation</code>(字段校验) + <code>accessibility-baseline</code>(WCAG 2.2)</li><li><code>laws-of-ux</code> — 交互组合规则</li></ul></div>
+  <div class="card"><b>② 优化执行层</b><ul class="tight"><li><code>design-review</code> — 逐问题原子修复</li><li><code>taste-skill</code> — 密度/留白/对齐调参</li><li><code>ui-prototype-generator-1.0.0</code> — HTML 原型落地</li></ul></div>
+  <div class="card"><b>③ 风格锚定层</b><ul class="tight"><li><code>aesthetic-preset-library</code> → <b>10 Müller-Brockmann 精密网格</b>: 数学精确网格、严格对齐、功能主义,最契合组件级走查标准</li><li>Craft: <code>typography-hierarchy</code> + <code>anti-ai-slop</code></li></ul></div>
+</div>
+
+<h3>2.2 入选与排除理由</h3>
+<div class="callout"><b>入选理由</b>: 本项目是「既有高保真原型的细节下沉走查 + 修复」,不是从零设计。因此选「走查判据(启发式+工艺规则)+ 修复执行(design-review/taste-skill)+ 风格约束(Müller-Brockmann 网格)」的最小有效组合,避免技能堆叠。<br><br>
+<b>排除理由</b>: <code>frontend-*</code> / <code>website-builder</code> / <code>figma-*</code> 面向新建或 Figma 工作流,与 HTML 原型直接修复的交付形态不符;<code>design-consultation</code> / <code>apple-hig</code> 面向从零系统或移动端,项目已有 token 且为 B 端桌面;<code>creative-director</code> 面向概念重构,本轮不改变信息架构与视觉风格。</div>
+
+<h3>2.3 优化风格说明(Müller-Brockmann 精密网格)</h3>
+<ul class="tight">
+  <li>数学精确的网格: 8pt 节奏对齐(4/8/12/16/20/24/32/40/48),表单栅格、表格列、卡片间距严格归一到节奏</li>
+  <li>严格对齐: 标签左对齐、数字列右对齐(mono)、按钮组右对齐、弹窗操作区统一右对齐</li>
+  <li>功能主义: 无装饰元素,信息层级靠字重/字号/留白区分(与项目「呼吸感极简」兼容)</li>
+  <li>禁蓝紫硬约束不变: 全体系色相避开 hue 190-320°(项目既有 token 体系)</li>
+</ul>
+
+<div class="note">本清单基于当前环境实际已安装技能(平台级 + 工作区设计库);走查执行由 4 路独立 Agent 按「搜索字段 / 列表表格 / 弹窗浮层 / 交互状态」四条线并行完成,结果进入问题台账。</div>
+</div>
+</body>
+</html>

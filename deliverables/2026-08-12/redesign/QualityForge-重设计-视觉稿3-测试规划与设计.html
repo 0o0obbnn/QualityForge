@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualityForge · 测试规划与设计 (重设计 V1)</title>
+<style>
+  :root{
+    --bg:#FAFAF7; --surface:#FFFFFF; --surface2:#F4F2ED; --fg:#1D1B18; --muted:#817B6E;
+    --border:#E9E6DE; --accent:#D96C1F; --accent-h:#B8551A; --accent-soft:#FDF4EA;
+    --sec:#6B7A5E; --sec-soft:#E6E9DF; --ok:#47875A; --ok-soft:#E4EFE6; --ok-d:#356B45;
+    --warn:#B98E2A; --warn-soft:#F5EDD8; --err:#C0442F; --err-soft:#F7E3DE;
+    --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+    --ui:"Avenir Next","PingFang SC","Noto Sans SC","Microsoft YaHei",-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--ui);background:var(--bg);color:var(--fg);font-size:14px;line-height:1.6;}
+  button{font:inherit;cursor:pointer;}
+  a{color:var(--accent-h);text-decoration:none;}
+  .app{display:grid;grid-template-columns:232px 1fr;min-height:100vh;}
+  .topbar{grid-column:2;display:flex;align-items:center;gap:16px;padding:14px 32px;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20;}
+  .ctx-btn{display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface);font-size:13px;font-weight:500;}
+  .topbar .spacer{flex:1;}
+  .icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid transparent;background:transparent;display:flex;align-items:center;justify-content:center;color:var(--muted);}
+  .icon-btn:hover{border-color:var(--border);background:var(--surface2);}
+  .avatar{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface2);display:flex;align-items:center;justify-content:center;color:var(--muted);}
+  .sidebar{grid-column:1;grid-row:1/3;background:var(--surface);border-right:1px solid var(--border);padding:20px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;}
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px;font-weight:600;font-size:15px;}
+  .brand .mark{width:26px;height:26px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;}
+  .nav-group{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;padding:16px 10px 6px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--fg);font-size:13.5px;font-weight:500;border:none;background:transparent;text-align:left;width:100%;}
+  .nav-item svg{color:var(--muted);flex:none;}
+  .nav-item:hover{background:var(--surface2);}
+  .nav-item.active{background:var(--accent-soft);color:var(--accent-h);}
+  .nav-item.active svg{color:var(--accent);}
+  main{padding:28px 32px 64px;max-width:1240px;}
+  .page-head{display:flex;align-items:flex-end;gap:16px;margin-bottom:22px;}
+  .page-head h1{font-size:26px;font-weight:600;letter-spacing:-0.02em;}
+  .page-head .sub{color:var(--muted);font-size:13.5px;margin-top:2px;}
+  .page-head .spacer{flex:1;}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;font-size:13.5px;font-weight:600;border:1px solid transparent;transition:all 120ms ease;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-h);}
+  .btn-ghost{background:var(--surface);color:var(--fg);border-color:var(--border);}
+  .btn-ghost:hover{border-color:var(--muted);}
+  .btn-sm{padding:5px 10px;font-size:12px;border-radius:8px;}
+  .stage{display:flex;gap:14px;margin-bottom:20px;flex-wrap:wrap;}
+  .stage-item{flex:1;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;position:relative;}
+  .stage-item .no{font-size:11px;color:var(--muted);letter-spacing:.08em;font-weight:600;text-transform:uppercase;}
+  .stage-item .nm{font-size:14.5px;font-weight:600;margin-top:4px;}
+  .stage-item .st{font-size:12px;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:6px;}
+  .stage-item .st .d{width:7px;height:7px;border-radius:50%;}
+  .stage-item .done .d{background:var(--ok);} .stage-item .done{border-color:var(--ok);}
+  .stage-item .active-now .d{background:var(--accent);} .stage-item .active-now{border-color:var(--accent);}
+  .stage-item .wait .d{background:var(--muted);}
+  .stage-item .rev .d{background:var(--warn);} .stage-item .rev{border-color:var(--warn);}
+  .stage-arrow{align-self:center;color:var(--border);}
+  .layout{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;}
+  @media(max-width:1080px){.layout{grid-template-columns:1fr;}}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
+  .panel .phead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+  .panel .phead b{font-size:14px;}
+  .panel .phead .hint{font-size:12px;color:var(--muted);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:10px 18px;background:var(--surface2);border-bottom:1px solid var(--border);}
+  td{padding:11px 18px;border-top:1px solid var(--border);vertical-align:middle;}
+  tbody tr{cursor:pointer;transition:background 120ms ease;}
+  tbody tr:hover{background:#FBF9F4;}
+  .tid{font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .t-title{font-weight:500;}
+  .t-sub{font-size:12px;color:var(--muted);}
+  .status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:500;}
+  .status .d{width:8px;height:8px;border-radius:50%;}
+  .st-draft .d{background:var(--muted);} .st-draft{color:var(--muted);}
+  .st-review .d{background:var(--warn);} .st-review{color:var(--warn);}
+  .st-approved .d{background:var(--ok);} .st-approved{color:var(--ok-d);}
+  .st-stale .d{background:var(--err);} .st-stale{color:var(--err);}
+  .ai-tag{font-size:10.5px;background:var(--sec-soft);color:var(--sec);border-radius:5px;padding:1px 6px;font-weight:600;letter-spacing:.05em;margin-right:6px;}
+  .badge{display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;font-weight:600;}
+  .b-v{background:var(--surface2);color:var(--muted);font-family:var(--mono);}
+  .b-new{background:var(--ok-soft);color:var(--ok-d);}
+  .b-gap{background:var(--err-soft);color:var(--err);}
+  .cov-block{padding:18px;}
+  .cov-row{margin-bottom:16px;}
+  .cov-row .top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;}
+  .cov-row .top .name{font-weight:500;}
+  .cov-row .top .val{font-family:var(--mono);color:var(--muted);}
+  .bar{height:8px;border-radius:4px;background:var(--surface2);overflow:hidden;}
+  .bar i{display:block;height:100%;border-radius:4px;}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--muted);padding:0 18px 18px;}
+  .legend .li{display:flex;align-items:center;gap:6px;}
+  .legend .sw{width:10px;height:10px;border-radius:3px;}
+  .chart-panel{padding:14px 18px 18px;}
+  .empty-note{font-size:12.5px;color:var(--muted);padding:22px 18px;text-align:center;}
+  @media(max-width:860px){
+    .app{grid-template-columns:1fr;}
+    .sidebar{display:none;}
+    .topbar{grid-column:1;}
+    main{padding:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item active"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+
+  <header class="topbar">
+    <button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button>
+    <span style="color:var(--border)">/</span>
+    <button class="ctx-btn">Release R-2026.08</button>
+    <div class="spacer"></div>
+    <button class="icon-btn"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5a4 4 0 0 1 4 4v3l1.5 2h-11L4 9.5v-3a4 4 0 0 1 4-4Z"/><path d="M6.5 13a1.6 1.6 0 0 0 3 0"/></svg></button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>测试规划与设计</h1>
+        <div class="sub">TestingIR → 策略 → 计划 → 用例 · AI 草稿 + 人工审核 · 示意数据</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>TestingIR</button>
+      <button class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>生成用例草稿</button>
+    </div>
+
+    <!-- 设计链阶段 -->
+    <div class="stage">
+      <div class="stage-item done"><div class="no">01</div><div class="nm">TestingIR</div><div class="st"><span class="d"></span>已验证 V4 · 12 条规则</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item done"><div class="no">02</div><div class="nm">测试策略</div><div class="st"><span class="d"></span>已批准 V2</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item active-now"><div class="no">03</div><div class="nm">测试计划</div><div class="st"><span class="d"></span>AI 生成中 · 步骤 4/6</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item rev"><div class="no">04</div><div class="nm">场景与用例</div><div class="st"><span class="d"></span>24 条待审核</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item wait"><div class="no">05</div><div class="nm">覆盖分析</div><div class="st"><span class="d"></span>等待用例批准</div></div>
+    </div>
+
+    <div class="layout">
+      <!-- 用例草稿 -->
+      <div class="panel">
+        <div class="phead"><b>DesignTestCase 草稿</b><span class="hint">批准后迁移为正式 TestCaseVersion</span></div>
+        <table>
+          <thead><tr><th>用例</th><th>优先级</th><th>状态</th><th>覆盖</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="tid">DC-1021</div><div class="t-title"><span class="ai-tag">AI</span>支付成功·正常扣款回调</div><div class="t-sub">正向 · 步骤 6 · 断言 4</div></td>
+              <td><span class="badge b-v">P1</span></td>
+              <td><span class="status st-review"><span class="d"></span>待审核</span></td>
+              <td><span class="badge b-new">Req-8.1</span></td>
+            </tr>
+            <tr>
+              <td><div class="tid">DC-1022</div><div class="t-title"><span class="ai-tag">AI</span>余额不足·拒绝并返回错误码</div><div class="t-sub">反向 · 步骤 4 · 断言 3</div></td>
+              <td><span class="badge b-v">P1</span></td>
+              <td><span class="status st-review"><span class="d"></span>待审核</span></td>
+              <td><span class="badge b-new">BR-12</span></td>
+            </tr>
+            <tr>
+              <td><div class="tid">DC-1023</div><div class="t-title"><span class="ai-tag">AI</span>并发扣款·幂等校验</div><div class="t-sub">边界 · 步骤 5 · 断言 5</div></td>
+              <td><span class="badge b-v">P2</span></td>
+              <td><span class="status st-review"><span class="d"></span>待审核</span></td>
+              <td><span class="badge b-new">BR-14</span></td>
+            </tr>
+            <tr>
+              <td><div class="tid">DC-1024</div><div class="t-title"><span class="ai-tag">AI</span>网关超时·故障注入</div><div class="t-sub">异常 · 步骤 7 · 断言 6</div></td>
+              <td><span class="badge b-v">P1</span></td>
+              <td><span class="status st-review"><span class="d"></span>待审核</span></td>
+              <td><span class="badge b-gap">缺口</span></td>
+            </tr>
+            <tr>
+              <td><div class="tid">DC-1025</div><div class="t-title"><span class="ai-tag">AI</span>重复回调·去重后仅一次入账</div><div class="t-sub">状态机 · 步骤 5 · 断言 4</div></td>
+              <td><span class="badge b-v">P2</span></td>
+              <td><span class="status st-approved"><span class="d"></span>已批准</span></td>
+              <td><span class="badge b-new">SM-3</span></td>
+            </tr>
+            <tr>
+              <td><div class="tid">DC-1026</div><div class="t-title">引用契约 V6 的旧用例</div><div class="t-sub">已批准 · 契约升级 V7 后待重评</div></td>
+              <td><span class="badge b-v">P2</span></td>
+              <td><span class="status st-stale"><span class="d"></span>待重评</span></td>
+              <td><span class="badge b-gap">STALE</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="empty-note" hidden id="emptyNote">筛选后无草稿</div>
+      </div>
+
+      <!-- 覆盖与图表 -->
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <div class="panel">
+          <div class="phead"><b>覆盖分析</b><span class="hint">分子 / 分母透明</span></div>
+          <div class="cov-block">
+            <div class="cov-row">
+              <div class="top"><span class="name">需求覆盖</span><span class="val">29 / 32 (90.6%)</span></div>
+              <div class="bar"><i style="width:90.6%;background:var(--ok)"></i></div>
+            </div>
+            <div class="cov-row">
+              <div class="top"><span class="name">规则覆盖</span><span class="val">10 / 12 (83.3%)</span></div>
+              <div class="bar"><i style="width:83.3%;background:var(--accent)"></i></div>
+            </div>
+            <div class="cov-row">
+              <div class="top"><span class="name">状态机覆盖</span><span class="val">6 / 7 (85.7%)</span></div>
+              <div class="bar"><i style="width:85.7%;background:var(--warn)"></i></div>
+            </div>
+            <div class="cov-row">
+              <div class="top"><span class="name">API 操作覆盖</span><span class="val">18 / 22 (81.8%)</span></div>
+              <div class="bar"><i style="width:81.8%;background:var(--sec)"></i></div>
+            </div>
+          </div>
+          <div class="legend">
+            <span class="li"><span class="sw" style="background:var(--ok)"></span>已覆盖</span>
+            <span class="li"><span class="sw" style="background:var(--accent)"></span>部分覆盖</span>
+            <span class="li"><span class="sw" style="background:var(--warn)"></span>待重评</span>
+            <span class="li"><span class="sw" style="background:var(--muted)"></span>排除项 3 (说明: 只读接口)</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><b>用例类型分布</b><span class="hint">SVG 示意 · 图表色板无蓝紫</span></div>
+          <div class="chart-panel">
+            <svg viewBox="0 0 320 150" width="100%" role="img" aria-label="用例类型分布柱状图">
+              <line x1="30" y1="10" x2="30" y2="120" stroke="#E9E6DE" stroke-width="1"/>
+              <line x1="30" y1="120" x2="310" y2="120" stroke="#E9E6DE" stroke-width="1"/>
+              <rect x="48"  y="30" width="34" height="90" rx="4" fill="#D96C1F"/>
+              <rect x="104" y="18" width="34" height="102" rx="4" fill="#4E7A5A"/>
+              <rect x="160" y="52" width="34" height="68" rx="4" fill="#C0442F"/>
+              <rect x="216" y="70" width="34" height="50" rx="4" fill="#B98E2A"/>
+              <rect x="272" y="86" width="34" height="34" rx="4" fill="#8A8378"/>
+              <text x="65"  y="140" font-size="10" fill="#817B6E" text-anchor="middle" font-family="var(--mono)">正向 18</text>
+              <text x="121" y="140" font-size="10" fill="#817B6E" text-anchor="middle">反向 22</text>
+              <text x="177" y="140" font-size="10" fill="#817B6E" text-anchor="middle">边界 12</text>
+              <text x="233" y="140" font-size="10" fill="#817B6E" text-anchor="middle">异常 9</text>
+              <text x="289" y="140" font-size="10" fill="#817B6E" text-anchor="middle">状态 5</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  // 阶段卡片点击高亮
+  document.querySelectorAll('.stage-item').forEach(s => s.addEventListener('click', () => {
+    document.querySelectorAll('.stage-item').forEach(x => x.style.outline = '');
+    s.style.outline = '2px solid var(--accent)';
+    s.style.outlineOffset = '2px';
+  }));
+  // 用例行选中反馈
+  document.querySelectorAll('tbody tr').forEach(r => r.addEventListener('click', () => {
+    document.querySelectorAll('tbody tr').forEach(x => x.style.background = '');
+    r.style.background = '#FDF4EA';
+  }));
+</script>
+</body>
+</html>

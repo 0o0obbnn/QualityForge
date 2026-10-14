@@ -1,0 +1,567 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "artifact_kind": "requirement_source_dependency_review",
+    "generated_at": "2026-09-07T14:18:31+08:00"
+  },
+  "source": {
+    "source_id": "SRC-001",
+    "file": "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md",
+    "sha256": "187f05d7e10926b2be91a2fe2a13ca52003bd02cf0dbe9e0f9c5047baffff35a"
+  },
+  "provided_sources": [],
+  "dependencies": [
+    {
+      "dependency_id": "DEP-C3702E13E453",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件2导出模板.xlsx",
+      "target_name": "附件2 导出模板.xlsx",
+      "quote": "《附件2 导出模板.xlsx》",
+      "locator": "L281",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-9258C22500E0",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:国家在线业务管理平台数据采集标准",
+      "target_name": "国家在线业务管理平台数据采集标准",
+      "quote": "《国家在线业务管理平台数据采集标准》",
+      "locator": "L303",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖",
+      "location_hint": "云盘"
+    },
+    {
+      "dependency_id": "DEP-1509F183AAC9",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:国家在线业务管理平台数据采集标准",
+      "target_name": "国家在线业务管理平台数据采集标准",
+      "quote": "详见采集标准",
+      "locator": "L576",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-CC8347B3F623",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件2导出模板.xlsx",
+      "target_name": "附件2 导出模板.xlsx",
+      "quote": "《附件2 导出模板.xlsx》",
+      "locator": "L590",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-986803D5491E",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件2导出模板.xlsx",
+      "target_name": "附件2 导出模板.xlsx",
+      "quote": "《附件2 导出模板.xlsx》",
+      "locator": "L820",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-58E4D7712624",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/数据上报（管理侧）/任务记录",
+      "target_name": "管理侧",
+      "quote": "复用管理侧页面",
+      "locator": "L846",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L117"
+    },
+    {
+      "dependency_id": "DEP-74A95EDDE8C6",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/数据上报（管理侧）/上报详情",
+      "target_name": "管理侧",
+      "quote": "复用管理侧页面",
+      "locator": "L863",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L363"
+    },
+    {
+      "dependency_id": "DEP-0D018E929B62",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/数据上报（管理侧）/上报详情/功能描述/文件明细",
+      "target_name": "管理侧",
+      "quote": "复用管理侧页面",
+      "locator": "L881",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L673"
+    },
+    {
+      "dependency_id": "DEP-C3C10777EC73",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:现行系统校验规则",
+      "target_name": "现行系统校验规则",
+      "quote": "其他校验规则同当前一致",
+      "locator": "L942",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-13BBCBDC0D91",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:现行系统校验规则",
+      "target_name": "现行系统校验规则",
+      "quote": "其他校验规则同当前一致",
+      "locator": "L1007",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-4DA8BF5A2A0A",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:现行功能其余行为",
+      "target_name": "现行功能其余行为",
+      "quote": "其余均保持不变",
+      "locator": "L1182",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-B3B1A6B5ADE6",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/信息查询/基础产品/功能描述/网页端",
+      "target_name": "网页端",
+      "quote": "同网页端一致",
+      "locator": "L1182",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L893"
+    },
+    {
+      "dependency_id": "DEP-318CB63256FE",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:现行系统校验规则",
+      "target_name": "现行系统校验规则",
+      "quote": "其他校验规则同当前一致",
+      "locator": "L1241",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-18432ED1C733",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:现行系统校验规则",
+      "target_name": "现行系统校验规则",
+      "quote": "其他校验规则同当前一致",
+      "locator": "L1306",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-947AB22719F1",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/信息查询/升级产品/功能描述/网页端",
+      "target_name": "网页端",
+      "quote": "同网页端一致",
+      "locator": "L1499",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L1192"
+    },
+    {
+      "dependency_id": "DEP-700CF30555C8",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/信息查询/升级产品/功能描述/网页端",
+      "target_name": "网页端",
+      "quote": "同网页端一致",
+      "locator": "L1501",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L1192"
+    },
+    {
+      "dependency_id": "DEP-E0247CBCE55D",
+      "reference_type": "pending_artifact",
+      "reference_key": "pending_artifact:接口文档",
+      "target_name": "接口文档",
+      "quote": "需提供接口文档",
+      "locator": "L1503",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-C5504F6D3825",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件2导出模板.xlsx",
+      "target_name": "附件2 导出模板.xlsx",
+      "quote": "《附件2 导出模板.xlsx》",
+      "locator": "L1687",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-60C5A38E1BAD",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L1952",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-9A9EAA1C7CCF",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L2209",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-41E3098CD8C3",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L2432",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-F72FA5B50A28",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L2845",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-A0E6A1B3A869",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L3651",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-E65E973D6D2F",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L3790",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-DF6AD761ACF2",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:附件1导出模板.xlsx",
+      "target_name": "附件1 导出模板.xlsx",
+      "quote": "《附件1 导出模板.xlsx》",
+      "locator": "L3925",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-BF1FD0F3EBA3",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/结算管理/调用量统计/功能描述/日调用量",
+      "target_name": "管理侧",
+      "quote": "同管理侧一致",
+      "locator": "L4226",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L3525"
+    },
+    {
+      "dependency_id": "DEP-A9519746C13E",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/结算管理/调用量统计/功能描述/月调用量",
+      "target_name": "管理侧",
+      "quote": "同管理侧一致",
+      "locator": "L4241",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L3659"
+    },
+    {
+      "dependency_id": "DEP-A8A4F346C503",
+      "reference_type": "internal_reference",
+      "reference_key": "internal_reference:系统功能设计/结算管理/调用量统计/功能描述/年调用量",
+      "target_name": "管理侧",
+      "quote": "同管理侧一致",
+      "locator": "L4254",
+      "status": "available",
+      "reason": null,
+      "target_locator": "L3798"
+    },
+    {
+      "dependency_id": "DEP-FBB9D98AEEF5",
+      "reference_type": "external_artifact",
+      "reference_key": "external_artifact:角色权限表",
+      "target_name": "角色权限表",
+      "quote": "《角色权限表》",
+      "locator": "L4260",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    },
+    {
+      "dependency_id": "DEP-D155AA9ABF26",
+      "reference_type": "existing_baseline",
+      "reference_key": "existing_baseline:历史接口契约",
+      "target_name": "历史接口契约",
+      "quote": "请求地址、请求参数、响应参数、加密方式等均与历史接口保持一致",
+      "locator": "L4279",
+      "status": "missing",
+      "reason": "未在本次评审提供的资料中定位到该依赖"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "RQF-FFCDD4D2CE26",
+      "code": "MISSING_REFERENCED_ARTIFACT",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-C3702E13E453",
+        "DEP-CC8347B3F623",
+        "DEP-986803D5491E",
+        "DEP-C5504F6D3825"
+      ],
+      "affected_test_dimensions": [
+        "functional",
+        "field_validation",
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L281",
+        "SRC-001:L590",
+        "SRC-001:L820",
+        "SRC-001:L1687"
+      ],
+      "evidence": "需求引用了「附件2 导出模板.xlsx」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "附件2 导出模板.xlsx",
+      "question": "请提供或明确「附件2 导出模板.xlsx」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-178F4EF492B6",
+      "code": "MISSING_REFERENCED_ARTIFACT",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-9258C22500E0",
+        "DEP-1509F183AAC9"
+      ],
+      "affected_test_dimensions": [
+        "field_validation",
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L303",
+        "SRC-001:L576"
+      ],
+      "evidence": "需求引用了「国家在线业务管理平台数据采集标准」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "国家在线业务管理平台数据采集标准",
+      "question": "请提供或明确「国家在线业务管理平台数据采集标准」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-430E24019AFE",
+      "code": "MISSING_EXISTING_BASELINE",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-C3C10777EC73",
+        "DEP-13BBCBDC0D91",
+        "DEP-318CB63256FE",
+        "DEP-18432ED1C733"
+      ],
+      "affected_test_dimensions": [
+        "field_validation",
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L942",
+        "SRC-001:L1007",
+        "SRC-001:L1241",
+        "SRC-001:L1306"
+      ],
+      "evidence": "需求引用了「现行系统校验规则」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "现行系统校验规则",
+      "question": "请提供或明确「现行系统校验规则」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-95AE5DD85715",
+      "code": "MISSING_EXISTING_BASELINE",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-4DA8BF5A2A0A"
+      ],
+      "affected_test_dimensions": [
+        "functional"
+      ],
+      "source_refs": [
+        "SRC-001:L1182"
+      ],
+      "evidence": "需求引用了「现行功能其余行为」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "现行功能其余行为",
+      "question": "请提供或明确「现行功能其余行为」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-B12200282DDB",
+      "code": "PENDING_REQUIRED_ARTIFACT",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-E0247CBCE55D"
+      ],
+      "affected_test_dimensions": [
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L1503"
+      ],
+      "evidence": "需求引用了「接口文档」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "接口文档",
+      "question": "请提供或明确「接口文档」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-A0C5C9C8E18C",
+      "code": "MISSING_REFERENCED_ARTIFACT",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-60C5A38E1BAD",
+        "DEP-9A9EAA1C7CCF",
+        "DEP-41E3098CD8C3",
+        "DEP-F72FA5B50A28",
+        "DEP-A0E6A1B3A869",
+        "DEP-E65E973D6D2F",
+        "DEP-DF6AD761ACF2"
+      ],
+      "affected_test_dimensions": [
+        "functional",
+        "field_validation",
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L1952",
+        "SRC-001:L2209",
+        "SRC-001:L2432",
+        "SRC-001:L2845",
+        "SRC-001:L3651",
+        "SRC-001:L3790",
+        "SRC-001:L3925"
+      ],
+      "evidence": "需求引用了「附件1 导出模板.xlsx」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "附件1 导出模板.xlsx",
+      "question": "请提供或明确「附件1 导出模板.xlsx」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-673770EB65A8",
+      "code": "MISSING_REFERENCED_ARTIFACT",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-FBB9D98AEEF5"
+      ],
+      "affected_test_dimensions": [
+        "permission"
+      ],
+      "source_refs": [
+        "SRC-001:L4260"
+      ],
+      "evidence": "需求引用了「角色权限表」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "角色权限表",
+      "question": "请提供或明确「角色权限表」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    },
+    {
+      "finding_id": "RQF-EA3C71677776",
+      "code": "MISSING_EXISTING_BASELINE",
+      "severity": "REJECT",
+      "certainty": "confirmed",
+      "evidence_type": "ABSENCE",
+      "lifecycle_status": "OPEN",
+      "dependency_ids": [
+        "DEP-D155AA9ABF26"
+      ],
+      "affected_test_dimensions": [
+        "integration"
+      ],
+      "source_refs": [
+        "SRC-001:L4279"
+      ],
+      "evidence": "需求引用了「历史接口契约」，但在本次评审来源中未完成定位。",
+      "inspected_scope": [
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "expected_element": "历史接口契约",
+      "question": "请提供或明确「历史接口契约」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。"
+    }
+  ],
+  "summary": {
+    "occurrence_count": 30,
+    "distinct_target_count": 16,
+    "by_type": {
+      "existing_baseline": 6,
+      "external_artifact": 14,
+      "internal_reference": 9,
+      "pending_artifact": 1
+    },
+    "by_status": {
+      "available": 9,
+      "review_required": 0,
+      "missing": 21
+    },
+    "finding_count": 8
+  }
+}

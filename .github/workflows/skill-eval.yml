@@ -1,0 +1,44 @@
+name: Skill Evaluation CI Gate
+
+on:
+  pull_request:
+    paths:
+      - 'prototypes/skills/**/SKILL.md'
+      - 'prototypes/skills/**/scripts/**'
+      - 'prototypes/skills/promptfooconfig.yaml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'prototypes/skills/**/SKILL.md'
+
+jobs:
+  evaluate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install promptfoo
+        run: npm install -g promptfoo@latest
+
+      - name: Run promptfoo evaluations
+        working-directory: prototypes/skills
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "Running SKILL.md evaluations..."
+          promptfoo eval --config promptfooconfig.yaml
+          
+      - name: Check baseline scripts
+        working-directory: prototypes/skills
+        run: |
+          echo "Running static baseline validations if any scripts exist..."
+          # Optionally run the python baseline validation check script here as well
+          # python3 api-test-generator/scripts/api_check.py ...

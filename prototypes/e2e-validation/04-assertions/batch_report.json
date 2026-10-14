@@ -1,0 +1,14 @@
+{
+  "skill": "10",
+  "checked_at": "2026-08-11T15:53:10.798072+00:00",
+  "total_assertions": 3,
+  "weak_count": 0,
+  "strong_count": 3,
+  "weak_ratio": 0.0,
+  "threshold": 0.3,
+  "weak_assertion_ids": [],
+  "verdict": "PASS",
+  "total_findings": 0,
+  "findings": [],
+  "routing": "PASS -> proceed to per-assertion verification; REJECT -> strengthen weak assertions and re-submit"
+}

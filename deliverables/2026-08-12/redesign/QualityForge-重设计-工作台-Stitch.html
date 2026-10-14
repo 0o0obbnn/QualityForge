@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>QualityForge - AI Testing Workbench</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed": "#331200",
+                      "surface-container-lowest": "#0e0e11",
+                      "secondary": "#bcccab",
+                      "inverse-surface": "#e4e1e6",
+                      "surface-variant": "#353438",
+                      "primary": "#ffb68d",
+                      "error": "#ffb4ab",
+                      "surface-dim": "#131316",
+                      "on-tertiary-fixed": "#2e1600",
+                      "on-secondary": "#27341d",
+                      "on-tertiary-fixed-variant": "#6c3a00",
+                      "on-error-container": "#ffdad6",
+                      "primary-fixed-dim": "#ffb68d",
+                      "error-container": "#93000a",
+                      "surface-tint": "#ffb68d",
+                      "secondary-container": "#3d4b32",
+                      "primary-fixed": "#ffdbc9",
+                      "tertiary": "#ffb877",
+                      "on-secondary-container": "#aaba9b",
+                      "tertiary-container": "#cd7e2d",
+                      "surface-bright": "#39393c",
+                      "on-surface-variant": "#ddc1b2",
+                      "on-primary": "#532200",
+                      "surface": "#131316",
+                      "surface-container-high": "#2a2a2d",
+                      "surface-container-low": "#1b1b1e",
+                      "on-surface": "#e4e1e6",
+                      "outline": "#a58c7e",
+                      "on-background": "#e4e1e6",
+                      "on-error": "#690005",
+                      "tertiary-fixed": "#ffdcc1",
+                      "on-primary-fixed-variant": "#763300",
+                      "on-secondary-fixed-variant": "#3d4b32",
+                      "on-tertiary": "#4b2700",
+                      "secondary-fixed": "#d8e8c6",
+                      "background": "#131316",
+                      "secondary-fixed-dim": "#bcccab",
+                      "surface-container": "#1f1f22",
+                      "on-tertiary-container": "#422200",
+                      "tertiary-fixed-dim": "#ffb877",
+                      "on-primary-container": "#491d00",
+                      "primary-container": "#e17225",
+                      "inverse-primary": "#9b4500",
+                      "outline-variant": "#564238",
+                      "surface-container-highest": "#353438",
+                      "inverse-on-surface": "#303033",
+                      "on-secondary-fixed": "#131f0a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "density-compact": "4px",
+                      "density-default": "8px",
+                      "gutter": "12px",
+                      "unit": "4px",
+                      "margin-md": "24px",
+                      "margin-sm": "16px"
+              },
+              "fontFamily": {
+                      "body-md": ["Geist"],
+                      "display-lg": ["Geist"],
+                      "headline-md": ["Geist"],
+                      "code-sm": ["JetBrains Mono"],
+                      "code-md": ["JetBrains Mono"],
+                      "label-sm": ["Geist"]
+              },
+              "fontSize": {
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "code-sm": ["11px", {"lineHeight": "16px", "fontWeight": "400"}],
+                      "code-md": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        /* Custom Utilities */
+        .forge-amber { color: #D96C1F; }
+        .forge-amber-bg { background-color: #D96C1F; }
+        .forge-amber-border { border-color: #D96C1F; }
+        .ink-tea-green { color: #6B7A5E; }
+        .ink-tea-green-border { border-color: #6B7A5E; }
+        .ink-tea-green-bg-subtle { background-color: rgba(107, 122, 94, 0.15); }
+        .bg-level-0 { background-color: #131316; }
+        .bg-level-1 { background-color: #1b1b1e; border: 1px solid #2a2a2d; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2a2a2d; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #564238; }
+
+        /* Animations */
+        @keyframes pulse-amber {
+            0% { box-shadow: 0 0 0 0 rgba(217, 108, 31, 0.4); }
+            70% { box-shadow: 0 0 0 4px rgba(217, 108, 31, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 108, 31, 0); }
+        }
+        .pulse-amber { animation: pulse-amber 2s infinite; }
+        
+        @keyframes width-grow {
+            from { width: 0; }
+            to { width: 66%; }
+        }
+        .animate-progress { animation: width-grow 1s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-level-0 text-on-surface font-body-md overflow-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar (JSON Context) -->
+<nav class="fixed left-0 top-0 h-full w-[240px] bg-surface flex flex-col py-margin-md border-r border-outline-variant z-50">
+<div class="px-4 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-DEFAULT bg-primary-container flex items-center justify-center text-on-primary-container font-bold">Q</div>
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-primary leading-none text-[20px]">QualityForge</h1>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest mt-1">AI Testing Workbench</p>
+</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-on-primary font-label-sm text-label-sm py-2 rounded-DEFAULT hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Experiment
+            </button>
+</div>
+<ul class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-primary bg-primary-container/10 border-r-2 border-primary hover:bg-surface-container-high transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="font-label-sm text-label-sm">Overview</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">science</span>
+<span class="font-label-sm text-label-sm">Evaluation</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">smart_toy</span>
+<span class="font-label-sm text-label-sm">Agents</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">hub</span>
+<span class="font-label-sm text-label-sm">Infrastructure</span>
+</a>
+</li>
+</ul>
+<ul class="mt-auto flex flex-col gap-1 border-t border-outline-variant pt-4">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="font-label-sm text-label-sm">Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">description</span>
+<span class="font-label-sm text-label-sm">Documentation</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="font-label-sm text-label-sm">Help Center</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span class="font-label-sm text-label-sm">Log Out</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- TopAppBar (JSON Context) -->
+<header class="fixed top-0 right-0 w-[calc(100%-240px)] h-14 bg-surface-container-low flex justify-between items-center px-margin-md ml-[240px] z-40 border-b border-outline-variant">
+<div class="flex items-center gap-6 h-full">
+<div class="flex items-center gap-2 text-on-surface-variant border border-outline-variant bg-surface rounded-DEFAULT px-3 py-1.5 focus-within:forge-amber-border transition-colors w-64">
+<span class="material-symbols-outlined text-[16px]">search</span>
+<input class="bg-transparent border-none text-body-md text-on-surface placeholder:text-on-surface-variant focus:ring-0 p-0 w-full h-full font-code-sm" placeholder="Search items, agents, tags..." type="text"/>
+</div>
+<nav class="h-full hidden md:flex">
+<ul class="flex h-full">
+<li class="h-full flex items-center">
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-primary font-bold border-b-2 border-primary pb-1 transition-all duration-150" href="#">Work</a>
+</li>
+<li class="h-full flex items-center">
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-all duration-150" href="#">Testing</a>
+</li>
+<li class="h-full flex items-center">
+<a class="h-full flex items-center px-4 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/50 transition-all duration-150" href="#">Platform</a>
+</li>
+</ul>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-code-sm text-code-sm text-on-surface-variant border border-outline-variant rounded-DEFAULT px-2 py-1 hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="w-2 h-2 rounded-full ink-tea-green-bg-subtle ink-tea-green-border border inline-block"></span>
+                Workspace Alpha
+            </button>
+<button class="font-code-sm text-code-sm forge-amber-border border rounded-DEFAULT px-2 py-1 forge-amber hover:bg-primary-container/10 transition-colors">
+                Release v2.4
+            </button>
+<div class="flex items-center gap-2 border-l border-outline-variant pl-4">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">notifications</span></button>
+<button class="text-on-surface-variant hover:text-on-surface transition-colors"><span class="material-symbols-outlined text-[20px]">terminal</span></button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant ml-2" data-alt="A small circular avatar showing a highly detailed, professional headshot of a female QA engineer in a high-tech control room environment, sharp focus, cyberpunk aesthetic, moody lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrplYgpeFVUFT1be--LEnO6jCpReD-dtiLQo4wBkdPkrqUcUQw1XXDQnEMi79_tlYlt2J8lbXeTcypTxNkzXyuXeqYCNUoSJixY5jZRfTg_Zice6PymifjsN2nSfPxpcXnX1_FC6jMS4aMgiR0tBYNYDueeCeVmO2lTqdEkYBmtZGQHfmW5JS_kq5ugkRHqnf9NFp0bsyLxjmsw1KazjH58JGAY73izxx1E47oJQRXI3OaESZ0pW1XK0oyyvf3y3J24ImkMWE2UbE"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="absolute top-14 left-[240px] right-0 bottom-0 overflow-y-auto p-margin-md bg-level-0 flex flex-col gap-margin-md pr-[464px]"> <!-- Added padding right to account for drawer -->
+<!-- HUD Row -->
+<section class="grid grid-cols-4 gap-gutter">
+<div class="bg-level-1 p-density-default rounded-DEFAULT flex flex-col gap-2 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Pending Review</span>
+<span class="material-symbols-outlined text-[16px] forge-amber">warning</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">6</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant pb-1">tasks</span>
+</div>
+<div class="font-code-sm text-code-sm forge-amber flex items-center gap-1 mt-auto">
+<span class="w-1.5 h-1.5 rounded-sm forge-amber-bg inline-block"></span> 2 due today
+                </div>
+<div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#D96C1F] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="bg-level-1 p-density-default rounded-DEFAULT flex flex-col gap-2 border-outline-variant hover:forge-amber-border transition-colors">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">AI Agents Active</span>
+<span class="w-2 h-2 rounded-sm forge-amber-bg pulse-amber mt-1"></span>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">3</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant pb-1">running</span>
+</div>
+<div class="font-code-sm text-code-sm text-on-surface-variant flex items-center gap-1 truncate mt-auto">
+                    Strategy, Case Suite, Coverage...
+                </div>
+</div>
+<div class="bg-level-1 p-density-default rounded-DEFAULT flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Approved Today</span>
+<span class="material-symbols-outlined text-[16px] ink-tea-green">check_circle</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-on-surface">12</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant pb-1">items</span>
+</div>
+<div class="font-code-sm text-code-sm ink-tea-green flex items-center gap-1 mt-auto">
+<span class="w-1.5 h-1.5 rounded-sm ink-tea-green-bg-subtle inline-block ink-tea-green-border border"></span> 4 human-signed
+                </div>
+</div>
+<div class="bg-level-1 p-density-default rounded-DEFAULT flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Blocked</span>
+<span class="material-symbols-outlined text-[16px] text-error">block</span>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-display-lg text-display-lg text-error">2</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant pb-1">exceptions</span>
+</div>
+<div class="font-code-sm text-code-sm text-error/80 flex flex-col gap-0.5 mt-auto leading-tight">
+<span>Vault Secret Denied</span>
+<span>Runner Offline</span>
+</div>
+</div>
+</section>
+<!-- Command Deck -->
+<section class="flex flex-col gap-3">
+<div class="flex justify-between items-center border-b border-surface-container-high pb-3">
+<div class="flex gap-2 bg-surface-container-low p-1 rounded-DEFAULT border border-surface-container-high">
+<button class="px-4 py-1.5 font-label-sm text-label-sm bg-surface text-on-surface rounded-sm border border-surface-container-high shadow-sm">All Work Items</button>
+<button class="px-4 py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface rounded-sm">AI Active Runs</button>
+<button class="px-4 py-1.5 font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface rounded-sm">My Approvals</button>
+</div>
+<div class="flex gap-1 bg-surface-container-low p-1 rounded-DEFAULT border border-surface-container-high">
+<button class="p-1.5 bg-surface text-primary rounded-sm border border-surface-container-high shadow-sm flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">table_rows</span></button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface rounded-sm flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">view_column</span></button>
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface rounded-sm flex items-center justify-center"><span class="material-symbols-outlined text-[18px]">vertical_split</span></button>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">filter_list</span>
+<div class="flex gap-2 overflow-x-auto pb-1">
+<button class="px-3 py-1 font-code-sm text-code-sm border border-surface-container-high bg-surface-container-low rounded-full text-on-surface flex items-center gap-1 hover:bg-surface-container-high">All</button>
+<button class="px-3 py-1 font-code-sm text-code-sm border border-surface-container-high bg-surface-container-low rounded-full text-on-surface flex items-center gap-1 hover:bg-surface-container-high">Pending Review <span class="bg-surface-container-high px-1.5 rounded-sm text-on-surface-variant">6</span></button>
+<button class="px-3 py-1 font-code-sm text-code-sm forge-amber-border border bg-primary-container/10 rounded-full forge-amber flex items-center gap-1">Running <span class="forge-amber-bg text-on-primary-fixed px-1.5 rounded-sm">3</span></button>
+</div>
+</div>
+</section>
+<!-- Data Grid -->
+<section class="flex-1 bg-level-1 rounded-DEFAULT overflow-hidden flex flex-col border border-surface-container-high">
+<div class="grid grid-cols-[40px_100px_minmax(250px,1fr)_150px_200px_150px_100px_120px_80px] border-b border-surface-container-high bg-surface-container-low px-4 py-2 sticky top-0 z-10">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center"><input class="bg-surface border-surface-container-high rounded-sm text-primary focus:ring-primary/50 w-3 h-3" type="checkbox"/></div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">ID</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">Title / Requirement</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">Tags</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">Assignees</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">Status</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">Risk</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center">SLA</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider flex items-center justify-end">Actions</div>
+</div>
+<div class="flex-1 overflow-y-auto">
+<!-- Active Row -->
+<div class="grid grid-cols-[40px_100px_minmax(250px,1fr)_150px_200px_150px_100px_120px_80px] border-b border-surface-container-high px-4 py-2 bg-primary-container/5 hover:bg-surface-container-high/50 transition-colors group cursor-pointer items-center min-h-[48px] forge-amber-border border-l-2">
+<div class="flex items-center"><input class="bg-surface border-surface-container-high rounded-sm text-primary focus:ring-primary/50 w-3 h-3" type="checkbox"/></div>
+<div class="font-code-md text-code-md text-on-surface">WI-0241</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-body-md text-body-md text-on-surface truncate">Review TestStrategy Draft · Release R-2026.08</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant inline-flex items-center gap-1 w-max"><span class="material-symbols-outlined text-[12px]">link</span> Req-2026-08-11</span>
+</div>
+<div class="flex flex-col gap-1 items-start justify-center">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 border border-outline-variant rounded-sm text-on-surface-variant bg-surface text-[10px] uppercase">TestStrategy v3.1</span>
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 border forge-amber-border rounded-sm forge-amber bg-primary-container/10 text-[10px] uppercase">Gate Required</span>
+</div>
+<div class="flex flex-col gap-1 justify-center">
+<div class="flex items-center gap-1 font-code-sm text-code-sm text-on-surface"><span class="material-symbols-outlined text-[14px] text-on-surface-variant">person</span> Li Test</div>
+<div class="flex items-center gap-1 font-code-sm text-code-sm forge-amber"><span class="material-symbols-outlined text-[14px] pulse-amber rounded-full">smart_toy</span> Agent v2.4</div>
+</div>
+<div class="flex flex-col gap-1 w-full justify-center pr-4">
+<div class="flex justify-between items-center font-code-sm text-code-sm ink-tea-green"><span>Running</span> <span>66%</span></div>
+<div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full ink-tea-green-bg-subtle border-t border-b ink-tea-green-border animate-progress"></div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-sm bg-error inline-block"></span>
+<span class="font-code-sm text-code-sm text-error">P0</span>
+</div>
+<div class="font-code-sm text-code-sm text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">hourglass_empty</span> 2h 14m</div>
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:bg-surface-variant rounded-sm text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">visibility</span></button>
+<button class="p-1 hover:bg-surface-variant rounded-sm text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">more_vert</span></button>
+</div>
+</div>
+<!-- Standard Row -->
+<div class="grid grid-cols-[40px_100px_minmax(250px,1fr)_150px_200px_150px_100px_120px_80px] border-b border-surface-container-high px-4 py-2 hover:bg-surface-container-high/50 transition-colors group cursor-pointer items-center min-h-[48px] border-l-2 border-transparent">
+<div class="flex items-center"><input class="bg-surface border-surface-container-high rounded-sm text-primary focus:ring-primary/50 w-3 h-3" type="checkbox"/></div>
+<div class="font-code-md text-code-md text-on-surface">WI-0238</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-body-md text-body-md text-on-surface truncate">Generate Coverage Matrix</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant inline-flex items-center gap-1 w-max"><span class="material-symbols-outlined text-[12px]">link</span> Core-API-V2</span>
+</div>
+<div class="flex flex-col gap-1 items-start justify-center">
+<span class="font-code-sm text-code-sm px-1.5 py-0.5 border border-outline-variant rounded-sm text-on-surface-variant bg-surface text-[10px] uppercase">Coverage</span>
+</div>
+<div class="flex flex-col gap-1 justify-center">
+<div class="flex items-center gap-1 font-code-sm text-code-sm text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">smart_toy</span> Coverage Agent</div>
+</div>
+<div class="flex items-center gap-2 font-code-sm text-code-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-sm bg-[#8E8E93] inline-block"></span> Idle
+                    </div>
+<div class="flex items-center gap-2">
+<span class="font-code-sm text-code-sm text-on-surface-variant">P2</span>
+</div>
+<div class="font-code-sm text-code-sm text-on-surface-variant flex items-center gap-1">-</div>
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 hover:bg-surface-variant rounded-sm text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">visibility</span></button>
+<button class="p-1 hover:bg-surface-variant rounded-sm text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined text-[16px]">more_vert</span></button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Inspection Drawer -->
+<aside class="fixed top-14 right-0 bottom-0 w-[440px] bg-level-1 border-l border-outline-variant z-40 flex flex-col shadow-[-8px_0_24px_rgba(0,0,0,0.5)] transform transition-transform duration-300">
+<!-- Drawer Header -->
+<div class="px-margin-sm py-3 border-b border-surface-container-high flex justify-between items-center bg-surface-container-low">
+<div class="flex items-center gap-3">
+<span class="font-code-md text-code-md text-on-surface bg-surface border border-outline-variant px-2 py-0.5 rounded-sm">WI-0241</span>
+<span class="font-label-sm text-label-sm forge-amber uppercase tracking-wider flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">bolt</span> Action Required</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1 text-on-surface-variant hover:text-on-surface rounded-sm hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">open_in_new</span></button>
+<button class="p-1 text-on-surface-variant hover:text-on-surface rounded-sm hover:bg-surface-variant transition-colors"><span class="material-symbols-outlined text-[18px]">close</span></button>
+</div>
+</div>
+<!-- Drawer Content (Scrollable) -->
+<div class="flex-1 overflow-y-auto p-margin-sm flex flex-col gap-6">
+<!-- Context -->
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Review TestStrategy Draft</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">The AI agent has completed the initial draft of the test strategy for Release R-2026.08. Human validation is required before merging to the main documentation repo.</p>
+</div>
+<!-- Execution Stream -->
+<div class="border border-surface-container-high rounded-DEFAULT bg-surface flex flex-col">
+<div class="px-3 py-2 border-b border-surface-container-high flex justify-between items-center bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">AI Execution Stream</span>
+<span class="font-code-sm text-code-sm text-on-surface-variant">Step 4/6</span>
+</div>
+<div class="p-3 flex flex-col gap-4">
+<div class="flex gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-[16px] ink-tea-green">check_circle</span>
+<div class="w-px h-full bg-surface-container-high my-1"></div>
+</div>
+<div class="pb-2">
+<p class="font-code-sm text-code-sm text-on-surface">1. Parse Requirements</p>
+<p class="font-code-sm text-code-sm text-on-surface-variant text-[10px]">Completed in 1.2s</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-[16px] ink-tea-green">check_circle</span>
+<div class="w-px h-full bg-surface-container-high my-1"></div>
+</div>
+<div class="pb-2">
+<p class="font-code-sm text-code-sm text-on-surface">2. Historical Analysis</p>
+<p class="font-code-sm text-code-sm text-on-surface-variant text-[10px]">Found 3 similar patterns</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="flex flex-col items-center">
+<span class="material-symbols-outlined text-[16px] ink-tea-green">check_circle</span>
+<div class="w-px h-full bg-surface-container-high my-1"></div>
+</div>
+<div class="pb-2">
+<p class="font-code-sm text-code-sm text-on-surface">3. Draft Generation</p>
+<p class="font-code-sm text-code-sm text-on-surface-variant text-[10px]">Generated 4 sections</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="flex flex-col items-center">
+<span class="w-2 h-2 rounded-full forge-amber-bg pulse-amber my-1"></span>
+</div>
+<div>
+<p class="font-code-sm text-code-sm forge-amber font-bold">4. Human Validation Gate</p>
+<p class="font-code-sm text-code-sm text-on-surface-variant text-[10px]">Awaiting signature</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Diff Preview (Code block) -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">Diff Preview</span>
+<button class="font-code-sm text-code-sm text-primary hover:underline">View Full File</button>
+</div>
+<div class="bg-[#0e0e11] border border-surface-container-high rounded-DEFAULT font-code-sm text-code-sm overflow-hidden">
+<div class="flex bg-surface-container-low border-b border-surface-container-high px-2 py-1 text-on-surface-variant text-[10px]">
+                        strategy_r2026.md
+                    </div>
+<div class="p-2 overflow-x-auto whitespace-pre font-code-sm text-code-sm">
+<span class="text-on-surface-variant">@@ -45,7 +45,10 @@</span>
+<span class="text-on-surface"> ## Risk Assessment</span>
+<span class="text-on-surface"> The primary risk for this release centers around the updated auth module.</span>
+<span class="text-error bg-error/10">- Focus regression testing on standard login flows.</span>
+<span class="text-primary bg-primary/10">+ Focus regression testing on:</span>
+<span class="text-primary bg-primary/10">+ 1. Standard login flows</span>
+<span class="text-primary bg-primary/10">+ 2. OAuth2 token refresh edge cases (identified via historical bug analysis)</span>
+<span class="text-primary bg-primary/10">+ 3. MFA fallback mechanisms</span>
+<span class="text-on-surface"> Mitigation strategies include...</span>
+</div>
+</div>
+</div>
+<!-- Pre-checks -->
+<div class="bg-ink-tea-green-bg-subtle/5 border ink-tea-green-border rounded-DEFAULT p-3">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-sm text-label-sm ink-tea-green uppercase tracking-wider flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">verified</span> Validation Pre-checks</span>
+<span class="font-code-md text-code-md text-on-surface font-bold">5/5 PASS</span>
+</div>
+<ul class="font-code-sm text-code-sm text-on-surface-variant flex flex-col gap-1">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px] ink-tea-green">check</span> Formatting constraints met</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px] ink-tea-green">check</span> Prohibited terms scan clean</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-[14px] ink-tea-green">check</span> References existing requirements</li>
+</ul>
+</div>
+</div>
+<!-- Drawer Footer (Actions) -->
+<div class="p-margin-sm border-t border-surface-container-high bg-surface-container-low flex justify-end gap-3">
+<button class="px-4 py-2 font-label-sm text-label-sm font-medium border border-surface-container-high text-on-surface hover:bg-surface-variant rounded-DEFAULT transition-colors">Reject &amp; Rework</button>
+<button class="px-4 py-2 font-label-sm text-label-sm font-bold forge-amber-bg text-surface-container-lowest rounded-DEFAULT hover:opacity-90 transition-opacity flex items-center gap-2 shadow-[0_0_10px_rgba(217,108,31,0.2)]">
+<span class="material-symbols-outlined text-[18px]">draw</span> Approve &amp; Sign
+            </button>
+</div>
+</aside>
+</body></html>

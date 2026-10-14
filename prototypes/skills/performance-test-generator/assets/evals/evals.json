@@ -1,0 +1,83 @@
+{
+  "strategy_refs": ["p95_latency", "error_rate", "throughput"],
+  "test_cases": [
+    {
+      "name": "Accept isolated namespace with strategy-backed threshold",
+      "input": {
+        "script_id": "s1",
+        "uses_mocked_dependency": false,
+        "asserts_performance": true,
+        "namespace": "loadtest_checkout",
+        "thresholds": [{"name": "p95", "strategy_ref": "p95_latency"}]
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Reject performance assertion against a mock",
+      "input": {
+        "script_id": "s2",
+        "uses_mocked_dependency": true,
+        "asserts_performance": true,
+        "namespace": "loadtest_checkout",
+        "thresholds": [{"name": "p95", "strategy_ref": "p95_latency"}]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["MOCK_DEP_PERF_ASSERT"]
+    },
+    {
+      "name": "Reject shared functional namespace",
+      "input": {
+        "script_id": "s3",
+        "uses_mocked_dependency": false,
+        "asserts_performance": true,
+        "namespace": "functional",
+        "thresholds": [{"name": "p95", "strategy_ref": "p95_latency"}]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["SHARED_DATA_NAMESPACE"]
+    },
+    {
+      "name": "Reject threshold with no strategy provenance",
+      "input": {
+        "script_id": "s4",
+        "uses_mocked_dependency": false,
+        "asserts_performance": true,
+        "namespace": "loadtest_checkout",
+        "thresholds": [{"name": "p95"}]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["THRESHOLD_NOT_FROM_STRATEGY"]
+    },
+    {
+      "name": "Reject threshold referencing an unknown gate",
+      "input": {
+        "script_id": "s5",
+        "uses_mocked_dependency": false,
+        "asserts_performance": true,
+        "namespace": "loadtest_checkout",
+        "thresholds": [{"name": "p95", "strategy_ref": "invented_slo"}]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["THRESHOLD_NOT_FROM_STRATEGY"]
+    },
+    {
+      "name": "Reject performance assertion with no declared threshold",
+      "input": {
+        "script_id": "s6",
+        "uses_mocked_dependency": false,
+        "asserts_performance": true,
+        "namespace": "loadtest_checkout",
+        "thresholds": []
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["THRESHOLD_NOT_FROM_STRATEGY"]
+    },
+    {
+      "name": "Missing namespace is not a clean pass",
+      "input": {"script_id": "s7", "uses_mocked_dependency": false, "asserts_performance": false},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["SHARED_DATA_NAMESPACE"]
+    }
+  ]
+}

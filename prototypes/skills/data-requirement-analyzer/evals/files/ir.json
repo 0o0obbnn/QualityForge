@@ -1,0 +1,7 @@
+{"entities":[{"entity_id":"ENT-RD","name":"RequirementDocument","fields":[
+  {"name":"id","type":"str","sensitivity_level":"PUBLIC","sensitivity_rationale":"UUID"},
+  {"name":"raw_content","type":"MEDIUMTEXT","sensitivity_level":"SENSITIVE","sensitivity_rationale":"may contain customer info"}]},
+  {"entity_id":"ENT-DTC","name":"DesignTestCase","fields":[
+  {"name":"id","type":"str","sensitivity_level":"PUBLIC"}]}],
+ "state_machines":[{"sm_id":"SM-DTC","entity_id":"ENT-DTC","states":["DRAFT","GENERATING","REVIEWING","APPROVED"],
+   "transitions":[{"from":"DRAFT","to":"GENERATING"},{"from":"GENERATING","to":"REVIEWING"},{"from":"REVIEWING","to":"APPROVED"},{"from":"REVIEWING","to":"DRAFT"}]}]}

@@ -1,0 +1,42 @@
+{
+  "ir_business_rules": [{"rule_id": "R-RV-101"}, {"rule_id": "R-RV-102"}],
+  "cases": [
+    {"rule_id": "R-RV-101", "scenario_id": "S-rv-101"},
+    {"rule_id": "R-RV-101", "scenario_id": "S-rv-102"},
+    {"rule_id": "R-RV-102", "scenario_id": "S-rv-103"},
+    {"rule_id": "R-RV-102", "scenario_id": "S-rv-104"},
+    {"rule_id": "R-RV-101", "scenario_id": "S-rv-105"},
+    {"rule_id": "R-RV-102", "scenario_id": "S-rv-106"}
+  ],
+  "scenarios": [
+    {"scenario_id": "S-rv-101"}, {"scenario_id": "S-rv-102"},
+    {"scenario_id": "S-rv-103"}, {"scenario_id": "S-rv-104"},
+    {"scenario_id": "S-rv-105"}, {"scenario_id": "S-rv-106"}
+  ],
+  "ir_state_machines": [
+    {
+      "sm_id": "SM-TCV-101",
+      "transitions": [
+        {"from": "DRAFT", "to": "PENDING_REVIEW"},
+        {"from": "PENDING_REVIEW", "to": "APPROVED"}
+      ]
+    }
+  ],
+  "exercised_transitions": [
+    "SM-TCV-101:DRAFT->PENDING_REVIEW",
+    "SM-TCV-101:PENDING_REVIEW->APPROVED"
+  ],
+  "assertions": [
+    {"assertion_id": "A-G-101"}, {"assertion_id": "A-G-102"},
+    {"assertion_id": "A-G-103"}, {"assertion_id": "A-G-104"},
+    {"assertion_id": "A-G-105"}, {"assertion_id": "A-G-106"}
+  ],
+  "assertion_verdicts": [
+    {"assertion_id": "A-G-101", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-G-102", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-G-103", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-G-104", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-G-105", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-G-106", "skill11_verdict": "PASS"}
+  ]
+}

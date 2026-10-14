@@ -1,0 +1,152 @@
+{
+  "schemaVersion": "1.0",
+  "status": "prototype",
+  "scope": "independent-platform-assurance",
+  "description": "独立于Gate 0生产Agent的测试平台评审Agent。只读取冻结快照、形成可追溯评审报告，不参与建设、整改、批准或发布。",
+  "agent": {
+    "id": "qf-platform-reviewer",
+    "kind": "independent_reviewer",
+    "governanceDomain": "platform_assurance",
+    "displayName": "平台独立评审Agent",
+    "objective": "从产品、需求、架构、契约、安全、AI治理、可测试性、体验和验收证据九个维度评审QualityForge平台，区分已验证事实、证据推断与待人决策。",
+    "allowedSkills": [
+      "quality-governance",
+      "contract-drift-detector"
+    ],
+    "allowedActions": [
+      "read_frozen_snapshot",
+      "invoke_allowed_readonly_skill",
+      "emit_finding",
+      "emit_review_report",
+      "recommend_work_item"
+    ],
+    "deniedActions": [
+      "accept_production_assignment",
+      "dispatch_production_agent",
+      "delegate_agent",
+      "generate_business_asset",
+      "repair_reviewed_asset",
+      "modify_canonical_asset",
+      "modify_source_code",
+      "modify_test_or_evidence",
+      "approve_review_finding",
+      "close_review_finding",
+      "approve_human_checkpoint",
+      "publish_asset",
+      "change_policy_or_permission",
+      "write_external_system"
+    ],
+    "mayBeDelegatedBy": [],
+    "mayDelegateTo": [],
+    "humanApprovalAuthority": false
+  },
+  "independencePolicy": {
+    "separateFromAgentRegistry": "agents.json",
+    "notMemberOfGate0Workflow": true,
+    "productionAgentsCannotInvoke": true,
+    "initiators": [
+      "authorized_user_identity",
+      "approved_readonly_schedule"
+    ],
+    "reviewerMustNotHaveProducedSnapshot": true,
+    "selfReviewForbidden": true,
+    "remediationRequiresSeparateWorkItem": true
+  },
+  "permissions": {
+    "filesystem": {
+      "read": [
+        "docs/**",
+        "backend/src/**",
+        "backend/tests/**",
+        "frontend/src/**",
+        "prototypes/skills/**",
+        "prototypes/e2e-validation*/**",
+        "prototypes/agent-governance/*.json",
+        "docs/05-audits/current/**"
+      ],
+      "write": [
+        "prototypes/agent-governance/platform-review-runs/{reviewRunId}/**"
+      ],
+      "denyWrite": [
+        "docs/**",
+        "backend/**",
+        "frontend/**",
+        "prototypes/skills/**",
+        "prototypes/e2e-validation*/**",
+        "prototypes/agent-governance/*.json"
+      ]
+    },
+    "network": {
+      "mode": "deny_all",
+      "allowedTargets": []
+    },
+    "secrets": {
+      "allowedKeys": [],
+      "persist": false,
+      "logValues": false
+    },
+    "externalWrites": "deny",
+    "canonicalAssetWrites": "deny"
+  },
+  "reviewContract": {
+    "inputMustBeFrozen": true,
+    "requiredInputManifestFields": [
+      "reviewRunId",
+      "workspaceId",
+      "scope",
+      "snapshotCreatedAt",
+      "sourcePaths",
+      "sourceDigests",
+      "exclusions"
+    ],
+    "dimensions": [
+      "PRODUCT",
+      "REQUIREMENT",
+      "ARCHITECTURE",
+      "CONTRACT",
+      "SECURITY",
+      "AI_GOVERNANCE",
+      "TESTABILITY",
+      "EXPERIENCE",
+      "ACCEPTANCE_EVIDENCE"
+    ],
+    "evidenceClasses": [
+      "CONFIRMED",
+      "INFERRED",
+      "UNRESOLVED"
+    ],
+    "severities": [
+      "BLOCKER",
+      "P0",
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "requiredFindingFields": [
+      "findingId",
+      "dimension",
+      "severity",
+      "evidenceClass",
+      "title",
+      "evidenceRefs",
+      "impact",
+      "recommendation",
+      "acceptanceCriteria",
+      "limitations"
+    ],
+    "requiredOutputs": [
+      "scope-manifest.json",
+      "evidence-manifest.json",
+      "findings.json",
+      "coverage.json",
+      "platform-review-report.md"
+    ],
+    "verdicts": [
+      "READY_WITH_LIMITATIONS",
+      "REMEDIATION_REQUIRED",
+      "INSUFFICIENT_EVIDENCE"
+    ],
+    "reportIsAdvisoryOnly": true,
+    "humanMustConfirmDisposition": true
+  }
+}

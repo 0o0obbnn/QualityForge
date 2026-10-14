@@ -1,0 +1,45 @@
+{
+  "review_id": "CTRL-PASS",
+  "source_ids": [
+    "SRC-A"
+  ],
+  "assessments": [
+    {
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "对照用例：ambiguity 维度无发现",
+      "finding_ids": []
+    },
+    {
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "对照用例：consistency 维度无发现",
+      "finding_ids": []
+    },
+    {
+      "dimension": "testability",
+      "status": "CLEAR",
+      "rationale": "对照用例：testability 维度无发现",
+      "finding_ids": []
+    },
+    {
+      "dimension": "completeness",
+      "status": "CLEAR",
+      "rationale": "对照用例：completeness 维度无发现",
+      "finding_ids": []
+    },
+    {
+      "dimension": "nfr_measurability",
+      "status": "CLEAR",
+      "rationale": "对照用例：nfr_measurability 维度无发现",
+      "finding_ids": []
+    },
+    {
+      "dimension": "role_permission",
+      "status": "CLEAR",
+      "rationale": "对照用例：role_permission 维度无发现",
+      "finding_ids": []
+    }
+  ],
+  "findings": []
+}

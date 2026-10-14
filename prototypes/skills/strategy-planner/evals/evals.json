@@ -1,0 +1,33 @@
+{
+  "skill_name": "strategy-planner",
+  "evals": [
+    {
+      "id": 1,
+      "name": "accept-project-declared-critical-path",
+      "prompt": "校验一份 QualityForge strategy,其声明的 critical path 绑定到范围内的 test-design 特性且不含支付特性。",
+      "expected_output": "PASS;checker 不强加通用的 payment/auth/permission 路径。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-unbound-critical-path",
+      "prompt": "一条 IN_SCOPE 的 critical path 引用了 In_Scope 中不存在的 feature ID。",
+      "expected_output": "REJECT 并给出 CRITICAL_PATH_FEATURE_NOT_IN_SCOPE。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "reject-boolean-threshold",
+      "prompt": "一个 quality gate 用 true 作为阈值。",
+      "expected_output": "REJECT 并给出 GATE_THRESHOLD_NON_NUMERIC;布尔值不是数值比例。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "reject-invalid-pyramid-value",
+      "prompt": "e2e 的 pyramid share 是字符串 many。",
+      "expected_output": "REJECT 并给出 INVALID_PYRAMID_VALUE,且不崩溃。",
+      "files": []
+    }
+  ]
+}

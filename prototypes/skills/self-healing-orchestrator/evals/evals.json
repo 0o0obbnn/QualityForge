@@ -1,0 +1,8 @@
+{
+  "skill_name": "self-healing-orchestrator",
+  "evals": [
+    {"id": 1, "name": "allow-safe-locator-candidate", "prompt": "一个非关键的 flaky locator 首次失败,提议的变更只更新 locator candidate。", "expected_output": "ALLOW 创建 candidate 版本;不得静默发布。", "files": []},
+    {"id": 2, "name": "deny-critical-path-heal", "prompt": "在支付扣款路径上提议一项 locator 变更。", "expected_output": "DENY 自动 healing 并路由到人工评审。", "files": []},
+    {"id": 3, "name": "deny-assertion-change", "prompt": "一项 healing 提议修改了期望值文本。", "expected_output": "DENY;self-healing 不得修改 assertion 或业务期望。", "files": []}
+  ]
+}

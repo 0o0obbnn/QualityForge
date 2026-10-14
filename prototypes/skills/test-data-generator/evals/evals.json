@@ -1,0 +1,8 @@
+{
+  "skill_name": "test-data-generator",
+  "evals": [
+    {"id": 1, "name": "accept-seeded-masked-packet", "prompt": "对照提供的 IR,校验符合规范的 seeded test-data packet。", "expected_output": "PASS;目标安全,敏感字段已脱敏且不写入日志。", "files": ["evals/files/packet_compliant.json", "evals/files/ir.json"]},
+    {"id": 2, "name": "reject-missing-seed", "prompt": "校验一个缺少可复现 seed 的已生成 data packet。", "expected_output": "REJECT 并给出 MISSING_SEED。", "files": []},
+    {"id": 3, "name": "reject-plaintext-sensitive-log", "prompt": "校验提供的违规 packet,其中包含一个未脱敏且被标记写入日志的敏感值。", "expected_output": "REJECT 并给出 PLAINTEXT_IN_LOG。", "files": ["evals/files/packet_violations.json", "evals/files/ir.json"]}
+  ]
+}

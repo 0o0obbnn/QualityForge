@@ -1,0 +1,150 @@
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Testing / coverage
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Linting
+.ruff_cache/
+
+# ===== Node.js / Frontend =====
+node_modules/
+.npm
+.yarn-integrity
+.pnpm-store/
+dist/
+.vite/
+
+# ===== IDE / Editor =====
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# ===== OS =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== Environment / Secrets =====
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ===== Docker =====
+docker-compose.override.yml
+
+# ===== Databases =====
+*.db
+*.sqlite3
+pgdata/
+redis-data/
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== AI tool configs (not project code) =====
+.serena/
+.trae/
+.workbuddy/
+.openclaw/
+.opencode/
+.remember/
+.zcode/
+.omo/
+.omx/
+.obsidian/
+.codegraph/
+.claude/
+.agents/
+
+# ===== Temp files =====
+_tmp_*
+*.tmp
+
+# ===== Runtime artifacts (generated, not source) =====
+memory/
+output/
+outputs/
+.playwright-cli/
+
+# ===== External skill libraries (not project code) =====
+审美相关skill/
+infinite-canvas-output/
+
+# ===== Agent workspace configs (not product code) =====
+/AUTO_DESIGNER.md
+/IDENTITY.md
+/SOUL.md
+/TOOLS.md
+/USER.md
+/DESIGN.md
+/INDEX.md
+/INTERACTIONS.md
+/MEMORY.md
+/OUTPUT_RULES.md
+/PRD_INGESTION.md
+/SELF_INTRO.md
+/TASK_ROUTER.md
+/HEARTBEAT.md
+/CLAUDE.md
+/PRODUCT.md
+/wall/
+/.cluster/
+/config/
+
+# code-review-graph / wiki 工具产物（本地索引与生成文档，不进版本库）
+/.code-review-graph/
+/code-wiki/
+prototypes/skills/qa-requirement-review/tests/banned_terms.local.txt

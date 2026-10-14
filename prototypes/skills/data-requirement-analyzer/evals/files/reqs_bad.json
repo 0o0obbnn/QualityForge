@@ -1,0 +1,6 @@
+[{"case_id":"TC-td-001","fixture_category":"Static","entities_needed":[
+  {"entity_id":"ENT-RD","instance_id":"rd-001"},
+  {"entity_id":"ENT-DTC","instance_id":"dtc-001","target_state":"CANCELLED"}],
+ "state_preconditions":[{"entity_id":"ENT-DTC","state":"CANCELLED"}],
+ "sensitive_fields":[],
+ "construction_steps":["x"]}]

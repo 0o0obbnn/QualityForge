@@ -1,0 +1,21 @@
+{
+  "$comment": "失败分类报告。每次测试失败都会产出。classification 驱动路由；counts_as_product_defect 驱动缺陷指标核算（仅 PRODUCT_BUG 计入）。",
+  "skill": "23",
+  "classified_at": "<ISO-8601 UTC>",
+ "failure_id": "<失败标识符>",
+ "error_type": "<参见 references/classification_rules.md#signal-taxonomy>",
+  "classification": "ENVIRONMENT | DATA | PRODUCT_BUG | TEST_ASSET_DEFECT",
+  "confidence": 0.0,
+  "rule_fired": "命中的规则",
+  "counts_as_product_defect": false,
+  "needs_human_review": false,
+  "env_healthy": "true | false | null",
+  "data_valid": "true | false | null",
+ "routing": "按分类给出的路由建议",
+ "$classes": {
+    "ENVIRONMENT": "基础设施失败；重新供给环境并重跑；不是产品缺陷",
+    "DATA": "测试输入失败；重建 fixture；不是产品缺陷",
+    "PRODUCT_BUG": "真实产品缺陷；提交工单；唯一计入统计的类别",
+    "TEST_ASSET_DEFECT": "测试本身损坏；修复测试；不是产品缺陷；单独区分"
+ }
+}

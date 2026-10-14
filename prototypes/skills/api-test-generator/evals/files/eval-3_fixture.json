@@ -1,0 +1,27 @@
+{
+  "code": "\nimport requests, os\n\nBASE_URL = os.environ[\"API_BASE_URL\"]\n\ndef test_create_order():\n    resp = requests.post(BASE_URL + \"/api/v1/orders\")\n    assert resp.status_code == 200  # covers ER-001\n    # ER-002 (order_id not null) has no assert\n",
+  "case_refs": [
+    "TC-003"
+  ],
+  "expected_results": [
+    {
+      "expected_result_id": "ER-001",
+      "field": "status",
+      "value": 200
+    },
+    {
+      "expected_result_id": "ER-002",
+      "field": "body.order_id",
+      "value": "not null"
+    }
+  ],
+  "fixture_deps": [
+    "create_order"
+  ],
+  "asserts": [
+    {
+      "expected_result_id": "ER-001",
+      "expr": "assert resp.status_code == 200"
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "2.0",
+  "status": "prototype",
+  "id": "execution-run-to-evidence",
+  "description": "从冻结的执行计划版本到运行、证据采集与证据人工批准的最小可验证工作流。",
+  "agentRegistry": "agents.json",
+  "preflight": {
+    "validatorId": "governance-structure-validator",
+    "requiredVerdict": "PASS",
+    "failureRoute": "STOP_INVALID_WORKFLOW"
+  },
+  "authorizationPolicy": {
+    "mode": "intersection_fail_closed",
+    "requiresAuthorizationDecisionFor": [
+      "workflow_start",
+      "skill_invocation",
+      "review_request_creation"
+    ],
+    "humanOnlyActions": [
+      "approve_execution_evidence",
+      "publish_formal_artifact"
+    ]
+  },
+  "artifactPolicy": {
+    "draftStatus": "PENDING_REVIEW",
+    "immutableOutputs": true,
+    "requiredReviewBinding": [
+      "artifactType",
+      "artifactId",
+      "artifactVersionId",
+      "contentDigest"
+    ],
+    "formalArtifactTypes": [
+      "EXECUTION_EVIDENCE"
+    ],
+    "promotionActorType": "USER_VIA_APPLICATION_SERVICE"
+  },
+  "routingPolicy": {
+    "PASS": "continue",
+    "REJECT": "stop_and_preserve_evidence",
+    "BLOCK_HUMAN": "create_review_request_and_pause",
+    "ERROR": "stop_and_preserve_evidence",
+    "TIMEOUT": "stop_and_preserve_evidence"
+  },
+  "nodes": [
+    {
+      "id": "fixture_preparation",
+      "agentId": "qf-execution",
+      "skillId": "fixture-dag-planner",
+      "dependsOn": [],
+      "output": "prototypes/agent-governance/runs/{runId}/01-fixture-dag.json"
+    },
+    {
+      "id": "test_data_preparation",
+      "agentId": "qf-execution",
+      "skillId": "test-data-generator",
+      "dependsOn": ["fixture_preparation"],
+      "output": "prototypes/agent-governance/runs/{runId}/02-test-data.json"
+    },
+    {
+      "id": "execution_run",
+      "agentId": "qf-execution",
+      "skillId": "self-healing-orchestrator",
+      "dependsOn": ["test_data_preparation"],
+      "output": "prototypes/agent-governance/runs/{runId}/03-execution-run.json"
+    },
+    {
+      "id": "evidence_gate",
+      "agentId": "qf-execution",
+      "skillId": "hitl-gatekeeper",
+      "dependsOn": ["execution_run"],
+      "output": "prototypes/agent-governance/runs/{runId}/04-evidence-review-package.json",
+      "createsReviewTasksFor": [
+        "EXECUTION_EVIDENCE"
+      ],
+      "requiredVerdict": "BLOCK_HUMAN"
+    }
+  ],
+  "terminalStates": [
+    "DRAFT_READY_FOR_HUMAN",
+    "STOP_REJECTED",
+    "PAUSED_FOR_HUMAN",
+    "STOP_ERROR",
+    "STOP_TIMEOUT",
+    "STOP_INVALID_WORKFLOW"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+ "skill_name": "assertion-verifier",
+ "evals": [
+ {
+ "id": 1,
+ "name": "static-check-rejects-hallucinated-field",
+ "prompt": "assertion generator 生成了这条 assertion:{assertion_id: 'A-bad-001', rule_id: 'R-014', req_id: 'Q-003', contract_id: 'IFC-ORD', target: 'response.body.discount_percentage', expression: 'eq 15', expected: '15'}。IR 契约 IFC-ORD(位于 evals/files/sample_ir.json)的字段只有 order_id、status、total、items——没有 discount_percentage。运行 static check,并告诉我 verdict 和具体的 violation code。",
+ "expected_output": "Stage-1 static check 必须 REJECT 并给出 code FIELD_NOT_IN_CONTRACT。必须解释这属于「hallucinated assertion」失败类别——该 assertion 引用了 IR 未定义的字段。必须路由回 assertion generator,不得计入 coverage。",
+ "files": ["evals/files/sample_ir.json"]
+ },
+ {
+ "id": 2,
+ "name": "static-check-rejects-orphan-no-rule",
+ "prompt": "一条 assertion 未绑定 rule_id 就提交了:{assertion_id: 'A-orphan', req_id: 'Q-003', target: 'response.body.total', expression: 'gt 0'}。V3 全局约束要求每条 assertion 必须同时绑定 rule_id 和 req_id。针对 evals/files/sample_ir.json 运行 static check,并告诉我结果。",
+ "expected_output": "Stage-1 REJECT 并给出 code ORPHAN_NO_RULE。必须解释 V3 全局约束(不允许孤立 assertion),且该约束不可协商——没有 rule 绑定的 assertion 不能继续,没有例外。",
+ "files": ["evals/files/sample_ir.json"]
+ },
+ {
+ "id": 3,
+ "name": "mutation-score-high-risk-rejects-false-coverage",
+ "prompt": "我们对一条 high-risk 的支付 assertion 运行了 10 个 mutant,只杀死 8 个(存活 2 个——一个 constant_swap、一个 null_where_value)。得分 0.8。这条 assertion 算已验证吗?运行 mutation-score 阶段,并告诉我 verdict 及原因。",
+ "expected_output": "Stage-3 verdict REJECT。得分 0.8 < high-risk 阈值 0.85。必须明确称之为「false coverage」——存活的 mutant 是该 assertion 无法捕获的 bug。不得在 coverage analyzer 中计为有效 coverage。必须路由回 case generator / assertion generator 以强化该 assertion。",
+ "files": []
+ },
+ {
+ "id": 4,
+ "name": "degrade-rule-stage2-skipped-raises-bar",
+ "prompt": "一条 high-risk 的认证 assertion 得到 mutation score 0.88(100 个 mutant 杀死 88 个)。但 stage 2(dry-run)因为没有 Fixture snapshot 而被跳过。常规 high-risk 阈值是 0.85,那 0.88 应该通过——对吗?在 stage2 被跳过的情况下运行 mutation-score 阶段,并告诉我实际结果。",
+ "expected_output": "尽管 0.88 > 0.85,仍必须 REJECT。必须解释 degrade-rule:当 stage 2 被跳过时,阈值上调 0.05(0.85 -> 0.90),因此 0.88 < 0.90 不通过。必须解释原因:证据缺失只会提高门槛、绝不降低——跳过 stage 2 不能让 assertion 更容易通过。核心逻辑是佐证越少,mutation gate 承担的举证负担越高。",
+ "files": []
+ },
+ {
+ "id": 5,
+ "name": "no-mutants-is-hard-reject",
+ "prompt": "mutator 插件对一条 high-risk assertion 返回 killed=0、total=0——它在生成任何 mutant 之前就崩溃了。该 assertion 的 stage 1 和 stage 2 都是干净的。既然没有失败,能当作 PASS 吗?运行 mutation-score 阶段并告诉我。",
+ "expected_output": "必须 REJECT。total=0 表示 mutation gate 没有运行,而不是通过了。必须解释:对 high-risk assertion 而言 mutation gate 是强制项,mutant 数为零即硬性 REJECT,原因为「gate did not run」——不能默认 PASS。缺失的 gate 视同失败的 gate,因为另一条路(无证据通过)正是本 skill 要杜绝的 false coverage 失败模式。",
+ "files": []
+ },
+ {
+ "id": 6,
+ "name": "effective-coverage-not-line-coverage",
+ "prompt": "我们的测试套件在 orders 模块上达到 100% 行覆盖,但 assertion verifier 因 mutation score 过低 REJECT 了 10 条 assertion 中的 3 条。coverage analyzer(Coverage Analyzer)即将报告 100% 覆盖率。它实际应报告什么?为什么原始行覆盖率不可接受?",
+ "expected_output": "必须指出 coverage analyzer 应报告有效 assertion 覆盖率(EFFECTIVE)7/10,而不是原始行覆盖率或 7/7。3 条被 REJECT 的 assertion 对已验证分子贡献为零,仍留在分母责任中,并在修复或正式移出范围前独立阻断 assertion gate。原始行覆盖率不可接受,因为没有强 assertion 的执行不能证明缺陷发现能力。",
+ "files": []
+ }
+ ]
+}

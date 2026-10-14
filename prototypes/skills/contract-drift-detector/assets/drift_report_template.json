@@ -1,0 +1,20 @@
+{
+ "$comment": "漂移报告。由漂移检测步骤在每个观测周期产出。verdict 驱动路由：NO_DRIFT -> 继续；COMPATIBLE_DRIFT -> 继续 + 向下游治理报告告警；BREAKING_DRIFT -> 挂起受影响用例 + 强制人工评审检查点。IR 绝不会基于本报告自动更新。",
+ "skill": "25",
+ "checked_at": "<ISO-8601 UTC>",
+ "contract_type": "interface_contract | state_machine",
+ "contract_id": "<IR 契约 id>",
+ "verdict": "NO_DRIFT | COMPATIBLE_DRIFT | BREAKING_DRIFT",
+ "total_findings": 0,
+ "breaking_count": 0,
+ "compatible_count": 0,
+ "findings": [
+ {
+ "drift_kind": "FIELD_ADDED | FIELD_REMOVED | TYPE_WIDENED | TYPE_NARROWED | TYPE_CHANGED | STATE_ADDED | STATE_REMOVED | TRANSITION_ADDED | TRANSITION_REMOVED",
+ "severity": "COMPATIBLE | BREAKING",
+  "target": "<contract.field 或 sm:state>",
+ "msg": ""
+ }
+ ],
+ "routing": "人类可读的、按 verdict 给出的路由说明"
+}

@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>工作看板 · QualityForge(Apple 风格样板)</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+<style>
+  /* ============================================================
+     Apple 风格样板 · 工作看板(Apple Pro 工具风 · macOS 规范)
+     特征: 毛玻璃侧栏/顶栏 / 白卡片圆角20 无边框阴影分层 /
+     hairline 分隔 / 分段控件 / 胶囊按钮 / 表格保密度
+     约束: 禁蓝紫 / 对比度 AA / 全功能保留
+     注意: 独立主题覆盖, 不影响原版 10-board.html
+     ============================================================ */
+  :root{
+    --ap-bg:#F7F7F7;
+    --ap-card:#FFFFFF;
+    --ap-fg:#1D1C1A;
+    --ap-muted:#6E6B66;
+    --ap-hairline:rgba(29,28,26,.08);
+    --ap-radius:20px;
+    --ap-shadow:0 1px 2px rgba(29,28,26,.04),0 8px 24px rgba(29,28,26,.06);
+    --ap-shadow-lg:0 2px 4px rgba(29,28,26,.05),0 20px 48px rgba(29,28,26,.1);
+    --ap-glass:rgba(247,247,247,.72);
+    --ap-spring:cubic-bezier(.34,1.56,.64,1);
+    --ap-ease:cubic-bezier(.25,.46,.94,.55);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--ap-bg);color:var(--ap-fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif;font-size:14px;line-height:1.6;}
+  button{font:inherit;cursor:pointer;}
+  a{color:var(--qf-accent-600);text-decoration:none;}
+  :focus-visible{outline:2px solid var(--qf-primary);outline-offset:2px;}
+  /* ===== 应用框架 ===== */
+  .app{display:grid;grid-template-columns:224px 1fr;min-height:100vh;}
+  @media (prefers-reduced-motion: reduce){
+    .pulse{animation:none;}
+  }
+  @media(max-width:900px){.app{grid-template-columns:1fr;}}
+  /* ===== 侧栏(毛玻璃) ===== */
+  .sidebar{
+    grid-column:1;grid-row:1/3;padding:20px 12px;display:flex;flex-direction:column;gap:2px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+    background:var(--ap-glass);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-right:1px solid var(--ap-hairline);
+  }
+  @supports not (backdrop-filter: blur(1px)){.sidebar{background:#FBFBFA;}}
+  .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 18px;font-weight:700;font-size:15px;letter-spacing:-0.01em;}
+  .brand .mark{width:28px;height:28px;border-radius:9px;background:var(--qf-primary);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 2px 8px rgba(217,108,31,.25);}
+  .nav-group{font-size:11px;color:#A5A29C;letter-spacing:.1em;text-transform:uppercase;padding:14px 10px 5px;font-weight:600;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;color:var(--ap-fg);font-size:13.5px;font-weight:500;border:none;background:transparent;text-align:left;width:100%;transition:background .15s var(--ap-ease);}
+  .nav-item svg{color:#8E8B85;flex:none;}
+  .nav-item:hover{background:rgba(29,28,26,.06);}
+  .nav-item.active{background:rgba(217,108,31,.12);color:var(--qf-accent-600);}
+  .nav-item.active svg{color:var(--qf-primary);}
+  .nav-badge{margin-left:auto;font-size:11px;background:var(--qf-error-100);color:var(--qf-error-600);border-radius:999px;padding:1px 8px;font-weight:600;}
+  .sidebar .foot{margin-top:auto;padding:12px 10px 4px;font-size:11.5px;color:#A5A29C;border-top:1px solid var(--ap-hairline);}
+  /* ===== 顶栏(毛玻璃悬浮) ===== */
+  .topbar{
+    grid-column:2;display:flex;align-items:center;gap:14px;padding:12px 28px;
+    position:sticky;top:0;z-index:40;
+    background:var(--ap-glass);
+    backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);
+    border-bottom:1px solid var(--ap-hairline);
+  }
+  @supports not (backdrop-filter: blur(1px)){.topbar{background:#FBFBFA;}}
+  .ctx-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--ap-hairline);background:var(--ap-card);font-size:13px;font-weight:500;transition:border-color .15s var(--ap-ease);}
+  .ctx-btn:hover{border-color:rgba(29,28,26,.22);}
+  .ctx-sep{color:var(--ap-hairline);}
+  .search{display:flex;align-items:center;gap:8px;border:1px solid var(--ap-hairline);border-radius:999px;padding:7px 16px;background:var(--ap-card);width:260px;color:#8E8B85;transition:box-shadow .2s var(--ap-ease);}
+  .search:focus-within{border-color:var(--qf-primary);box-shadow:0 0 0 4px rgba(217,108,31,.12);}
+  .search input{border:none;outline:none;background:transparent;width:100%;font-size:13px;color:var(--ap-fg);}
+  .icon-btn{width:34px;height:34px;border-radius:50%;border:none;background:transparent;display:flex;align-items:center;justify-content:center;color:#6E6B66;}
+  .icon-btn:hover{background:rgba(29,28,26,.07);}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--qf-secondary-100);display:flex;align-items:center;justify-content:center;color:var(--qf-secondary-700);}
+  /* ===== 主区 ===== */
+  main{padding:26px 30px 64px;max-width:1240px;}
+  .page-head{display:flex;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap;}
+  .page-head h1{font-size:30px;font-weight:700;letter-spacing:-0.02em;line-height:1.15;}
+  .page-head .sub{color:var(--ap-muted);font-size:13.5px;margin-top:4px;}
+  .page-head .spacer{flex:1;}
+  /* 胶囊按钮 */
+  .btn-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;font-size:13.5px;font-weight:600;border:none;transition:transform .15s var(--ap-spring),background .2s var(--ap-ease);}
+  .btn-pill:hover{background:var(--qf-accent-600);color:#fff;}
+  .btn-pill:active{transform:scale(.98);}
+  .btn-pill.primary{background:var(--qf-primary);color:#fff;}
+  .btn-pill.ghost{background:var(--ap-card);color:var(--ap-fg);border:1px solid var(--ap-hairline);}
+  .btn-pill.ghost:hover{background:rgba(29,28,26,.05);color:var(--ap-fg);}
+  /* KPI 卡(无边框 · 阴影分层) */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.kpis{grid-template-columns:1fr;}}
+  .kpi{background:var(--ap-card);border-radius:var(--ap-radius);box-shadow:var(--ap-shadow);padding:18px 20px;}
+  .kpi .label{font-size:12.5px;color:var(--ap-muted);display:flex;align-items:center;gap:6px;}
+  .kpi .value{font-size:28px;font-weight:700;letter-spacing:-0.02em;margin-top:6px;}
+  .kpi .value b{font-weight:700;}
+  .kpi .note{font-size:12px;color:#A5A29C;margin-top:2px;}
+  .num-ok{color:var(--qf-success-600);}.num-err{color:var(--qf-error-500);}.num-warn{color:var(--qf-warning-500);}.num-acc{color:var(--qf-accent-600);}
+  /* 筛选: 苹果式分段控件 */
+  .filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .seg{display:inline-flex;background:rgba(29,28,26,.06);border-radius:999px;padding:3px;gap:2px;}
+  .seg button{padding:6px 14px;border-radius:999px;border:none;background:transparent;font-size:12.5px;color:var(--ap-muted);font-weight:500;transition:all .18s var(--ap-ease);}
+  .seg button.on{background:var(--ap-card);color:var(--ap-fg);font-weight:600;box-shadow:0 1px 4px rgba(29,28,26,.12);}
+  .seg button:hover:not(.on){color:var(--ap-fg);}
+  .filters .spacer{flex:1;}
+  .viewswitch{display:inline-flex;background:rgba(29,28,26,.06);border-radius:999px;padding:3px;gap:2px;}
+  .viewswitch button{padding:6px 14px;border-radius:999px;border:none;background:transparent;font-size:12.5px;color:var(--ap-muted);}
+  .viewswitch button.on{background:var(--ap-card);color:var(--ap-fg);font-weight:600;box-shadow:0 1px 4px rgba(29,28,26,.12);}
+  /* 面板与表格 */
+  .main-grid{display:grid;grid-template-columns:1fr 300px;gap:18px;align-items:start;}
+  @media(max-width:1080px){.main-grid{grid-template-columns:1fr;}}
+  .panel{background:var(--ap-card);border-radius:var(--ap-radius);box-shadow:var(--ap-shadow);overflow:hidden;}
+  .panel .phead{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:12px;}
+  .panel .phead b{font-size:14.5px;font-weight:600;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;font-size:11.5px;color:#8E8B85;letter-spacing:.05em;text-transform:uppercase;font-weight:600;padding:10px 20px;border-bottom:1px solid var(--ap-hairline);}
+  td{padding:12px 20px;border-bottom:1px solid var(--ap-hairline);vertical-align:middle;}
+  tbody tr{cursor:pointer;transition:background .12s var(--ap-ease);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:#F6F5F3;}
+  tbody tr.sel{background:rgba(217,108,31,.07);}
+  .tid{font-family:var(--qf-font-mono);font-size:12px;color:#8E8B85;}
+  .t-title{font-weight:600;}
+  .t-desc{font-size:12px;color:var(--ap-muted);margin-top:1px;}
+  /* 徽标(胶囊) */
+  .badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 10px;border-radius:999px;font-weight:600;}
+  .b-acc{background:rgba(217,108,31,.12);color:var(--qf-accent-600);}
+  .b-sec{background:var(--qf-secondary-100);color:var(--qf-secondary-700);}
+  .b-ok{background:rgba(71,135,90,.12);color:var(--qf-success-600);}
+  .b-warn{background:rgba(185,142,42,.14);color:var(--qf-warning-600);}
+  .b-err{background:rgba(192,68,47,.12);color:var(--qf-error-600);}
+  .b-gray{background:rgba(29,28,26,.06);color:#6E6B66;}
+  .status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;}
+  .status .d{width:8px;height:8px;border-radius:50%;}
+  .st-review .d{background:var(--qf-warning-500);}.st-review{color:var(--qf-warning-600);}
+  .st-run .d{background:var(--qf-primary);}.st-run{color:var(--qf-accent-600);}
+  .st-done .d{background:var(--qf-success-500);}.st-done{color:var(--qf-success-600);}
+  .st-blocked .d{background:var(--qf-error-500);}.st-blocked{color:var(--qf-error-600);}
+  .st-backlog .d{background:#A5A29C;}.st-backlog{color:var(--ap-muted);}
+  .ai-tag{font-size:10.5px;background:var(--qf-secondary-100);color:var(--qf-secondary-700);border-radius:999px;padding:1px 8px;font-weight:600;letter-spacing:.04em;}
+  .pri{font-size:11px;padding:2px 10px;border-radius:999px;font-weight:600;}
+  .pri.p0{background:rgba(192,68,47,.12);color:var(--qf-error-600);}
+  .pri.p1{background:rgba(185,142,42,.14);color:var(--qf-warning-600);}
+  .pri.p2{background:rgba(29,28,26,.06);color:#6E6B66;}
+  .risk{font-size:11px;padding:2px 10px;border-radius:999px;font-weight:600;}
+  .risk.high{background:rgba(192,68,47,.12);color:var(--qf-error-600);}
+  .risk.mid{background:rgba(185,142,42,.14);color:var(--qf-warning-600);}
+  .risk.low{background:rgba(71,135,90,.12);color:var(--qf-success-600);}
+  .due{font-family:var(--qf-font-mono);font-size:12px;color:#8E8B85;}
+  .due.over{color:var(--qf-error-500);font-weight:600;}
+  /* 侧栏卡 */
+  .aside-stack{display:flex;flex-direction:column;gap:16px;position:sticky;top:80px;}
+  .mini-card{background:var(--ap-card);border-radius:var(--ap-radius);box-shadow:var(--ap-shadow);padding:18px 20px;}
+  .mini-card h3{font-size:13.5px;font-weight:600;margin-bottom:10px;}
+  .mini-card .row{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--ap-hairline);font-size:13px;gap:10px;}
+  .mini-card .row:first-of-type{border-top:none;}
+  .mini-card .row .k{color:var(--ap-muted);}
+  .ai-panel{background:var(--ap-card);border-radius:var(--ap-radius);box-shadow:var(--ap-shadow);padding:18px 20px;}
+  .ai-panel h3{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+  .pulse{width:8px;height:8px;border-radius:50%;background:var(--qf-primary);animation:pl 1.6s ease infinite;display:inline-block;}
+  @keyframes pl{0%,100%{opacity:1}50%{opacity:.35}}
+  .ai-run{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--ap-hairline);}
+  .ai-run:first-of-type{border-top:none;}
+  .ai-run .ic{width:28px;height:28px;flex:none;border-radius:9px;background:var(--qf-secondary-100);color:var(--qf-secondary-700);display:flex;align-items:center;justify-content:center;}
+  .ai-run .nm{font-size:13px;font-weight:600;}
+  .ai-run .st{font-size:11.5px;color:#8E8B85;}
+  .pr-line{height:3px;border-radius:2px;background:rgba(29,28,26,.07);margin-top:6px;overflow:hidden;}
+  .pr-line i{display:block;height:100%;background:var(--qf-primary);border-radius:2px;}
+  /* 弹窗圆角 */
+  .modal-box{border-radius:var(--ap-radius);}
+  @media(max-width:900px){
+    main{padding:18px;}
+    .sidebar{display:none;}
+    .topbar{grid-column:1;}
+    .search{width:150px;}
+    .table-scroll{overflow-x:auto;}
+    .table-scroll table{min-width:640px;}
+  }
+</style>
+</head>
+<body data-page="board">
+<div class="app">
+  <!-- 侧栏(毛玻璃) -->
+  <aside class="sidebar">
+    <div class="brand"><img class="mark" src="assets/brand/logo-qforge-v2.png" alt="QualityForge logo" style="width:28px;height:28px;object-fit:contain;border-radius:9px;background:#1D1B18;padding:3px;box-shadow:0 2px 8px rgba(217,108,31,.25)">QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item active"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板<span class="nav-badge">6</span></button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+    <div class="foot">V1 原型 · Apple 样板</div>
+  </aside>
+
+  <!-- 顶栏(毛玻璃) -->
+  <header class="topbar">
+    <button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button>
+    <span class="ctx-sep">/</span>
+    <button class="ctx-btn">Release R-2026.08</button>
+    <div class="spacer"></div>
+    <div class="search"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><input type="search" aria-label="搜索工作项" placeholder="搜索工作项、用例、契约…"></div>
+    <button class="icon-btn" onclick="qf.toast('暂无新通知','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5a4 4 0 0 1 4 4v3l1.5 2h-11L4 9.5v-3a4 4 0 0 1 4-4Z"/><path d="M6.5 13a1.6 1.6 0 0 0 3 0"/></svg></button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+
+  <!-- 主区 -->
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>工作看板</h1>
+        <div class="sub">统一查看工作项、AI 运行与待审核事项 · 苹果风样板</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn-pill ghost">视图设置</button>
+      <button class="btn-pill primary" onclick="qf.openModal('m-new-item')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>新建工作项</button>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="label">待我审核</div><div class="value num-warn"><b>6</b></div><div class="note">其中 2 项今日到期</div></div>
+      <div class="kpi"><div class="label">AI 运行中</div><div class="value num-acc"><b>3</b></div><div class="note">策略 · 用例 · 覆盖率</div></div>
+      <div class="kpi"><div class="label">今日完成</div><div class="value num-ok"><b>12</b></div><div class="note">4 项经人工批准</div></div>
+      <div class="kpi"><div class="label">阻塞</div><div class="value num-err"><b>2</b></div><div class="note">Secret 未授权 · Runner 离线</div></div>
+    </div>
+
+    <div class="filters">
+      <div class="seg">
+        <button class="on">全部</button><button>待审核</button><button>AI 运行中</button><button>阻塞</button><button>已完成</button>
+      </div>
+      <span class="spacer"></span>
+      <div class="viewswitch">
+        <button class="on">列表</button><button>看板</button>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div class="panel">
+        <div class="phead"><b>工作项</b><span class="small muted">6 项 · 第 1/1 页</span></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>工作项</th><th>类型</th><th>状态</th><th>当前执行者</th><th>优先级</th><th>风险</th><th>截止</th></tr></thead>
+          <tbody>
+            <tr onclick="location.href='11-reviews.html'"><td><div class="tid">WI-0241</div><div class="t-title">审核 TestStrategy 草稿 · Release R-2026.08</div><div class="t-desc">范围 32 项需求 · 3 个风险点待确认</div></td><td><span class="badge b-acc">策略</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><div class="actor">李测试 <span class="ai-tag">AI</span></div></td><td><span class="pri p1">P1</span></td><td><span class="risk mid">中</span></td><td class="due over">今日 18:00</td></tr>
+            <tr onclick="location.href='11-reviews.html'"><td><div class="tid">WI-0243</div><div class="t-title">用例包审核 · 支付流程 24 条</div><div class="t-desc">DesignTestCase V3 · 来源 Req-2026-08-11</div></td><td><span class="badge b-sec">用例</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><div class="actor">王审核 <span class="ai-tag">AI</span></div></td><td><span class="pri p1">P1</span></td><td><span class="risk low">低</span></td><td class="due">明日 12:00</td></tr>
+            <tr onclick="location.href='12-workitem.html'" class="sel"><td><div class="tid">WI-0246</div><div class="t-title">生成测试计划草稿</div><div class="t-desc">依赖策略 V2 已批准 · 里程碑编排中</div></td><td><span class="badge b-warn">计划</span></td><td><span class="status st-run"><span class="d"></span>AI 运行中</span></td><td><div class="actor"><span class="ai-tag">AI</span>策略 Agent</div></td><td><span class="pri p2">P2</span></td><td><span class="risk mid">中</span></td><td class="due">-</td></tr>
+            <tr onclick="location.href='12-workitem.html'"><td><div class="tid">WI-0238</div><div class="t-title">执行计划 · 环境 prod-staging</div><div class="t-desc">BLOCKED: SECRET_ACCESS_DENIED · 缺少 Vault 授权</div></td><td><span class="badge b-gray">执行</span></td><td><span class="status st-blocked"><span class="d"></span>阻塞</span></td><td><div class="actor"><span class="ai-tag">AI</span>Runner 调度</div></td><td><span class="pri p1">P1</span></td><td><span class="risk high">高</span></td><td class="due over">已逾期 2h</td></tr>
+            <tr onclick="location.href='61-defects.html'"><td><div class="tid">WI-0235</div><div class="t-title">Defect 草稿 · 对账失败率异常</div><div class="t-desc">已批准 V1 · 外部同步待确认</div></td><td><span class="badge b-err">Defect</span></td><td><span class="status st-done"><span class="d"></span>已批准</span></td><td><div class="actor">李测试</div></td><td><span class="pri p0">P0</span></td><td><span class="risk high">高</span></td><td class="due">昨日</td></tr>
+            <tr onclick="location.href='22-knowledge.html'"><td><div class="tid">WI-0250</div><div class="t-title">知识条目 · 支付幂等模式</div><div class="t-desc">候选中 · 待合并 2 条重复候选</div></td><td><span class="badge b-sec">知识</span></td><td><span class="status st-backlog"><span class="d"></span>待办</span></td><td><div class="actor"><span class="ai-tag">AI</span>知识 Agent</div></td><td><span class="pri p2">P2</span></td><td><span class="risk low">低</span></td><td class="due">本周五</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <div class="aside-stack">
+        <div class="ai-panel">
+          <h3><span class="pulse"></span>AI 运行中</h3>
+          <div class="ai-run"><div class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg></div><div><div class="nm">TestStrategy 草稿生成</div><div class="st">策略 Agent · 步骤 4/6 · 128s</div><div class="pr-line"><i style="width:66%"></i></div></div></div>
+          <div class="ai-run"><div class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg></div><div><div class="nm">用例编译 · 支付流程</div><div class="st">测试设计 Agent · 步骤 2/5</div><div class="pr-line"><i style="width:40%"></i></div></div></div>
+          <div class="ai-run"><div class="ic"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg></div><div><div class="nm">覆盖率分析</div><div class="st">独立验证 Agent · 等待检查器</div><div class="pr-line"><i style="width:20%"></i></div></div></div>
+        </div>
+        <div class="mini-card">
+          <h3>Release 进度 · R-2026.08</h3>
+          <div class="row"><span class="k">用例已批准</span><span class="v">184 / 236</span></div>
+          <div class="row"><span class="k">策略/计划</span><span class="v">策略 ✓ · 计划草稿</span></div>
+          <div class="row"><span class="k">自动化覆盖</span><span class="v">62% (示意)</span></div>
+          <div class="row"><span class="k">阻塞项</span><span class="v txt-err">2</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 新建工作项弹窗 -->
+<div class="modal" id="m-new-item" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>新建工作项</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="newItemForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「新建工作项」主按钮 · 提交后写入 localStorage</div>
+        <div class="field"><label>标题 <span class="req">*</span></label><input class="input" name="title" required placeholder="例如: 补充退款场景用例"><div class="err">请输入标题</div></div>
+        <div class="field"><label>描述</label><textarea class="input" name="desc" placeholder="补充说明(可选)"></textarea></div>
+        <div class="form-row">
+          <div class="field"><label>类型</label><select class="input" name="type"><option>用例</option><option>策略</option><option>计划</option><option>执行</option><option>Defect</option><option>知识</option><option>其他</option></select></div>
+          <div class="field"><label>优先级</label><select class="input" name="pri"><option>P0</option><option>P1</option><option>P2</option></select></div>
+        </div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-item')">取消</button><button type="submit" class="btn btn-primary">创建</button></div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('newItemForm', function (f) {
+    var item = qf.items.add({ title: f.title.value, desc: f.desc.value, type: f.type.value, pri: f.pri.value });
+    qf.closeModal('m-new-item');
+    qf.toast('工作项 ' + item.id + ' 已创建并持久化', 'ok');
+  });
+  document.querySelectorAll('.seg button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.seg button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+  }); });
+  document.querySelectorAll('.viewswitch button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.viewswitch button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+  }); });
+</script>
+</body>
+</html>

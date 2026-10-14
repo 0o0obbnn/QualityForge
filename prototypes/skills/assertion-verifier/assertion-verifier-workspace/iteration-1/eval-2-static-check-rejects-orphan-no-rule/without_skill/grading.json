@@ -1,0 +1,26 @@
+{
+  "eval_id": 2,
+  "eval_name": "eval-2-static-check-rejects-orphan-no-rule",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "verdict_is_REJECT",
+      "passed": true
+    },
+    {
+      "text": "code_is_ORPHAN_NO_RULE",
+      "passed": false
+    },
+    {
+      "text": "cites_V3_binding_constraint",
+      "passed": true
+    },
+    {
+      "text": "non_negotiable",
+      "passed": true
+    }
+  ],
+  "passed": 3,
+  "total": 4,
+  "pass_rate": 0.75
+}

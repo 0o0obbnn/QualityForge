@@ -1,0 +1,26 @@
+{
+  "skill_name": "requirement-compiler",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-empty-compilation",
+      "prompt": "审计一个空的编译 packet,既没有 source manifest 也没有 IR requirement。",
+      "expected_output": "REJECT 并给出 EMPTY_SOURCE_MANIFEST 和 EMPTY_IR_DRAFT。空证据永远不可发布。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "review-expected-missing-source",
+      "prompt": "PRD 状态为 AVAILABLE 并贡献了 REQ-001。期望中的 API 契约被标记为 EXPECTED_MISSING。审计该编译。",
+      "expected_output": "PASS_WITH_REVIEW,并对 API 契约给出 SOURCE_UNAVAILABLE。不得编造 API requirement,也不得静默返回 PASS。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "reject-duplicate-conflict-evidence",
+      "prompt": "一个 conflict 被标记为 true,但 conflict_refs 将同一 source version 重复了两次。",
+      "expected_output": "REJECT 并给出 CONFLICT_SINGLE_VERSION,因为两条数组记录不构成两个不同的 source version。",
+      "files": []
+    }
+  ]
+}

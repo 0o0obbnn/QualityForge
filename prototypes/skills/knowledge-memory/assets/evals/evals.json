@@ -1,0 +1,82 @@
+{
+  "known_hashes": [],
+  "test_cases": [
+    {
+      "name": "Accept sourced timestamped entry",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 0.8,
+        "content": "safe",
+        "feedback_eligible": false,
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Reject credential literal with no provenance",
+      "input": {"content": "password=unsafe"},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["NO_PROVENANCE", "SENSITIVE_IN_ENTRY", "NO_TIMESTAMP"]
+    },
+    {
+      "name": "Zero confidence is present evidence, not missing provenance",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 0.0,
+        "content": "low-confidence but sourced",
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Reject un-redacted phone number",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 0.7,
+        "content": "contact 138-1234-5678 for details",
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["SENSITIVE_IN_ENTRY"]
+    },
+    {
+      "name": "Reject unvetted feedback-eligible entry",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 0.7,
+        "content": "safe",
+        "feedback_eligible": true,
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["UNVETTED_FEEDBACK"]
+    },
+    {
+      "name": "Reject out-of-range confidence",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 1.5,
+        "content": "safe",
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["NO_PROVENANCE"]
+    },
+    {
+      "name": "Reject duplicate content hash",
+      "input": {
+        "source": "SourceSnapshot:src",
+        "confidence": 0.8,
+        "pattern": "flaky-locator",
+        "summary": "dup",
+        "content": "already stored",
+        "created_at": "2026-08-11T00:00:00Z"
+      },
+      "known_hashes_override": ["__COMPUTED__"],
+      "expected_verdict": "REJECT",
+      "expected_findings": ["DUPLICATE_ENTRY"]
+    }
+  ]
+}

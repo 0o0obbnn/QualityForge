@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>登录 · QualityForge(Apple 风格样板)</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+<style>
+  /* ============================================================
+     Apple 风格样板 · 登录页(apple-hig 驱动 · macOS 规范)
+     特征: 浅灰底 #F7F7F7 / 白卡片圆角 20 无边框阴影分层 /
+     大字号层级 / 胶囊按钮 / hairline 分隔 / spring 弹性动效
+     约束: 禁蓝紫(hue 190-320) / 对比度 AA / 全功能保留
+     注意: 本页为独立主题覆盖, 不影响原版 01-login.html
+     ============================================================ */
+  :root{
+    --ap-bg:#F7F7F7;
+    --ap-card:#FFFFFF;
+    --ap-fg:#1D1C1A;
+    --ap-muted:#6E6B66;
+    --ap-hairline:rgba(29,28,26,.09);
+    --ap-radius:20px;
+    --ap-radius-sm:14px;
+    --ap-shadow:0 1px 2px rgba(29,28,26,.04),0 10px 32px rgba(29,28,26,.07);
+    --ap-shadow-lg:0 2px 4px rgba(29,28,26,.05),0 24px 64px rgba(29,28,26,.12);
+    --ap-spring:cubic-bezier(.34,1.56,.64,1);
+    --ap-ease:cubic-bezier(.25,.46,.94,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ap-bg);color:var(--ap-fg);
+    font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",sans-serif;
+    min-height:100dvh;overflow-x:hidden;
+  }
+  button{font:inherit;cursor:pointer;}
+  a{color:var(--qf-accent-600);text-decoration:none;}
+  :focus-visible{outline:2px solid var(--qf-primary);outline-offset:2px;border-radius:6px;}
+  /* 背景氛围: 极淡琥珀光晕(克制的苹果式氛围, 非渐变滥用) */
+  .bg-aura{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;
+    background:linear-gradient(160deg,#FAFAF8 0%,#F4F2ED 60%,#F0EBE2 100%);}
+  .aura-blob{position:absolute;border-radius:50%;filter:blur(64px);opacity:.5;}
+  .aura-blob.b1{width:340px;height:340px;top:-90px;right:8%;background:#E9AC66;}
+  .aura-blob.b2{width:280px;height:280px;bottom:-80px;left:6%;background:#D96C1F;opacity:.3;}
+  .aura-blob.b3{width:200px;height:200px;top:34%;left:30%;background:#F2CD9E;opacity:.45;}
+  @media (prefers-reduced-motion: no-preference){
+    .aura-blob{animation:blob-drift 18s ease-in-out infinite alternate;}
+    .aura-blob.b2{animation-delay:-6s;}
+    .aura-blob.b3{animation-delay:-11s;}
+    @keyframes blob-drift{from{transform:translate(0,0) scale(1)}to{transform:translate(-28px,20px) scale(1.06)}}
+  }
+  @media (prefers-reduced-motion: reduce){.aura-blob{animation:none;}}
+  .page{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;}
+  /* ===== 顶部品牌 ===== */
+  .top-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;letter-spacing:-0.01em;margin-bottom:28px;}
+  .top-brand .mark{width:34px;height:34px;border-radius:11px;background:var(--qf-primary);display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 2px 10px rgba(217,108,31,.28);}
+  /* ===== 登录卡片(白 · 圆角20 · 无边框阴影分层) ===== */
+  .auth-card{
+    width:100%;max-width:400px;padding:40px 36px 32px;
+    border-radius:var(--ap-radius);
+    background:rgba(255,255,255,.55);
+    -webkit-backdrop-filter:saturate(180%) blur(24px);
+    backdrop-filter:saturate(180%) blur(24px);
+    border:1px solid rgba(255,255,255,.65);
+    box-shadow:var(--ap-shadow-lg),inset 0 1px 0 rgba(255,255,255,.6);
+  }
+  @supports not (backdrop-filter: blur(1px)){.auth-card{background:rgba(255,255,255,.95);}}
+  .auth-card h1{font-size:30px;font-weight:700;letter-spacing:-0.02em;line-height:1.2;}
+  .auth-card .sub{margin-top:6px;font-size:14px;color:var(--ap-muted);}
+  .auth-card form{margin-top:28px;}
+  /* 输入: 白底 + hairline 边框 + 圆角14, focus 琥珀环 */
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:7px;color:var(--ap-fg);}
+  .field .input{
+    width:100%;padding:12px 14px;font-size:15px;color:var(--ap-fg);
+    background:rgba(255,255,255,.85);border:1px solid rgba(29,28,26,.1);border-radius:var(--ap-radius-sm);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    transition:border-color .2s var(--ap-ease),box-shadow .2s var(--ap-ease),background .2s var(--ap-ease);
+  }
+  .field .input::placeholder{color:#A5A29C;}
+  .field .input:hover{border-color:rgba(29,28,26,.2);}
+  .field .input:focus{outline:none;border-color:var(--qf-primary);box-shadow:0 0 0 4px rgba(217,108,31,.14);}
+  .field .err{font-size:12.5px;color:var(--qf-error-500);margin-top:5px;display:none;}
+  .field.has-err .err{display:block;}
+  .field.has-err .input{border-color:var(--qf-error-500);}
+  /* 密码切换(苹果风 32px 圆形) */
+  .pw-wrap{position:relative;}
+  .pw-wrap .input{padding-right:44px;}
+  .pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:32px;height:32px;border-radius:50%;border:none;background:transparent;color:#8E8B85;display:flex;align-items:center;justify-content:center;}
+  .pw-toggle:hover{background:rgba(29,28,26,.06);color:var(--ap-fg);}
+  .pw-toggle::after{content:"";position:absolute;inset:-6px;}
+  .pw-toggle:focus-visible{outline:2px solid var(--qf-primary);}
+  /* 胶囊按钮 */
+  .btn-capsule{width:100%;padding:13px 20px;border:none;border-radius:999px;background:var(--qf-primary);color:#fff;font-size:15px;font-weight:600;letter-spacing:.01em;transition:transform .15s var(--ap-spring),background .2s var(--ap-ease);}
+  .btn-capsule:hover{background:var(--qf-accent-600);}
+  .btn-capsule:active{transform:scale(.985);}
+  .btn-capsule:disabled{opacity:.5;cursor:not-allowed;}
+  .btn-capsule.loading{pointer-events:none;opacity:.75;}
+  .btn-capsule.loading::before{content:"";display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:-2px;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .options{display:flex;justify-content:space-between;align-items:center;margin:14px 0 20px;font-size:13px;color:var(--ap-muted);}
+  .options .check{display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
+  .options .check input{width:15px;height:15px;accent-color:var(--qf-primary);}
+  .divider{display:flex;align-items:center;gap:12px;color:#A5A29C;font-size:12px;margin:22px 0;}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--ap-hairline);}
+  /* SSO 按钮(苹果式次级按钮) */
+  .sso-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:1px solid rgba(29,28,26,.1);border-radius:999px;background:rgba(255,255,255,.75);font-size:14px;font-weight:500;color:var(--ap-fg);transition:background .2s var(--ap-ease);}
+  .sso-btn:hover{background:rgba(29,28,26,.04);}
+  .auth-foot{display:flex;justify-content:space-between;margin-top:18px;font-size:13px;color:var(--ap-muted);}
+  .auth-foot a{font-weight:600;}
+  .sec-note{display:flex;justify-content:center;align-items:center;gap:7px;margin-top:22px;padding-top:18px;border-top:1px solid var(--ap-hairline);font-size:12px;color:#8E8B85;font-family:var(--qf-font-mono);}
+  /* 底部 */
+  .page-foot{margin-top:26px;font-size:12px;color:#A5A29C;display:flex;gap:18px;align-items:center;}
+  /* spring 入场 */
+  @media (prefers-reduced-motion: no-preference){
+    .top-brand{opacity:0;animation:fade-in .5s var(--ap-ease) .05s forwards;}
+    .auth-card{opacity:0;transform:scale(.96) translateY(14px);animation:card-in .55s var(--ap-spring) .12s forwards;}
+    .page-foot{opacity:0;animation:fade-in .5s var(--ap-ease) .3s forwards;}
+    @keyframes card-in{to{opacity:1;transform:none}}
+    @keyframes fade-in{to{opacity:1}}
+  }
+  /* 移动端 */
+  @media(max-width:480px){
+    .auth-card{padding:30px 24px 26px;border-radius:16px;}
+    .auth-card h1{font-size:26px;}
+    .field .input{min-height:44px;font-size:16px;}
+    .btn-capsule{min-height:48px;}
+  }
+</style>
+</head>
+<body data-page="login">
+<div class="bg-aura" aria-hidden="true">
+  <div class="aura-blob b1"></div>
+  <div class="aura-blob b2"></div>
+  <div class="aura-blob b3"></div>
+</div>
+<div class="page">
+  <div class="top-brand">
+    <img class="mark" src="assets/brand/logo-qforge-v2.png" alt="QualityForge logo" style="width:38px;height:38px;object-fit:contain;border-radius:11px;background:#1D1B18;padding:4px;box-shadow:0 2px 10px rgba(217,108,31,.28)">
+    QualityForge
+  </div>
+
+  <section class="auth-card" aria-label="登录表单">
+    <h1>登录</h1>
+    <p class="sub">进入你的测试工作台</p>
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label for="username">用户名 <span class="req">*</span></label>
+        <input class="input" id="username" name="username" type="text" placeholder="例如: zhang.test" required autocomplete="username">
+        <div class="err">请输入用户名</div>
+      </div>
+      <div class="field">
+        <label for="password">密码 <span class="req">*</span></label>
+        <div class="pw-wrap">
+          <input class="input" id="password" name="password" type="password" placeholder="••••••••" required autocomplete="current-password" minlength="6">
+          <button type="button" class="pw-toggle" id="pwToggle" aria-label="显示密码" aria-pressed="false">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8Z"/><circle cx="8" cy="8" r="2.2"/></svg>
+          </button>
+        </div>
+        <div class="err">密码至少 6 位</div>
+      </div>
+      <div class="options">
+        <label class="check"><input type="checkbox" checked> 记住我</label>
+        <a href="#" onclick="qf.openModal('m-forgot');return false;">忘记密码?</a>
+      </div>
+      <button class="btn-capsule" type="submit" id="loginBtn">登 录</button>
+    </form>
+    <div class="divider">或</div>
+    <button class="sso-btn" onclick="qf.toast('演示环境: SSO 登录将在真实环境接入','info')">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="7.5" width="11" height="6" rx="1.5"/><path d="M5 7.5V5.5a3 3 0 0 1 6 0v2"/></svg>
+      使用企业 SSO 登录
+    </button>
+    <div class="auth-foot">
+      <span>还没有账号?</span>
+      <a href="#" onclick="qf.openModal('m-register');return false;">申请账号</a>
+    </div>
+    <div class="sec-note">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="m3 8.5 3 3 7-7"/></svg>
+      FAIL-CLOSED 权限模型 · 登录行为记录审计
+    </div>
+  </section>
+
+  <footer class="page-foot">
+    <span>© 2026 QualityForge</span>
+    <span>·</span>
+    <span>Apple 风格样板 V1(禁蓝紫)</span>
+  </footer>
+</div>
+
+<!-- 忘记密码弹窗 -->
+<div class="modal" id="m-forgot" role="dialog" aria-modal="true" aria-labelledby="forgotTitle">
+  <div class="mask"></div>
+  <div class="modal-box" style="border-radius:20px">
+    <div class="modal-head"><h3 id="forgotTitle">重置密码</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="forgotForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 登录表单「忘记密码?」链接</div>
+        <p class="body-text small muted" style="margin-bottom:12px">输入工作邮箱,我们将发送重置链接。链接 30 分钟内有效。</p>
+        <div class="field"><label for="forgotEmail">工作邮箱 <span class="req">*</span></label><input class="input" id="forgotEmail" type="email" required placeholder="name@company.com"><div class="err">请输入有效邮箱</div></div>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-forgot')">取消</button><button type="submit" class="btn btn-primary" style="border-radius:999px">发送重置链接</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- 注册弹窗 -->
+<div class="modal" id="m-register" role="dialog" aria-modal="true" aria-labelledby="regTitle">
+  <div class="mask"></div>
+  <div class="modal-box" style="border-radius:20px">
+    <div class="modal-head"><h3 id="regTitle">申请账号</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="regForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 登录页底部「申请账号」</div>
+        <div class="field"><label>姓名 <span class="req">*</span></label><input class="input" required placeholder="你的姓名"><div class="err">请输入姓名</div></div>
+        <div class="field"><label>工作邮箱 <span class="req">*</span></label><input class="input" type="email" required placeholder="name@company.com"><div class="err">请输入有效邮箱</div></div>
+        <div class="field"><label>所属团队</label><input class="input" placeholder="团队名(选填)"></div>
+        <label class="check"><input type="checkbox" required> 我已阅读并同意 <a href="#" onclick="qf.openModal('m-terms');return false;">服务协议</a> 与 <a href="#" onclick="qf.toast('隐私政策(演示: 内容同服务协议)','info');return false;">隐私政策</a></label>
+      </div>
+      <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-register')">取消</button><button type="submit" class="btn btn-primary" style="border-radius:999px">提交申请</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- 服务协议弹窗 -->
+<div class="modal" id="m-terms" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box" style="border-radius:20px">
+    <div class="modal-head"><h3>服务协议</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 注册表单中的「服务协议」链接</div>
+      <p class="body-text" style="font-size:12.5px;color:var(--qf-muted-foreground);max-height:200px;overflow-y:auto;border:1px solid var(--qf-border);border-radius:14px;padding:14px;">
+        1. 服务范围: 本平台提供 AI 辅助测试设计与执行能力,正式测试产出物需经人工审核后生效。<br><br>
+        2. 数据与隐私: 平台对执行证据、AI 推断与人工决定分层保存;敏感信息按权限脱敏访问。<br><br>
+        3. 人工责任: AI 生成内容不构成质量结论,最终质量责任由审核人员承担。<br><br>
+        4. 安全: 平台默认 fail-closed,任何未授权操作将被拒绝并记录审计日志。<br><br>
+        (演示环境占位协议文本)
+      </p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" style="border-radius:999px" onclick="qf.closeModal('m-terms')">我已阅读</button></div>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  var u = document.getElementById('username');
+  if (u && !window.matchMedia('(max-width: 480px)').matches) setTimeout(function(){ u.focus(); }, 300);
+  var pwToggle = document.getElementById('pwToggle');
+  var pwInput = document.getElementById('password');
+  pwToggle.addEventListener('click', function () {
+    var show = pwInput.type === 'password';
+    pwInput.type = show ? 'text' : 'password';
+    pwToggle.setAttribute('aria-pressed', show ? 'true' : 'false');
+    pwToggle.setAttribute('aria-label', show ? '隐藏密码' : '显示密码');
+  });
+  qf.bindForm('loginForm', function () {
+    var btn = document.getElementById('loginBtn');
+    btn.classList.add('loading'); btn.disabled = true;
+    setTimeout(function () {
+      qf.session.login(document.getElementById('username').value || '演示用户', 'TestLead');
+      qf.toast('登录成功,正在进入工作台', 'ok');
+      setTimeout(function () { location.href = '10-board-apple.html'; }, 400);
+    }, 900);
+  });
+  qf.bindForm('regForm', function () { qf.closeModal('m-register'); qf.toast('申请已提交,管理员审批后生效(演示)', 'ok'); });
+  qf.bindForm('forgotForm', function () { qf.closeModal('m-forgot'); qf.toast('重置链接已发送(演示)', 'ok'); });
+</script>
+</body>
+</html>

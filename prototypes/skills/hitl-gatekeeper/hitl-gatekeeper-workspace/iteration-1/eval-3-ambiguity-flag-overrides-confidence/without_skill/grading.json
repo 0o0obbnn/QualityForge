@@ -1,0 +1,22 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguity-flag-overrides-confidence",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "decision_is_BLOCK_HUMAN",
+      "passed": true
+    },
+    {
+      "text": "explains_flag_overrides_confidence",
+      "passed": true
+    },
+    {
+      "text": "explains_model_self_report_honoured",
+      "passed": false
+    }
+  ],
+  "pass_rate": 0.667,
+  "passed": 2,
+  "total": 3
+}

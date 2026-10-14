@@ -1,0 +1,22 @@
+{
+  "name": "qualityforge",
+  "version": "0.1.0",
+  "description": "Gated requirements-to-tests pipeline: 30 deterministic stage gates plus a routing entry skill. Every gate audits an artifact; none fabricate evidence.",
+  "keywords": [
+    "pi-package",
+    "testing",
+    "quality-gate",
+    "requirements",
+    "coverage",
+    "traceability"
+  ],
+  "license": "MIT",
+  "files": [
+    "skills/"
+  ],
+  "pi": {
+    "skills": [
+      "skills"
+    ]
+  }
+}

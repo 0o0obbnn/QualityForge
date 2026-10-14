@@ -1,0 +1,15 @@
+{
+  "$comment": "状态机提取数据包。initial_state 必填，可达性由它计算得出。",
+  "known_entity_ids": ["ENT-ORD-001"],
+  "state_machines": [
+    {
+      "sm_id": "SM-ORD-001",
+      "entity_id": "ENT-ORD-001",
+      "initial_state": "PENDING",
+      "states": ["PENDING", "PAID"],
+      "transitions": [
+        {"from": "PENDING", "to": "PAID", "guard": null}
+      ]
+    }
+  ]
+}

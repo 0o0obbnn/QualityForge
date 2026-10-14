@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>配套资产 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="automation">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item active" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button></div>
+    <div class="spacer"></div>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>配套资产</h1><div class="sub">Locator / Mock / 数据 Profile / 视觉基线 · 版本化与人工审核 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="qf.openModal('m-new-asset')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>新建资产</button>
+    </div>
+
+    <div class="tabs">
+      <button class="on" data-tab="locator">Locator</button>
+      <button data-tab="mock">Mock 配置</button>
+      <button data-tab="data">测试数据</button>
+      <button data-tab="visual">视觉基线</button>
+    </div>
+
+    <div class="tabpane on" id="tab-locator">
+      <div class="panel mt-4">
+        <div class="phead"><h2>资产列表</h2></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>Locator</th><th>主选择器</th><th>状态</th><th>来源</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-locator')"><td><div class="t-title">checkout-submit-btn</div><div class="t-sub">结算页 · 提交按钮</div></td><td class="mono">#checkout-submit</td><td><span class="status st-done"><span class="d"></span>VERIFIED</span></td><td>人工录入</td><td><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();qf.toast('自愈候选已生成(演示)','info')">自愈候选</button></td></tr>
+            <tr onclick="qf.openModal('m-locator')"><td><div class="t-title">order-table-row</div><div class="t-sub">订单列表 · 行元素</div></td><td class="mono">[data-testid="order-row"]</td><td><span class="status st-review"><span class="d"></span>DECAYING</span></td><td><span class="ai-tag">AI</span>发现</td><td><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();qf.openModal('m-heal')">查看候选</button></td></tr>
+          </tbody>
+        </table>
+        <div class="empty-note" hidden><div class="en-title">暂无资产</div>新建或由 AI 发现</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-mock">
+      <div class="panel mt-4">
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>Mock</th><th>绑定契约</th><th>匹配规则</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-mock')"><td><div class="t-title">gw-timeout-mock</div><div class="t-sub">网关超时场景</div></td><td class="mono">settlement-api V7 · op-refund-batch</td><td class="mono">header[x-mock]=timeout</td><td><span class="status st-done"><span class="d"></span>已发布</span></td></tr>
+            <tr onclick="qf.openModal('m-mock')"><td><div class="t-title">insufficient-balance-mock</div><div class="t-sub">余额不足场景</div></td><td class="mono">settlement-api V7 · op-pay</td><td class="mono">body[amount]>balance</td><td><span class="status st-review"><span class="d"></span>待审核</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-data">
+      <div class="panel mt-4">
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>数据 Profile</th><th>生成规则</th><th>脱敏</th><th>清理策略</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-data')"><td><div class="t-title">pay-users</div><div class="t-sub">支付用户合成数据</div></td><td>schema pay-user.v3</td><td><span class="badge b-ok">已脱敏</span></td><td>24h 后清理</td><td><span class="status st-done"><span class="d"></span>已发布</span></td></tr>
+            <tr onclick="qf.openModal('m-data')"><td><div class="t-title">refund-orders</div><div class="t-sub">退款订单数据</div></td><td>schema refund-order.v1</td><td><span class="badge b-ok">已脱敏</span></td><td>手动清理</td><td><span class="status st-backlog"><span class="d"></span>草稿</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-visual">
+      <div class="panel mt-4">
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>视觉基线</th><th>视口</th><th>遮罩区</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-visual')"><td><div class="t-title">checkout-page-baseline</div><div class="t-sub">结算页 · 桌面 1440</div></td><td class="mono">1440×900</td><td>金额区已遮罩</td><td><span class="status st-done"><span class="d"></span>已发布</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="m-new-asset" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <form id="assetForm" novalidate>
+    <div class="modal-head"><h3>新建资产</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「新建资产」按钮</div>
+      <div class="field"><label>资产类型</label><select class="input"><option>Locator</option><option>Mock 配置</option><option>测试数据 Profile</option><option>视觉基线</option></select></div>
+      <div class="field"><label>名称 <span class="req">*</span></label><input class="input" name="name" required placeholder="例如: order-table-row"><div class="err">请输入名称</div></div>
+    </div>
+    <div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-asset')">取消</button><button type="submit" class="btn btn-primary">创建</button></div></form>
+  </div>
+</div>
+<div class="modal" id="m-locator" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>Locator 详情</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击 Locator 行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">主选择器</span><span class="mono">#checkout-submit</span>
+        <span class="muted">备选</span><span class="mono">[data-testid=submit]</span>
+        <span class="muted">状态</span><span class="status st-done"><span class="d"></span>VERIFIED</span>
+        <span class="muted">版本</span><span class="mono">V2</span>
+      </div>
+      <p class="small muted mt-4">自愈只产生候选新版本;正式变更走 Diff 与 ReviewTask。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-locator')">关闭</button></div>
+  </div>
+</div>
+<div class="modal" id="m-heal" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>自愈候选</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「查看候选」按钮 · Locator 自愈确认</div>
+      <div class="check review" style="margin-bottom:10px"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>候选 V3</b><div class="small muted mono">[data-testid="order-row"] · 运行中成功使用 3 次</div></div></div>
+      <p class="small muted">原 LocatorVersion 不变;候选带证据进入 ReviewTask。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-heal')">忽略</button><button class="btn btn-primary" onclick="qf.closeModal('m-heal');qf.toast('候选已提交审核(演示)','ok')">提交候选</button></div>
+  </div>
+</div>
+<div class="modal" id="m-mock" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>Mock 配置</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击 Mock 行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">契约绑定</span><span class="mono">settlement-api V7</span>
+        <span class="muted">匹配规则</span><span class="mono">header[x-mock]=timeout</span>
+        <span class="muted">响应</span><span>504 + retryAfter: 5</span>
+      </div>
+      <p class="small muted mt-4">Mock 不复制 API Schema 正文,只引用契约版本。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-mock')">关闭</button></div>
+  </div>
+</div>
+<div class="modal" id="m-data" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>数据 Profile</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击数据行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">Schema</span><span class="mono">pay-user.v3</span>
+        <span class="muted">脱敏</span><span class="badge b-ok">已脱敏</span>
+        <span class="muted">清理</span><span>24h 后自动清理</span>
+        <span class="muted">敏感性</span><span class="badge b-warn">内部</span>
+      </div>
+      <p class="small muted mt-4">Secret 不能内嵌于数据内容;内容变化创建新版本。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-data')">关闭</button></div>
+  </div>
+</div>
+<div class="modal" id="m-visual" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>视觉基线</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击视觉基线行 · 图片预览类弹窗</div>
+      <div style="height:180px;border:1px solid var(--qf-border);border-radius:10px;background:var(--qf-secondary-surface);display:flex;align-items:center;justify-content:center;color:var(--qf-muted-foreground);font-size:13px">结算页截图占位 · 1440×900 · 金额区已遮罩</div>
+      <p class="small muted mt-3">视口 1440×900 · 遮罩区: 金额、订单号</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-visual')">关闭</button></div>
+  </div>
+</div>
+<script src="assets/qf-shell.js"></script>
+<script>
+  document.querySelectorAll('.tabs button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.tabs button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    document.querySelectorAll('.tabpane').forEach(function (p) { p.classList.remove('on'); });
+    document.getElementById('tab-' + b.dataset.tab).classList.add('on');
+  }); });
+</script>
+</body>
+</html>

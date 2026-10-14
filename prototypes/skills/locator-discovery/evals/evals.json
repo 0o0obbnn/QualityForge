@@ -1,0 +1,7 @@
+{
+  "skill_name": "locator-discovery",
+  "evals": [
+    {"id": 1, "name": "accept-stable-strategy-set", "prompt": "校验一个包含 ID 和 CSS 策略、stability score 为 0.9 的 locator candidate。", "expected_output": "作为 locator candidate PASS;发布仍需遵循适用的评审策略。", "files": []},
+    {"id": 2, "name": "reject-index-xpath", "prompt": "校验一个唯一策略为基于索引的 XPath //button[1] 的 locator。", "expected_output": "REJECT 并给出 INDEX_XPATH_PRIMARY。", "files": []}
+  ]
+}

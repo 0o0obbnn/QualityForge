@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Defect · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="quality">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item active" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <button class="btn btn-sm btn-ghost" onclick="location.href='62-reports.html'">报告</button>
+    <button class="btn btn-primary btn-sm" onclick="qf.openModal('m-new-defect')">新建 Defect</button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>Defect</h1><div class="sub">稳定根 + 不可变版本 · 外部同步逐次批准 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-sync')">外部同步</button>
+    </div>
+
+    <div class="filters">
+      <button class="chip on">全部</button>
+      <button class="chip">严重</button>
+      <button class="chip">一般</button>
+      <button class="chip">已同步</button>
+      <span class="spacer"></span>
+      <span class="small muted">按严重度筛选(演示)</span>
+    </div>
+    <div class="panel">
+      <div class="phead"><h2>Defect 列表</h2></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Defect</th><th>严重度</th><th>生命周期</th><th>版本</th><th>外部同步</th></tr></thead>
+        <tbody>
+          <tr onclick="qf.openModal('m-defect')"><td><div class="t-title">重复回调返回不同 order_no</div><div class="t-sub">D-0142 · 支付 · 复现步骤 4 条</div></td><td><span class="badge b-err">严重</span></td><td><span class="status st-review"><span class="d"></span>NEW</span></td><td class="mono">V1</td><td><span class="badge b-warn">待批准</span></td></tr>
+          <tr onclick="qf.openModal('m-defect')"><td><div class="t-title">对账失败率异常</div><div class="t-sub">D-0138 · 对账 · 已批准 V1</div></td><td><span class="badge b-err">严重</span></td><td><span class="status st-run"><span class="d"></span>IN_PROGRESS</span></td><td class="mono">V1</td><td><span class="badge b-ok">已同步 JIRA</span></td></tr>
+          <tr onclick="qf.openModal('m-defect')"><td><div class="t-title">网关限流提示文案缺失</div><div class="t-sub">D-0135 · 网关 · 已关闭</div></td><td><span class="badge b-warn">一般</span></td><td><span class="status st-done"><span class="d"></span>CLOSED</span></td><td class="mono">V2</td><td><span class="badge b-gray">未同步</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="m-new-defect" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>新建 Defect</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="defectForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「新建 Defect」按钮 · 表单弹窗</div>
+        <div class="field"><label>标题 <span class="req">*</span></label><input class="input" required placeholder="例如: 退款接口超时未重试"><div class="err">请输入标题</div></div>
+        <div class="form-row">
+          <div class="field"><label>严重度</label><select class="input"><option>严重</option><option>一般</option><option>轻微</option></select></div>
+          <div class="field"><label>优先级</label><select class="input"><option>P0</option><option>P1</option><option>P2</option></select></div>
+        </div>
+        <div class="field"><label>复现步骤</label><textarea class="input" placeholder="1. 进入支付页发起退款&#10;2. 观察回调结果"></textarea><div class="hint">按实际操作步骤填写</div></div>
+        <div class="field"><label>期望 / 实际</label><div class="form-row"><input class="input" aria-label="期望结果" placeholder="期望结果"><input class="input" aria-label="实际结果" placeholder="实际结果"></div></div>
+        <div class="field"><label>证据</label><select class="input"><option>关联 ExecutionResult</option><option>关联截图/日志</option></select></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-defect')">取消</button>
+        <button type="submit" class="btn btn-primary">创建草稿</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal" id="m-defect" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>D-0142 · 重复回调返回不同 order_no</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击 Defect 行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">复现</span><span>同一幂等键二次调用,返回 order_no 与首次不同</span>
+        <span class="muted">期望</span><span>返回首次结果(order_no 一致)</span>
+        <span class="muted">实际</span><span>返回新 order_no(ORD-8822)</span>
+        <span class="muted">证据</span><span>EX-T-3185 #2 · 截图 2 张</span>
+        <span class="muted">影响 Release</span><span>R-2026.08</span>
+      </div>
+      <div class="flex mt-4" style="flex-wrap:wrap">
+        <button class="btn btn-sm btn-ghost" onclick="qf.openModal('m-sync')">同步到 JIRA</button>
+        <button class="btn btn-sm btn-primary" onclick="qf.closeModal('m-defect');qf.toast('Defect V1 已批准(演示)','ok')">批准版本</button>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-defect')">关闭</button></div>
+  </div>
+</div>
+<div class="modal" id="m-sync" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>外部同步确认</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「外部同步」/「同步到 JIRA」按钮 · 外部写入逐次批准</div>
+      <div class="mini-card" style="border:none;padding:0">
+        <div class="row"><span class="k">目标系统</span><span class="v">JIRA · 结算中心项目</span></div>
+        <div class="row"><span class="k">操作</span><span class="v mono">CREATE_ISSUE</span></div>
+        <div class="row"><span class="k">payload 摘要</span><span class="v mono">sha256:11ae…c04f</span></div>
+        <div class="row"><span class="k">幂等键</span><span class="v mono">sync-D0142-001</span></div>
+        <div class="row"><span class="k">绑定版本</span><span class="v mono">D-0142 V1</span></div>
+      </div>
+      <p class="small muted mt-3">每次 CREATE/UPDATE/COMMENT 单独批准;重试使用同一幂等键,不假报成功。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="qf.closeModal('m-sync')">取消</button>
+      <button class="btn btn-primary" onclick="qf.closeModal('m-sync');qf.toast('已批准同步,回执待接收(演示)','ok')">批准写入</button>
+    </div>
+  </div>
+</div>
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('defectForm', function () { qf.closeModal('m-new-defect'); qf.toast('Defect 草稿已创建(演示)','ok'); });
+  document.querySelectorAll('.filters .chip').forEach(function (c) { c.addEventListener('click', function () {
+    document.querySelectorAll('.filters .chip').forEach(function (x) { x.classList.remove('on'); });
+    c.classList.add('on');
+  }); });
+</script>
+</body>
+</html>

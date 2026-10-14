@@ -1,0 +1,149 @@
+{
+  "anchorProviderId": "deterministic-local",
+  "anchorProviderVersion": "1.0.0",
+  "baselineVersion": 1,
+  "goldenSourceDigest": "c973e833382310c8a048402d1fc255eaa5213dfff043953a00d10b8dbf33b5f8",
+  "outputs": {
+    "cases": [
+      {
+        "content": {
+          "assertions": [
+            {
+              "expected": "业务操作成功且状态符合需求",
+              "operator": "EQUALS",
+              "target": "businessOutcome"
+            }
+          ],
+          "expectedResults": [
+            "业务操作成功且状态符合需求"
+          ],
+          "preconditions": [
+            "需求版本摘要保持不变",
+            "测试环境可用"
+          ],
+          "priority": "P1",
+          "steps": [
+            {
+              "action": "准备与需求匹配的输入",
+              "kind": "POSITIVE",
+              "sequence": 1
+            },
+            {
+              "action": "执行目标业务行为",
+              "planVersionId": "464e730b-7c36-5caa-9e80-c61af0616b30",
+              "sequence": 2
+            },
+            {
+              "action": "核对结果与副作用",
+              "sequence": 3
+            }
+          ],
+          "testDataRefs": [],
+          "testType": "FUNCTIONAL",
+          "title": "[订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。] 正向业务流程"
+        },
+        "kind": "POSITIVE",
+        "title": "[订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。] 正向业务流程"
+      },
+      {
+        "content": {
+          "assertions": [
+            {
+              "expected": "非法输入被拒绝且无越权副作用",
+              "operator": "EQUALS",
+              "target": "businessOutcome"
+            }
+          ],
+          "expectedResults": [
+            "非法输入被拒绝且无越权副作用"
+          ],
+          "preconditions": [
+            "需求版本摘要保持不变",
+            "测试环境可用"
+          ],
+          "priority": "P0",
+          "steps": [
+            {
+              "action": "准备与需求匹配的输入",
+              "kind": "NEGATIVE",
+              "sequence": 1
+            },
+            {
+              "action": "执行目标业务行为",
+              "planVersionId": "464e730b-7c36-5caa-9e80-c61af0616b30",
+              "sequence": 2
+            },
+            {
+              "action": "核对结果与副作用",
+              "sequence": 3
+            }
+          ],
+          "testDataRefs": [],
+          "testType": "FUNCTIONAL",
+          "title": "[订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。] 非法输入与权限校验"
+        },
+        "kind": "NEGATIVE",
+        "title": "[订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。] 非法输入与权限校验"
+      }
+    ],
+    "plan": {
+      "acceptanceCriteria": [
+        "所有ReviewTask绑定精确版本和摘要",
+        "Agent不能批准自己的产出"
+      ],
+      "endDate": "2026-08-18",
+      "milestones": [
+        {
+          "exitGate": "ALL_FORMAL_ARTIFACTS_APPROVED",
+          "name": "人工审核"
+        }
+      ],
+      "objective": "执行测试策略覆盖：订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。",
+      "ownerId": "35309a43-b14d-53f2-9041-06f3d3afb36c",
+      "planType": "RELEASE_VALIDATION",
+      "resourceRequirements": {
+        "provider": "deterministic-local",
+        "reviewer": 1
+      },
+      "scope": {
+        "requirementVersionId": "6792c40c-6846-53cf-87c5-914216de6407"
+      },
+      "startDate": "2026-08-18",
+      "strategyVersionId": "f2e42be6-e863-56e5-8a41-510ca6981a92"
+    },
+    "strategy": {
+      "approach": "风险驱动、来源可追溯、正反场景并行设计",
+      "automationStrategy": "优先API，稳定后扩展UI",
+      "dataStrategy": "使用可复现且脱敏的测试数据",
+      "defectStrategy": "失败证据先分析，人工确认后形成Defect",
+      "entryCriteria": [
+        "需求版本摘要已固定"
+      ],
+      "environmentStrategy": "使用受控测试环境",
+      "exitCriteria": [
+        "策略、计划和用例均完成人工审核"
+      ],
+      "inScope": [
+        "订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。"
+      ],
+      "objective": "验证需求：订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。",
+      "outOfScope": [
+        "未经声明的外部系统写入"
+      ],
+      "riskAssessment": [
+        {
+          "level": "HIGH",
+          "risk": "需求歧义",
+          "treatment": "人工审核"
+        }
+      ],
+      "testTypes": [
+        "FUNCTIONAL",
+        "API",
+        "NEGATIVE"
+      ]
+    },
+    "summary": "订单退款审核；用户在订单完成 7 天内可申请退款，退款金额不得超过实付金额。；审核通过后原路退回，审核拒绝必须给出原因并通知用户。"
+  },
+  "outputsDigest": "22a00f76ab777d1b91376494e12e25652672dd23431c0b75460269ef24d5df42"
+}

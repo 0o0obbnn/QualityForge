@@ -1,0 +1,19 @@
+{
+  "$comment": "Cleanup packet. Validated by scripts/cleanup_check.py at phase exit. construction_order drives the expected LIFO reverse; static_baselines are never cleaned; residuals must be explicit.",
+  "construction_order": ["A", "B", "C"],
+  "cleanup_plan": ["C", "B", "A"],
+  "static_baselines": ["BASE-VIP-001"],
+  "results": [
+    {"node_id": "C", "status": "success"},
+    {"node_id": "B", "status": "failed", "reason": "FK constraint"},
+    {"node_id": "A", "status": "success"}
+  ],
+  "residuals": [
+    {"node_id": "B", "reason": "FK constraint from external system; snapshot-restore pending"}
+  ],
+  "$codes": [
+    "WRONG_CLEANUP_ORDER", "STATIC_BASELINE_IN_CLEANUP",
+    "MISSING_CLEANUP_STATUS", "SILENCED_FAILURE",
+    "RESIDUALS_NOT_CHECKED", "UNTRACKED_RESIDUAL"
+  ]
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "input": {
+      "error_type": "conn_refused",
+      "env_healthy": false,
+      "data_valid": null
+    },
+    "expected": {
+      "classification": "ENVIRONMENT",
+      "confidence": 0.95
+    }
+  },
+  {
+    "input": {
+      "error_type": "fixture_build_fail",
+      "env_healthy": true,
+      "data_valid": false
+    },
+    "expected": {
+      "classification": "DATA",
+      "confidence": 0.9
+    }
+  },
+  {
+    "input": {
+      "error_type": "assertion_mismatch",
+      "env_healthy": true,
+      "data_valid": true
+    },
+    "expected": {
+      "classification": "PRODUCT_BUG",
+      "confidence": 0.9
+    }
+  },
+  {
+    "input": {
+      "error_type": "assertion_mismatch",
+      "env_healthy": null,
+      "data_valid": null
+    },
+    "expected": {
+      "classification": "TEST_ASSET_DEFECT",
+      "confidence": 0.4
+    }
+  }
+]

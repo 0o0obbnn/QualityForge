@@ -1,0 +1,33 @@
+{
+  "skill_name": "contract-drift-detector",
+  "evals": [
+    {
+      "id": 1,
+      "name": "field-removed-is-breaking",
+      "prompt": "IR 中 /api/v1/orders 响应的 interface_contract 声明字段为:[order_id, status, total, items]。来自线上 API 的 observation snapshot 显示:[order_id, status, amount, items]——\"total\" 字段消失,取而代之出现了 \"amount\"。运行 drift check。",
+      "expected_output": "必须归类为 BREAKING_DRIFT。必须识别出两处 drift:(1)字段移除:total 缺失——恒为 BREAKING;(2)字段新增:amount——作为必需的替代字段属于 BREAKING,而非可选新增的 COMPATIBLE。必须 BLOCK 流水线并创建强制人工评审检查点。不得自动更新 IR。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "optional-field-added-is-compatible",
+      "prompt": "IR 中 /api/v1/orders 响应的契约声明为:[order_id, status, total]。观测到的响应新增了一个可选字段:coupon_code(nullable string,未被任何现有 assertion 要求)。运行 drift check。",
+      "expected_output": "必须归类为 COMPATIBLE_DRIFT。必须解释:现有消费方可忽略的可选新增字段是兼容的(与 Pact 的前向兼容规则一致)。必须 WARN(而非 BLOCK)。必须记录到 governance dashboard 并创建 sample 级别的 review 项。不得自动更新 IR。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "state-removed-is-breaking",
+      "prompt": "IR 中 TestCase 实体的 state machine 声明状态为:[Draft, Reviewing, Approved, Deprecated]。一次观测显示线上系统不再返回 Deprecated 状态——该状态似乎已被移除。运行 drift check。",
+      "expected_output": "必须归类为 BREAKING_DRIFT。按分类规则,状态移除恒为 BREAKING。必须挂起 IR 中所有绑定到 Deprecated 状态的 test case。必须创建强制人工评审检查点。不得静默将其重新标记为新需求或兼容性 drift。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "no-drift-must-confirm-no-drift",
+      "prompt": "IR 契约声明响应为:{order_id: string, status: enum[PENDING,PAID,SHIPPED], total: number}。观测到的 API 响应:{order_id: \"ORD-123\", status: \"PAID\", total: 99.9}。所有字段的类型、枚举和存在性均匹配。运行 drift check。",
+      "expected_output": "必须返回 verdict NO_DRIFT。必须确认每个字段匹配:order_id(string 通过)、status(PAID 是合法枚举成员,通过)、total(number 通过)。不得生成虚假 findings。流水线必须无告警继续。",
+      "files": []
+    }
+  ]
+}

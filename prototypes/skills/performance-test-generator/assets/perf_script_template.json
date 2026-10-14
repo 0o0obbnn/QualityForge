@@ -1,0 +1,9 @@
+{
+  "$comment": "性能测试脚本契约。由 scripts/perf_check.py 校验。",
+  "targets": [{"target_id": "", "dependency": ""}],
+  "mocked_dependencies": ["被 mock 的依赖"],
+  "data_namespace": "loadtest_isolated",
+  "thresholds": [{"name": "", "source": "strategy"}],
+  "strategy_threshold_keys": ["来自 strategy 契约的 key"],
+  "$codes": ["MOCK_DEP_PERF_ASSERT", "SHARED_DATA_NAMESPACE", "THRESHOLD_NOT_FROM_STRATEGY"]
+}

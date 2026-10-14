@@ -1,0 +1,8 @@
+{
+  "skill_name": "data-cleanup-manager",
+  "evals": [
+    {"id": 1, "name": "accept-reverse-cleanup", "prompt": "校验构建顺序 A,B,C、清理顺序 C,B,A 且无残留。", "expected_output": "PASS,因为清理顺序是依赖顺序的逆序,且所有动态数据均被移除。", "files": []},
+    {"id": 2, "name": "reject-static-baseline-deletion", "prompt": "一个清理计划在包含动态节点的同时还包含静态 baseline。", "expected_output": "REJECT;静态 baseline 受保护,不得被运行时清理。", "files": []},
+    {"id": 3, "name": "reject-forward-cleanup", "prompt": "校验构建顺序 A,B,C、清理顺序 A,B,C。", "expected_output": "REJECT,因为依赖的清理顺序没有逆序。", "files": []}
+  ]
+}

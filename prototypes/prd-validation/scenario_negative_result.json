@@ -1,0 +1,140 @@
+{
+  "skill": "08",
+  "checked_at": "2026-09-06T06:52:45.652982+00:00",
+  "total_scenarios": 4,
+  "verdict": "REJECT",
+  "facet_distribution": {
+    "abnormal": 0,
+    "boundary": 1,
+    "normal": 1,
+    "permission": 0,
+    "state_transition": 1
+  },
+  "transitions_in_ir": 9,
+  "transitions_covered": 0,
+  "transitions_missing": [
+    "SM-001:处理异常->等待处理",
+    "SM-001:正在处理->处理完毕无反馈",
+    "SM-001:正在处理->处理完毕有反馈",
+    "SM-001:正在处理->处理异常",
+    "SM-001:等待处理->正在处理",
+    "SM-002:待审批->审批不通过",
+    "SM-002:待审批->审批通过",
+    "SM-003:停用->启用",
+    "SM-003:启用->停用"
+  ],
+  "total_findings": 18,
+  "reject_findings": 16,
+  "review_findings": 2,
+  "findings": [
+    {
+      "code": "REQUIREMENT_NOT_IN_IR",
+      "severity": "REJECT",
+      "target": "S-NEG-001",
+      "msg": "req_id 'REQ-999' 不在 IR 中"
+    },
+    {
+      "code": "RULE_NOT_IN_IR",
+      "severity": "REJECT",
+      "target": "S-NEG-002",
+      "msg": "rule_id 'BR-999' 不在 IR 中"
+    },
+    {
+      "code": "INVALID_FACET",
+      "severity": "REJECT",
+      "target": "S-NEG-002",
+      "msg": "facet 'happy' 无效"
+    },
+    {
+      "code": "MALFORMED_SCENARIO_ID",
+      "severity": "REJECT",
+      "target": "BAD-ID",
+      "msg": "scenario_id 'BAD-ID' 格式不正确"
+    },
+    {
+      "code": "INVALID_TRANSITION_REF",
+      "severity": "REJECT",
+      "target": "BAD-ID",
+      "msg": "transition_ref 'SM-001:等待处理->处理完毕有反馈' 不在 IR 中"
+    },
+    {
+      "code": "ORPHAN_SCENARIO",
+      "severity": "REJECT",
+      "target": "S-NEG-003",
+      "msg": "缺少字符串 req_id"
+    },
+    {
+      "code": "ORPHAN_SCENARIO",
+      "severity": "REJECT",
+      "target": "S-NEG-003",
+      "msg": "缺少字符串 rule_id"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-001:处理异常->等待处理",
+      "msg": "transition 'SM-001:处理异常->等待处理' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-001:正在处理->处理完毕无反馈",
+      "msg": "transition 'SM-001:正在处理->处理完毕无反馈' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-001:正在处理->处理完毕有反馈",
+      "msg": "transition 'SM-001:正在处理->处理完毕有反馈' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-001:正在处理->处理异常",
+      "msg": "transition 'SM-001:正在处理->处理异常' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-001:等待处理->正在处理",
+      "msg": "transition 'SM-001:等待处理->正在处理' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-002:待审批->审批不通过",
+      "msg": "transition 'SM-002:待审批->审批不通过' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-002:待审批->审批通过",
+      "msg": "transition 'SM-002:待审批->审批通过' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-003:停用->启用",
+      "msg": "transition 'SM-003:停用->启用' 未被覆盖"
+    },
+    {
+      "code": "TRANSITION_UNCOVERED",
+      "severity": "REJECT",
+      "target": "SM-003:启用->停用",
+      "msg": "transition 'SM-003:启用->停用' 未被覆盖"
+    },
+    {
+      "code": "EMPTY_FACET",
+      "severity": "REVIEW",
+      "target": "facet:abnormal",
+      "msg": "没有任何 'abnormal' 场景"
+    },
+    {
+      "code": "EMPTY_FACET",
+      "severity": "REVIEW",
+      "target": "facet:permission",
+      "msg": "没有任何 'permission' 场景"
+    }
+  ],
+  "routing": "退回生成器"
+}

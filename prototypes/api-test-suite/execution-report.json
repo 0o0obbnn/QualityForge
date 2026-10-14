@@ -1,0 +1,63 @@
+{
+  "executed_at": "2026-08-27T16:31:27",
+  "runner": "pytest + httpx ASGITransport（in-process，function 级独立 SQLite）",
+  "summary": {
+    "passed": 80,
+    "failed": 0,
+    "skipped": 4,
+    "xfailed": 5,
+    "total": 89
+  },
+  "defects": [
+    {
+      "id": 1,
+      "severity": "contract-drift",
+      "evidence": "TC-AUTH-003 (xfail strict)",
+      "desc": "GET /auth/me 返回 actorType=USER；契约 LocalAuthProfile.actorType 枚举与 B14 裁决（2026-08-15）要求 HUMAN"
+    },
+    {
+      "id": 2,
+      "severity": "contract-drift",
+      "evidence": "TC-WI-001 (xfail strict)",
+      "desc": "createWorkItem 初始 status=READY（planning_workflow.py:507）；33号Schema work_items.status DEFAULT 'BACKLOG'"
+    },
+    {
+      "id": 4,
+      "severity": "missing-control",
+      "evidence": "TC-ERR-002[15,129] + TC-WI-019 (xfail strict)",
+      "desc": "createWorkItem 端点未声明 Idempotency-Key header（契约必填 16-128）且无幂等实现：15/129 字符键通过、同键重放创建两条数据"
+    },
+    {
+      "id": 5,
+      "severity": "contract-drift",
+      "evidence": "TC-PLN-012 执行调试",
+      "desc": "createCoverageReport 服务端必填 coverage 维度（ruleDimension 等含 covered/total），契约 CoverageReportCreate.required 未声明，最小合法请求被 422 拒绝"
+    }
+  ],
+  "skipped": [
+    {
+      "case": "TC-WI-017",
+      "reason": "本地单 workspace 实现，跨 workspace 工作项不可构造"
+    },
+    {
+      "case": "TC-RT-011",
+      "reason": "本地认证仅签发 USER 会话，AGENT 主体不可构造"
+    },
+    {
+      "case": "TC-RT-012",
+      "reason": "本地管理员 capabilities 为全集，受限会话不可构造"
+    },
+    {
+      "case": "TC-EX-001",
+      "reason": "服务端校验 testPlanId 引用存在性，testPlan 根在已实现面无创建入口"
+    }
+  ],
+  "coverage_note": "74 条设计用例中 66 条有对应自动化测试（含参数化展开为 89 个 pytest 项）；执行证伪并修正 3 处用例断言（decision 不回传/runs 宽松语义/eventType 字段名）；未自动化的用例为 skip 清单与冒烟合并项",
+  "xfailed_evidence": [
+    "test_01_auth.py::test_tc_auth_003_me_returns_profile（缺陷#1）",
+    "test_02_workboard.py::test_tc_wi_001_create_201_defaults（缺陷#2）",
+    "test_02_workboard.py::test_tc_wi_019_idempotent_create_same_id（缺陷#4-幂等）",
+    "test_04_contract.py::test_tc_err_002_idempotency_key_boundaries[15]（缺陷#4-长度）",
+    "test_04_contract.py::test_tc_err_002_idempotency_key_boundaries[129]（缺陷#4-长度）"
+  ]
+}

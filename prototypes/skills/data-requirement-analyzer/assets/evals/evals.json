@@ -1,0 +1,82 @@
+[
+  {
+    "id": "eval-01-pass",
+    "description": "Valid Hybrid requirement matching the case and IR",
+    "inputs": {
+      "requirements": [
+        {
+          "case_id": "case-01",
+          "fixture_category": "Hybrid",
+          "entities_needed": [
+            {"entity_id": "Order", "target_state": "DRAFT"}
+          ],
+          "sensitive_fields": ["credit_card"],
+          "construction_steps": ["Create Order"]
+        }
+      ],
+      "ir": {
+        "entities": [
+          {
+            "entity_id": "Order",
+            "fields": [{"name": "credit_card", "sensitivity_level": "SENSITIVE"}]
+          }
+        ],
+        "state_machines": [
+          {
+            "sm_id": "sm-order",
+            "entity_id": "Order",
+            "states": ["DRAFT", "PAID"],
+            "transitions": [{"from": "DRAFT", "to": "PAID"}]
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "case-01",
+          "fixture_category": "Hybrid"
+        }
+      ]
+    },
+    "expected_verdict": "PASS"
+  },
+  {
+    "id": "eval-02-reject-missing-sensitive",
+    "description": "Requirement omits sensitive field from IR",
+    "inputs": {
+      "requirements": [
+        {
+          "case_id": "case-02",
+          "fixture_category": "Dynamic",
+          "entities_needed": [
+            {"entity_id": "Order", "target_state": "DRAFT"}
+          ],
+          "sensitive_fields": [],
+          "construction_steps": ["Create Order"]
+        }
+      ],
+      "ir": {
+        "entities": [
+          {
+            "entity_id": "Order",
+            "fields": [{"name": "credit_card", "sensitivity_level": "SENSITIVE"}]
+          }
+        ],
+        "state_machines": [
+          {
+            "sm_id": "sm-order",
+            "entity_id": "Order",
+            "states": ["DRAFT", "PAID"],
+            "transitions": [{"from": "DRAFT", "to": "PAID"}]
+          }
+        ]
+      },
+      "cases": [
+        {
+          "case_id": "case-02",
+          "fixture_category": "Dynamic"
+        }
+      ]
+    },
+    "expected_verdict": "REJECT"
+  }
+]

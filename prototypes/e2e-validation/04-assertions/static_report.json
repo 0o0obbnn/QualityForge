@@ -1,0 +1,9 @@
+{
+  "stage": 1,
+  "stage_name": "static_check",
+  "total_assertions": 3,
+  "clean_assertions": 3,
+  "violations": [],
+  "verdict": "PASS",
+  "checked_at": "2026-08-11T15:53:10.828108+00:00"
+}

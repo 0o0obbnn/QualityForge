@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 需求说明书 V1.0 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.75;}
+  .wrap{max-width:780px;margin:0 auto;padding:48px 28px 96px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:36px;}
+  h1{font-size:22px;margin:36px 0 12px;padding-top:14px;border-top:1px solid var(--line);}
+  h2{font-size:18px;margin:28px 0 10px;}
+  h3{font-size:16px;margin:20px 0 8px;}
+  h4{font-size:15px;margin:16px 0 6px;}
+  p{margin:8px 0;}
+  .src{font-size:12px;color:var(--muted);margin:4px 0 12px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;}
+  td{border-bottom:1px solid var(--line);padding:6px 8px;vertical-align:top;}
+  li{margin:4px 0 4px 22px;}
+  a{color:var(--link);}
+  footer{margin-top:56px;border-top:1px solid var(--line);padding-top:14px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="src">QualityForge 需求说明书（SRS）· V1.0 · 2026-08-14 · 编制依据 GB/T 9385-2008</div>
+  <h1 style="border:none;margin:0;font-size:26px;">QualityForge 需求说明书</h1>
+  <p class="src">可编辑版（docx）与本文档内容一致；本文档为预览版，正文与附表可直接阅读。</p>
+</header>
+<h1>QualityForge 需求说明书(第 1 章 引言、第 2 章 总体描述)</h1>
+<p>文档信息:</p>
+<li>文档名称:QualityForge 需求说明书(节选:第 1 章、第 2 章)</li>
+<li>编制依据:GB/T 9385-2008《计算机软件需求规格说明规范》</li>
+<li>编制日期:2026-08-14</li>
+<li>内容来源:本项目 01、02、03、05、22、34 号权威文档,未新增未经验证的陈述</li>
+<li>适用范围:产品设计、开发、测试与验收各方对产品边界与总体能力的共同基线</li>
+<p>---</p>
+<h2>第 1 章 引言</h2>
+<p>本章依次说明本需求说明书的编写目的与预期读者、产品范围与边界、关键术语定义、引用文件清单以及文档自身的组织方式,帮助读者在进入总体描述之前建立对本文档性质与使用方法的完整认识。</p>
+<h3>1.1 目的</h3>
+<p>本需求说明书依据 GB/T 9385-2008 的章节骨架编制,对 QualityForge 产品的总体定位、八个一级功能模块、用户角色、全局约束、假设与依赖以及分版本需求分配进行系统化、可核对的描述。它的核心目的,是为产品设计、开发、测试与验收各方提供一份唯一可对照的总体基线:产品&quot;做什么、不做什么、由谁负责、按什么顺序交付&quot;,都应以本文档及其引用的权威文档为准,而不是依赖口头约定或零散页面。</p>
+<p>本文档的预期读者包括四类人群。第一类是产品与业务人员,包括产品经理与需求分析师,他们据此核对产品承诺与版本范围;第二类是最终用户代表,主要是测试工程师与测试负责人,他们据此理解 AI 生产与人工审核的分工边界、自己在审核与批准环节的职责,以及系统不会代替他们作出的决定;第三类是研发与架构人员,包括前端、后端、测试开发与运维工程师,他们据此确定实现范围、模块边界与必须满足的审核门禁;第四类是质量与治理人员,包括平台治理人员、审计人员与项目管理者,他们据此检查权限隔离、审计留痕与版本交付证据是否满足要求。</p>
+<p>在阅读方式上,本文档遵循三条约定:其一,凡涉及术语、实体、状态与枚举的定义,一律以 03 号术语表为唯一权威源,本文档不再重复裁决;其二,凡涉及产品范围、模块职责与版本承诺的陈述,均在相应小节末尾以来源标注形式给出出处,读者可据此回溯核对;其三,本文档只描述&quot;做什么、不做什么、由谁负责&quot;,具体的界面呈现、接口契约与数据库设计由项目的 04、32、33 号等文档另行规定。</p>
+<p>综上所述,本文档的目的是让各方对&quot;QualityForge 是什么产品、边界在哪里、谁对正式产出物负责&quot;形成一致理解,为后续逐条功能需求、接口需求与非功能需求的展开奠定基础。</p>
+<p class="src">（来源:02-PRD总纲 §1、§2;05-功能模块重构方案 §1）</p>
+<h3>1.2 范围</h3>
+<p>本文档描述的产品名称为 QualityForge,定位为 AI 原生端到端测试平台。它面向测试工程师、测试负责人和测试平台治理人员,提供从测试依据、策略、计划、用例、自动化代码、执行、结果分析、Defect 到测试报告的端到端工作平台。产品的一级功能模块固定为八个:任务看板、知识库、测试策划与设计、自动化测试开发、测试执行、质量分析与缺陷、AI Agent 中心、平台管理;其中前六个为测试工作与产出物模块,后两个为管理控制模块。</p>
+<p>本需求说明书所覆盖的内容包括:产品总体描述与核心理念、八个模块的功能概要、六类内置 RBAC 角色及其使用场景、法规与安全等技术约束、外部依赖与假设,以及 V1、V2、V3 三个交付版本的需求分配。本文档不包含数据库物理设计、API 详细规格与 UI 视觉规范,这些内容分别由项目的 04、32、33 号等文档承担;本文档也不重新裁决术语、实体与契约定义,相关内容一律以 03 号术语表及其指定的权威源为准。</p>
+<p>产品&quot;不做什么&quot;由当前非目标明确界定,主要包括:</p>
+<li>V0 阶段不交付可运行的 SaaS、分布式执行平台或完整 Agent 市场;</li>
+<li>V1 阶段不承诺无人测试、全自动发布门禁或替代测试人员;</li>
+<li>不把 Workspace 复制成 Project 实体,不把 Skill 和 Agent 合并为同一概念;</li>
+<li>不因 AI 高置信度跳过正式产出物审核、外部写入批准或报告签署;</li>
+<li>在没有实测基线之前,不承诺固定的收益百分比、并发量、延迟或 AI 准确率。</li>
+<p>在适用边界上,本文档适用于以&quot;项目(Workspace)加发布版本(Release)&quot;为组织单元的测试团队,覆盖从需求导入到质量交付的完整测试生命周期;不适用于把本产品当作通用项目管理工具、独立 CI 分发平台或无人值守测试系统来使用。需要特别强调的是,任何版本均不取消正式产出物的人工审核、外部写入批准、报告签署、权限隔离与可追溯性,这是贯穿全部范围描述的总边界。</p>
+<p>综上,本文档界定的产品是一条&quot;人工负责、AI 生产、证据可溯&quot;的智能测试生产线,而不是替代测试人员的黑盒工具。</p>
+<p class="src">（来源:02-PRD总纲 §3.2、§4;22-MVP版本规划v2.0 前言;05-功能模块重构方案 §2.1）</p>
+<h3>1.3 定义与缩略语</h3>
+<p>本文档沿用项目术语权威源(03 号术语表)的命名约定:产品展示名使用面向测试人员的清晰中文业务语言,领域实体使用稳定的英文规范名。下表列出本文档涉及的核心术语;凡未列入表中的实体、状态与枚举,一律以 03 号术语表为唯一权威源。</p>
+<table><thead><tr><th>术语</th><th>中文</th><th>定义</th></tr></thead><tbody><tr><td>Workspace</td><td>项目/工作空间</td><td>测试数据、权限和执行上下文的顶级业务边界;UI 统一显示&quot;项目&quot;,技术契约只使用 Workspace,不新增 Project 实体</td></tr><tr><td>Release</td><td>发布版本</td><td>Workspace 内一次业务发布的追溯锚点;不等于任何资产的修订版本</td></tr><tr><td>WorkItem</td><td>工作项</td><td>人、Agent 或系统为产生、审核、执行测试产出物而处理的统一业务工作单元</td></tr><tr><td>ReviewTask</td><td>审核任务</td><td>绑定精确产出物版本与内容摘要、审核策略、审核人职责和决议的人工任务</td></tr><tr><td>TestStrategy</td><td>测试策略</td><td>对 Release 定义目标、范围、风险、方法、测试类型、准入/退出、环境/数据/自动化/缺陷策略的正式产出物</td></tr><tr><td>TestPlan</td><td>测试计划</td><td>基于已批准策略拆解责任、时间、任务、资源、依赖和验收标准的正式活动计划</td></tr><tr><td>TestingIR</td><td>测试中间表示</td><td>从精确需求/API 来源编译出的结构化需求、规则、实体、状态机、接口和约束中间表示</td></tr><tr><td>TestCase</td><td>测试用例</td><td>跨计划复用的正式测试意图,包含前置、步骤、数据、预期、断言、来源和版本</td></tr><tr><td>AutomationScript</td><td>自动化脚本</td><td>Web/API 等自动化实现的稳定身份;代码正文按不可变版本管理</td></tr><tr><td>ExecutionPlan</td><td>执行计划</td><td>绑定测试计划、精确用例/代码版本、环境、触发、并发和 Runner 策略的机器运行配置</td></tr><tr><td>ExecutionResult</td><td>执行结果</td><td>单个用例在一次执行任务中的不可变执行事实</td></tr><tr><td>Defect</td><td>缺陷</td><td>平台内部问题的稳定身份与生命周期;不等于失败聚类或外部 Issue</td></tr><tr><td>TestReport</td><td>测试报告</td><td>绑定不可变范围、结果、覆盖、缺陷、风险快照并经签署的正式质量产出物</td></tr><tr><td>KnowledgeEntry</td><td>知识条目</td><td>具有来源、适用范围、验证证据、失效条件、版本和人工发布记录的正式知识</td></tr><tr><td>SourceTrace</td><td>来源溯源</td><td>从原始来源、规则、用例、代码、执行到分析、缺陷、报告的只追加可追溯关系</td></tr><tr><td>APIContract</td><td>API 契约</td><td>Workspace 内一个逻辑 API 服务或契约集合的稳定身份;知识库为其唯一所有者</td></tr><tr><td>Agent</td><td>智能体</td><td>受职责、技能白名单、文件/网络/密钥/外部写入和委派边界约束的机器身份</td></tr><tr><td>Skill</td><td>技能</td><td>可复用的原子能力或确定性门禁,具有输入输出 Schema、版本、权限需求和评测</td></tr><tr><td>ReviewPolicy</td><td>审核策略</td><td>按产出物类型和风险定义审核阶段、人数、能力、职责分离和阻断检查的策略</td></tr><tr><td>contentDigest</td><td>内容摘要</td><td>对受审核正文、结构化字段和证据清单规范化计算得到的摘要;摘要变化使旧批准失效</td></tr></tbody></table>
+<p>除上表术语外,本文档还使用若干通用缩略语:RBAC 指基于角色的访问控制,SLA 指服务等级协议,HITL 指人在回路审核,RCA 指根因分析,RAG 指检索增强生成,OIDC 指开放身份连接协议;API、Web、CI 等通用缩略语按惯例理解,不再逐一解释。</p>
+<p>此外,本文档涉及的核心状态枚举,包括通用产出物审核状态(草稿、生成中、待审核、要求修改、已批准、已发布、已拒绝、待复核、已归档)、WorkItem 状态、ExecutionResult 状态与 Defect 生命周期等,均以 03 号术语表第 13 节为权威来源;界面展示标签由状态与执行者类型组合派生,不属于本表定义范围。</p>
+<p>上表术语在本文档各处使用时,其含义均以上表及 03 号术语表的对应章节为准,历史名称只用于迁移与审计,不再作为现行可写契约。</p>
+<p class="src">（来源:03-术语表Glossary §4-§13）</p>
+<h3>1.4 引用文件</h3>
+<p>本需求说明书的全部内容均来源于下列项目权威文档,不包含来源之外的自行设定。文档编号沿用项目文档体系,后续章节以编号简称引用;各文档的现行版本与详细内容以项目仓库中的实际文件为准。</p>
+<table><thead><tr><th>编号</th><th>文档名称</th><th>版本/状态</th><th>在本说明书中的作用</th></tr></thead><tbody><tr><td>01</td><td>产品功能地图 v2.0</td><td>v2.0</td><td>八模块职责、八类正式产出物归属与版本演进总览</td></tr><tr><td>02</td><td>PRD 总纲</td><td>现行</td><td>产品定义、目标与非目标、范围、核心旅程与验收原则</td></tr><tr><td>03</td><td>术语表 Glossary</td><td>现行</td><td>术语、实体、状态与枚举的权威定义</td></tr><tr><td>05</td><td>功能模块重构方案</td><td>修订至 2026-08-12</td><td>模块划分裁决、人机职责、产出物与审核契约</td></tr><tr><td>22</td><td>MVP 版本规划 v2.0</td><td>v2.0</td><td>V0-V3 范围、非目标、版本门禁与需求分配</td></tr><tr><td>34</td><td>认证授权设计</td><td>现行</td><td>身份类型、作用域 RBAC、审核授权与安全约束</td></tr></tbody></table>
+<p>上述文档之间如出现表述差异,按 05 号文档的约定处理:术语、实体、治理、API 与数据库相关内容分别以 03、04、32、33、34、55 号等对应权威源为现行依据;本文档只汇总引用,不参与裁决。</p>
+<p class="src">（来源:05-功能模块重构方案 引言;各引用文档本身）</p>
+<h3>1.5 综述</h3>
+<p>本文档按 GB/T 9385-2008 规定的骨架组织,当前版本包含前两章。第 1 章引言已依次说明编写目的与预期读者、产品范围与非目标、术语定义、引用文件清单以及本文档的组织方式;第 2 章总体描述将从整体上给出产品定位与核心理念、八个一级模块的功能概要、用户特点与角色、全局约束、假设和依赖,以及 V1 至 V3 的需求分配。</p>
+<p>后续章节将沿同一骨架继续展开:逐条描述各模块的功能需求、外部接口需求、非功能需求与验收要求,并保持与第 2 章总体描述的一致性,凡涉及术语、实体与状态的内容均回指 1.3 节所引权威源。</p>
+<p>建议读者先通读第 2 章形成整体认识,再结合自身角色查阅具体章节;涉及术语争议时,以 03 号术语表为准。</p>
+<p class="src">（来源:GB/T 9385-2008 章节组织约定）</p>
+<p>---</p>
+<h2>第 2 章 总体描述</h2>
+<p>本章从整体视角描述 QualityForge 的产品本质、功能构成、使用人群与约束环境,并给出需求的版本分配,为后续逐条功能需求提供全局背景。</p>
+<h3>2.1 产品描述</h3>
+<p>QualityForge 是一个 AI 原生端到端测试平台,面向测试工程师、测试负责人和测试平台治理人员,提供从测试依据、策略、计划、用例、自动化代码、执行、结果分析、Defect 到测试报告的端到端工作平台。产品的核心分工是:AI Agent 尽可能承担资料解析、草稿生成、代码生成、检查、执行、证据整理、分析和改稿工作;测试人员负责审核、批改、业务取舍、例外裁决和最终质量责任。</p>
+<p>在测试领域的整体版图中,QualityForge 不是&quot;传统测试管理平台增加若干 AI 功能&quot;,而是一条以测试交付物为主线的智能测试生产线。平台围绕测试生命周期的正式产出物组织功能,而不是围绕 Agent、Skill、Runner、向量库等内部技术组件组织测试人员的日常工作;测试人员看到的是任务、产出物与审核队列,而非 AI 基础设施。它的组织单元是持续存在的项目(Workspace)与项目内一次有范围、有时间、有质量结论的发布版本(Release)。</p>
+<p>产品的核心理念是&quot;AI 生产、人工负责&quot;的人机协作与责任分层。AI 可以生成草稿、执行已批准的任务、组织证据与提出建议,但正式测试产出物必须由有权限的测试人员审核后生效;执行事实、AI 推断和人工决定在系统中清晰分层,任何一方都不能越界冒充另一方。这一理念同时体现在权限设计上:管理员身份不自动获得业务批准权,AI 永远不能作为正式批准人,正式批准是审核任务中的临时职责而非全局角色。</p>
+<p>围绕这一理念,产品设定四个核心目标:提高效率,减少需求阅读、测试设计、代码编写、结果整理和报告编制中的重复劳动;提高质量,通过来源追踪、AI 交叉检查、人工审核和确定性门禁减少遗漏与错误;保持人类责任,让 AI 生成和执行的同时,由测试人员对正式产出物承担最终质量责任;形成持续学习闭环,使执行结果、缺陷与复盘经验经审核后回流知识库,提高下一轮 AI 产出质量。同时,产品要求 AI 行为、权限、输入输出、成本和效果可观察、可评测、可降级。</p>
+<p>在产出物层面,产品确立八类正式测试产出物:测试策略、测试计划、测试用例、Web/API 自动化测试代码、结果分析、缺陷、测试报告与知识条目。每类产出物采用稳定根加不可变版本保存,发布与批准绑定精确内容摘要;每个业务实体只有一个唯一所有者模块,跨模块通过 ID、版本和事件引用,不复制可写真相源。总而言之,QualityForge 的本质是一台由人设定目标与把关质量、由 AI 承担生产与执行的测试生产线,其所有设计都服务于&quot;可控、可溯、可评测&quot;这一总要求。</p>
+<p class="src">（来源:01-产品功能地图v2.0 §1、§4;02-PRD总纲 §1、§3.1;05-功能模块重构方案 §1、§3.2）</p>
+<h3>2.2 产品功能</h3>
+<p>产品目标态划分为八个一级功能模块,其中任务看板、知识库、测试策划与设计、自动化测试开发、测试执行、质量分析与缺陷六个模块承载测试工作与产出物,AI Agent 中心与平台管理两个模块承担管理与控制职能。下面按测试主链的顺序介绍各模块的功能概要。</p>
+<li>任务看板:测试人员与 AI 协作的任务控制中心,是默认首页与日常工作入口;统一承载工作项创建与拆解、AI 运行进度、待我审核、审核退回、阻塞与风险等队列,以及审核决议和效率指标,把&quot;人操作多个工具&quot;转变为&quot;人管理一条 AI 测试生产线&quot;。</li>
+<li>知识库:AI 工作的可信输入源和经人工确认的经验沉淀中心;管理需求文档、API 契约等原始来源、项目结构、来源快照与溯源、已审核知识与知识候选发布,保证 AI 基于项目事实工作并可持续沉淀经验。</li>
+<li>测试策划与设计:把项目目标、需求和风险转化为经审核的测试策略、测试计划、测试场景、用例与断言,形成&quot;需求、规则、策略、计划、场景、用例、断言&quot;的可信设计链。</li>
+<li>自动化测试开发:把批准的测试设计转化为可审查、可调试、可执行的 Web 与 API 自动化测试代码,以及配套的测试数据、Locator 与 Mock;AI 承担代码生成与检查,工程级代码审核与版本控制保留给人工。</li>
+<li>测试执行:冻结精确的资产、环境与契约版本,调度 Runner 执行并保存只追加的不可变结果、日志与证据;原始执行证据不可被分析结论反向改写,保证结果可观察、可复现。</li>
+<li>质量分析与缺陷:将原始执行证据转化为经测试人员确认的结果分析、失败聚类、Defect、测试报告与质量门禁,并把已审核知识回流知识库,构成&quot;执行后处理&quot;的完整闭环。</li>
+<li>AI Agent 中心:管理 Agent、Skill、Workflow、Prompt、Trace、Eval 与权限治理;业务人员从任务看板使用 AI,管理员在治理台管理 AI,该模块不拥有业务产出物的最终批准权。</li>
+<li>平台管理:提供租户、用户、项目、发布版本、环境、密钥、模型、Runner、外部集成与审计的基础设施管理,并按身份、安全、模型、Runner、集成和审计划分子域。</li>
+<p>八个模块并非并列孤立,而是沿主链协作:知识库、测试策划与设计、自动化测试开发、测试执行、质量分析与缺陷依次衔接,已审核的知识、缺陷经验与质量模式再回流知识库形成反馈闭环;任务看板贯穿全流程负责编排与追踪,AI Agent 中心为各阶段提供受治理的 AI 生产与执行能力,平台管理为全平台提供身份、安全、模型、Runner、集成与审计支撑。模块之间遵循清晰的边界规则:任务看板拥有工作项但不拥有业务产出物正文,知识库唯一拥有来源与已发布知识,测试执行拥有原始执行证据,质量分析与缺陷的分析、缺陷与报告在审核前均为草稿或候选。</p>
+<p>在上述模块之上,产品以三条核心旅程定义端到端的价值交付方式。旅程 A 是从需求到可审核测试资产:导入来源、固化来源快照、AI 编译测试中间表示、生成策略/计划/用例草稿、执行确定性检查与独立验证,再由测试人员在审核任务中查看差异、证据与风险,批准或退回新版本。旅程 B 是从正式用例到自动化结果:选择已批准的用例版本,AI 生成 Web/API 自动化代码版本,经过代码检查与人工审核后创建冻结资产的执行计划,由 Runner 执行并只追加保存结果、日志与证据。旅程 C 是从失败到质量交付:AI 基于执行事实聚类并给出根因分析,人工审核结果分析,AI 生成缺陷与测试报告草稿,人工批准与签署后经单次外部写入批准同步缺陷,已审核知识回流知识库。三条旅程共同覆盖测试工作的主要价值场景,也决定了各模块的职责边界与审核控制点。</p>
+<p>综上,八个模块以明确的单一所有权和跨模块引用关系构成一条完整的智能测试生产线,任何模块都不替代另一模块的业务判断。</p>
+<p class="src">（来源:01-产品功能地图v2.0 §2、§3;02-PRD总纲 §6;05-功能模块重构方案 §2.1、§4、§5.1、§5.2）</p>
+<h3>2.3 用户特点与角色</h3>
+<p>产品的使用主体是测试组织中的各类人员,他们对测试业务有专业理解,但对 AI 技术细节的需求被刻意隔离。测试工程师的日常职责是批改用例与代码、触发执行、分析和处理 Defect;测试负责人控制范围、风险和交付质量,审核策略、计划与报告并裁决关键例外;平台治理人员维护工作区与租户的运行条件。系统要求使用者理解&quot;AI 生产、人工负责&quot;的分工,能够区分执行事实与 AI 推断,并对正式产出物承担审核与批准责任;使用者无需掌握模型、技能或运行节点等 AI 基础设施细节,这些能力由治理人员在 AI Agent 中心统一配置与评测。</p>
+<p>系统采用作用域 RBAC,内置六类角色模板,如下表所示:</p>
+<table><thead><tr><th>角色</th><th>典型作用域</th><th>允许职责</th><th>明确不自动拥有</th></tr></thead><tbody><tr><td>PlatformAdmin</td><td>平台级</td><td>平台基础设施、全局模板、租户生命周期和安全运维</td><td>全租户测试内容、业务批准、报告签署</td></tr><tr><td>TenantAdmin</td><td>租户级</td><td>成员、租户策略、配额、共享集成和角色委派</td><td>Workspace 正式产出物批准</td></tr><tr><td>WorkspaceAdmin</td><td>工作区级</td><td>Workspace 成员、环境、集成引用和常规配置</td><td>报告签署、质量门禁豁免、跨 Workspace 访问</td></tr><tr><td>TestLead</td><td>工作区/资源级</td><td>策略/计划总体把控、风险裁决、具备授权时审核</td><td>RBAC/Secret 管理、自动越过四眼复核</td></tr><tr><td>TestEngineer</td><td>工作区/资源级</td><td>编写/批改资产、触发执行、分析、处理 Defect</td><td>默认批准自己的产出物、权限管理</td></tr><tr><td>ViewerAuditor</td><td>租户/工作区级</td><td>授权范围只读、审计和证据查看</td><td>写入、执行、批准、外部写入</td></tr></tbody></table>
+<p>从使用场景看,六类角色围绕审核链协作:日常流程中,TestEngineer 从任务看板的待审核队列接收 AI 草稿,进行批改、批准或退回;TestLead 对策略、计划、报告与高风险结论进行总体审核和签署,处理阻塞与例外;ViewerAuditor 以只读身份查看审核链与执行证据,承担审计职能;三层管理员分别维护平台、租户与工作区的运行条件。需要强调的是,角色只是权限模板,不是硬编码判断依据;管理员身份不自动获得业务批准,正式批准人(Approver)与审核人(Reviewer)是审核任务中的临时职责,由审核策略、能力、作用域和职责分离共同计算得出,只能由具备相应能力的人类承担。此外,系统还存在 Service 与 Agent 两类机器身份,它们只能在授权交集内受限执行,永远不能作为正式批准人。</p>
+<p>综上所述,六类角色与两类机器身份共同构成产品的权限主体体系,其设计原则是:权限按作用域显式授予,业务批准专属人类,任何身份都不能凭借单一角色属性获得超出职责的权限。</p>
+<p class="src">（来源:02-PRD总纲 §2;03-术语表Glossary §5;34-认证授权设计 §4.1、§5）</p>
+<h3>2.4 约束</h3>
+<p>产品在法规合规、安全、技术与运营四个方面受到如下约束。这些约束适用于所有版本,是需求实现与验收的强制前提。</p>
+<p>法规与合规约束:</p>
+<li>正式产出物、执行证据与审核记录必须可审计、可追溯,高价值动作写入只追加的授权决定与审计日志;</li>
+<li>敏感信息受保护:明文凭证与未脱敏个人信息不得进入 API 响应、日志、Trace、产出物或 Agent 上下文;产出物正文不得保存明文凭证或无限期有效的下载地址;</li>
+<li>数据保留与归档受管理:平台提供全局审计、数据保留与归档能力,废弃不等于删除,历史执行与审计仍引用原版本。</li>
+<p>安全约束:</p>
+<li>默认拒绝,认证成功不等于有权访问任何 Workspace;平台、租户、工作区、资源四级作用域显式授权;</li>
+<li>用户权限、机器权限、工作流节点权限、资源状态与环境条件取交集,任一拒绝即失败关闭;</li>
+<li>正式产出物批准是人类专属能力,受审核策略、能力、作用域与职责分离共同约束;</li>
+<li>高价值动作逐次重新授权;Secret 只保存引用并加密存储,明文不返回普通接口;</li>
+<li>多租户隔离采用行级安全作为纵深防御,应用事务注入租户上下文,上下文缺失或伪造即终止请求。</li>
+<p>技术约束:</p>
+<li>每个业务实体只有一个唯一所有者模块,跨模块通过 ID、版本和事件引用,不复制可写真相源;</li>
+<li>正式产出物以稳定根加不可变版本保存,发布与批准绑定精确内容摘要;执行结果、证据、审核决定、授权决定、审计日志与 Agent Trace 只追加;</li>
+<li>审核、执行与报告必须引用精确版本,禁止引用&quot;当前最新版本&quot;;内容摘要变化使旧批准失效,下游引用随之失效;</li>
+<li>正式产出物必须通过确定性检查、独立验证和适用的人工审核,三层证据分别报告;确定性门禁失败不得用人工审核工单掩盖;</li>
+<li>AI 自治默认受限代理;没有经批准且仍有效的评测校准记录时,分数不能驱动高价值自治;</li>
+<li>外部写入逐次审批、幂等执行并保留回执与冲突处理。</li>
+<p>运营约束:</p>
+<li>V1 以单租户、单 Workspace 试点闭环为交付形态,不做多租户商业化运营、可视化工作流设计器、Skill 市场、多云弹性与 L3 自治;</li>
+<li>收益指标先建立人工基线,再按同类任务、同等复杂度和明确样本窗口比较;具体目标值必须在试点基线后批准,禁止沿用无测量方法的 80%、95% 等口号;</li>
+<li>版本交付必须列清范围、非目标、基线、测量方法、已知限制与恢复方案;版本门禁按产品、质量、安全、AI、运行、发布六类证据验收;</li>
+<li>覆盖率按实例、设计、可执行、严格有效、人工验收五类口径分别报告,分母互不推导、互不替代,禁止混用。</li>
+<p>上述约束共同决定了产品的实现底线:无论版本如何演进,可审计、可追溯、人工负责与失败关闭的原则均不可放宽。</p>
+<p class="src">（来源:02-PRD总纲 §7、§8;05-功能模块重构方案 §3.4、§5.6;22-MVP版本规划v2.0 §7、附录C;34-认证授权设计 §1、§7、§8）</p>
+<h3>2.5 假设和依赖</h3>
+<p>本产品的需求建立在以下假设之上,若假设不成立,相应需求的有效性需要重新评估:</p>
+<li>项目当前尚无应用代码与生产数据,文档阶段只执行契约迁移,不执行数据库数据迁移;</li>
+<li>试点阶段存在一个真实但可控的 Workspace 与 Release,能够完成&quot;来源、策略/计划/用例、Web/API 代码、执行、分析/Defect/报告、人工审核&quot;的完整证据链;</li>
+<li>测试组织能够提供具备审核与批准权限的人力资源,持续承担正式产出物审核、外部写入批准与报告签署责任;</li>
+<li>AI 生成物始终需要人工审核,任何版本都不假设无人测试或全自动发布;</li>
+<li>收益与质量指标在 V1 试点基线建立之前不作定量承诺,禁止沿用无测量方法的目标值口号。</li>
+<p>产品同时依赖以下外部条件与系统:</p>
+<li>大模型能力:依赖 LLM Provider 的模型路由、额度、成本与健康度管理;模型、Prompt、Skill、Workflow 或数据分布变化后须重新校准;</li>
+<li>执行基础设施:依赖 Runner 节点注册、升级、健康与资源池管理;Runner 缺少所需能力时任务在执行前失败并转阻塞,不得运行后静默降级;</li>
+<li>外部系统:Git、Jira、PingCode、LDAP/SSO、消息通知等外部集成,写入须逐次授权、幂等执行并保存回执与冲突处理;</li>
+<li>身份与密钥:目标设计依赖 OIDC/MFA 身份提供方与 KMS/Vault 密钥管理;在目标能力就绪前,Stage 4 阶段使用受限的本地认证 Profile,采用 scrypt 密码散列、JWT 校验与 HttpOnly Cookie,持久化数据在签名密钥轮换后需用户重新登录;</li>
+<li>数据库:多租户隔离依赖数据库行级安全,应用使用非 owner、无 BYPASSRLS 身份连接,只读查询也须在显式事务内执行。</li>
+<p>上述假设与依赖构成产品外部环境的基本画像,相关能力未就绪时,相应需求应降级或推迟,而不应通过放宽安全边界来迁就。</p>
+<p class="src">（来源:05-功能模块重构方案 §5.7.9;22-MVP版本规划v2.0 §2、§3;34-认证授权设计 引言、§7、§8）</p>
+<h3>2.6 需求分配</h3>
+<p>产品按 V0、V1、V2、V3 四个阶段演进,其中 V0 为设计与开发准入阶段,交付产品边界、核心旅程、契约一致性与 Gate 0 原型,不冒充可用产品;本文档将功能需求分配到 V1、V2、V3 三个交付版本。产品版本与 API 版本属于不同版本轴,不得混用;任何版本均不取消正式产出物人工审核、外部写入批准、报告签署、权限隔离与可追溯性。各版本的范围分配如下表所示:</p>
+<table><thead><tr><th>版本</th><th>定位</th><th>主要需求内容</th><th>明确不做</th></tr></thead><tbody><tr><td>V1</td><td>单 Workspace 试点闭环</td><td>八模块最小入口贯通:工作项与审核队列、知识导入与基础检索、策略/计划/用例生成与审核、Web/API 代码生成与代码审核、单 Runner 执行与证据、RCA/Defect/报告草稿与审核、固定工作流与 L0-L2 降级、试点所需平台管理</td><td>多租户商业化运营、可视化工作流设计器、Skill 市场、多云弹性、L3 自治、自动放行发布、自动对外提 Defect、无人审核正式资产</td></tr><tr><td>V2</td><td>团队协同与集成增强</td><td>多 Workspace 协作与四眼复核、多 Runner 调度与资源配额、外部缺陷/代码仓库/CI 集成的逐次授权与幂等回执、质量门禁与智能回归建议、知识反馈、契约漂移与 Locator 候选修复、Golden Set 持续评测与版本化校准</td><td>不以功能页面完成判定,准出须有容量、韧性、安全、成本与误放/误阻基线</td></tr><tr><td>V3</td><td>企业规模与扩展代理</td><td>弹性 Runner 与资源隔离、区域/故障域策略与企业集成、Skill/Agent/Workflow 生命周期与供应链安全、批准范围内的 L3 编排与自动纠错恢复、高级变化影响与性能/安全/视觉能力、风险预测与知识演进</td><td>L3 在正式资产批准、外部写入、报告签署、门禁放行与权限变更之前保持暂停</td></tr></tbody></table>
+<p>V1 是本需求分配的重点,它以单租户、单 Workspace 试点为交付形态,核心验证&quot;AI 生产加人工审核&quot;是否真实提升效率与质量。八个模块在 V1 的最小范围分别为:任务看板提供工作项、AI 运行状态、待审核队列、退回重做与阻塞处理,效率指标从状态事件采集而非人工录入;知识库支持 Markdown 与 OpenAPI 导入、来源快照、需求与 API 契约版本和基础检索;测试策划与设计提供 TestingIR、策略、计划、场景与用例草稿生成及人工审核;自动化测试开发提供 Web/API 代码生成、版本、用例绑定、静态与受控检查和代码审核;测试执行提供单资源池 Runner、版本冻结、执行任务、结果、日志与证据;质量分析与缺陷提供基础 RCA 草稿、Defect 草稿与 TestReport 草稿及人工审核,外部同步可先手工执行,但手工同步仍须落同步记录、批准与回执;AI Agent 中心提供固定工作流、白名单、Trace、基础 Eval 与 L0/L1/L2 降级;平台管理提供试点所需的 Release、成员、环境、密钥引用、RBAC 与审计。V1 明确不做多租户商业化运营、可视化工作流设计器、Skill 市场、多云弹性与 L3 自治,也不自动放行发布、不自动对外提缺陷、不无人审核正式资产。</p>
+<p>V2 面向团队协同与集成增强:支持多 Workspace 与团队协作、四眼复核、委派与审计运营;多 Runner 调度、失败恢复、计划并行与资源配额;外部缺陷、代码仓库与 CI 集成的逐次授权、幂等、冲突与回执模型;质量门禁规则、智能回归建议、知识反馈、契约漂移检测与 Locator 候选修复;并以真实 Golden Set 持续评测 Agent、Skill、Prompt 与 Workflow,形成介入点的版本化校准记录。V2 的准出条件要求具备容量、韧性、安全、成本与误放/误阻的实测基线。</p>
+<p>V3 面向企业规模与更高代理能力:提供经过实测的弹性 Runner、资源隔离、区域与故障域策略和企业集成;可管理的 Skill、Agent、Workflow 生命周期、供应链安全与 Eval 准入;在批准的低、中风险范围内启用 L3 跨工作项编排、自动纠错与恢复;并扩展高级变化影响分析、性能/安全/视觉能力、风险预测与知识演进。需要特别说明,L3 能力在正式资产批准、外部写入、报告签署、门禁放行与权限变更之前始终保持暂停。</p>
+<p>与需求分配配套的是指标建立顺序:各版本先在 V0 阶段定义指标、分母、样本与采集方式;V1 阶段通过影子或人工流程建立人工基线,再做同类任务对照;至少经过一个 Release 窗口后批准目标值;V2、V3 按 Workspace 规模、任务类型、风险和 AI 版本分层设定 SLO;模型、Prompt、Skill、Workflow 或数据分布变化后重新校准。这一顺序确保任何版本的量化承诺都以实测证据为前提。</p>
+<p>需求分配与版本门禁机制配套执行:每个版本交付必须列清范围、非目标、基线、测量方法、已知限制与恢复方案,并按产品、质量、安全、AI、运行、发布六类证据接受验收;任何版本都不因增加 AI 能力而取消人工硬门。</p>
+<p class="src">（来源:01-产品功能地图v2.0 §6;22-MVP版本规划v2.0 §1、§3、§4、§5、§6、§7）</p><h2>第 3 章 任务看板（Work Board）</h2>
+<h3>3.1 模块定位</h3>
+<p>任务看板是测试人员与 AI Agent 协作的任务控制中心，是默认首页和日常工作入口，解决任务分散、AI 运行不可见、审核待办遗漏和阻塞难追踪的问题。它管理工作流，不拥有策略、用例、脚本、结果、Defect 或报告正文。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.1；10-PRD-Workspace §1）</p>
+<h3>3.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>工作项</td><td>创建、查询、筛选、分派、优先级、父子关系、Release/TestPlan 关联</td><td>确认关键范围、负责人和优先级</td></tr><tr><td>状态流转</td><td>按状态机流转并记录原因</td><td>BLOCKED、取消、关键范围变更需有理由/权限</td></tr><tr><td>AI 运行</td><td>显示 Agent、Skill、版本、步骤、耗时、成本、Trace 和降级</td><td>可暂停/取消；越权和异常由人处理</td></tr><tr><td>审核队列</td><td>按产出物、风险、Release、到期时间和职责筛选</td><td>ReviewDecision 仅 UserIdentity 可作出</td></tr><tr><td>退回重做</td><td>保留原版本和决定，创建新版本/attempt</td><td>审核人复核新摘要，不沿用旧批准</td></tr><tr><td>阻塞管理</td><td>原因码、详情、恢复条件、依赖人/系统和 SLA</td><td>决定接受风险、补资料或调整计划</td></tr><tr><td>看板统计</td><td>WIP、周期、审核时长、阻塞、人工接管和 AI 失败</td><td>指标用于改进，不作为个人绩效自动裁决</td></tr></tbody></table>
+<p>看板视图至少包括：我的待审核、AI 工作中、审核退回/重做、待执行/执行中、阻塞与风险、全部工作项、管理视图。</p>
+<p class="src">（来源：10-PRD-Workspace §3；05-功能模块重构方案 §5.5.9）</p>
+<h3>3.3 关键规则</h3>
+<li>1. WorkItem 状态机：`BACKLOG → READY → IN_PROGRESS → PENDING_REVIEW → REWORK(→IN_PROGRESS)/APPROVED → DONE`，支持 `BLOCKED/CANCELLED`；DONE 为终态，重新工作须新建修订 WorkItem（05 §5.5.4）。</li>
+<li>2. `requiresReview=true` 的工作项不得从 IN_PROGRESS 直接进入 DONE；进入 PENDING_REVIEW 前必须存在带版本的 OUTPUT Artifact（05 §5.5.4）。</li>
+<li>3. 进入 APPROVED 前必须存在已解决的 ReviewTask 和审核人签名；固化的 Artifact 版本必须与审核目标版本一致，并发修改则审核失效并回到 PENDING_REVIEW（05 §5.5.4）。</li>
+<li>4. BLOCKED 必须记录结构化原因、责任方和恢复条件；用户主动暂停 = BLOCKED + blocked_reason=USER_PAUSED，状态机不新增 PAUSED（裁决 2026-08-14 B4）。</li>
+<li>5. ReviewTask 绑定 `artifactType/artifactId/artifactVersionId/contentDigest/policyType`；审核动作 APPROVE/REQUEST_CHANGES/REJECT 且只追加；审核人不得批准自己无权批准的产出物，AI Agent 永远不能作为正式批准人（10-PRD §4；05 §5.5.7）。</li>
+<li>6. 审核、执行和报告必须引用精确版本，禁止只引用&quot;当前最新版本&quot;；删除工作项不得级联删除业务产出物和证据（05 §5.5.5）。</li>
+<li>7. 所有状态变化另存为只追加的 WorkItemEvent；看板周期、等待时间和 SLA 指标必须从事件计算，禁止通过覆盖字段伪造历史（05 §5.5.6）。</li>
+<li>8. 最终允许动作取&quot;用户 RBAC ∩ Agent 权限 ∩ Workflow 节点权限&quot;的交集，任一层拒绝即 fail-closed（05 §5.5.10）。</li>
+<li>9. 看板中&quot;已批准&quot;不等于外部同步或发布已完成；后续动作各自重新授权（10-PRD §4）。</li>
+<h3>3.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 AI 产出进入人工审核</p>
+<li>Given AI完成TestPlanVersion草稿；</li>
+<li>When Workflow提交结果；</li>
+<li>Then WorkItem进入`PENDING_REVIEW`并创建绑定精确版本与摘要的ReviewTask，不直接批准。</li>
+<p>AC-02 退回不覆盖历史</p>
+<li>Given 审核人退回TestCaseVersion V1；</li>
+<li>When Agent按意见修改；</li>
+<li>Then 创建V2并重新检查/审核，V1、决定和Trace保持可查。</li>
+<p>AC-03 越权失败关闭</p>
+<li>Given Agent请求未在allowlist的外部写入；</li>
+<li>When 节点执行前授权；</li>
+<li>Then 调用不发生，WorkItem阻塞并记录DENY原因。</li>
+<p>AC-04 聚合不篡改 Owner 状态</p>
+<li>Given TestReport由质量分析与缺陷模块归档；</li>
+<li>When 看板刷新；</li>
+<li>Then 只读取投影并展示，不在看板存第二份可写报告状态。</li>
+<p class="src">（来源：10-PRD-Workspace §7）</p>
+<h3>3.5 版本范围</h3>
+<p>V1 交付基础看板、AI 运行状态、待审核队列、退回重做、阻塞处理，并采集效率指标（Lead/Cycle Time、审核/阻塞时长、AI 成功率与成本、产出物生成到批准时间，采集自 WorkItemEvent/WorkItemRun 事件、不手工录入，裁决 2026-08-14）；V2 增强 SLA、团队负载和跨集成通知；V3 增强政策内跨工作项 L3 编排，不取消人工硬门。</p>
+<p class="src">（来源：10-PRD-Workspace §8；22-MVP版本规划 §3）</p>
+<h3>3.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>Lead Time / Cycle Time</td><td>生产</td><td>WorkItemEvent：BACKLOG/READY→DONE、首次 IN_PROGRESS→DONE</td><td>事件计算，不手工录入</td></tr><tr><td>审核等待/阻塞时长</td><td>生产</td><td>PENDING_REVIEW→离开、BLOCKED 进入→离开事件对</td><td>事件计算</td></tr><tr><td>AI 任务成功率/成本/超时/重试</td><td>生产</td><td>WorkItemRun(actorType=AGENT) + AgentSession 汇总</td><td>按介入点+版本分层</td></tr><tr><td>产出物从生成到批准时间</td><td>生产</td><td>版本创建→ReviewAssignment.decidedAt(APPROVE)</td><td>指标字典 M-08</td></tr></tbody></table>
+<p>完整清单见 05 §5.5.11（AI 处理时间、人工修改比例、一次审核通过率、在制品/吞吐量/SLA 超时率、Agent 产出采用/修改/退回/废弃比例等），对应指标字典 M-02/03/08/09/10/11/12/38/39/40/41/42 等。</p>
+<p class="src">（来源：10-PRD-Workspace §8；05-功能模块重构方案 §5.5.11；指标字典）</p>
+<p>---</p>
+<h2>第 4 章 知识库（Knowledge Base）</h2>
+<h3>4.1 模块定位</h3>
+<p>知识库是 AI 工作的可信输入源和经人工确认的经验沉淀中心：把需求、OpenAPI、流量观察、仓库资料和测试经验转成有来源、有版本、有适用范围的测试依据，解决资料分散、契约漂移、AI 引用过期内容和知识污染问题。本模块不拥有 TestCase、AutomationScript、ExecutionResult 或 ResultAnalysis，只提供它们引用的精确来源/契约/知识版本。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.2；11-PRD-知识库 §1）</p>
+<h3>4.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>来源导入</td><td>支持文件、URL、集成、手工、流量等来源，固化原文/定位、摘要、授权和时间</td><td>确认导入范围和冲突来源</td></tr><tr><td>需求版本</td><td>RequirementDocument 稳定根 + 不可变版本，保留 SourceTrace</td><td>裁决歧义和业务规则</td></tr><tr><td>API 契约</td><td>APIContract 稳定根、Version、Operation/Schema 版本及 DECLARED/OBSERVED 分层</td><td>批准契约版本/基线，决定冲突</td></tr><tr><td>契约基线</td><td>为 Release 和用途固定契约版本/摘要集合</td><td>人工确认关键接口范围</td></tr><tr><td>知识条目</td><td>草稿、审核、发布、失效、归档；记录适用/失效条件和来源</td><td>发布、纠错和失效判断</td></tr><tr><td>检索</td><td>关键词/向量/图谱混合检索，返回来源、版本和相关性解释</td><td>命中不等于可信；用户可排除错误来源</td></tr><tr><td>候选治理</td><td>处理重复、冲突、陈旧、敏感和低证据候选</td><td>人工决定合并/发布/拒绝</td></tr></tbody></table>
+<p class="src">（来源：11-PRD-知识库 §2）</p>
+<h3>4.3 关键规则</h3>
+<li>1. SourceSnapshot 不可变；重新抓取产生新快照；相同来源摘要相同可标记 `NO_CONTENT_CHANGE`，但不能伪造新契约版本（05 §5.10.4）。</li>
+<li>2. APIContract 及其版本的唯一业务写入所有者是知识库；Workspace 向导、测试策划、自动化开发、测试执行、质量分析、平台管理、AI Agent 中心均只能消费精确版本、发起请求或生成差异建议（05 §5.10.1/§5.10.9）。</li>
+<li>3. 三层对象不可混用：SourceSnapshot（原始、不可变）→ APIContractVersion（规范化、审核后发布）→ APIContractBaseline / ExecutionContractBaseline（按用途绑定精确版本）；流量录制默认属于&quot;观察到的行为&quot;，不得自动替换产品声明的 OpenAPI 契约（05 §5.10.2）。</li>
+<li>4. DECLARED、OBSERVED、MANUAL、MERGED 必须标记来源，不静默覆盖；冲突时两类证据并存并创建冲突 WorkItem，禁止自动合并为权威（11-PRD §5）。</li>
+<li>5. KnowledgeEntry 是八类正式产出物之一，至少一名人类批准后才可 `PUBLISHED`（11-PRD §3）。</li>
+<li>6. 检索结果必须带 sourceTrace、version、digest 和适用范围；Agent 不得把高相似度当事实；无有效 Eval 校准记录时检索分数仅排序，不自动发布知识或选择契约真相（11-PRD §3/§5）。</li>
+<li>7. 来源撤权/敏感性变化时停止新增使用，并标记受影响产出物待重评，不删除历史证据（11-PRD §3）。</li>
+<li>8. TestCase 和 AutomationScriptVersion 必须绑定 `operationVersionId` 或稳定键加精确 contractVersionId，不能只绑可漂移的 APIContract.id（05 §5.10.5）。</li>
+<li>9. 解析失败、阻断校验失败或来源摘要失效时不能批准 APIContractVersion；`BREAKING` 或安全要求变化使用 FOUR_EYES，普通新版本至少 SINGLE_REVIEW（05 §5.10.6）。</li>
+<h3>4.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 来源可追溯</p>
+<li>Given AI从需求文档提取BusinessRule；</li>
+<li>When 用户查看规则；</li>
+<li>Then 可定位SourceSnapshot、文档版本和原文位置，摘要匹配（判定口径：随机抽检≥5条规则，比对摘要与原文定位一致，裁决 2026-08-14 批次二）。</li>
+<p>AC-02 契约冲突不静默覆盖</p>
+<li>Given OpenAPI声明响应字段必填但流量中缺失；</li>
+<li>When 导入Observation；</li>
+<li>Then 两类证据并存并创建冲突，不自动修改已批准APIContractVersion。</li>
+<p>AC-03 知识发布需要人</p>
+<li>Given AI从失败历史生成Pattern草稿；</li>
+<li>When 生成完成；</li>
+<li>Then 状态为`PENDING_REVIEW`且ReviewTask绑定版本/摘要，Agent不能发布。</li>
+<p>AC-04 精确基线可复现</p>
+<li>Given Release已批准APIContractBaseline；</li>
+<li>When 后续契约出现新版本；</li>
+<li>Then 原执行仍能解析到旧版本及摘要，新版本不自动替换历史基线。</li>
+<p class="src">（来源：11-PRD-知识库 §6）</p>
+<h3>4.5 版本范围</h3>
+<p>V1 支持 Markdown/OpenAPI 导入、版本、基础检索和人工知识发布；V2 增强流量/仓库、漂移、混合检索和反馈；V3 增强企业级来源治理和知识运营。</p>
+<p class="src">（来源：11-PRD-知识库 §7）</p>
+<h3>4.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>知识条目过期率（M-31）</td><td>生产</td><td>窗口内 STALE/到期未复核条目/活跃条目，KnowledgeEntryVersion.reviewStatus，整 Release</td><td>过期率可复算且按条目类型分层</td></tr><tr><td>正向/反向链完整率（M-43）</td><td>生产（SourceTrace 载体）</td><td>关键跳转有 CONFIRMED/INFERRED 边的链数/应覆盖链数</td><td>按 evidenceClass 分层报告</td></tr><tr><td>知识条目复用命中率（M-30）</td><td>生产（载体 V2）</td><td>检索命中且采纳条目/检索命中总数</td><td>载体建立前不报目标值</td></tr></tbody></table>
+<p class="src">（来源：11-PRD-知识库 §8；指标字典）</p>
+<p>---</p>
+<h2>第 5 章 测试策划与设计（Test Planning &amp; Design）</h2>
+<h3>5.1 模块定位</h3>
+<p>本模块把项目目标、需求和风险转化为经审核的测试策略、计划、场景和用例，形成&quot;需求→规则→策略→计划→场景→用例→断言&quot;的可信设计链。AI 生成草稿，测试人员集中审核和纠偏；解决手工产出慢、覆盖遗漏、策略/计划/执行计划语义混乱和草稿直接入库风险。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.3；12-PRD-TestAsset §1）</p>
+<p>正式产出物：TestStrategy、TestPlan、TestCase 三类；TestingIR、BusinessRule、Assertion、TestScenario 和 DesignTestCase 是设计链实体/中间产物，不与三类正式产出物混为同一生命周期。</p>
+<p class="src">（来源：12-PRD-TestAsset §2）</p>
+<h3>5.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>范围输入</td><td>读取 RequirementVersion、APIContractBaseline、Release 和已审核知识</td><td>确认关键路径、排除项和冲突来源</td></tr><tr><td>TestingIR</td><td>编译规则、领域、状态机、断言和 SourceTrace</td><td>裁决关键规则冲突；IR 验证不等于业务批准</td></tr><tr><td>策略草稿</td><td>生成风险驱动策略并运行结构检查</td><td>审核范围、风险和门槛引用</td></tr><tr><td>计划草稿</td><td>生成阶段 DAG、里程碑、资源和验收准则</td><td>审核资源、时间、依赖和责任</td></tr><tr><td>场景/用例</td><td>生成正向、反向、边界、权限、状态、兼容和异常场景</td><td>批改业务步骤、数据和预期</td></tr><tr><td>覆盖分析</td><td>计算 Requirement/API/Rule/Scenario/TestCase 映射和缺口</td><td>决定接受缺口或生成补充草稿</td></tr><tr><td>版本/Diff</td><td>生成变更摘要和受影响链</td><td>审核精确版本，不沿用陈旧批准</td></tr></tbody></table>
+<p class="src">（来源：12-PRD-TestAsset §3）</p>
+<h3>5.3 关键规则</h3>
+<li>1. TestStrategy 替代旧 TestDesignPlan；TestPlan 表达项目执行安排；ExecutionPlan 表达机器执行配置，三者不得合并；TestScenario 归属 TestPlan（05 §5.7.1/§5.7.2/§5.7.6）。</li>
+<li>2. 一个 Release 可以有多个历史策略版本，但同一时刻只能有一个 `PUBLISHED` 当前基线；策略来源可为多份文档/契约，通过 WorkItemArtifact/Source Trace 关联（05 §5.7.4）。</li>
+<li>3. TestPlan 必须绑定已 APPROVED/PUBLISHED 的 TestStrategy 精确版本后才能正式发布；计划范围不得超出策略 inScope，扩大范围必须先修订策略或获得明确的策略例外审核（05 §5.7.5）。</li>
+<li>4. DesignTestCase 是 AI 设计草稿；只有通过检查和人工审核后才能迁移/发布为 TestCaseVersion；批准后形成可跨计划复用的正式 TestCase（12-PRD §4；05 §5.7.6）。</li>
+<li>5. Coverage 必须声明分子、分母、排除项和映射证据；不得用&quot;生成数量&quot;代替覆盖；未检查不计通过（12-PRD §4）。</li>
+<li>6. 正式版本状态遵循 `DRAFT/GENERATING/PENDING_REVIEW/CHANGES_REQUESTED/APPROVED/PUBLISHED/REJECTED/STALE/ARCHIVED`（12-PRD §4）。</li>
+<li>7. 任一来源/契约版本变化都应产生影响分析并把相关草稿或已批准版本标为待重评，而非静默改写；TestStrategy 新版本发布后不得自动切换策略版本（05 §5.7.8）。</li>
+<li>8. 策略未批准：计划可生成草稿但不能批准/启动执行；策略默认 SINGLE_REVIEW，高风险发布采用 FOUR_EYES（05 §5.7.4/§5.7.5）。</li>
+<li>9. 设计覆盖分析（需求→用例映射）是本模块中间产物；执行覆盖率报告 CoverageReport 由第 8 章质量分析与缺陷唯一写入，两概念不共用实体（裁决 B2-1）。</li>
+<h3>5.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 策略、计划、执行计划分离</p>
+<li>Given Release已存在TestStrategy；</li>
+<li>When 用户安排里程碑和资源；</li>
+<li>Then 创建TestPlanVersion，不修改策略，也不创建Runner执行配置。</li>
+<p>AC-02 AI 用例不能直接入库</p>
+<li>Given AI生成高置信度DesignTestCase；</li>
+<li>When 所有机器检查PASS；</li>
+<li>Then 仍创建ReviewTask，人工批准后才生成/发布TestCaseVersion。</li>
+<p>AC-03 覆盖分析分母透明</p>
+<li>Given 设计覆盖分析声称90%；</li>
+<li>When 用户查看详情；</li>
+<li>Then 可见分子、分母、排除项、未覆盖项和每条SourceTrace。</li>
+<p>AC-04 陈旧版本重评</p>
+<li>Given 已批准用例引用APIContractVersion V1；</li>
+<li>When Release基线切换V2且存在breaking change；</li>
+<li>Then 用例进入受影响队列，旧批准不自动覆盖V2。</li>
+<p class="src">（来源：12-PRD-TestAsset §7）</p>
+<h3>5.5 版本范围</h3>
+<p>V1 跑通策略、计划、用例和人工审核；V2 增强变化影响、团队复核和复杂覆盖；V3 增强受控 L3 跨工作项设计，但正式批准仍由人完成。</p>
+<p class="src">（来源：12-PRD-TestAsset §8）</p>
+<h3>5.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>设计覆盖（DESIGN 口径）</td><td>生产</td><td>已映射需求条目/需求条目总数（inScope），SourceTraceEdge 事件，整 Release 窗口</td><td>分母/分子可复算（22 附录 C）</td></tr><tr><td>覆盖分析人工修改率</td><td>生产</td><td>REQUEST_CHANGES 次数/AI 提交版本数，版本级主口径</td><td>版本级口径可复现</td></tr><tr><td>覆盖分析遗漏率（设计层）</td><td>生产</td><td>CoverageReport 未覆盖项/分母，整 Release</td><td>未覆盖项可溯源到需求条目</td></tr></tbody></table>
+<p class="src">（来源：12-PRD-TestAsset §9；22-MVP版本规划 附录C；指标字典）</p>
+<p>---</p>
+<h2>第 6 章 自动化测试开发（Test Automation Development）</h2>
+<h3>6.1 模块定位</h3>
+<p>本模块把经审核的测试设计转换为可审查、可调试、可执行的自动化测试代码，作为正式产出物独立治理，既大幅交给 AI，又保留工程级 Code Review 和版本控制。解决脚本散落、代码与用例一对一僵化、依赖/运行时不可复现和自愈静默污染资产的问题。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.4；13-PRD-Execution §1）</p>
+<h3>6.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>脚本稳定根/版本</td><td>AutomationScript 按能力命名，版本记录语言、框架、运行时、依赖锁、来源模式和摘要</td><td>代码 Review 并批准版本</td></tr><tr><td>用例绑定</td><td>一个脚本版本可覆盖多个 TestCaseVersion，一个用例可有多种自动化实现</td><td>审核绑定真实性</td></tr><tr><td>Web 自动化</td><td>页面对象/组件、Locator、等待、截图/视频配置</td><td>审核关键路径、稳定性和敏感操作</td></tr><tr><td>API 自动化</td><td>基于 APIContractVersion 生成请求、断言、鉴权引用和数据</td><td>审核业务码/字段/副作用断言</td></tr><tr><td>代码检查</td><td>格式、类型、静态安全、依赖、契约绑定和受控试跑</td><td>检查 PASS 不替代代码批准</td></tr><tr><td>Locator</td><td>稳定根/版本、主/备选择器、证据和 supersedes</td><td>写正式 LocatorVersion 需审核</td></tr><tr><td>Mock/数据/视觉</td><td>Mock 绑定契约版本；数据含生成/脱敏/清理；视觉含视口/遮罩/摘要</td><td>审核业务约束和隐私风险</td></tr><tr><td>Git 模式</td><td>固定 repo、完整 commit SHA、path、blob SHA 和 digest</td><td>仓库写入另行人工批准</td></tr></tbody></table>
+<p>自动化类型：WEB（Playwright，V1 必须）、API（pytest/httpx 或等价，V1 必须）、MOBILE（预留）、PERFORMANCE（预留）、SECURITY（预留，默认禁用）。</p>
+<p class="src">（来源：13-PRD-Execution §2；05-功能模块重构方案 §5.8.2）</p>
+<h3>6.3 关键规则</h3>
+<li>1. AutomationScript 是八类正式产出物之一；AI 不能把检查 PASS 直接变成 `APPROVED/PUBLISHED`（13-PRD §3）。</li>
+<li>2. 脚本身份与代码版本拆分：AutomationScript（稳定身份）→ AutomationScriptVersion（不可变代码版本）→ 用例绑定/检查运行/ReviewTask/执行引用；MANAGED 与 GIT 只能有一个权威代码源，分支名和&quot;最新提交&quot;不得作为正式执行证据（05 §5.8.1/§5.8.4）。</li>
+<li>3. 试运行沙箱量化验收口径（裁决 B2-8）：进程非 root 运行、工作目录只读挂载、默认零外网（网络命名空间禁出站）、单次执行超时上限（默认 120s）、产出目录白名单；每条均有可执行检查命令（13-PRD §3）。</li>
+<li>4. 执行只接收已批准脚本版本和完整依赖/运行时指纹；运行时临时修复产生候选新版本，不覆盖已冻结版本（13-PRD §3）。</li>
+<li>5. 代码正文和 Secret 分离；脚本只引用 secretRef，日志/Trace 中不得出现明文（13-PRD §3）。</li>
+<li>6. API 代码绑定 APIContractVersion；契约变化触发影响分析而不是静默重生成覆盖；用例新版本发布后既有脚本不会自动宣称继续有效（05 §5.8.5）。</li>
+<li>7. Locator 自愈默认只在单次运行尝试；正式资产变更走 Diff 和 ReviewTask（13-PRD §3）。</li>
+<li>8. 强制检查不可人工备注绕过：Secret 扫描、静态检查、隔离试运行等阻断项失败时拒绝批准；例外必须走单独、高权限、限时且可审计的豁免流程（05 §5.8.8）。</li>
+<li>9. 正式执行默认只能执行 PUBLISHED 版本；PENDING_REVIEW 版本仅限隔离试验 WorkItem 中运行，结果标记 EXPERIMENTAL，不进入正式质量报告或发布门禁（05 §5.8.11）。</li>
+<li>10. Git 模式：仓库凭证归平台管理 Integration/Secret；AI 创建分支、提交、推送或 PR 属于外部写入，必须遵循 EXTERNAL_WRITE 策略（05 §5.8.9）。</li>
+<h3>6.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 多对多绑定</p>
+<li>Given 一段登录setup服务于10个用例；</li>
+<li>When 创建脚本版本；</li>
+<li>Then 可绑定10个精确TestCaseVersion并分别标注coverageType，无需复制10份脚本。</li>
+<p>AC-02 依赖可复现</p>
+<li>Given 脚本准备批准；</li>
+<li>When 缺frameworkVersion、runtimeVersion或dependencyDigest；</li>
+<li>Then blocking check失败，不能发布或进入执行计划。</li>
+<p>AC-03 自愈不污染正式资产</p>
+<li>Given 运行中AI找到新Locator并重试成功；</li>
+<li>When 运行结束；</li>
+<li>Then 原LocatorVersion不变，新候选带证据进入ReviewTask。</li>
+<p>AC-04 API 副作用受控</p>
+<li>Given AI生成删除类API测试；</li>
+<li>When 目标环境或清理策略未授权；</li>
+<li>Then 代码可保持草稿，但试跑/执行被拒绝并说明条件。</li>
+<p class="src">（来源：13-PRD-Execution §6）</p>
+<h3>6.5 版本范围</h3>
+<li>MUST（V1）：Web/API 代码生成、AutomationScript 稳定根+不可变版本、用例绑定（多对多精确版本）、静态/受控检查、隔离试运行（B2-8 量化口径）、人工 Code Review 与版本批准。</li>
+<li>SHOULD（V1 末/V2）：Git 模式（固定 repo+SHA+blob 摘要证据）、Locator 候选、Mock、测试数据。</li>
+<li>LATER（V3）：性能/安全/视觉自动化与企业级供应链治理。</li>
+<p>（裁决 2026-08-14 批次二；来源：13-PRD-Execution §7）</p>
+<h3>6.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>自动化代码首版生成时间（M-05）</td><td>生产</td><td>WorkItem(AUTOMATION)创建→首个脚本草稿创建，按 Web/API 分层</td><td>双时点口径（草稿/可审核）分列报告</td></tr><tr><td>静态检查通过率（M-24）</td><td>生产</td><td>STATIC 检查 PASS 脚本版本/检查版本总数，AutomationCheckRun</td><td>阻断检查失败不可人工备注放行</td></tr><tr><td>试运行通过率（M-25）</td><td>生产</td><td>isExperimental 试运行通过数/总数，ExecutionResult</td><td>试运行与正式执行分层报告</td></tr></tbody></table>
+<p class="src">（来源：13-PRD-Execution §8；指标字典）</p>
+<p>---</p>
+<h2>第 7 章 测试执行（Test Execution）</h2>
+<h3>7.1 模块定位</h3>
+<p>本模块将批准后的测试资产转化为完整、可观察、可复现的执行证据，以可复现、可授权、可观察的方式运行人工/自动化测试并保存不可变事实。它拥有 ExecutionPlan、Task、Result、Log 和 Evidence，不拥有对失败的业务解释、Defect 或报告结论。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.5；14-PRD-QualityIntelligence §1）</p>
+<h3>7.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>执行计划</td><td>稳定根+不可变版本，绑定 TestPlanVersion、Release、Environment、范围、并发、Runner 策略</td><td>审核高风险环境/范围和首跑</td></tr><tr><td>触发</td><td>V1：手工、计划；V2：Webhook、Pipeline（裁决 B2-9）；统一幂等</td><td>取消、重跑和高风险触发需权限</td></tr><tr><td>调度</td><td>按能力/资源池/配额选 Runner，租约、心跳和重试</td><td>处理资源不足或特殊环境</td></tr><tr><td>执行任务</td><td>状态、attempt、超时、重试（V1 默认一次受控重试）、环境/授权快照</td><td>可暂停/取消；不能编辑运行中版本</td></tr><tr><td>契约检查</td><td>按 ExecutionContractBaseline 记录 APIObservation 与 ContractCheckResult（MATCH/DEVIATION/NOT_CHECKED/INCONCLUSIVE）</td><td>偏差证据只追加；INCONCLUSIVE 不得报告为契约一致</td></tr><tr><td>结果</td><td>每个 attempt 产生独立 ExecutionResult</td><td>人工注释不能改原始事实</td></tr><tr><td>证据</td><td>请求/响应、日志、截图、视频、Trace、性能数据、摘要和保留策略</td><td>敏感证据访问受限</td></tr><tr><td>实时流</td><td>ExecutionTask 进度、日志和制品事件</td><td>WebSocket 不承载批准/修改命令</td></tr><tr><td>手工测试</td><td>记录步骤结果、实际结果和证据</td><td>测试人员对手工结果负责</td></tr></tbody></table>
+<p class="src">（来源：14-PRD-QualityIntelligence §2）</p>
+<h3>7.3 关键规则</h3>
+<li>1. ExecutionTask 状态与业务结论分离：`PENDING/QUEUED/RUNNING/COMPLETED/FAILED/CANCELLED/TIMED_OUT/BLOCKED`；COMPLETED 表示任务调度与采集完成，用例业务结论只看 ExecutionResult 的 `PASSED/FAILED/SKIPPED/ERROR/INCONCLUSIVE`（14-PRD §3）。</li>
+<li>2. `FAILED` 表示被测行为未满足断言；`ERROR` 表示环境、脚本、Runner 或平台未完成有效验证；二者不可合并（14-PRD §3）。</li>
+<li>3. 重跑创建新 Batch/Task attempt，不覆盖旧结果（14-PRD §3）。</li>
+<li>4. ExecutionPlanVersion 必须固定 TestCaseVersion、AutomationScriptVersion、ExecutionContractBaseline（由 APIContractBaseline 复制精确版本+运行时映射/认证/脱敏快照，裁决 2026-08-14 批次二）、Environment 和数据/Mock/Locator 等引用及摘要（14-PRD §3）。</li>
+<li>5. ExecutionContractBaseline 创建后不可变；执行前若基线引用已撤销、权限失效或必需凭证不可用，ExecutionTask 转 `BLOCKED`，不得自动切换到&quot;最新版&quot;（05 §5.10.7）。</li>
+<li>6. ResultAnalysis 只能引用 ExecutionResult，不能反写其状态或正文（14-PRD §3）。</li>
+<li>7. 未检查不能计为通过，`INCONCLUSIVE` 不能被报告为契约一致（裁决 B2-2）；TestReport 必须同时展示执行基线摘要、已检查 Operation 数、偏差数、未检查数和不可判定数（05 §5.10.8）。</li>
+<li>8. 暂停 = status=BLOCKED + blocked_reason=USER_PAUSED，语义由原因码承载、状态机不新增 PAUSED（裁决 B2-4，字段落 33 t_execution_task）。</li>
+<li>9. Runner 失联：租约到期后按策略创建新 attempt；原 attempt 标记 ERROR 并保留证据；Runner 缺少所需能力时任务在执行前 BLOCKED，不得运行后静默降级（05 §5.8.11）。</li>
+<h3>7.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 版本冻结</p>
+<li>Given ExecutionPlanVersion已创建；</li>
+<li>When TestCase或Script发布新版本；</li>
+<li>Then 本次执行仍使用已冻结旧版本，新版本需新ExecutionPlanVersion。</li>
+<p>AC-02 FAIL 与 ERROR 分离</p>
+<li>Given 一个断言失败、另一个Runner启动失败；</li>
+<li>When 汇总结果；</li>
+<li>Then 前者为FAILED、后者为ERROR，报告不能把ERROR计入有效业务失败/通过分母而不披露。</li>
+<p>AC-03 重跑不覆盖</p>
+<li>Given Task attempt1失败；</li>
+<li>When 自动重试成功；</li>
+<li>Then attempt1和attempt2均可查，最终汇总说明采用规则。</li>
+<p>AC-05 契约偏差事实留存（裁决 B2-2）</p>
+<li>Given 执行完成且部分Operation未检查；</li>
+<li>When 生成执行结果；</li>
+<li>Then ContractCheckResult 含 MATCH/DEVIATION/NOT_CHECKED/INCONCLUSIVE 四态且未检查不计为通过，INCONCLUSIVE 不被报告为契约一致。</li>
+<p class="src">（来源：14-PRD-QualityIntelligence §6）</p>
+<h3>7.5 版本范围</h3>
+<p>V1 支持单资源池 Web/API 执行、冻结、结果与证据；V2 增强多 Runner、恢复和流水线；V3 增强弹性、性能/安全等执行能力与企业隔离。</p>
+<p class="src">（来源：14-PRD-QualityIntelligence §7）</p>
+<h3>7.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>失败结果到 Bug 草稿时间（M-06）</td><td>生产</td><td>ExecutionResult FAILED→首个 Defect 草稿创建，FailureAnalysis 关联</td><td>草稿≠提交≠外部同步，分层计时</td></tr><tr><td>平均重试次数（M-41）</td><td>生产</td><td>attemptNo&gt;1 之和/任务数，WorkItemRun.attemptNo、ExecutionTask.retryOfTaskId</td><td>重试不覆盖历史证据</td></tr><tr><td>结果可复现率（M-22 备选）</td><td>生产</td><td>同基线重跑判定一致比例，ExecutionTask 重跑</td><td>环境快照不同不可比；载体建立后批准</td></tr></tbody></table>
+<p class="src">（来源：14-PRD-QualityIntelligence §8；指标字典）</p>
+<p>---</p>
+<h2>第 8 章 质量分析与缺陷（Quality Analysis &amp; Defects）</h2>
+<h3>8.1 模块定位</h3>
+<p>本模块把原始结果转化为经测试人员确认的分析、Bug、报告和质量结论，形成&quot;执行后处理&quot;闭环，同时区分原始证据、AI 推断、人类确认和最终发布结论；减少失败分析、提 Bug 和报告整理的重复劳动，避免 AI 推断污染执行事实或直接影响外部系统/发布。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.6；15-PRD-SkillCenter §1）</p>
+<p>正式产出物：ResultAnalysis、Defect（DefectVersion）、TestReport、CoverageReport。</p>
+<p class="src">（来源：15-PRD-SkillCenter §2）</p>
+<h3>8.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>结果分析</td><td>聚类失败、关联日志/Trace、RCA 和替代解释</td><td>审核证据充分性，不接受越界推断</td></tr><tr><td>FailureCluster</td><td>按特征聚合 ExecutionResult，支持拆分/合并建议</td><td>Cluster 不是 Defect，人工决定是否建 Defect</td></tr><tr><td>Defect</td><td>生成草稿、去重、复现步骤和严重度建议</td><td>批准版本、流转、关闭和重复关系</td></tr><tr><td>外部同步</td><td>生成固定 payload、附件和操作建议</td><td>每次 CREATE/UPDATE/COMMENT/TRANSITION 等写入单独批准</td></tr><tr><td>报告</td><td>汇总冻结范围、执行事实、已批准分析/Defect 和指标</td><td>签署发布，披露 ERROR/阻塞/排除项</td></tr><tr><td>覆盖率</td><td>按批准分母口径与快照生成执行覆盖率报告</td><td>批准分母口径与报告结论</td></tr><tr><td>质量门禁</td><td>执行版本化确定性规则，AI 提供风险/回归建议</td><td>门禁规则变更、放行/阻断豁免由人决定</td></tr><tr><td>流水线</td><td>关联触发、运行、回调和回执</td><td>外部写入与触发范围受授权</td></tr></tbody></table>
+<p class="src">（来源：15-PRD-SkillCenter §3）</p>
+<h3>8.3 关键规则</h3>
+<li>1. ResultAnalysis 与 ExecutionResult 分离；分析可被推翻但结果事实不被改写；AI 推断必须标记为 `INFERRED`，不得伪装为执行事实（15-PRD §4；05 §5.9.5）。</li>
+<li>2. FailureCluster 只聚合失败，不存外部缺陷键，不代表缺陷成立；聚类拆分、合并或重新计算不得改写已批准 DefectVersion 的证据快照（05 §5.9.2）。</li>
+<li>3. Defect 稳定根和不可变版本分离于生命周期状态；未存在批准版本时不得进入 `OPEN`，更不得外部提交；REJECTED/DUPLICATE 均须保存理由（05 §5.9.3）。</li>
+<li>4. 每个 DefectSyncAttempt 绑定 DefectVersion、Integration、操作、payloadDigest、approvalId 和幂等键；所有正式缺陷外部写入均须在调用前获得人工 `EXTERNAL_WRITE` 批准，不得通过租户开关降级为 AI 自主提交（05 §5.9.8）。</li>
+<li>5. V1 手工外部同步同样创建 DefectSyncAttempt 记录并绑定批准（执行者为人，裁决 B2-4），不绕过 EXTERNAL_WRITE 契约；回执与幂等键照常落库（15-PRD §4）。</li>
+<li>6. TestReport 必须固定 scopeSnapshot 和 executionSnapshot，签署后内容不可变；更正产生新版本；必须披露契约检查摘要（裁决 B2-2）（15-PRD §4）。</li>
+<li>7. CoverageReport 是执行覆盖率正式产出物（裁决 B2-1）：按批准的分母口径与快照生成；设计覆盖分析（需求→用例映射）归第 5 章测试策划与设计，两概念不共用实体（15-PRD §4）。</li>
+<li>8. AI 建议不能自动放行/阻断发布；确定性门禁规则也必须版本化和可解释；质量门禁依赖不可用时返回不可判定，不能默认放行（15-PRD §4/§6）。</li>
+<li>9. RESOLVED 只表示声称已修复；转 VERIFIED 必须关联 `REGRESSION_VERIFICATION` 证据（Release、环境、用例版本、脚本版本、ExecutionResult）并由获授权人员确认；AI 只能提出&quot;建议验证通过&quot;（05 §5.9.9）。</li>
+<li>10. 外部系统冲突/超时：记录 attempt 和回执，重试使用同一幂等键，不假报成功；远端已变化时进入 CONFLICT，不得静默覆盖（05 §5.9.8）。</li>
+<h3>8.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 聚类不等于 Defect</p>
+<li>Given AI聚类出10个相似失败；</li>
+<li>When 聚类完成；</li>
+<li>Then 只产生FailureCluster/分析草稿，不自动创建已批准Defect或外部Issue。</li>
+<p>AC-02 外部写入逐次批准</p>
+<li>Given Defect创建同步已批准；</li>
+<li>When 后续要改变外部状态；</li>
+<li>Then 新建独立SyncAttempt并重新审核，旧批准不能复用。</li>
+<p>AC-03 报告分母透明</p>
+<li>Given TestReport展示通过率；</li>
+<li>When 存在ERROR、BLOCKED、SKIPPED；</li>
+<li>Then 报告显示完整分类、分母定义和排除理由，不把无效执行算PASS。</li>
+<p>AC-04 AI 分析可被纠正</p>
+<li>Given 人工证据否定AI根因；</li>
+<li>When 审核退回；</li>
+<li>Then 新分析版本保留替代解释，原AI版本/证据仍可审计，ExecutionResult不变。</li>
+<p class="src">（来源：15-PRD-SkillCenter §7）</p>
+<h3>8.5 版本范围</h3>
+<p>V1 支持基础分析、Defect/报告草稿和人工审核（知识回流交付边界：AI 提炼草稿+人工发布，裁决 2026-08-14 批次二）；V2 增强外部同步、门禁和流水线；V3 增强风险预测，但所有高价值决定保留人工硬门。</p>
+<p class="src">（来源：15-PRD-SkillCenter §8）</p>
+<h3>8.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>一次审核通过率（M-15）</td><td>生产</td><td>首个阶段直接 APPROVE 审核数/ReviewTask 总数</td><td>分母含 REJECT；多阶段任一段非 APPROVE 即不记一次通过</td></tr><tr><td>人工修改率（M-16，版本级主口径）</td><td>生产</td><td>被退回或批准后修订的 AI 产出版本数/AI 提交审核版本总数</td><td>版本级口径可复算，与退回率（M-17）并列标注定义</td></tr><tr><td>误放率（M-20，离线口径）</td><td>生产</td><td>EvalRun 判通过但基线判不通过样本/判通过总数</td><td>无 Golden Set 不报目标值；与误阻率配对</td></tr><tr><td>遗漏率（M-19，覆盖口径）</td><td>生产</td><td>无有效追踪边的单元数/应覆盖单元总数</td><td>与误放率配对报告，漏 vs 错分层</td></tr><tr><td>重开率（M-21）</td><td>生产</td><td>CLOSED→OPEN 缺陷数/关闭缺陷总数</td><td>内部与外部同步重开分层</td></tr><tr><td>RCA 人工确认准确率（M-26）</td><td>生产</td><td>批准且无实质修正的分析数/已审核分析总数</td><td>未人工审核不计入分子</td></tr><tr><td>Bug 有效率（M-27）</td><td>生产</td><td>非 REJECTED/DUPLICATE 缺陷数/提交总数</td><td>内部与外部回执分层</td></tr><tr><td>报告数据一致性（M-29）</td><td>生产</td><td>快照与权威源一致的报告版本数/报告版本总数</td><td>摘要一致≠内容一致，抽样人工复核</td></tr></tbody></table>
+<p class="src">（来源：15-PRD-SkillCenter §8；指标字典）</p>
+<p>---</p>
+<h2>第 9 章 AI Agent 中心（AI Agent Center）</h2>
+<h3>9.1 模块定位</h3>
+<p>本模块统一管理 Skill、Agent、Prompt、Workflow、Session、Trace、Eval 和 AI 运行策略，使 AI 可控、可审计、可降级、可持续改进。Skill 是原子能力；Agent 是职责/权限边界；Workflow 是固定或版本化 DAG，三者不得合并。本模块不拥有业务产出物正文，也不代替任务看板、ReviewTask 或业务模块发布服务。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.7；16-PRD-AgentCenter §1）</p>
+<h3>9.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工控制</th></tr></thead><tbody><tr><td>Skill</td><td>稳定根/版本、输入输出契约、实现引用、风险、依赖、权限和 eval</td><td>发布/升级可执行 Skill 需代码与安全 Review</td></tr><tr><td>Agent</td><td>目标、职责、allowedSkills、工具/文件/网络/Secret、委派深度和预算</td><td>能力扩大需治理审核</td></tr><tr><td>Prompt</td><td>不可变版本、模型/模板/摘要和适用范围</td><td>版本发布及高风险变更审核</td></tr><tr><td>Workflow</td><td>DAG、节点 Agent/Skill、输入输出、权限、重试、降级和 human checkpoints</td><td>发布前结构、权限和业务 Eval</td></tr><tr><td>Session/Trace</td><td>发起人、WorkItem、版本快照、授权决定、节点/tool 调用、输入输出摘要、成本</td><td>敏感字段脱敏；不记录隐藏思维链</td></tr><tr><td>Eval</td><td>Golden Set、数据集版本、目标版本、指标、结果、人工基线和适用性</td><td>决定准入、回滚并形成版本化校准记录（落 t_calibration_record，裁决 B2-3）</td></tr><tr><td>运行控制</td><td>暂停、取消、预算、循环检测、熔断和 L0-L3 降级（以 21 号为唯一权威源）</td><td>人工可随时接管；正式审核不可跳过</td></tr><tr><td>独立平台评审</td><td>在生产 Agent 委派图之外按冻结快照评审产品、需求、架构、契约、安全、AI 治理、可测试性、体验和验收证据</td><td>只输出咨询性 Finding；人工处置，评审 Agent 不得建设、整改或关闭 Finding</td></tr></tbody></table>
+<p class="src">（来源：16-PRD-AgentCenter §2）</p>
+<h3>9.3 关键规则</h3>
+<li>1. Agent 最终权限 = 发起人当前 RBAC ∩ AgentVersion 权限 ∩ Workflow 节点权限 ∩ WorkItem/环境/集成策略 − 显式 Deny − humanOnly；任一层缺失即拒绝（16-PRD §3）。</li>
+<li>2. 默认：网络 deny-all、Secret 空、外部写入 deny、正式资产写入/批准 deny、Subagent 委派深度受限；Agent 不得以用户拥有的批准权代表用户作 ReviewDecision（16-PRD §3）。</li>
+<li>3. Skill 是原子能力，Agent 是职责/权限/工作流边界；不得按&quot;一项 Skill 配置一个 Agent&quot;机械映射（03-术语表 §11）。</li>
+<li>4. 无有效校准记录时（21 号 §4 + 裁决 B2-3），模型分数只排序、不驱动自治；校准记录过期、评测跌破门槛、误放/误阻超警戒线时按 21 号 §6.1 降级触发，回退并重建校准（16-PRD §6）。</li>
+<li>5. Trace 缺失或 checker 异常：不得给 PASS，不得进入正式审核的&quot;可批准&quot;状态（16-PRD §6）。</li>
+<li>6. 模型/Prompt/Skill/Workflow 版本变化：原校准记录失效，回退 L1 并重评（16-PRD §6）。</li>
+<li>7. 独立平台评审 Agent（qf-platform-reviewer）不在 agents.json 和 Supervisor 委派列表内，不接受生产 Agent 派工，也不能反向调度生产 Agent（裁决 2026-08-14 批次二）。</li>
+<li>8. 主流程：WorkItem + 用户授权 → 锁定版本 → 结构/权限预检 → 节点执行与 Trace → 确定性检查/独立验证（INDEPENDENT_VERIFY 介入点，构成三层证据第二层）→ 到 human checkpoint 创建 ReviewTask 并暂停 → 人工决定后由业务应用服务发布（16-PRD §5）。</li>
+<h3>9.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 Skill 与 Agent 不混同</p>
+<li>Given `coverage-analyzer`是Skill；</li>
+<li>When Workflow调用它；</li>
+<li>Then 由授权Agent执行并分别记录AgentVersion与SkillVersion，不创建同名Agent冒充独立职责。</li>
+<p>AC-02 权限取交集</p>
+<li>Given 用户有外部写权限但AgentVersion禁止；</li>
+<li>When Agent尝试同步Defect；</li>
+<li>Then 操作被拒绝并记录DENY，不因用户权限放行。</li>
+<p>AC-03 机器 PASS 不等于人工批准</p>
+<li>Given 所有Gate 0 checker通过；</li>
+<li>When human_gate到达；</li>
+<li>Then 创建绑定策略/计划/用例版本摘要的ReviewTask并`BLOCK_HUMAN`。</li>
+<p>AC-04 Eval 版本可复现</p>
+<li>Given Agent变更Prompt；</li>
+<li>When 查看准入结果；</li>
+<li>Then 旧Eval只关联旧PromptVersion，新版本必须重新运行指定DatasetVersion。</li>
+<p>AC-07 独立验证行为契约（第0周补丁 B2）</p>
+<li>Given verifier 裁决 FAIL；</li>
+<li>When 生成独立验证结果；</li>
+<li>Then WorkItem 转 REWORK 且裁决证据只追加。（独立性：verifier 与 producer 权限隔离、只读被审资产、不可反向调度生产 Agent；确定性检查失败直接 FAIL 不进入 verifier；verifier 超时上限 60s，超时按 ERROR 处理不阻断人工审核；三层证据不可合并展示。）</li>
+<p class="src">（来源：16-PRD-AgentCenter §7）</p>
+<h3>9.5 版本范围</h3>
+<p>V1 实现固定 Workflow、Trace 和基础 Eval；V2 增强版本发布、团队治理和版本化校准记录；V3 支持经过评测的扩展代理与企业能力供应链。Gate 0 基线为 1 个 Supervisor + 3 个受限 Subagent、14 个 Gate 0 Skill，是 V0 局部链，不代表 V1 完整 Agent 平台。</p>
+<p class="src">（来源：16-PRD-AgentCenter §8/§4）</p>
+<h3>9.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>Golden Set 准确率/召回率（M-32/33）</td><td>生产</td><td>EvalRun 对版本化 EvalDataset 的结果，绑定 target/dataset/environment</td><td>只认 EvalRun 结果，模型自评分无效</td></tr><tr><td>越权率（M-35）</td><td>生产</td><td>Agent 请求被 DENY 次数/请求总数</td><td>成功越权率独立监控期望为 0</td></tr><tr><td>误阻率（M-36）</td><td>生产</td><td>判拒绝但应通过样本/判拒绝总数</td><td>无人工标注不得报告；与误放率配对</td></tr><tr><td>AI 草稿采用率（M-38）</td><td>生产</td><td>直接/修改后/退回/废弃四项合计 100%，分母=AI 提交审核版本数</td><td>采用≠正确，与误放率互补解读</td></tr><tr><td>AI 任务成功率（M-39）</td><td>生产</td><td>SUCCEEDED/已结束 AI run 总数</td><td>任务成功率≠业务正确率，不得替代 M-32</td></tr><tr><td>AI 超时率/重试/错误率（M-40/41/42）</td><td>生产</td><td>errorCode/attemptNo/SkillInvocation 统计</td><td>按介入点+模型版本分层</td></tr></tbody></table>
+<p class="src">（来源：16-PRD-AgentCenter §8；指标字典）</p>
+<p>---</p>
+<h2>第 10 章 平台管理（Platform Administration）</h2>
+<h3>10.1 模块定位</h3>
+<p>本模块提供 Workspace、Release、成员、环境、Secret、Runner、集成、RBAC、ReviewPolicy、LLM 配置、资源配额和审计等控制面，负责&quot;系统如何安全运行&quot;；不拥有策略、用例、脚本、结果或报告正文，也不自动获得业务批准权。</p>
+<p class="src">（来源：05-功能模块重构方案 §4.8；17-PRD-KnowledgeCenter §1）</p>
+<h3>10.2 核心能力表</h3>
+<table><thead><tr><th>能力</th><th>需求要点</th><th>人工/安全控制</th></tr></thead><tbody><tr><td>Tenant/Workspace</td><td>生命周期、成员和隔离；UI 把 Workspace 展示为项目</td><td>不新增 Project 实体；归档保留历史引用</td></tr><tr><td>Release</td><td>范围、计划时间、状态和关联版本</td><td>关闭/归档前校验未完成工作和报告</td></tr><tr><td>Environment</td><td>类型、endpoint 映射、能力、数据策略和 secretRef</td><td>不保存连接串明文</td></tr><tr><td>Secret</td><td>密文、keyVersion、作用域、过期、轮换和使用审计</td><td>元数据与使用权限分离，API 不返回明文</td></tr><tr><td>Runner/资源池</td><td>能力、运行时、健康、配额和 Workspace 范围</td><td>注册/隔离/撤销受平台权限控制</td></tr><tr><td>Integration</td><td>Defect、Git、CI、通知等端点/凭据引用/作用域</td><td>出站 allowlist、逐次高价值授权和回执</td></tr><tr><td>RBAC</td><td>Permission、RoleDefinition、RoleBinding、ExplicitDeny 和委派</td><td>四级作用域；管理员不能自我无限授权</td></tr><tr><td>ReviewPolicy</td><td>产出物/风险对应阶段、人数、能力、职责分离和 blockingChecks</td><td>平台最低要求只能调严，不能取消至少一名人类</td></tr><tr><td>LLM 配置</td><td>Provider/模型/路由、数据区域、预算和允许用途</td><td>不在此设置业务自治阈值；版本变化触发重评</td></tr><tr><td>配置辅助</td><td>CONFIG_ASSIST：解释配置、预检变更、生成最小权限建议（21 号默认 L1）</td><td>AI 建议仅提示，不自动改配置；变更落审计</td></tr><tr><td>审计</td><td>AuthorizationDecision、AuditLog、保留/导出</td><td>只追加、脱敏、访问受限</td></tr><tr><td>支持访问</td><td>SupportAccessGrant（限时、最小能力、强审计的 break-glass）；DelegationGrant 委派</td><td>每次授权逐项审批、超时自动失效、全程审计，Agent 无权发起</td></tr></tbody></table>
+<p class="src">（来源：17-PRD-KnowledgeCenter §2）</p>
+<h3>10.3 关键规则</h3>
+<li>1. Tenant 包含多个 Workspace；Workspace 包含多个 Release；Environment、Integration 和 RoleBinding 按 Tenant/Workspace/Resource 作用域生效（17-PRD §3）。</li>
+<li>2. PlatformAdmin 管理平台基础设施，不默认读取租户业务内容；TenantAdmin 管理租户成员/策略，不默认批准 Workspace 正式产出物；WorkspaceAdmin 管理工作条件，不默认签署报告或豁免门禁（05 §5.11.2/§5.11.8）。</li>
+<li>3. Secret 管理能力只允许创建、轮换、吊销和授权引用；普通 UI/API 不得返回 Secret 明文；Secret 过期/无权时执行阻塞，不回退到明文或默认凭据（17-PRD §5）。</li>
+<li>4. 租户/Workspace 上下文缺失：服务层和 RLS 同时拒绝，且不泄漏资源存在性（17-PRD §5）。</li>
+<li>5. ReviewPolicy 定义产出物/风险对应的审核阶段、人数、能力、职责分离和阻断检查；平台最低要求只能调严，放宽需要产品级变更而非租户配置（05 §5.11.7）。</li>
+<li>6. 每次高价值动作（提交审核、领取审核、批准、发布、开始执行、读取 Secret、外部写入、质量门禁决策、角色变更）必须在服务端重新授权并保存 AuthorizationDecision；打开页面时有权限不代表点击时仍有权限（05 §5.11.10）。</li>
+<li>7. break-glass 仅用于恢复可用性或阻止持续损害，不得用于伪造业务批准、篡改执行结果或绕过正式报告签署；启用时强提醒、全量审计、自动过期，事后生成复核 WorkItem（05 §5.11.8）。</li>
+<li>8. Agent、Runner、Scheduler 和集成 Worker 使用独立机器身份，不借用管理员长期 Token；Agent 永远不得获得 `artifact.approve`、`report.signoff`、`quality_gate.override`、`tenant.manage_roles` 等人类责任能力（05 §5.11.9）。</li>
+<li>9. 角色、权限和策略变更必须版本化；高权限变更写入不可变 AuditLog；ReviewPolicy/RoleBinding 变更后后续高价值动作重新计算，已签署历史保留策略快照（17-PRD §5；05 §5.11.4）。</li>
+<h3>10.4 主要验收标准（AC 摘选）</h3>
+<p>AC-01 项目等于 Workspace</p>
+<li>Given 用户点击&quot;新建项目&quot;；</li>
+<li>When 保存；</li>
+<li>Then 只创建Workspace并返回workspaceId，不创建Project副本。</li>
+<p>AC-02 管理员不自动批准</p>
+<li>Given TenantAdmin未获目标业务审核能力；</li>
+<li>When 尝试批准TestReport；</li>
+<li>Then 403拒绝并记录AuthorizationDecision。</li>
+<p>AC-03 Secret 不泄漏</p>
+<li>Given 用户有环境查看权限；</li>
+<li>When 查询环境/Secret；</li>
+<li>Then 只能看到引用和元数据，响应/日志/Trace无明文。</li>
+<p>AC-04 跨租户失败关闭</p>
+<li>Given 请求令牌与资源Tenant不一致；</li>
+<li>When 查询或写入；</li>
+<li>Then 服务层和RLS拒绝，且不泄漏资源存在性。</li>
+<p class="src">（来源：17-PRD-KnowledgeCenter §6）</p>
+<h3>10.5 版本范围</h3>
+<p>V1 实现试点必需的 Workspace/Release、环境、Secret 引用、基础 RBAC/审核和审计；V2 增强多团队、集成、Runner 和配额；V3 增强企业隔离、合规和运营。</p>
+<p class="src">（来源：17-PRD-KnowledgeCenter §7）</p>
+<h3>10.6 指标承接</h3>
+<table><thead><tr><th>指标</th><th>本模块角色</th><th>测量方法要点</th><th>验收</th></tr></thead><tbody><tr><td>成功成本（M-45）</td><td>生产</td><td>成功 WorkItem 的 AgentSession 成本合计/成功数</td><td>失败尝试成本单独报告；人工折算需注明系数</td></tr><tr><td>P95 延迟（M-46）</td><td>生产</td><td>按 API/AI 步骤/调度分层，遥测窗口滚动 14 天</td><td>无压测基线不得承诺数值</td></tr><tr><td>降级率（M-47）</td><td>生产</td><td>触发降级中断的自动步骤/自动步骤总数</td><td>按 interventionKey+原因码分层</td></tr><tr><td>人工接管率（M-48）</td><td>生产</td><td>人工接管 WorkItem 数/涉及 AI 运行数</td><td>与 AI 自动完成占比互补</td></tr><tr><td>WIP/吞吐量（M-49/50）</td><td>生产</td><td>WorkItemEvent 当前态投影/窗口 DONE 数</td><td>不含 BACKLOG/READY；用于改进不作个人绩效</td></tr><tr><td>SLA 超时率（M-51）</td><td>生产</td><td>到期未完成数/到期总数</td><td>审核超时只产生 SLA 风险不自动批准</td></tr></tbody></table>
+<p class="src">（来源：17-PRD-KnowledgeCenter §8；指标字典）</p>
+<p>---</p>
+<h2>第 11 章 术语表（关键术语 20 项）</h2>
+<p class="src">定义均摘自 03-术语表Glossary.md（§4-§12）；完整枚举与废弃术语迁移见 03 号原文。</p>
+<table><thead><tr><th>#</th><th>术语</th><th>中文</th><th>定义</th></tr></thead><tbody><tr><td>1</td><td>Workspace</td><td>项目/工作空间</td><td>测试数据、权限和执行上下文的顶级业务边界；UI 统一显示&quot;项目&quot;，技术契约只使用 Workspace/workspaceId，不新增 Project 实体。</td></tr><tr><td>2</td><td>Release</td><td>发布版本</td><td>Workspace 内一次业务发布的追溯锚点；不等于任何资产的修订 version。</td></tr><tr><td>3</td><td>WorkItem</td><td>工作项</td><td>人、Agent 或系统为产生/审核/执行测试产出物而处理的统一业务工作单元。</td></tr><tr><td>4</td><td>ReviewTask</td><td>审核任务</td><td>绑定精确 artifactId/version/contentDigest、审核策略、Reviewer/Approver 职责和决议的人工任务。</td></tr><tr><td>5</td><td>TestStrategy</td><td>测试策略</td><td>对 Release 定义目标、范围、风险、方法、测试类型、准入/退出、环境/数据/自动化/缺陷策略的正式产出物（替代 TestDesignPlan）。</td></tr><tr><td>6</td><td>TestPlan</td><td>测试计划</td><td>基于批准 TestStrategy 拆解责任、时间、任务、资源、依赖和验收标准的正式活动计划（不再兼任发布里程碑）。</td></tr><tr><td>7</td><td>ExecutionPlan</td><td>执行计划</td><td>绑定 TestPlan、精确用例/代码版本、环境、触发、并发和 Runner 策略的机器运行配置。</td></tr><tr><td>8</td><td>TestingIR / BusinessRule</td><td>测试中间表示/业务规则</td><td>从精确需求/API 来源编译出的结构化需求、规则、实体、状态机、接口和约束中间表示；BusinessRule 为其提取并经复核的条件/动作/来源。</td></tr><tr><td>9</td><td>TestCase / DesignTestCase</td><td>测试用例/用例草稿</td><td>跨计划复用的正式测试意图（含前置、步骤、数据、预期、断言、来源和版本）；DesignTestCase 是待审核草稿，批准后形成正式 TestCase。</td></tr><tr><td>10</td><td>AutomationScriptVersion</td><td>自动化代码版本</td><td>不可变代码、语言、框架、来源、commit/blob/digest、配置、审核和发布版本，是八类正式产出物之一；AutomationScript 为其稳定身份。</td></tr><tr><td>11</td><td>SourceSnapshot / SourceTrace</td><td>来源快照/来源溯源</td><td>某次文件、URL、仓库、手工或流量来源的不可变内容、位置、revision 和 digest；SourceTrace 是从来源到分析/Defect/报告的只追加可追溯关系。</td></tr><tr><td>12</td><td>APIContract / APIContractVersion</td><td>API 契约/契约版本</td><td>Workspace 内一个逻辑 API 服务/契约集合的稳定身份；Version 是从 SourceSnapshot 解析、规范化、审核和发布的不可变完整契约版本。</td></tr><tr><td>13</td><td>APIContractBaseline / ExecutionContractBaseline</td><td>设计基线/执行基线</td><td>某 Release 及设计/Mock/分析用途批准采用的精确契约版本集合；ExecutionContractBaseline 是 ExecutionPlan 发布时冻结、创建后不可变的执行快照。</td></tr><tr><td>14</td><td>KnowledgeEntry</td><td>知识条目</td><td>具有来源、适用范围、验证证据、失效条件、版本和人工发布记录的正式知识；KnowledgeCandidate 是待审核建议，不得直接进入正式检索。</td></tr><tr><td>15</td><td>ExecutionResult</td><td>执行结果</td><td>单个用例在 ExecutionTask 中的不可变执行事实；PASSED/FAILED/SKIPPED/ERROR/INCONCLUSIVE 必须区分，未检查不得折算为 PASSED。</td></tr><tr><td>16</td><td>ResultAnalysis / FailureCluster</td><td>结果分析/失败聚类</td><td>引用不可变执行证据并区分事实、推断、置信度、替代解释和影响的正式产出物；FailureCluster 是在指定算法版本下对相似失败的候选分组，不等于 Defect。</td></tr><tr><td>17</td><td>Defect / DefectVersion</td><td>缺陷/缺陷版本</td><td>平台内部问题的稳定身份和生命周期（NEW/OPEN/…/CLOSED/REJECTED/DUPLICATE）；DefectVersion 是含标题、步骤、预期、实际、严重度、证据、来源和 digest 的正式产出物版本；ExternalDefectLink 为厂商中立外部映射。</td></tr><tr><td>18</td><td>TestReport / QualityGate</td><td>测试报告/质量门禁</td><td>绑定不可变范围/结果/覆盖/缺陷/风险快照并经 REPORT_SIGNOFF 的正式质量产出物；QualityGate 基于确定性规则和已批准输入给出放行、警告、阻断或需人工决定的门禁。</td></tr><tr><td>19</td><td>Skill / Agent / AgentWorkflow</td><td>技能/智能体/工作流</td><td>Skill 是可复用的原子能力；Agent 是受职责、Skill allowlist、文件/网络/Secret/外部写入和委派边界约束的机器身份；AgentWorkflow 是固定或版本化的 Agent/Skill 调用 DAG 及人工检查点；三者不得合并。</td></tr><tr><td>20</td><td>AI 自治等级 / 介入点 / 校准记录</td><td>L0-L3 自治等级、interventionKey、校准记录</td><td>自治等级描述 AI 在人工硬门之前可连续完成的工作量（L0 人工/L1 辅助/L2 受限代理/L3 扩展代理）；介入点是 21 号矩阵中的唯一 AI 介入标识；校准记录（EvalDataset/EvalRun + 策略版本）是阈值生效的前提，无有效校准记录时分数只排序、不驱动自治。</td></tr></tbody></table>
+<p>补充（核心状态枚举，定义见 03 §13）：通用产出物审核状态 `DRAFT/GENERATING/PENDING_REVIEW/CHANGES_REQUESTED/APPROVED/PUBLISHED/REJECTED/STALE/ARCHIVED`；WorkItem 状态 `BACKLOG/READY/IN_PROGRESS/PENDING_REVIEW/REWORK/APPROVED/BLOCKED/DONE/CANCELLED`；ExecutionResult 状态 `PASSED/FAILED/SKIPPED/ERROR/INCONCLUSIVE`；Defect 生命周期 `NEW/OPEN/IN_PROGRESS/RESOLVED/VERIFIED/CLOSED/REJECTED/DUPLICATE/ARCHIVED`；风险等级 `LOW/MEDIUM/HIGH/CRITICAL`；契约检查状态 `MATCH/DEVIATION/NOT_CHECKED/INCONCLUSIVE`；审核策略类型 `SINGLE_REVIEW/FOUR_EYES/CODE_REVIEW/EXTERNAL_WRITE/REPORT_SIGNOFF/KNOWLEDGE_PUBLISH`。</p>
+<p class="src">（来源：03-术语表Glossary §4-§13）</p>
+<p>---</p><h1>QualityForge《需求说明书》补充章节稿：非功能需求、数据与接口、需求优先级、风险与里程碑</h1>
+<p class="src">用途：作为《需求说明书》第 12-15 章内容稿（位于第 11 章术语表之后、附录之前），按 GB/T 9385-2008 骨架中&quot;具体需求&quot;的非功能部分与国标 8 大质量特征组织。</p>
+<p class="src">依据：2026-08-14 批 1-3 裁决执行后的现行权威文档状态（20/21/22/31/32/33/34 号、05 号方案、问题台账 QF-REQ-001~048 与 V1 里程碑执行对照表）。</p>
+<p class="src">本文只读源文档、不改写源文档；NFR 编号从 NFR-001 起连续编号；所有目标值遵循&quot;先测基线、再批准目标&quot;原则，未经批准的数值一律不构成承诺。</p>
+<p>---</p>
+<h2>第 12 章 非功能需求</h2>
+<p>本章定义 QualityForge 的可验收非质量属性，按性能与容量、安全保密、可用性与可靠性、可维护性、可扩展性、合规与审计、可观测性、AI 自治与降级八类组织。本章所有条目遵循同一验收方法：每条非功能需求必须记录 metricKey、用户旅程或工作负载、数据规模、环境、测量窗口、统计口径、基线、目标、错误预算、采集方式、责任人和版本，缺少这些字段的数字只算候选值，不构成交付门禁；当前系统尚无运行基线，因此本章不把未经实测的并发、延迟、可用性或 AI 准确率写成已承诺指标，各版本先测基线、再批准目标值。受控指标清单以 20 号登记表为准，共 51 项 metricKey，按效率（eff_，14 项）、质量（qual_，17 项）、AI 效果（ai_，11 项）、追溯（trace_，2 项）、运营（ops_，7 项）五组前缀登记，载体状态分为可计算、部分载体与 V1 无载体三类。</p>
+<p class="src">（来源：20-非功能需求 §1；22-MVP版本规划 §6）</p>
+<h3>12.1 性能与容量</h3>
+<p>本节覆盖 Web、REST API、AI 步骤、执行调度和证据报告五类对象的性能测量义务。性能需求的核心不是写死某个数字，而是把&quot;测量—基线—批准&quot;固化为版本门禁：V1 开发前建立单 Workspace 试点负载模型，每个版本的目标值以压测报告批准，不从旧规划继承任何未经证明的数字。</p>
+<p>NFR-001 性能目标批准门禁 — 系统应在每个版本交付前，基于已批准的工作负载模型完成压测并形成基线报告；描述：任何延迟、吞吐、容量或并发目标值必须附测量方法、环境、数据规模与统计口径，经项目负责人批准后方可作为该版本交付门禁，未经批准的数字不得用于宣称版本达标。验收：版本交付评审包含压测报告与批准记录；凡无基线或工作负载的目标（如并发数、P95 延迟）一律标记为不可验收（对齐 20 号 AC-04）。</p>
+<p class="src">（来源：20-非功能需求 §1、§2、§10 AC-04）</p>
+<p>NFR-002 API 响应延迟 — 系统应在批准的试点负载模型下，使 95% 的 API 请求在批准的目标延迟内响应（候选目标如 500ms，须经基线批准后生效），并按 P50/P95/P99 分层测量；描述：延迟统计按 operationId、读写类型、数据量与租户维度分层，与吞吐、错误率、饱和度一并报告。验收：压测报告含 P50/P95/P99、吞吐、错误率、饱和度四项及分层明细，经批准后归档，超预算触发告警。</p>
+<p class="src">（来源：20-非功能需求 §2）</p>
+<p>NFR-003 Web 前端性能 — 系统应测量并建立 LCP、INP、CLS、首个可操作时间和页面错误率的基线；描述：测量按页面、设备、网络、冷热缓存分层，核心审核工作台不得因前端资源加载阻塞人工审核流程。验收：每个版本提供分层基线数据，核心页面无未解释的布局偏移与输入延迟回归。</p>
+<p class="src">（来源：20-非功能需求 §2）</p>
+<p>NFR-004 AI 步骤延迟与成本 — 系统应按 interventionKey 及模型、Prompt、Skill、Workflow 版本分层测量 AI 步骤的首个结果延迟、完整结果延迟、成功成本、超时率和人工接管率；描述：AI 步骤指标不与普通 API 指标混算，模型版本变化后必须重新测量。验收：AI 步骤报告按介入点与精确版本分层，超时与接管率触发熔断或降级条件（见 12.8）。</p>
+<p class="src">（来源：20-非功能需求 §2；21-AI介入点降级矩阵 §4）</p>
+<p>NFR-005 执行调度与容量 — 系统应测量执行调度的排队时间、启动时间、有效并发与资源利用率，并建立容量基线与错误预算；描述：测量按 Runner 能力、测试类型和环境分层；队列积压、Runner 失联与资源不足必须可观测并可触发降级。验收：容量报告含分层基线，错误预算消耗超限时产生告警并可溯源到调度事件。</p>
+<p class="src">（来源：20-非功能需求 §2、§3）</p>
+<p>本节小结：性能与容量需求以&quot;先基线后批准&quot;为总闸，五类对象各有必测指标与分层维度；任何目标值缺失测量证据即不可验收，这一原则同样适用于后续所有质量类别。</p>
+<p class="src">（来源：20-非功能需求 §1、§2）</p>
+<h3>12.2 安全保密</h3>
+<p>本节覆盖认证、授权、多租户隔离、Secret 保护、Agent 安全、供应链安全、数据保护与安全测试八项。总体原则是默认拒绝、纵深防御、fail-closed：认证成功不等于有权访问任何 Workspace，管理员身份不自动扩散为业务权限，任一授权环节缺失即拒绝。</p>
+<p>NFR-006 认证与身份管理 — 系统应支持 OIDC/OAuth2 授权码加 PKCE（必要时启用 MFA）的人工身份认证，以及短时服务令牌或 mTLS 工作负载身份的服务认证；描述：JWT 令牌必须携带并校验 iss、sub、aud、iat、exp、jti 与身份类型，用户离职或禁用后立即失效；本地开发 Profile 使用随机盐 scrypt 存储密码、HttpOnly 与 SameSite=Strict Cookie、双提交 CSRF 与登录限流。验收：认证测试覆盖令牌伪造、过期、audience 不匹配与重放场景，均被拒绝；WebSocketTicket 一次性绑定资源且不扩大权限。</p>
+<p class="src">（来源：34-认证授权设计 §2、§10 AC-05；20-非功能需求 §5）</p>
+<p>NFR-007 授权默认拒绝与审核授权 — 系统应按平台、租户、Workspace、资源四级作用域实施 RBAC，权限含 resourceType、action、scopeTypes、riskLimit、conditionSchema 与 humanOnly 标记；描述：正式产出物批准、报告签署、外部写入批准、门禁放行与豁免、Skill/Agent/Workflow 发布均为人类专属能力；Approver 是 ReviewTask 中的临时职责而非全局角色，每次审核绑定 artifactType、artifactId、artifactVersionId 与 contentDigest，服务端按&quot;验证身份—重读版本摘要—解析策略—计算绑定—校验职责分离—执行 blockingChecks—追加决定&quot;七步算法批准。验收：跨租户访问、IDOR、角色或作用域提升、自批、陈旧批准（STALE_ARTIFACT_VERSION）等负向用例全部被拒绝并记录 DENY；管理员与 Agent 均不能绕过该算法。</p>
+<p class="src">（来源：34-认证授权设计 §4、§5、§10 AC-01/AC-03；05-功能模块重构方案 §5.11）</p>
+<p>NFR-008 多租户数据隔离 — 系统应在每个事务内以参数化方式注入已验证的租户与主体上下文，所有租户表启用并强制行级安全（ENABLE 且 FORCE RLS），应用连接角色非表 Owner、无 BYPASSRLS；描述：上下文缺失、格式错误或与授权决定不一致时请求终止；连接池归还前事务结束，禁止会话级 SET 造成串租户；跨租户资源存在性不得通过 404/403 差异泄漏。验收：跨租户失败关闭测试（20 号 AC-01）在各层通过：服务、API、数据库均拒绝且不泄漏资源存在性，审计记录脱敏事件；RLS 配置随迁移验收测试执行。</p>
+<p class="src">（来源：34-认证授权设计 §7、§10 AC-04；33-数据库Schema设计 §1、§13）</p>
+<p>NFR-009 Secret 保护 — 系统应将主密钥存放于 KMS/Vault，数据以 AES-256-GCM 或经评审的 AEAD 双信封加密，数据库只保存密文、nonce、keyVersion 与访问元数据；描述：Secret 通过引用使用，明文只存在于受控执行服务的短时内存，元数据读取与明文使用为不同权限；API 永不返回 secretValue 或 encrypted_value，密钥材料不写入普通配置表，支持按租户与 Workspace 轮换并记录使用审计。验收：Secret 泄漏与越权读取用例全部失败关闭，任何 API 响应、日志、Trace、产出物与 Agent 上下文均不出现明文密钥。</p>
+<p class="src">（来源：34-认证授权设计 §8、§9；20-非功能需求 §5；33-数据库Schema设计 §1）</p>
+<p>NFR-010 Agent 与机器身份安全 — 系统应使 Agent 权限等于发起用户当前权限、AgentVersion 允许权限、WorkflowVersion 节点权限、WorkItem 授权快照与环境策略的交集，再减去显式 Deny 与 humanOnly 能力；描述：Agent 默认零网络、无 Secret、无外部写入，每次工具调用前重新校验，策略或发起人权限变化时令牌撤销或运行熔断；Agent 不得继承平台或租户管理员宽泛权限，不得持久化用户令牌或 Secret，不得自行扩大委派深度，不得提交 ReviewDecision。验收：Agent 尝试批准、越权工具调用、权限扩大请求均被拒绝并转 BLOCKED 或 PENDING_REVIEW，审计可追溯（对齐 21 号 AC-01、34 号 AC-02）。</p>
+<p class="src">（来源：34-认证授权设计 §6、§10 AC-02；21-AI介入点降级矩阵 §1）</p>
+<p>NFR-011 供应链安全 — 系统应锁定依赖版本、维护 SBOM 与签名来源，执行 SAST/SCA 扫描，并对恶意 Skill 实施隔离；描述：AutomationScript 与 Skill 的引入须经过静态安全检查与人工发布审核；Runner 在隔离环境中执行，默认零外网出站。验收：供应链安全测试（依赖投毒、恶意 Skill、任意代码执行）通过；未经安全扫描与审核的 Skill 或脚本不得进入可执行状态。</p>
+<p class="src">（来源：20-非功能需求 §5；QF-RSK-012；05-功能模块重构方案 §5.8.8）</p>
+<p>NFR-012 数据保护与隐私 — 系统应对证据执行分类分级、最小采集、脱敏、访问控制与保留删除策略；描述：日志与 Trace 不得记录令牌、Secret、隐藏思维链或不必要的敏感正文，仅保留决策摘要与引用；测试数据按敏感度分级并支持生成、脱敏与清理策略；真实 LLM 接入前的出站数据评测与脱敏策略未完成时，不得将测试数据送出受控边界。验收：证据脱敏与访问控制用例通过；对越权读取敏感证据的请求全部拒绝并审计。</p>
+<p class="src">（来源：20-非功能需求 §5、§7；33-数据库Schema设计 §8；QF-RSK-013）</p>
+<p>NFR-013 安全测试基线 — 系统在每个里程碑提供安全测试证据，至少覆盖跨租户、IDOR、角色或作用域提升、自批、陈旧批准、Secret 泄漏、SSRF 与出站绕过、提示注入、恶意文件和依赖供应链十类场景；描述：M1 准出前须通过 031 号整改定义的六条负向用例（悬空引用、跨租户、审核绑定漂移、溯源断链、环依赖、跨版本绑定）与&quot;禁止 AI 自批&quot;负向用例。验收：安全测试报告逐用例记录结果与证据位置；任何用例失败不得以文档说明替代运行时证据。</p>
+<p class="src">（来源：20-非功能需求 §5；V1里程碑执行对照表 §5 准出压力；QF-REQ-031）</p>
+<p>本节小结：安全保密需求以&quot;默认拒绝、人工专属、失败关闭、不泄漏存在性&quot;为四根支柱，身份、授权、隔离、Secret、Agent、供应链、数据与测试八项互为纵深；任何高价值动作都必须逐次重新授权并落不可变记录。</p>
+<p class="src">（来源：34-认证授权设计 §1；20-非功能需求 §5）</p>
+<h3>12.3 可用性与可靠性</h3>
+<p>本节定义可用性测量口径、外部依赖韧性、取消重放幂等、消息传递、恢复演练与用户可用性六项。可用性不以&quot;进程存活&quot;为口径，而以用户旅程的 SLI 为度量。</p>
+<p>NFR-014 可用性 SLI 口径 — 系统应按用户旅程定义 SLI（如草稿生成可用、审核提交可用、执行结果回传可用），不以进程存活替代可用性；描述：每个 SLI 配置测量窗口、统计口径与错误预算，目标值在部署拓扑与业务等级明确后批准。验收：SLI 定义表与错误预算配置经批准归档，版本报告按 SLI 口径汇报而非进程存活率。</p>
+<p class="src">（来源：20-非功能需求 §3）</p>
+<p>NFR-015 外部依赖韧性 — 系统应对外部 LLM、Defect、Git、CI、KMS 与 Runner 设置超时、预算、熔断和明确降级策略，不无限重试；描述：LLM 持续超时且备用策略不可用时应停止自动节点、保留草稿与 Trace，将 WorkItem 置为阻塞或回退低自治等级，不得发布正式资产。验收：外部依赖故障注入演练（LLM 限流、集成超时、KMS 不可用）均按预定降级路径执行，无静默继续与无限重试。</p>
+<p class="src">（来源：20-非功能需求 §3、§10 AC-02）</p>
+<p>NFR-016 取消、重放与幂等 — 系统应支持 WorkItem、ExecutionTask 与 AgentSession 的取消、重放和幂等；描述：重放创建新的 attempt 并保留旧证据，重试受预算与幂等约束（V1 默认一次受控重试），超过边界后才转 BLOCKED；取消他人运行需相应权限。验收：取消、超时与受控重试用例通过，重放后证据链可追溯到原失败记录，无覆盖历史事实。</p>
+<p class="src">（来源：20-非功能需求 §3；05-功能模块重构方案 §5.5.12；QF-REQ-043）</p>
+<p>NFR-017 消息传递可靠性 — 系统在采用至少一次传递时，消费者应以稳定事件 ID 或幂等键去重；描述：状态改变在本地事务内写业务数据与 Outbox 候选事件，消费者幂等处理，事件包含 eventId、sequence 或 offset、租户与 Workspace、资源与版本、occurredAt 与 traceId。验收：消息重投与乱序场景下业务状态不重复推进，去重效果有测试证据。</p>
+<p class="src">（来源：20-非功能需求 §3；31-系统架构设计 §3）</p>
+<p>NFR-018 故障恢复与演练 — 系统应定期演练 Runner 失联、队列积压、数据库故障、对象存储故障、LLM 限流与外部集成超时六类场景；描述：RTO/RPO 在部署拓扑与业务等级明确后批准，V0 阶段只定义恢复步骤与证据要求，不预设数值承诺。验收：演练记录含场景、处置步骤与恢复证据；恢复后新 attempt 引用原失败记录，历史证据完整保留。</p>
+<p class="src">（来源：20-非功能需求 §3）</p>
+<p>NFR-019 用户可用性与无障碍 — 系统应使核心任务、审核、Diff、结果与错误流程支持键盘操作、语义化标签、焦点管理与非颜色提示；描述：对 AI 结论展示证据、限制、版本、可修改内容与人工责任，不使用误导性的&quot;AI 已批准&quot;表述；长任务显示阶段、预计或已用时间、取消、降级与恢复条件。验收：V1 以 WCAG 2.2 AA 检查清单和真实用户任务测试建立基线，审核工作台无障碍缺陷不迟于该版本关闭。</p>
+<p class="src">（来源：20-非功能需求 §9）</p>
+<p>本节小结：可用性与可靠性以用户旅程 SLI 为度量、以外部依赖熔断为韧性、以取消重放幂等为恢复底座、以演练为持续验证；可用性目标数字同样遵循先基线后批准。</p>
+<p class="src">（来源：20-非功能需求 §3）</p>
+<h3>12.4 可维护性</h3>
+<p>本节覆盖契约驱动、兼容代际、数据库可维护与代码文档质量四项，目标是让系统在版本演进中保持契约可解析、迁移可重跑、变更可追溯。</p>
+<p>NFR-020 契约驱动开发 — 系统应以 OpenAPI 与事件契约为外部契约的唯一来源，operationId 全局唯一，Schema 引用可解析；描述：核心链（策略、计划、用例、执行、分析）共 41 个路径、53 个 operation 的响应与请求 schema 必须在目标版本落地为具体定义，不得引用 Generic 或未定义块，并可通过 openapi-spec-validator 校验。验收：核心链 operation 全部为具体 schema 且 validator PASS，无 Generic 响应残留，运行时 operation 数与 KNOWN_DEFERRED 台账对账一致。</p>
+<p class="src">（来源：20-非功能需求 §8；V1里程碑执行对照表 §4；QF-REQ-005）</p>
+<p>NFR-021 兼容代际管理 — 系统应使 API 兼容代际与产品版本分离，首个产品交付代际为 /api/v1；描述：破坏性变更遵循 32/37 号迁移规则，版本计划不得以兼容性为由取消人工审核、外部写入批准、报告签署、权限隔离与可追溯性。验收：代际变更清单、迁移规则与回退方案随版本发布，未申报的破坏性变更在契约扫描中被拦截。</p>
+<p class="src">（来源：22-MVP版本规划 §1；20-非功能需求 §8；31-系统架构设计 §9）</p>
+<p>NFR-022 数据库可维护性 — 系统应通过 Alembic 迁移管理 schema，迁移支持空库升级、重跑、降级或恢复并附带 RLS 测试；描述：迁移由 qf_owner 角色执行，运行期严禁使用 qf_owner 或 postgres 连接；目标 DDL 在 Gate D 采用直接替换，不编写虚构的数据迁移成功声明。验收：迁移在空库与既有库上可重复执行，回滚后数据与权限一致，RLS 策略测试随迁移通过。</p>
+<p class="src">（来源：20-非功能需求 §8；33-数据库Schema设计 §1、§14）</p>
+<p>NFR-023 代码与文档质量 — 系统代码应通过类型检查、lint、单元、契约、集成与 E2E 分层验证；描述：测试覆盖率只作为风险信号，不设脱离代码类型的统一百分比；文档变更须同步术语、领域、API、DB、PRD 与治理文档并追加 CHANGELOG 条目。验收：CI 中分层检查全绿，文档变更与 CHANGELOG 一一对应，权威源无不可解释冲突。</p>
+<p class="src">（来源：20-非功能需求 §8；QF-REQ-002）</p>
+<p>本节小结：可维护性以&quot;契约唯一、代际分离、迁移可重跑、变更留痕&quot;为验收主线，静态文档通过不等于运行时验证，V1 需 Spike、迁移、契约与 E2E 证据。</p>
+<p class="src">（来源：31-系统架构设计 §10）</p>
+<h3>12.5 可扩展性</h3>
+<p>本节定义架构演进、Runner 扩展、数据扩展与契约扩展四项。扩展性不追求一步到位的微服务，而是按实测负载分阶段演进。</p>
+<p>NFR-024 架构演进路径 — 系统应采用模块化单体起步，按负载分离 Agent Worker 与 Runner，再基于实测瓶颈拆服务、建立弹性资源池与故障域；描述：V1 采用 Modular Core 加 Agent Worker、Runner 与 PostgreSQL、对象存储，按需引入 Redis；模块边界是代码与数据 Owner 边界，不等同于必须独立部署的微服务。验收：部署演进表（V0、Stage 4 本地、V1、V2、V3）与负载证据一致，任何拆分决策附实测依据。</p>
+<p class="src">（来源：31-系统架构设计 §9）</p>
+<p>NFR-025 Runner 与执行扩展 — 系统应支持 Runner 注册、能力声明、租约、心跳与资源池分配；描述：V1 提供单资源池 Runner 并支持 DRAINING 状态，V2 支持多 Runner 调度、失败恢复与资源配额，V3 支持弹性与区域隔离；执行环境为隔离容器或沙箱，被测网络与代码执行为高风险边界。验收：Runner 心跳丢失检测、租约过期、能力不足拒绝分配均有运行时证据。</p>
+<p class="src">（来源：31-系统架构设计 §6；33-数据库Schema设计 §3；QF-REQ-039）</p>
+<p>NFR-026 数据扩展 — 系统应在真实查询与数据规模证据建立后，再决定向量、JSONB 与全文索引，不预设所有 JSONB 字段均需 GIN 索引；描述：正文与制品保存对象存储引用与 digest，复杂受控结构使用 JSONB，检索层使用 PostgreSQL 加 PGVector。验收：索引决策附查询模式与数据量证据，检索性能随数据增长有测量记录。</p>
+<p class="src">（来源：33-数据库Schema设计 §1、§13.4；31-系统架构设计 §1）</p>
+<p>NFR-027 契约扩展与三方对账 — 系统新增介入点、operation 或表时应保持 21 号介入点矩阵、32 号 API 与 33 号数据库三方对账一致；描述：新集成通过 IntegrationConfig 注册并受出站 allowlist、操作、作用域与逐次授权约束；AI 自治等级变更必须版本化、审批并支持立即回退。验收：三方对账表随 L1 扫描基线维护，新增项无未闭合对账差异（对齐 QF-REQ-036）。</p>
+<p class="src">（来源：QF-REQ-036；21-AI介入点降级矩阵 §3；34-认证授权设计 §8）</p>
+<p>本节小结：可扩展性以实测驱动为原则，架构、Runner、数据与契约四层均不得在缺乏证据时提前扩容或承诺规模数字。</p>
+<p class="src">（来源：31-系统架构设计 §9；20-非功能需求 §1）</p>
+<h3>12.6 合规与审计</h3>
+<p>本节覆盖审计完整性、保留导出、数据出域与外部写入合规四项，目标是让每一次高价值动作都可复核、可导出、可追责。</p>
+<p>NFR-028 审计完整性 — 系统应对正式批准或发布、外部写入、执行启动或取消、Secret 使用、角色或策略变更、Agent 高风险工具调用、门禁放行或豁免记录只追加的 AuthorizationDecision；描述：记录至少包含主体、身份类型、动作、资源及版本与摘要、适用策略版本、RoleBinding 快照、条件结果、ALLOW 或 DENY、原因码、traceId 与时间；不得记录 Secret、完整令牌或不必要的敏感正文。验收：审计链不可篡改，任一决策可回溯到策略版本与绑定快照；审计链中断触发安全高优先级告警。</p>
+<p class="src">（来源：34-认证授权设计 §9；20-非功能需求 §7）</p>
+<p>NFR-029 记录保留与导出 — 系统应按证据分类分级配置保留与删除策略，删除默认归档，存在历史引用时阻止物理删除并返回依赖信息；描述：审计日志支持保留、导出与受限查询，平台运维跨租户查询走专用、审计、最小化的后台流程。验收：归档与依赖拦截用例通过，导出内容经脱敏校验。</p>
+<p class="src">（来源：20-非功能需求 §5、§7；33-数据库Schema设计 §1；34-认证授权设计 §7）</p>
+<p>NFR-030 数据出域合规 — 系统在接入真实 LLM 前必须完成数据出站评测、脱敏与区域策略评估，未通过评测前保持确定性 Provider 或 L0 模式；描述：LLM 配置含数据区域、路由策略、配额与预算，出站目标受 EGRESS_DENIED 错误码保护。验收：接入准入报告含出站评测、脱敏验证与区域策略证据，无评测不得接入（对齐 QF-RSK-005、QF-RSK-013）。</p>
+<p class="src">（来源：QF-RSK-005/013；32-API规范 §错误码；21-AI介入点降级矩阵 §2 L0）</p>
+<p>NFR-031 外部写入合规 — 系统对 Defect、代码仓库、质量门禁豁免等外部写入默认拒绝，每次写入须经独立人工批准并绑定固定 payload；描述：V1 手工同步同样落 DefectSyncAttempt 记录、批准记录与回执；同步操作携带幂等键与 payloadDigest，冲突返回 EXTERNAL_SYNC_CONFLICT，不得假报成功。验收：外部写入无批准即拒绝；手工同步记录可逐条回溯到批准、负载摘要与回执（对齐 QF-REQ-025、QF-RSK-010）。</p>
+<p class="src">（来源：QF-REQ-025；QF-RSK-010；21-AI介入点降级矩阵 §1；32-API规范 §错误码）</p>
+<p>本节小结：合规与审计以&quot;只追加、可导出、出站受控、外部写入逐次批准&quot;为底线，任何版本演进均不得削弱。</p>
+<p class="src">（来源：22-MVP版本规划 §1；05-功能模块重构方案 §5.13.6）</p>
+<h3>12.7 可观测性</h3>
+<p>本节定义全链路关联、遥测采集、告警与失败分类四项。可观测性是 AI 治理与审计的基础设施，所有请求、工作项、会话与外部尝试都必须可关联、可回放。</p>
+<p>NFR-032 全链路关联 — 系统应使所有请求、WorkItem、AgentSession、ExecutionTask 与外部 SyncAttempt 使用 traceId 或 correlationId 贯通关联；描述：traceId 贯穿 API、WorkItem、Agent、Runner 与外部 attempt，跨域引用固定 ID、versionId 与必要的 contentDigest。验收：任一报告或 Defect 可从结果反查输入资料、策略计划、用例、代码版本、执行结果、分析、审核记录与 Agent Trace。</p>
+<p class="src">（来源：20-非功能需求 §7；31-系统架构设计 §8；05-功能模块重构方案 §5.5.12）</p>
+<p>NFR-033 遥测采集范围 — 系统应采集结构化日志、指标与分布式 Trace，并记录 Agent、Skill、Prompt、Workflow 的精确版本、工具调用、输入输出摘要与 verdict；描述：授权 ALLOW 或 DENY、ReviewDecision、版本发布、Secret 使用与外部回执均须入遥测；不持久化隐藏思维链。验收：采集清单与 20 号 §7 至少一致，采样与保留策略经批准。</p>
+<p class="src">（来源：20-非功能需求 §7；31-系统架构设计 §5）</p>
+<p>NFR-034 告警与安全事件 — 系统告警阈值必须基于基线与错误预算批准；描述：跨租户访问、humanOnly 越权、Secret 外泄与审计链中断始终作为安全高优先级事件，数据质量、队列、Runner、成本、错误预算与降级状态纳入常规告警。验收：告警规则清单附阈值批准记录，安全事件可实时触达处置角色。</p>
+<p class="src">（来源：20-非功能需求 §7）</p>
+<p>NFR-035 失败分类 — 系统应对失败至少区分业务 FAIL、平台或环境 ERROR、权限 DENY、人工 BLOCK 与 CANCEL 或 TIMEOUT 五类；描述：分类进入 Trace 与指标口径，不得混淆业务失败与环境错误；降级原因码、版本与恢复条件随记录保留。验收：故障注入样本的分类准确率有测试证据，报告与看板按分类口径展示。</p>
+<p class="src">（来源：31-系统架构设计 §8；21-AI介入点降级矩阵 §6.2）</p>
+<p>本节小结：可观测性以&quot;贯通、分层、批准、分类&quot;为四要素，既是运维能力也是 AI 治理证据链的一部分。</p>
+<p class="src">（来源：20-非功能需求 §7；31-系统架构设计 §8）</p>
+<h3>12.8 AI 自治与降级</h3>
+<p>本节是 AI 治理的非功能底座，对应 21 号矩阵的六项硬性要求。产品目标不是让 AI 替测试人员作最终质量判断，而是让 AI 承担可委派的收集、生成、执行、分析与整理工作，人工负责审核、批改、例外处理与全局质量控制。</p>
+<p>NFR-036 人工硬门不可绕过 — 系统应保证八类正式产出物（策略、计划、用例、自动化代码、结果分析、Defect、测试报告、知识条目）不得被 AI 自动批准或发布；描述：AI 运行不得拥有 ReviewDecision，Workflow 尝试直接置 APPROVED 或 PUBLISHED 时授权被拒绝并创建或保留 ReviewTask；TenantAdmin 开关不能绕过底线。验收：对&quot;禁止 AI 自批&quot;的负向用例（含独立验证裁决表 t_verify_verdict 落点）在 M1 准出前全绿（对齐 21 号 AC-01/AC-02）。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §1、§7 AC-01/AC-02；V1里程碑执行对照表 §5）</p>
+<p>NFR-037 自治等级受控 — 系统应使新介入点默认 L1，已有固定输入输出契约、最小权限、可观测 Trace、失败回滚与人工硬门的介入点可默认 L2；描述：L3 只有在代表性 Golden Set 达到经批准质量门槛，并完成影子运行、误放误阻评估与成本延迟基线后才可上调；等级变更必须版本化、审批、记录 AuthorizationDecision 与 AuditLog 并支持立即回退。验收：介入点矩阵的默认等级与升级证据一致，无校准记录的介入点不得执行 L3 编排。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §2、§3）</p>
+<p>NFR-038 校准记录治理 — 系统应使每个 AI 阈值引用一组经批准的版本化校准记录，至少包含 interventionKey、被评测对象精确版本、数据集版本与适用范围、指标定义、阈值、样本量与人工基线、生效与过期时间、回退等级；描述：没有有效校准记录时，模型分数只用于排序或提示，不得自动触发资产变更、缺陷提交、质量门禁或 L3 执行。验收：校准记录在 t_calibration_record 落库并有注册与查询 API；对无校准介入点的越权自治用例全部失败关闭（对齐 21 号 AC-03、QF-REQ-006）。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §4、§7 AC-03；QF-REQ-006；33-数据库Schema设计 §11）</p>
+<p>NFR-039 降级触发与运行行为 — 系统应在命中任一降级触发条件（输入来源、精确版本、内容摘要或授权上下文缺失或变化；触达 allowlist 外资源；Workflow 循环、超时、预算超限、重复失败或 Runner 能力不足；关键路径、来源冲突、职责分离或强制人工检查点；校准过期、评测跌破门槛或误放误阻超警戒；模型、Prompt、Skill 或 Workflow 版本变化未重新评测）时立即停止当前自动步骤并按介入点回退至 L1 或 L0；描述：降级必须停止未开始节点、保留已完成产物与 Trace、把 WorkItem 置为 BLOCKED 或 PENDING_REVIEW、记录原因码版本与恢复条件，不得静默切换模型后继续发布。验收：对越权、循环、超时、版本陈旧四类触发的熔断用例（21 号 AC-04）通过，降级证据完整可审计。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §6.1、§6.2、§7 AC-04）</p>
+<p>NFR-040 恢复与重放 — 系统应在问题修复、权限重新计算、必要人工决定完成且受影响输入重新锁定后恢复；描述：恢复重放创建新的 run 或 attempt 并引用原失败记录，不覆盖历史证据；被审资产可写或输入快照不完整时独立验证裁决禁用。验收：恢复路径用例验证新 attempt 与原记录引用关系，证据链完整无覆盖。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §6.3；05-功能模块重构方案 §5.5.12）</p>
+<p>NFR-041 AI 质量分层报告 — 系统应对每个介入点分别报告机器检查、独立验证与人工验收三层结果，不把任一层替代另一层；描述：重点监控人工修改率、误放率、误阻率、越权率、幻觉引用率、降级率、成本与延迟；模型、Prompt、Skill、Workflow 或数据分布变化后重新评测，线上异常触发 L1 或 L0 回退；无版本化校准记录的分数只作排序或提示。验收：分层报告样例齐全，指标口径与 20 号 metricKey 映射一致，无基线数字不得宣称提升。</p>
+<p class="src">（来源：20-非功能需求 §6；21-AI介入点降级矩阵 §4；QF-REQ-026/029）</p>
+<p>本节小结：AI 自治与降级以&quot;人工硬门、等级受控、校准先行、熔断留痕、恢复可重放、分层报告&quot;六项为治理闭环，是本产品区别于普通 AI 功能的质量底线，任何版本不得突破。</p>
+<p class="src">（来源：21-AI介入点降级矩阵 §1、§6；22-MVP版本规划 §1）</p>
+<h3>12.9 非功能需求总验收</h3>
+<p>第 12 章全部条目的总体验收以 20 号 Given/When/Then 门禁与 22 号版本门禁为框架：性能与容量、可用性与可靠性目标必须在基线批准后生效（AC-04）；AI 依赖不可用时不发布正式资产（AC-02）；幂等冲突不产生第二个业务副作用（AC-03）；跨租户失败关闭（AC-01）。版本发布须同时满足产品、质量、安全、AI、运行与发布六类门禁证据要求。</p>
+<p class="src">（来源：20-非功能需求 §10；22-MVP版本规划 §7）</p>
+<p>---</p>
+<h2>第 13 章 数据与接口</h2>
+<p>本章规定系统的数据模型概要、接口约定与外部接口。数据与接口共同构成可追溯性、多租户隔离与集成安全的技术底座：所有跨域引用固定 ID、versionId 与必要 contentDigest，外部契约由 OpenAPI 与事件契约驱动。</p>
+<p class="src">（来源：31-系统架构设计 §2、§3）</p>
+<h3>13.1 数据模型概要</h3>
+<p>系统目标数据库为 PostgreSQL 16，主键采用 UUID，复杂受控结构使用 JSONB，正文与制品保存对象存储引用与摘要；租户内业务表必须带 tenant_id，Workspace 内业务表必须同时带 workspace_id；应用连接角色非表 Owner、非 superuser 且无 BYPASSRLS；API 使用 camelCase，数据库使用 snake_case，由 ORM 显式映射。当前目标共 106 张表（含 2026-08-14 批 3 新增的校准记录表与独立验证裁决表；里程碑对照表另有 104 至 105 张的实算口径差异，属解析口径，已列入其未核实项）。</p>
+<p class="src">（来源：33-数据库Schema设计 §1、§2；V1里程碑执行对照表 §6）</p>
+<p>按写入规则与职责，目标表可归纳为五类实体，概要如下：</p>
+<table><thead><tr><th>实体类别</th><th>含义</th><th>代表表</th><th>写入规则</th></tr></thead><tbody><tr><td>稳定根与不可变版本</td><td>正式产出物的稳定身份与内容版本</td><td>t_requirement_document（加 _version）、t_api_contract（加 _version、_operation_version）、t_test_strategy（加 _version）、t_test_plan（加 _version）、t_test_case（加 _version）、t_knowledge_entry（加 _version）、t_automation_script（加 _version）、t_execution_plan（加 _version）、t_result_analysis（加 _version）、t_defect（加 _version）、t_test_report（加 _version）</td><td>版本正文列不可 UPDATE，只能 INSERT 新版本并推进稳定根 current/published 指针</td></tr><tr><td>只追加证据与事实</td><td>执行事实、决定、审计、Trace 与回执</td><td>t_execution_result、t_execution_artifact、t_api_observation、t_contract_check_result、t_audit_log、t_authorization_decision、t_work_item_event、t_execution_task_event、t_defect_status_event、t_agent_session、t_agent_trace_node、t_skill_invocation、t_eval_run、t_eval_result、t_defect_sync_attempt、t_verify_verdict</td><td>应用角色 REVOKE UPDATE、DELETE（33 号 §13.3 共 15 张表）</td></tr><tr><td>工作流与协作</td><td>工作项、运行、审核与依赖</td><td>t_work_item、t_work_item_run、t_work_item_artifact、t_work_item_dependency、t_review_task、t_review_assignment、t_execution_task、t_failure_cluster（加 _member）</td><td>状态机流转并落只追加事件；乐观锁与依赖环约束</td></tr><tr><td>目录、配置与治理</td><td>身份、权限、策略、环境与集成</td><td>t_tenant、t_user、t_workspace、t_role_definition、t_permission、t_role_binding、t_explicit_deny、t_review_policy、t_environment、t_runner_node、t_llm_config、t_integration_config、t_workspace_secret、t_skill、t_agent、t_agent_workflow、t_agent_prompt_version</td><td>配置版本化并受审核；Secret 只存密文</td></tr><tr><td>中间产物与检索</td><td>来源、中间表示、草稿与向量</td><td>t_source_snapshot、t_source_trace_edge、t_ai_context_snapshot、t_testing_ir、t_business_rule、t_test_scenario、t_design_test_case、t_assertion、t_knowledge_vector、t_calibration_record</td><td>可标注与替换；溯源边带证据等级；校准记录版本化</td></tr></tbody></table>
+<p class="src">（来源：33-数据库Schema设计 §3-§12）</p>
+<p>数据模型围绕两条核心约束组织。其一为稳定根加不可变版本：正式产出物以稳定根表保存身份与当前、已发布指针，以版本表保存不可变内容、contentDigest、supersedes 关系、变更摘要与审核状态，应用服务必须校验指针版本属于同一聚合根、租户与 Workspace，普通外键无法表达该跨列约束。其二为只追加证据链：执行结果、制品、API 观察、契约检查、审计、授权决定、事件、会话、Trace、评测、同步尝试等事实表对应用角色禁止 UPDATE 与 DELETE；追踪链至少覆盖&quot;来源快照到 TestingIR 与规则、策略、计划、用例、脚本、执行、分析、Defect 与报告、Review&quot;的完整链路，ReviewTask 绑定 artifactId、artifactVersionId 与 contentDigest，删除默认归档，存在历史引用时阻止物理删除并返回依赖。</p>
+<p class="src">（来源：33-数据库Schema设计 §1、§13.3、§12；20-非功能需求 §4）</p>
+<p>多租户隔离在数据层以行级安全实现：每个事务开始后以参数化方式执行 set_config 注入当前租户与用户，所有租户表 ENABLE 且 FORCE ROW LEVEL SECURITY，缺失或非法上下文在应用层与数据库策略两侧失败关闭；平台运维的跨租户查询走专用、审计、最小化的后台流程；RLS 是纵深防御，不替代服务层的 Workspace 与资源级授权。</p>
+<p class="src">（来源：34-认证授权设计 §7；33-数据库Schema设计 §13.1、§13.2）</p>
+<p>表规模与版本落点方面，按里程碑对照表实算：M1 建表约 54 张、M2 新增 1 张（依赖表，M2 以能力落地为主）、M3 约 15 张、M4 约 18 张、M5 约 4 至 5 张（含校准与独立验证表），V2 及以后预留 12 张；V1 必需（含部分必需）合计约占 88%，八域均有 V1 必需表。本地 SQLite 切片不是目标 PostgreSQL 的等价移植，不具备原生 RLS，只能用于受控单机开发。</p>
+<p class="src">（来源：V1里程碑执行对照表 §2、§3、§5；33-数据库Schema设计 §引言）</p>
+<h3>13.2 接口约定</h3>
+<p>系统对外提供 OpenAPI 定义的目标 API 契约，当前状态为 draft，尚不是已发布线上兼容面；产品版本（V0 至 V3）与 API 兼容代际（/api/v1）分离。契约解析口径为 79 个路径、104 个 operation（快照 grep 口径为 78 个路径、102 个 operation，差异属解析口径，列入对照表未核实项）。接口约定要点如下：</p>
+<p>认证与授权：全局安全方案为 BearerAuth（JWT）与 CookieAuth（qf_access）双通道；JWT 至少携带并校验 iss、sub、aud、iat、exp、jti 与身份类型；Web 使用 HttpOnly、SameSite=Strict Cookie 加双提交 CSRF；实时订阅使用经 REST 鉴权后签发的一次性 WebSocketTicket；服务间使用短时工作负载身份或 mTLS，网关清除客户端伪造的身份 Header，服务端不信任客户端角色 Header。</p>
+<p class="src">（来源：32-API规范 §security、§components；34-认证授权设计 §2、§3）</p>
+<p>幂等：所有写操作（POST）要求携带 Idempotency-Key 请求头（16 至 128 字符）；相同键绑定相同 payload 时返回原结果，相同键提交不同 payload 时返回冲突（IDEMPOTENCY_CONFLICT）且不产生第二个业务副作用；异步写操作返回 WorkItem 或 attempt 资源，不以 HTTP 200 掩盖后台失败。</p>
+<p class="src">（来源：32-API规范 §components 参数；20-非功能需求 §4、§10 AC-03）</p>
+<p>分页：列表查询统一使用 page（最小 1，默认 1）与 pageSize（1 至 200，默认 20）参数，分页响应随列表信封返回。</p>
+<p class="src">（来源：32-API规范 §components 参数）</p>
+<p>错误码与信封：成功响应使用 ResponseEnvelope（code、message、traceId），错误使用 ErrorEnvelope（code、message、details、traceId），code 枚举包括 VALIDATION_FAILED、UNAUTHORIZED、INVALID_CREDENTIALS、CSRF_VALIDATION_FAILED、RATE_LIMITED、SETUP_ALREADY_COMPLETED、FORBIDDEN、NOT_FOUND、CONFLICT、IDEMPOTENCY_CONFLICT、INVALID_STATE_TRANSITION、REVIEW_REQUIRED、SEPARATION_OF_DUTIES_VIOLATION、STALE_ARTIFACT_VERSION、EGRESS_DENIED、SECRET_ACCESS_DENIED、DATA_SOURCE_MISSING、RUNNER_CAPABILITY_MISSING、EXTERNAL_SYNC_CONFLICT、DEPENDENCY_UNAVAILABLE、INTERNAL_ERROR 共 21 个业务错误码；每次响应必须携带 traceId 供全链路关联。</p>
+<p class="src">（来源：32-API规范 §components schemas）</p>
+<p>版本代际与契约收敛：核心链（策略、计划、用例、执行、分析）41 个路径、53 个 operation 的响应与请求 schema 必须为具体定义，不得引用 Generic 或未定义块；破坏性变更遵循 32/37 号迁移规则；运行时 operation 数进入 KNOWN_DEFERRED 台账对账，防止静默漂移；M1 至 M5 各里程碑按对照表 §4 承担对应的路径组收敛义务。</p>
+<p class="src">（来源：V1里程碑执行对照表 §4；20-非功能需求 §8；QF-REQ-005）</p>
+<p>实时通道：WebSocket 只投递 ExecutionTask、WorkItem、AgentTrace 与 Workspace 事件，高价值命令仍走 REST；事件包含 eventId、sequence 或 offset、租户与 Workspace、资源与版本、occurredAt 与 traceId。</p>
+<p class="src">（来源：31-系统架构设计 §3）</p>
+<h3>13.3 外部接口</h3>
+<p>外部接口按集成类型分四类，全部受出站 allowlist、操作范围、Workspace 作用域与逐次授权约束。</p>
+<p>LLM 网关：通过 t_llm_config 管理 Provider、endpoint_ref、模型目录、路由策略、配额与预算，凭据以 Secret 引用方式保存；V1 以确定性 Provider 起步，真实模型须通过 M5 黄金集评测与准入报告（质量、成本、延迟、降级、数据出站策略齐备）后才可替换；出站目标受 EGRESS_DENIED 保护，数据区域与脱敏策略在接入前评测。</p>
+<p class="src">（来源：33-数据库Schema设计 §3；V1里程碑执行对照表 §2 M5；QF-RSK-005/013）</p>
+<p>缺陷系统（Jira 等）：通过 t_integration_config 注册目标，t_external_defect_link 保存厂商中立的外部映射与同步状态，t_defect_sync_attempt 记录每次写入尝试；每次 CREATE、UPDATE、COMMENT、TRANSITION 等外部写入须先经人工批准（EXTERNAL_WRITE 能力），携带幂等键与 payloadDigest，冲突与回执逐次留档；V1 手工同步同样落同步尝试、批准记录与回执，自动双向同步为 V2 能力。</p>
+<p class="src">（来源：33-数据库Schema设计 §10；05-功能模块重构方案 §5.9；QF-REQ-025）</p>
+<p>CI 与代码仓库：Git 集成以完整 commit SHA、文件路径与 blob SHA 冻结代码版本（source_mode=GIT），仓库写入另行人工批准；CI 流水线（t_pipeline_config、t_pipeline_run）与规则型质量门禁为 V2 能力，V1 不自动阻断；流水线触发归属在 PRD 层明确后落版本规划。</p>
+<p class="src">（来源：33-数据库Schema设计 §8、§10；QF-REQ-042；22-MVP版本规划 §4）</p>
+<p>KMS 与身份提供者：主密钥存放于 KMS/Vault，OIDC/OAuth2 身份提供者经 mTLS 或工作负载身份接入；所有外部集成凭证只存密文引用，凭据轮换与使用审计受平台管理。</p>
+<p class="src">（来源：34-认证授权设计 §2、§8；33-数据库Schema设计 §3）</p>
+<p>---</p>
+<h2>第 14 章 需求优先级</h2>
+<p>本章按八模块能力给出 MUST、SHOULD、LATER 三级全局优先级，并说明优先级决策原则。优先级与产品版本（V1 单 Workspace 试点、V2 团队协同、V3 企业规模）绑定，任何版本均不取消正式产出物人工审核、外部写入批准、报告签署、权限隔离与可追溯性。</p>
+<p class="src">（来源：22-MVP版本规划 §1）</p>
+<h3>14.1 优先级决策原则</h3>
+<p>优先级标注遵循五项原则。第一，基线后批准：性能、容量、准确率与收益类目标在 V1 试点建立基线与对照之前不得承诺，未批准的目标不构成验收门禁（对齐 20 号 §1、22 号 §6）。第二，非目标声明：V1 明确不做多租户商业化运营、可视化 Workflow 设计器、Skill 市场、多云弹性和 L3 自治，不得以&quot;补全闭环体验&quot;为名把 V2 项提前拉入 V1。第三，逐项标注：每个版本能力项标注 MUST、SHOULD、LATER、Owner 与验收证据（05 §5.13.7），未实现项明确标注&quot;规划中&quot;，不得计入完成率。第四，范围冻结：V1&quot;最小入口&quot;颗粒度按 05 §5.13.3 与 22 号 §3 冻结，边界漂移须走变更流程。第五，指标口径：试点报告必须声明五类覆盖率口径（实例、设计、可执行、严格有效、人工验收），分母互不推导、互不替代。</p>
+<p class="src">（来源：05-功能模块重构方案 §5.13.7；22-MVP版本规划 §2、§3、附录C；QF-REQ-008/013/024）</p>
+<h3>14.2 全局优先级表</h3>
+<table><thead><tr><th>模块</th><th>V1 MUST（最小能力）</th><th>V2 SHOULD（团队协同）</th><th>V3 LATER（企业规模）</th></tr></thead><tbody><tr><td>任务看板</td><td>WorkItem、AI 运行状态、待审核队列、退回重做、阻塞处理、效率指标采集（事件驱动）</td><td>SLA 与超时、团队负载、跨集成通知、AI 效率与返工指标</td><td>政策内跨工作项 L3 编排（人工硬门不变）</td></tr><tr><td>知识库</td><td>Markdown 与 OpenAPI 导入、SourceSnapshot、需求与 API 契约版本、基础检索、人工知识发布</td><td>URL 与仓库增量同步、契约漂移、混合检索、知识反馈</td><td>企业内容连接器、知识谱系治理、跨项目模式</td></tr><tr><td>测试策划与设计</td><td>TestingIR、TestStrategy、TestPlan、场景、TestCase 草稿与版本、人工审核</td><td>需求变更影响、批量覆盖分析、跨 Release 复用与修订</td><td>组织策略模板、复杂风险模型、测试类型扩展</td></tr><tr><td>自动化测试开发</td><td>Web 与 API 代码生成、版本、用例绑定、静态与受控检查、隔离试运行、Code Review</td><td>Git 精确 commit 模式、Locator 自愈候选、Mock 与数据增强</td><td>性能、安全、视觉、App 扩展、供应链治理</td></tr><tr><td>测试执行</td><td>单资源池 Runner、版本冻结、执行任务、结果、日志与证据</td><td>多 Runner 调度、失败恢复、实时日志与 Trace、流水线</td><td>弹性 Runner、隔离资源池、跨区域与专有网络</td></tr><tr><td>质量分析与缺陷</td><td>基础 RCA 草稿、Defect 草稿、TestReport 草稿与人工审核；外部同步可先手工（仍落同步尝试、批准与回执）</td><td>至少一种外部系统受控双向同步、Flaky 分析、知识回流、CI 触发、规则型质量门禁</td><td>高级发布风险预测、企业门禁、视觉分析、跨项目缺陷模式</td></tr><tr><td>AI Agent 中心</td><td>固定 Workflow、allowlist、Trace、基础 Eval、L0 与 L1 与 L2 降级</td><td>Workflow 版本管理、受限自定义 Skill、规模化 Eval、灰度 Prompt</td><td>经验证的多 Agent 协作、企业 Skill 目录、受控策略优化</td></tr><tr><td>平台管理</td><td>单租户试点所需 Release、成员、环境、Secret 引用、RBAC 与审计</td><td>自定义角色、团队、更多集成、Runner 资源池、SSO 基础接入</td><td>多 IdP 与 SCIM、企业审计导出、数据驻留、灾备治理</td></tr></tbody></table>
+<p class="src">（来源：22-MVP版本规划 §3-§5；05-功能模块重构方案 §5.13.3-§5.13.5）</p>
+<h3>14.3 版本门禁</h3>
+<p>每个版本发布必须同时满足六类门禁证据：产品门禁（范围、非目标、核心旅程、用户验收与已知限制）、质量门禁（自动检查、独立验证、人工验收分层结果）、安全门禁（多租户、越权、Secret、外联、供应链与审计测试）、AI 门禁（Golden Set、人工修改率、误放误阻、降级与越权率）、运行门禁（容量、延迟、恢复、成本与可观测证据）与发布门禁（精确版本与摘要、迁移与回滚、批准与签署记录）。任一门禁无证据即不得宣称版本达标。</p>
+<p class="src">（来源：22-MVP版本规划 §7）</p>
+<h3>14.4 跨版本不变项</h3>
+<p>以下能力不得因版本推进而推迟：Tenant 与 Workspace 边界、服务端授权与 Secret 不明文；AI 不能批准自己的正式产出物；正式资产精确版本、contentDigest、Source Trace 与审核记录；执行证据不可被分析结论覆盖；外部写入默认拒绝并绑定人工批准的最终 Payload；Agent 与 Skill 最小权限、allowlist、Trace 与失败可解释；未检查、跳过、不可判定与阻塞不得伪报为通过；审计只追加、历史批准版本不可覆盖。</p>
+<p class="src">（来源：05-功能模块重构方案 §5.13.6；22-MVP版本规划 §1）</p>
+<p>---</p>
+<h2>第 15 章 风险与里程碑</h2>
+<p>本章登记项目风险、执行里程碑与需求变更流程。风险与里程碑相互绑定：13 项登记风险中，QF-RSK-004（延期或缩范围）与 QF-RSK-005（确定性 Provider 不等于真实模型）直接威胁 V1 准出，其缓解措施已落为 M1 至 M5 里程碑的验收证据。</p>
+<p class="src">（来源：QualityForge-问题台账-QF-REQ-001-048 §五；V1里程碑执行对照表 §2）</p>
+<h3>15.1 风险登记表</h3>
+<table><thead><tr><th>编号</th><th>类别</th><th>风险描述</th><th>概率</th><th>严重度</th><th>影响与缓解方向</th></tr></thead><tbody><tr><td>QF-RSK-001</td><td>业务</td><td>V1 试点未严格采集效率与质量数据，收益主张无法验证</td><td>中</td><td>高</td><td>影响收益论证；缓解：采集清单转强制数据字典（QF-REQ-026/027），指标事件驱动</td></tr><tr><td>QF-RSK-002</td><td>业务</td><td>单 Workspace 与 SINGLE_REVIEW 试点结论被外推为团队协作价值</td><td>中</td><td>中</td><td>影响结论有效性；缓解：试点报告强制声明边界</td></tr><tr><td>QF-RSK-003</td><td>业务</td><td>覆盖率分母口径漂移致质量指标可操纵</td><td>中</td><td>高</td><td>影响质量可信度；缓解：五类覆盖率权威定义冻结（QF-REQ-024，22 号附录 C）</td></tr><tr><td>QF-RSK-004</td><td>技术</td><td>V1 八模块乘八产出物对当前仅 3 类运行时证据，存在延期或缩范围</td><td>高</td><td>高</td><td>影响 V1 准出；缓解：后续五步骤绑定 M1-M5 里程碑与验收证据（QF-REQ-007）</td></tr><tr><td>QF-RSK-005</td><td>技术</td><td>确定性 Provider 不等于真实模型，正确性、延迟、成本与出站未评测</td><td>高</td><td>高</td><td>影响 AI 效果与合规；缓解：黄金集先行、接入前评测、无校准分数只排序（AC-03 兜底）</td></tr><tr><td>QF-RSK-006</td><td>技术</td><td>SQLite 原型不等于 PostgreSQL 的 RLS、并发与恢复</td><td>中</td><td>中</td><td>影响多租户安全；缓解：V1 试点前 PG 冒烟（QF-REQ-034），门禁定于 M2 准出</td></tr><tr><td>QF-RSK-007</td><td>技术</td><td>V2 外部集成若 V1 未保留 Link 与 SyncAttempt 结构，集成成本剧增</td><td>低-中</td><td>中</td><td>影响 V2 成本；缓解：V1 手工同步保留完整数据结构（QF-REQ-025）</td></tr><tr><td>QF-RSK-008</td><td>范围</td><td>八模块 V1&quot;最小入口&quot;颗粒度未冻结，边界漂移</td><td>高</td><td>中</td><td>影响范围可控性；缓解：逐能力标注 MUST、SHOULD、LATER（QF-REQ-013）</td></tr><tr><td>QF-RSK-009</td><td>范围</td><td>V2 项被提前拉入 V1&quot;补全闭环体验&quot;</td><td>中</td><td>中</td><td>影响 V1 收敛；缓解：执行 05 §5.13.7 变更规则并走 53 号审计</td></tr><tr><td>QF-RSK-010</td><td>合规/安全</td><td>外部写入 approvalId 与 payloadDigest 校验被简化</td><td>中</td><td>高</td><td>影响外部写入安全底线；缓解：V1 手工模式也走批准记录、幂等键与回执</td></tr><tr><td>QF-RSK-011</td><td>合规/安全</td><td>Secret 双信封在原型期无实现，V1 凭证体系延期</td><td>中</td><td>高</td><td>影响凭证安全；缓解：Secret 服务随 V1 交付，禁止明文回退</td></tr><tr><td>QF-RSK-012</td><td>合规/安全</td><td>AutomationScript 任意代码执行与 Skill 供应链风险</td><td>中</td><td>高</td><td>影响运行安全；缓解：V1 Runner 容器化隔离、零默认外网、依赖锁扫描</td></tr><tr><td>QF-RSK-013</td><td>合规/安全</td><td>真实 LLM 接入等于测试数据出站，脱敏与区域策略未评测</td><td>高</td><td>高</td><td>影响数据合规；缓解：接入前出站评测，未评测前保持确定性 Provider 与 L0</td></tr></tbody></table>
+<p class="src">（来源：QualityForge-问题台账-QF-REQ-001-048 §五）</p>
+<p>风险管理执行规则：所有整改完成后须按 53 号方案在 docs/05-audits/current/ 复验记录中关闭并引用证据位置，不改写历史审计结论；关键关闭项引入独立复审或第三方抽查，避免证据链仅依赖内部自述（QF-REQ-048）。</p>
+<p class="src">（来源：QualityForge-问题台账-QF-REQ-001-048 §六；QF-REQ-048）</p>
+<h3>15.2 里程碑</h3>
+<p>V1 试点按五个里程碑推进，对应 05 号方案&quot;后续五个步骤&quot;，每里程碑定义范围、验收证据、Owner 与完成定义；验收证据均须落在 docs/05-audits/current/ 新报告与 output/ 可重跑脚本，不允许无基线宣称。</p>
+<table><thead><tr><th>里程碑</th><th>对应步骤</th><th>范围要点</th><th>验收证据要点与完成定义</th></tr></thead><tbody><tr><td>M1 需求与审核收口</td><td>①人工批改、新版本、二次复核（策略、计划、用例先行）</td><td>知识库导入与契约版本化、策划设计域审核闭环、平台与 RBAC 与看板最小集、AI 中心最小运行</td><td>E2E 完成&quot;草稿、批改、新版本、二次 ReviewTask、批准或退回或拒绝&quot;；ReviewTask 绑定版本与摘要的服务端断言；禁止 AI 自批负向用例；M1 建表落库；策略、计划、用例 16 个 operation 契约收敛</td></tr><tr><td>M2 任务看板工作化</td><td>②看板分派、优先级、SLA、版本 Diff</td><td>新增依赖表，分派、优先级、SLA、Diff 复用 M1 字段</td><td>五能力 E2E 可演示；看板 10 个 operation 契约收敛；依赖表自环与循环 CHECK 通过；PG 冒烟门禁（104 至 106 表迁移加 RLS 加核心链并发写入）在此准出</td></tr><tr><td>M3 执行与证据</td><td>③AutomationScript 闭环（接口自动化先行）</td><td>自动化开发域与测试执行域建表、执行冻结与证据</td><td>代码生成、用例绑定、检查、隔离试运行、Code Review、批准全链；执行结果与 API 观察不可变；成功、业务失败、环境失败、脚本失败四类样例；取消、超时、一次受控重试用例</td></tr><tr><td>M4 分析与报告</td><td>④四类产出物运行证据</td><td>质量分析域与知识库产出表</td><td>ResultAnalysis、Defect、TestReport、KnowledgeEntry 各至少一条&quot;草稿、审核、签署或发布&quot;完整证据；反向追溯链脚本通过；Defect 生命周期与证据落库；手工同步记录在案；报告签署后不可覆盖</td></tr><tr><td>M5 真实模型准入</td><td>⑤黄金集评测后替换确定性 Provider</td><td>Eval 四表与校准记录、独立验证裁决表</td><td>黄金集至少 10 个样本；双层闸门全绿；阶梯熔断样例验证；准入报告齐备；未通过评测不得替换确定性 Provider（硬门禁）；替换后双链重跑通过</td></tr></tbody></table>
+<p class="src">（来源：V1里程碑执行对照表 §2；05-功能模块重构方案 §十一）</p>
+<p>版本时间线方面：V0 为设计与开发准入阶段，完成权威契约一致、Gate 0 原型静态验证与独立复审准入结论，不以静态检查 PASS 宣称业务正确；V1 为单 Workspace 试点，以五个里程碑收口，验证&quot;AI 生产加入工审核&quot;是否真实提升效率与质量，建立八类正式产出物全人工批准与基线；V2 为团队协同，落地多 Runner、外部集成、知识反馈、门禁建议与恢复，并形成介入点版本化校准记录；V3 为企业规模，在实测容量、安全、韧性、评测与运营 SLO 证据齐备后提供受控 L3 扩展代理能力。指标建立顺序为：V0 定义指标与分母、V1 影子或人工流程建立基线、至少经过一个 Release 窗口后批准目标值、V2 与 V3 分层设 SLO、模型或数据分布变化后重新校准。</p>
+<p class="src">（来源：22-MVP版本规划 §1-§6；05-功能模块重构方案 §九）</p>
+<h3>15.3 需求变更流程</h3>
+<p>需求变更按&quot;变更申请、影响评估、裁决、版本更新、回退&quot;五步闭环管理。变更申请：任何需求变更（范围、优先级、契约、非功能目标）由提出方提交申请，说明理由、期望版本与影响范围，V1 期间优先级调整须同时说明对里程碑验收证据的影响。影响评估：评估变更对八模块能力归属、04 领域模型、32 号 API、33 号数据库与 21 号治理矩阵的对账影响，执行 L1 一致性扫描与正反向追踪检查，识别是否触及跨版本不变项或安全底线；凡涉及非功能目标数值的变更，须附基线或测量证据，不得以新数字替换未经批准的旧数字。裁决：由项目负责人按版本规划原则拍板，高风险裁决（触碰底线、跨版本拉项、契约代际变化）留 AuthorizationDecision 与审计记录，并同步 53 号审计流程复核；关键关闭项引入独立复审，避免自证闭环。版本更新：裁决通过后在权威源同批落地，同步 CHANGELOG 并标注每能力项的 MUST、SHOULD、LATER、Owner 与验收证据；API 代际变更遵循 32/37 号迁移规则，数据库变更按 38 号迁移批次、种子与回滚约定执行；发布时同时满足产品、质量、安全、AI、运行与发布六类门禁。回退：自治等级、配置与集成变更支持立即回退并记录回退原因；数据与证据类变更回退创建新 attempt 或新版本并引用原记录，不覆盖历史证据；无法回退的破坏性变更须在评估阶段声明并纳入发布已知限制。</p>
+<p class="src">（来源：05-功能模块重构方案 §5.13.7、§十；22-MVP版本规划 §7；33-数据库Schema设计 §14；QF-REQ-048）</p>
+<p>---</p>
+<li>本文为《需求说明书》补充章节稿：第 12 章非功能需求、第 13 章数据与接口、第 14 章需求优先级、第 15 章风险与里程碑；渲染时插入第 11 章之后。</li>
+<li>NFR 编号 NFR-001 至 NFR-041 连续编号，与 FR 条目（FR-001 至 FR-074）共同构成需求条目体系；风险编号沿用台账 QF-RSK-001 至 QF-RSK-013。</li>
+<li>所有目标值表述遵循&quot;先基线后批准&quot;原则；正文中出现的示例数字（如 500ms、95%）均为测量句式示例或候选值，不构成承诺，渲染时如与批准口径冲突以批准记录为准。</li>
+<li>来源标注格式：（来源：文件名 §章节）；批 3 新增表与口径差异以 V1 里程碑执行对照表未核实项为准。</li>
+<h2>附录 A 需求跟踪矩阵</h2><p>全部功能需求条目及其模块归属与来源。</p><table><thead><tr><th>编号</th><th>模块</th><th>需求</th><th>来源</th></tr></thead><tbody><tr><td>FR-001</td><td>任务看板</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-002</td><td>任务看板</td><td>系统应支持创建、查询、筛选、分派、优先级、父子关系、Release/TestPlan 关联。人工控制:确认关键范围、负责人和优先级。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-003</td><td>任务看板</td><td>系统应支持按状态机流转并记录原因。人工控制:BLOCKED、取消、关键范围变更需有理由/权限。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-004</td><td>任务看板</td><td>系统应支持显示 Agent、Skill、版本、步骤、耗时、成本、Trace 和降级。人工控制:可暂停/取消；越权和异常由人处理。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-005</td><td>任务看板</td><td>系统应支持按产出物、风险、Release、到期时间和职责筛选。人工控制:ReviewDecision 仅 UserIdentity 可作出。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-006</td><td>任务看板</td><td>系统应支持保留原版本和决定，创建新版本/attempt。人工控制:审核人复核新摘要，不沿用旧批准。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-007</td><td>任务看板</td><td>系统应支持原因码、详情、恢复条件、依赖人/系统和 SLA。人工控制:决定接受风险、补资料或调整计划。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-008</td><td>任务看板</td><td>系统应支持WIP、周期、审核时长、阻塞、人工接管和 AI 失败。人工控制:指标用于改进，不作为个人绩效自动裁决。</td><td>05 §4.1 与 3-PRD §2</td></tr><tr><td>FR-009</td><td>知识库</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-010</td><td>知识库</td><td>系统应支持支持文件、URL、集成、手工、流量等来源，固化原文/定位、摘要、授权和时间。人工控制:确认导入范围和冲突来源。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-011</td><td>知识库</td><td>系统应支持RequirementDocument 稳定根 + 不可变版本，保留 SourceTrace。人工控制:裁决歧义和业务规则。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-012</td><td>知识库</td><td>系统应支持APIContract 稳定根、Version、Operation/Schema 版本及 DECLARED/OBSERVED 分层。人工控制:批准契约版本/基线，决定冲突。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-013</td><td>知识库</td><td>系统应支持为 Release 和用途固定契约版本/摘要集合。人工控制:人工确认关键接口范围。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-014</td><td>知识库</td><td>系统应支持草稿、审核、发布、失效、归档；记录适用/失效条件和来源。人工控制:发布、纠错和失效判断。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-015</td><td>知识库</td><td>系统应支持关键词/向量/图谱混合检索，返回来源、版本和相关性解释。人工控制:命中不等于可信；用户可排除错误来源。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-016</td><td>知识库</td><td>系统应支持处理重复、冲突、陈旧、敏感和低证据候选。人工控制:人工决定合并/发布/拒绝。</td><td>05 §4.2 与 4-PRD §2</td></tr><tr><td>FR-017</td><td>测试策划与设计</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-018</td><td>测试策划与设计</td><td>系统应支持读取 RequirementVersion、APIContractBaseline、Release 和已审核知识。人工控制:确认关键路径、排除项和冲突来源。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-019</td><td>测试策划与设计</td><td>系统应支持编译规则、领域、状态机、断言和 SourceTrace。人工控制:裁决关键规则冲突；IR 验证不等于业务批准。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-020</td><td>测试策划与设计</td><td>系统应支持生成风险驱动策略并运行结构检查。人工控制:审核范围、风险和门槛引用。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-021</td><td>测试策划与设计</td><td>系统应支持生成阶段 DAG、里程碑、资源和验收准则。人工控制:审核资源、时间、依赖和责任。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-022</td><td>测试策划与设计</td><td>系统应支持生成正向、反向、边界、权限、状态、兼容和异常场景。人工控制:批改业务步骤、数据和预期。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-023</td><td>测试策划与设计</td><td>系统应支持计算 Requirement/API/Rule/Scenario/TestCase 映射和缺口。人工控制:决定接受缺口或生成补充草稿。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-024</td><td>测试策划与设计</td><td>系统应支持生成变更摘要和受影响链。人工控制:审核精确版本，不沿用陈旧批准。</td><td>05 §4.3 与 5-PRD §2</td></tr><tr><td>FR-025</td><td>自动化测试开发</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-026</td><td>自动化测试开发</td><td>系统应支持AutomationScript 按能力命名，版本记录语言、框架、运行时、依赖锁、来源模式和摘要。人工控制:代码 Review 并批准版本。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-027</td><td>自动化测试开发</td><td>系统应支持一个脚本版本可覆盖多个 TestCaseVersion，一个用例可有多种自动化实现。人工控制:审核绑定真实性。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-028</td><td>自动化测试开发</td><td>系统应支持页面对象/组件、Locator、等待、截图/视频配置。人工控制:审核关键路径、稳定性和敏感操作。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-029</td><td>自动化测试开发</td><td>系统应支持基于 APIContractVersion 生成请求、断言、鉴权引用和数据。人工控制:审核业务码/字段/副作用断言。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-030</td><td>自动化测试开发</td><td>系统应支持格式、类型、静态安全、依赖、契约绑定和受控试跑。人工控制:检查 PASS 不替代代码批准。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-031</td><td>自动化测试开发</td><td>系统应支持稳定根/版本、主/备选择器、证据和 supersedes。人工控制:写正式 LocatorVersion 需审核。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-032</td><td>自动化测试开发</td><td>系统应支持Mock 绑定契约版本；数据含生成/脱敏/清理；视觉含视口/遮罩/摘要。人工控制:审核业务约束和隐私风险。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-033</td><td>自动化测试开发</td><td>系统应支持固定 repo、完整 commit SHA、path、blob SHA 和 digest。人工控制:仓库写入另行人工批准。</td><td>05 §4.4 与 6-PRD §2</td></tr><tr><td>FR-034</td><td>测试执行</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-035</td><td>测试执行</td><td>系统应支持稳定根+不可变版本，绑定 TestPlanVersion、Release、Environment、范围、并发、Runner 策略。人工控制:审核高风险环境/范围和首跑。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-036</td><td>测试执行</td><td>系统应支持V1：手工、计划；V2：Webhook、Pipeline（裁决 B2-9）；统一幂等。人工控制:取消、重跑和高风险触发需权限。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-037</td><td>测试执行</td><td>系统应支持按能力/资源池/配额选 Runner，租约、心跳和重试。人工控制:处理资源不足或特殊环境。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-038</td><td>测试执行</td><td>系统应支持状态、attempt、超时、重试（V1 默认一次受控重试）、环境/授权快照。人工控制:可暂停/取消；不能编辑运行中版本。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-039</td><td>测试执行</td><td>系统应支持按 ExecutionContractBaseline 记录 APIObservation 与 ContractCheckResult（MATCH/DEVIATION/NOT_CHECKED/INCONCLUSIVE）。人工控制:偏差证据只追加；INCONCLUSIVE 不得报告为契约一致。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-040</td><td>测试执行</td><td>系统应支持每个 attempt 产生独立 ExecutionResult。人工控制:人工注释不能改原始事实。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-041</td><td>测试执行</td><td>系统应支持请求/响应、日志、截图、视频、Trace、性能数据、摘要和保留策略。人工控制:敏感证据访问受限。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-042</td><td>测试执行</td><td>系统应支持ExecutionTask 进度、日志和制品事件。人工控制:WebSocket 不承载批准/修改命令。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-043</td><td>测试执行</td><td>系统应支持记录步骤结果、实际结果和证据。人工控制:测试人员对手工结果负责。</td><td>05 §4.5 与 7-PRD §2</td></tr><tr><td>FR-044</td><td>质量分析与缺陷</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-045</td><td>质量分析与缺陷</td><td>系统应支持聚类失败、关联日志/Trace、RCA 和替代解释。人工控制:审核证据充分性，不接受越界推断。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-046</td><td>质量分析与缺陷</td><td>系统应支持按特征聚合 ExecutionResult，支持拆分/合并建议。人工控制:Cluster 不是 Defect，人工决定是否建 Defect。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-047</td><td>质量分析与缺陷</td><td>系统应支持生成草稿、去重、复现步骤和严重度建议。人工控制:批准版本、流转、关闭和重复关系。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-048</td><td>质量分析与缺陷</td><td>系统应支持生成固定 payload、附件和操作建议。人工控制:每次 CREATE/UPDATE/COMMENT/TRANSITION 等写入单独批准。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-049</td><td>质量分析与缺陷</td><td>系统应支持汇总冻结范围、执行事实、已批准分析/Defect 和指标。人工控制:签署发布，披露 ERROR/阻塞/排除项。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-050</td><td>质量分析与缺陷</td><td>系统应支持按批准分母口径与快照生成执行覆盖率报告。人工控制:批准分母口径与报告结论。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-051</td><td>质量分析与缺陷</td><td>系统应支持执行版本化确定性规则，AI 提供风险/回归建议。人工控制:门禁规则变更、放行/阻断豁免由人决定。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-052</td><td>质量分析与缺陷</td><td>系统应支持关联触发、运行、回调和回执。人工控制:外部写入与触发范围受授权。</td><td>05 §4.6 与 8-PRD §2</td></tr><tr><td>FR-053</td><td>AI Agent中心</td><td>系统应支持需求要点。人工控制:人工控制。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-054</td><td>AI Agent中心</td><td>系统应支持稳定根/版本、输入输出契约、实现引用、风险、依赖、权限和 eval。人工控制:发布/升级可执行 Skill 需代码与安全 Review。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-055</td><td>AI Agent中心</td><td>系统应支持目标、职责、allowedSkills、工具/文件/网络/Secret、委派深度和预算。人工控制:能力扩大需治理审核。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-056</td><td>AI Agent中心</td><td>系统应支持不可变版本、模型/模板/摘要和适用范围。人工控制:版本发布及高风险变更审核。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-057</td><td>AI Agent中心</td><td>系统应支持DAG、节点 Agent/Skill、输入输出、权限、重试、降级和 human checkpoints。人工控制:发布前结构、权限和业务 Eval。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-058</td><td>AI Agent中心</td><td>系统应支持发起人、WorkItem、版本快照、授权决定、节点/tool 调用、输入输出摘要、成本。人工控制:敏感字段脱敏；不记录隐藏思维链。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-059</td><td>AI Agent中心</td><td>系统应支持Golden Set、数据集版本、目标版本、指标、结果、人工基线和适用性。人工控制:决定准入、回滚并形成版本化校准记录（落 t_calibration_record，裁决 B2-3）。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-060</td><td>AI Agent中心</td><td>系统应支持暂停、取消、预算、循环检测、熔断和 L0-L3 降级（以 21 号为唯一权威源）。人工控制:人工可随时接管；正式审核不可跳过。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-061</td><td>AI Agent中心</td><td>系统应支持在生产 Agent 委派图之外按冻结快照评审产品、需求、架构、契约、安全、AI 治理、可测试性、体验和验收证据。人工控制:只输出咨询性 Finding；人工处置，评审 Agent 不得建设、整改或关闭 Finding。</td><td>05 §4.7 与 9-PRD §2</td></tr><tr><td>FR-062</td><td>平台管理</td><td>系统应支持需求要点。人工控制:人工/安全控制。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-063</td><td>平台管理</td><td>系统应支持生命周期、成员和隔离；UI 把 Workspace 展示为项目。人工控制:不新增 Project 实体；归档保留历史引用。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-064</td><td>平台管理</td><td>系统应支持范围、计划时间、状态和关联版本。人工控制:关闭/归档前校验未完成工作和报告。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-065</td><td>平台管理</td><td>系统应支持类型、endpoint 映射、能力、数据策略和 secretRef。人工控制:不保存连接串明文。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-066</td><td>平台管理</td><td>系统应支持密文、keyVersion、作用域、过期、轮换和使用审计。人工控制:元数据与使用权限分离，API 不返回明文。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-067</td><td>平台管理</td><td>系统应支持能力、运行时、健康、配额和 Workspace 范围。人工控制:注册/隔离/撤销受平台权限控制。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-068</td><td>平台管理</td><td>系统应支持Defect、Git、CI、通知等端点/凭据引用/作用域。人工控制:出站 allowlist、逐次高价值授权和回执。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-069</td><td>平台管理</td><td>系统应支持Permission、RoleDefinition、RoleBinding、ExplicitDeny 和委派。人工控制:四级作用域；管理员不能自我无限授权。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-070</td><td>平台管理</td><td>系统应支持产出物/风险对应阶段、人数、能力、职责分离和 blockingChecks。人工控制:平台最低要求只能调严，不能取消至少一名人类。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-071</td><td>平台管理</td><td>系统应支持Provider/模型/路由、数据区域、预算和允许用途。人工控制:不在此设置业务自治阈值；版本变化触发重评。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-072</td><td>平台管理</td><td>系统应支持CONFIG_ASSIST：解释配置、预检变更、生成最小权限建议（21 号默认 L1）。人工控制:AI 建议仅提示，不自动改配置；变更落审计。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-073</td><td>平台管理</td><td>系统应支持AuthorizationDecision、AuditLog、保留/导出。人工控制:只追加、脱敏、访问受限。</td><td>05 §4.8 与 10-PRD §2</td></tr><tr><td>FR-074</td><td>平台管理</td><td>系统应支持SupportAccessGrant（限时、最小能力、强审计的 break-glass）；DelegationGrant 委派。人工控制:每次授权逐项审批、超时自动失效、全程审计，Agent 无权发起。</td><td>05 §4.8 与 10-PRD §2</td></tr></tbody></table>
+<footer>QualityForge 需求说明书 V1.0 · 依据 GB/T 9385-2008 骨架编制 · 需求编号规则 FR-xxx/NFR-xxx · 2026-08-14</footer>
+</div>
+</body>
+</html>

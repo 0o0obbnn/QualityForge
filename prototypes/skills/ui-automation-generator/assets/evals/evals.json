@@ -1,0 +1,56 @@
+[
+  {
+    "scenario": "Valid script with all POM structure correct",
+    "input": {
+      "code": "page.click(locator)",
+      "locator_refs": ["btn_submit"],
+      "known_locator_ids": ["btn_submit"],
+      "interactions": [
+        {
+          "interaction_id": "i1",
+          "wait_strategy": "wait_for_selector",
+          "code": "page.wait_for_selector(btn_submit)"
+        }
+      ],
+      "test_logic_in_page_object": false,
+      "page_object_in_test": false
+    },
+    "expected_verdict": "PASS"
+  },
+  {
+    "scenario": "Script with inline XPath literal",
+    "input": {
+      "code": "page.find_element('//html/body/div')",
+      "locator_refs": [],
+      "known_locator_ids": [],
+      "interactions": [
+        {
+          "interaction_id": "i1",
+          "wait_strategy": "wait_for_selector",
+          "code": "wait"
+        }
+      ],
+      "test_logic_in_page_object": false,
+      "page_object_in_test": false
+    },
+    "expected_verdict": "REJECT"
+  },
+  {
+    "scenario": "Missing wait strategy in interaction",
+    "input": {
+      "code": "page.click()",
+      "locator_refs": [],
+      "known_locator_ids": [],
+      "interactions": [
+        {
+          "interaction_id": "i1",
+          "wait_strategy": "",
+          "code": "page.click()"
+        }
+      ],
+      "test_logic_in_page_object": false,
+      "page_object_in_test": false
+    },
+    "expected_verdict": "REJECT"
+  }
+]

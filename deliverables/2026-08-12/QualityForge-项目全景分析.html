@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 项目全景分析</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#161d2e; --panel2:#1b2438; --border:#26304a;
+    --text:#e8edf7; --muted:#8b96ad; --accent:#008cff; --accent2:#4db8ff;
+    --green:#3ddc97; --amber:#ffb454; --red:#ff6b6b; --purple:#a78bfa;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",Roboto,sans-serif; line-height:1.65; padding:40px 20px;}
+  .wrap{max-width:1080px; margin:0 auto;}
+  header.hero{background:linear-gradient(135deg,#12233f 0%,#161d2e 55%,#1b1030 100%); border:1px solid var(--border); border-radius:16px; padding:36px 40px; margin-bottom:28px;}
+  .hero h1{font-size:28px; letter-spacing:.5px;}
+  .hero .tagline{color:var(--muted); margin-top:8px; font-size:15px;}
+  .badges{margin-top:16px; display:flex; flex-wrap:wrap; gap:8px;}
+  .badge{display:inline-block; padding:4px 12px; border-radius:999px; font-size:12.5px; border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--muted);}
+  .badge.blue{color:var(--accent2); border-color:rgba(77,184,255,.35);}
+  .badge.green{color:var(--green); border-color:rgba(61,220,151,.35);}
+  .badge.amber{color:var(--amber); border-color:rgba(255,180,84,.35);}
+  .badge.red{color:var(--red); border-color:rgba(255,107,107,.35);}
+  h2{font-size:20px; margin:36px 0 16px; padding-left:12px; border-left:4px solid var(--accent);}
+  h3{font-size:16px; margin:20px 0 10px; color:var(--accent2);}
+  .grid{display:grid; gap:14px;}
+  .g4{grid-template-columns:repeat(4,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:900px){.g4,.g3{grid-template-columns:repeat(2,1fr);} .g2{grid-template-columns:1fr;}}
+  @media(max-width:560px){.g4,.g3{grid-template-columns:1fr;}}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:18px;}
+  .card .k{font-size:13px; color:var(--muted); margin-bottom:6px;}
+  .card .v{font-size:17px; font-weight:600;}
+  .card .d{font-size:12.5px; color:var(--muted); margin-top:6px;}
+  .metric{font-size:26px; font-weight:700; color:var(--accent2);}
+  table{width:100%; border-collapse:collapse; margin:12px 0; font-size:13.5px; background:var(--panel); border-radius:10px; overflow:hidden;}
+  th{background:var(--panel2); text-align:left; padding:10px 14px; color:var(--accent2); font-weight:600; white-space:nowrap;}
+  td{padding:10px 14px; border-top:1px solid var(--border); vertical-align:top;}
+  .pipeline{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:14px 0;}
+  .node{background:var(--panel2); border:1px solid var(--border); border-radius:8px; padding:8px 12px; font-size:12.5px;}
+  .node.hl{border-color:rgba(77,184,255,.5); color:var(--accent2);}
+  .arrow{color:var(--muted);}
+  .timeline{margin:14px 0; position:relative; padding-left:26px;}
+  .tstep{position:relative; padding:0 0 22px 0;}
+  .tstep::before{content:""; position:absolute; left:-20px; top:4px; width:10px; height:10px; border-radius:50%; background:var(--accent);}
+  .tstep::after{content:""; position:absolute; left:-16px; top:14px; bottom:-4px; width:2px; background:var(--border);}
+  .tstep:last-child::after{display:none;}
+  .tstep .tt{font-weight:600; font-size:14px;}
+  .tstep .td{color:var(--muted); font-size:13px; margin-top:2px;}
+  .tstep .verdict{display:inline-block; font-size:11.5px; padding:2px 8px; border-radius:999px; margin-left:8px; vertical-align:2px;}
+  .ok{background:rgba(61,220,151,.15); color:var(--green);} .warn{background:rgba(255,180,84,.15); color:var(--amber);} .bad{background:rgba(255,107,107,.15); color:var(--red);}
+  .callout{border:1px solid var(--border); border-left:4px solid var(--amber); background:var(--panel); border-radius:10px; padding:16px 18px; margin:14px 0; font-size:13.5px;}
+  .callout.blue{border-left-color:var(--accent);}
+  .callout.red{border-left-color:var(--red);}
+  .code{background:#0d1220; border:1px solid var(--border); border-radius:8px; padding:12px 16px; font-family:"SF Mono",Menlo,Consolas,monospace; font-size:12.5px; overflow-x:auto; margin:12px 0; color:#c9d4ea;}
+  .foot{margin-top:40px; padding-top:16px; border-top:1px solid var(--border); color:var(--muted); font-size:12.5px;}
+  ul.tight li{margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>QualityForge · 项目全景分析</h1>
+  <div class="tagline">AI 原生端到端测试平台 —— AI 主生产 / 人主审核 · 事实 / 推断 / 决定三层分离 · 全链路可追溯</div>
+  <div class="badges">
+    <span class="badge blue">阶段：V0 设计 + Step 3 工程骨架 / TestDesign Spike</span>
+    <span class="badge green">L1 审计缺陷：静态关闭</span>
+    <span class="badge amber">产品基线：可冻结</span>
+    <span class="badge red">运行时：NOT VERIFIED</span>
+  </div>
+</header>
+
+<h2>1. 这是什么</h2>
+<p>面向测试工程师、测试负责人与平台治理人员的智能测试生产线。AI Agent 承担需求解析、草稿生成、代码生成、执行、证据整理、分析与改稿；测试人员负责审核、批改、业务取舍、例外裁决和最终质量责任。平台围绕 <b>8 类正式产出物</b>组织功能，任何 AI 产出未经人工审核不得生效。</p>
+
+<h3>核心哲学（贯穿全部契约的设计不变量）</h3>
+<div class="grid g4">
+  <div class="card"><div class="k">生产</div><div class="v">AI 主生产</div><div class="d">草稿/代码/执行/分析全部可由 AI 完成</div></div>
+  <div class="card"><div class="k">门</div><div class="v">人工硬门</div><div class="d">8 类正式产出物批准、报告签署、外部写入、门禁豁免、权限管理 humanOnly</div></div>
+  <div class="card"><div class="k">分层</div><div class="v">事实≠推断≠决定</div><div class="d">ExecutionResult 只追加；分析/Defect 版本化；ReviewDecision 独立审计</div></div>
+  <div class="card"><div class="k">权限</div><div class="v">fail-closed</div><div class="d">用户×Agent×Workflow×环境权限交集，减去 Deny 与 humanOnly</div></div>
+</div>
+
+<h2>2. 当前状态快照</h2>
+<div class="grid g4">
+  <div class="card"><div class="k">Git</div><div class="v">1 commit</div><div class="d">37e734c 工程骨架 + TestDesign Spike；另有 120 个文件未提交（文档重构+设计工作流）</div></div>
+  <div class="card"><div class="k">API 契约</div><div class="metric">71 paths</div><div class="d">94 operations / 64 schemas；73 处成功响应仍是通用对象待具体化</div></div>
+  <div class="card"><div class="k">DB 契约</div><div class="metric">104 表</div><div class="d">356 引用 / 0 缺失；未在 PostgreSQL 实际执行过</div></div>
+  <div class="card"><div class="k">原型</div><div class="metric">30 Skill</div><div class="d">20 个有标准 evals.json，10 个待补；57 个单元测试全过</div></div>
+</div>
+<div class="grid g4">
+  <div class="card"><div class="k">UI 设计</div><div class="v">14 页面</div><div class="d">qualityforge-ui 全套 HTML 页面 + 设计令牌（品牌主色 #008cff）；页面地图目标约 22 页</div></div>
+  <div class="card"><div class="k">后端</div><div class="v">FastAPI 0.2.0</div><div class="d">3 端点（upload/parse/generate-cases，Mock 不调真 LLM）；4 ORM 模型；3 个迁移</div></div>
+  <div class="card"><div class="k">前端</div><div class="v">待搭建</div><div class="d">React 18 + TS + Vite 已定目标栈，frontend/ 目录仅占位</div></div>
+  <div class="card"><div class="k">审计</div><div class="v">REVISE_AND_FOCUS → 复扫关闭</div><div class="d">2026-07-30 总裁决 3.2/5.0；2026-08-11 L1 六项缺陷静态关闭</div></div>
+</div>
+
+<h2>3. 八个一级模块</h2>
+<table>
+  <tr><th>模块</th><th>用户要完成的事</th><th>AI 承担</th><th>人工承担</th><th>核心事实/产出</th></tr>
+  <tr><td><b>任务看板</b></td><td>看清工作、阻塞、AI 进度与待审事项</td><td>拆分、派发建议、预检审核包</td><td>调范围、处理阻塞、作审核决定</td><td>WorkItem / ReviewTask / ReviewDecision</td></tr>
+  <tr><td><b>知识与契约</b></td><td>管理测试依据与可复用知识</td><td>解析来源、规范化契约、识别冲突</td><td>裁决来源冲突、审核知识版本</td><td>SourceSnapshot / Requirement / APIContract / KnowledgeEntry</td></tr>
+  <tr><td><b>测试规划与设计</b></td><td>形成策略、计划、场景、用例</td><td>编译 TestingIR、生成草稿、分析覆盖</td><td>审核策略/计划/用例、纠正业务判断</td><td>TestStrategy / TestPlan / TestCase</td></tr>
+  <tr><td><b>自动化工作台</b></td><td>生成维护 Web/API 测试代码</td><td>生成代码、检查、调试建议</td><td>代码审核、关键修复、批准版本</td><td>AutomationScript 及配套资产</td></tr>
+  <tr><td><b>测试执行</b></td><td>安全可复现地运行测试</td><td>冻结版本、调度 Runner、重试、采集证据</td><td>批准高风险首跑、处理环境例外</td><td>ExecutionPlan/Task/Result/Evidence</td></tr>
+  <tr><td><b>质量中心</b></td><td>把执行事实转成质量判断</td><td>聚类、RCA、Defect/报告草稿、门禁建议</td><td>审核分析、外部写入和发布判断</td><td>ResultAnalysis / Defect / TestReport / QualityGate</td></tr>
+  <tr><td><b>AI Agent 中心</b></td><td>管理 AI 能力与效果</td><td>执行受限 Workflow、留 Trace、跑 Eval</td><td>发布能力/权限、审核评测、降级</td><td>Skill / Agent / Workflow / Trace / Eval</td></tr>
+  <tr><td><b>平台管理</b></td><td>管理 Workspace、环境、权限</td><td>配置预检、最小权限建议</td><td>安全配置、Secret、基础设施</td><td>Workspace / Release / RBAC / AuditLog</td></tr>
+</table>
+
+<h2>4. 核心机制</h2>
+
+<h3>4.1 测试生命周期主闭环</h3>
+<div class="pipeline">
+  <span class="node">来源固化</span><span class="arrow">→</span>
+  <span class="node">AI 策略/计划草稿</span><span class="arrow">→</span>
+  <span class="node hl">人工审核</span><span class="arrow">→</span>
+  <span class="node">AI 用例+代码草稿</span><span class="arrow">→</span>
+  <span class="node hl">人工审核/批改</span><span class="arrow">→</span>
+  <span class="node">AI 编排执行·不可变结果</span><span class="arrow">→</span>
+  <span class="node">AI 分析/Defect/报告草稿</span><span class="arrow">→</span>
+  <span class="node hl">人工审核/签署/外部写入批准</span><span class="arrow">→</span>
+  <span class="node">知识回流</span>
+</div>
+
+<h3>4.2 Gate 0 可信数据流水线（原型已验证）</h3>
+<div class="pipeline">
+  <span class="node">需求源</span><span class="arrow">→</span>
+  <span class="node hl">requirement-quality-gate</span><span class="arrow">→</span>
+  <span class="node">business-rule / domain-model / state-machine</span><span class="arrow">→</span>
+  <span class="node hl">requirement-compiler</span><span class="arrow">→</span>
+  <span class="node hl">ir-validator</span><span class="arrow">→</span>
+  <span class="node">scenario-generator</span><span class="arrow">→</span>
+  <span class="node">test-case-generator</span><span class="arrow">→</span>
+  <span class="node">assertion-generator</span><span class="arrow">→</span>
+  <span class="node hl">assertion-verifier</span><span class="arrow">→</span>
+  <span class="node hl">coverage-analyzer</span><span class="arrow">→</span>
+  <span class="node">GATE_PASS / GATE_FAILURE</span>
+</div>
+<div class="callout blue">设计不变量（校验器强制执行）：缺失证据永不变成干净 PASS（降级 PASS_WITH_REVIEW）；冲突保留全部版本；被拒断言仍留在覆盖率分母——不能靠删数据让门通过。</div>
+
+<h3>4.3 Agent 治理模型（Gate 0）</h3>
+<div class="grid g3">
+  <div class="card"><div class="k">1 Supervisor</div><div class="v">qf-supervisor</div><div class="d">分类任务、验证工作流、派发、停止异常、汇总证据；无业务生成权</div></div>
+  <div class="card"><div class="k">3 Subagent</div><div class="v">需求IR / 测试设计 / 独立验证</div><div class="d">各自 allowlist 技能；不能批准自己产出、不能修改权威源、不能外部写入</div></div>
+  <div class="card"><div class="k">默认自治</div><div class="v">L2 受限代理</div><div class="d">零网络、零 Secret、无 humanOnly；委派深度 ≤1；最大步数 12；600s 超时</div></div>
+</div>
+
+<h3>4.4 正式产出物发布事务</h3>
+<div class="code">锁定 ReviewTask 与产出版本 → 重算授权/策略/职责分离 → 校验 contentDigest + blockingChecks
+→ 追加 ReviewDecision/AuthorizationDecision → 推进 approved/published 指针 → 写 Outbox 事件
+失败任意一步即回滚；外部写入用独立 SyncAttempt，不做分布式强一致。</div>
+
+<h2>5. 资产盘点</h2>
+<div class="grid g2">
+  <div class="card">
+    <div class="k">文档体系（54 号总索引导航）</div>
+    <ul class="tight" style="margin-top:8px; padding-left:18px; font-size:13px;">
+      <li><b>01-product ×5</b>：功能地图 / PRD总纲 / 术语表 / 核心领域模型（实体状态权威）/ 模块重构方案（产品裁决权威）</li>
+      <li><b>02-prd ×10</b>：8 模块现行 PRD（10-17）+ 2 份旧模块迁移说明（18/19）</li>
+      <li><b>03-governance ×5</b>：NFR / AI 介入点降级矩阵 L0-L3 / MVP 版本规划 / 审计方案 / Agent-Skill 运行 SOP</li>
+      <li><b>04-architecture ×9</b>：选型 / 架构 / OpenAPI / DB Schema / 认证授权 / CHANGELOG / WebSocket / API 总览 / 迁移约定</li>
+      <li><b>05-audits</b>：current 16 份（时点证据）+ historical 14 份（仅追溯，勿当权威）</li>
+      <li><b>06-wireframes ×5</b> + 99-archive</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="k">代码与原型</div>
+    <ul class="tight" style="margin-top:8px; padding-left:18px; font-size:13px;">
+      <li><b>backend/</b>：FastAPI Spike（qf 包：api / models / schemas / services / db / config）+ migrations + pytest</li>
+      <li><b>prototypes/skills/</b>：30 个 Skill 原型（SKILL.md 契约 + scripts 确定性校验器 + evals + references）</li>
+      <li><b>prototypes/agent-governance/</b>：4 Agent / 14 Skill Gate 0 DAG / 结构验证器</li>
+      <li><b>prototypes/e2e-validation-golden|e2e-validation</b>：正/负两条回归基线链</li>
+      <li><b>qualityforge-ui/</b>：14 个 HTML 页面 + 设计令牌 + 运行时编排摘要 + 验证报告</li>
+      <li><b>deliverables/</b>：PRD/API 文档 docx + 项目分析报告 HTML</li>
+    </ul>
+  </div>
+</div>
+
+<h2>6. 审计演进时间线</h2>
+<div class="timeline">
+  <div class="tstep"><div class="tt">2026-07-30 · 总裁决 <span class="verdict bad">REVISE_AND_FOCUS 3.2/5.0</span></div><div class="td">全量独立复审：6 Blocker（可信链断层、DesignTestCase 无契约、阈值无校准、AI 自评循环、收益不可验收等）+ 7 Critical。方法：Fagan + IEEE 830/29148 + RE-for-ML + RTM</div></div>
+  <div class="tstep"><div class="tt">2026-08-04 · B3 收尾 <span class="verdict ok">CHANGELOG</span></div><div class="td">需求文档重构：可信链 6 概念补入术语/领域/API/DB</div></div>
+  <div class="tstep"><div class="tt">2026-08-07 · Skill 审计</div><div class="td">30 个 Skill 能力契约审计，10 个缺标准 evals</div></div>
+  <div class="tstep"><div class="tt">2026-08-11 · L1 复扫 <span class="verdict ok">6/6 静态关闭</span></div><div class="td">L1-001~006 全部关闭（L1-004 复扫中发现并即时修复 TestPlan 缺 requirement 外键 CH-39）</div></div>
+  <div class="tstep"><div class="tt">2026-08-11 · 现状独立复审 <span class="verdict warn">有条件准入</span></div><div class="td">产品基线 PASS / Gate 0 样例链 PASS / OpenAPI 准入 REVISE / Skill 准入 REVISE / 运行时 NOT VERIFIED。结论：允许一条纵向切片 Spike，禁止全量铺开</div></div>
+</div>
+
+<h2>7. 风险与开放项</h2>
+<table>
+  <tr><th>优先级</th><th>项目</th><th>现状</th></tr>
+  <tr><td><span class="badge red">P0</span></td><td>运行时不存在</td><td>RLS、不可变版本、人工审核、权限交集、WebSocket、幂等外部写入全是设计主张，无运行证据</td></tr>
+  <tr><td><span class="badge amber">P1</span></td><td>API 成功响应过度通用</td><td>94 operations 中 32 处 GenericListResponse + 41 处 GenericObjectResponse，不足以生成稳定客户端</td></tr>
+  <tr><td><span class="badge amber">P1</span></td><td>10 个 Skill 无标准 evals.json</td><td>有 eval 脚本但缺统一契约，阻碍注册/回归/发布门禁</td></tr>
+  <tr><td><span class="badge amber">P1</span></td><td>104 表实现复杂度</td><td>静态完整但未证明 V1 全量物理落地必要，应靠纵向切片裁决</td></tr>
+  <tr><td><span class="badge amber">P2</span></td><td>收益指标无基线</td><td>已定义测量方法（效率/质量/追溯/AI效果/运营五维），但无人工基线与实测数据，禁止沿用 80%/95% 口号</td></tr>
+</table>
+
+<h2>8. 下一步路线（复审给出）</h2>
+<div class="pipeline">
+  <span class="node hl">① API 响应契约收敛</span><span class="arrow">→</span>
+  <span class="node">② 10 Skill eval 标准化</span><span class="arrow">→</span>
+  <span class="node hl">③ Gate 0 纵向切片</span><span class="arrow">→</span>
+  <span class="node">④ 最小 DB + RLS 负向测试</span><span class="arrow">→</span>
+  <span class="node">⑤ Agent 权限/审核硬门</span><span class="arrow">→</span>
+  <span class="node">⑥ Runner 与执行证据</span><span class="arrow">→</span>
+  <span class="node">⑦ 小样本度量建基线</span>
+</div>
+<div class="callout">①② 可并行；③ 需在①完成切片契约后进入；④-⑥ 应围绕同一条纵向切片递增推进，不建议拆成三个长期平行项目。</div>
+
+<h2>9. 常用命令</h2>
+<div class="code"># Gate 0 契约回归（57 个单元测试）
+python3 -m unittest discover -s prototypes/skills/tests -p 'test_*.py' -v
+
+# 后端开发
+make install && make dev     # PG+Redis + uvicorn 热重载
+make migrate && make test && make lint
+
+# Golden E2E 链（必须全部退出码 0 且 GATE_PASS）
+# 命令序列见 prototypes/e2e-validation-golden/README.md</div>
+
+<div class="foot">分析日期 2026-08-12 · 依据：54 总索引 / 01-05 权威源 / 架构与审计文档 / backend 源码 / prototypes 原型 / qualityforge-ui 设计 · 完整记忆已沉淀至 memory/2026-08-12.md</div>
+</div>
+</body>
+</html>

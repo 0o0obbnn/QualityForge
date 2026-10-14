@@ -1,0 +1,3847 @@
+{
+  "$comment": "QualityForge V1 已实现面接口测试用例。每条绑定 Scenario Graph 场景与 Testing IR 需求/规则；expected_results 中 expect/assertion 为执行期断言依据，state/endpoint 由 case_check.py 校验。",
+  "cases": [
+    {
+      "case_id": "TC-AUTH-001",
+      "req_id": "Q-AUTH-001",
+      "rule_id": "R-AUTH-002",
+      "scenario_id": "S-AUTH-001",
+      "fixture_category": "Dynamic",
+      "title": "空库首次 setup 用 12 字符合规密码初始化成功",
+      "precondition": "GET /auth/status 返回 setupRequired=true（空库）",
+      "steps": [
+        {
+          "action": "确认初始化状态",
+          "endpoint": "/auth/status",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "提交管理员初始化",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "admin@example.test",
+            "password": "a-12-char-pw!!",
+            "tenantName": "默认租户",
+            "workspaceName": "默认工作区"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/status",
+          "expect_status": 200,
+          "assertion": "data.setupRequired == true"
+        },
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 201,
+          "assertion": "信封含 code/message/traceId，data.userId 非空且 data.email == admin@example.test"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-002",
+      "req_id": "Q-AUTH-002",
+      "rule_id": "R-AUTH-005",
+      "scenario_id": "S-AUTH-002",
+      "fixture_category": "Dynamic",
+      "title": "正确凭据登录返回 200 并签发会话",
+      "precondition": "已存在本地管理员",
+      "steps": [
+        {
+          "action": "提交登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "email": "admin@example.test",
+            "password": "a-12-char-pw!!"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 200,
+          "assertion": "响应携带 Bearer Token 或 Set-Cookie(qf_access)；data.userId 非空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-003",
+      "req_id": "Q-AUTH-003",
+      "rule_id": "R-AUTH-005",
+      "scenario_id": "S-AUTH-003",
+      "fixture_category": "Hybrid",
+      "title": "携带有效会话读取 /auth/me 档案",
+      "precondition": "已登录持有有效会话",
+      "steps": [
+        {
+          "action": "读取当前用户",
+          "endpoint": "/auth/me",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/me",
+          "expect_status": 200,
+          "assertion": "data.actorType == HUMAN，data.capabilities 为数组，data.email 与登录一致"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-004",
+      "req_id": "Q-AUTH-001",
+      "rule_id": "R-AUTH-001",
+      "scenario_id": "S-AUTH-004",
+      "fixture_category": "Hybrid",
+      "title": "setup 完成后重复初始化返回 409 SETUP_ALREADY_COMPLETED",
+      "precondition": "管理员已初始化",
+      "steps": [
+        {
+          "action": "再次提交 setup",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "another@example.test",
+            "password": "another-12char!",
+            "tenantName": "t2",
+            "workspaceName": "w2"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 409,
+          "assertion": "code == SETUP_ALREADY_COMPLETED；随后 GET /auth/setup 所用邮箱在 /auth/login 中仍返回 401（未创建新身份）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-005",
+      "req_id": "Q-AUTH-002",
+      "rule_id": "R-AUTH-003",
+      "scenario_id": "S-AUTH-005",
+      "fixture_category": "Hybrid",
+      "title": "错误密码登录返回 401 INVALID_CREDENTIALS",
+      "precondition": "已存在本地管理员",
+      "steps": [
+        {
+          "action": "使用错误密码登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "email": "admin@example.test",
+            "password": "wrong-password-1"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 401,
+          "assertion": "code == INVALID_CREDENTIALS，响应不携带任何会话凭据"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-006",
+      "req_id": "Q-AUTH-002",
+      "rule_id": "R-AUTH-004",
+      "scenario_id": "S-AUTH-006",
+      "fixture_category": "Dynamic",
+      "title": "60 秒窗口内连续 6 次失败登录后第 6 次触发 429",
+      "precondition": "已存在本地管理员；测试需在 60 秒内完成全部请求",
+      "steps": [
+        {
+          "action": "连续提交 5 次错误密码登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "repeat": 5,
+          "input": {
+            "email": "admin@example.test",
+            "password": "bad-password-01"
+          }
+        },
+        {
+          "action": "第 6 次尝试登录（可用正确密码）",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "email": "admin@example.test",
+            "password": "a-12-char-pw!!"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 401,
+          "assertion": "前 5 次均返回 401 INVALID_CREDENTIALS"
+        },
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 429,
+          "assertion": "code == RATE_LIMITED"
+        }
+      ],
+      "constraint_refs": [
+        "C-006"
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-007",
+      "req_id": "Q-AUTH-001",
+      "rule_id": "R-AUTH-002",
+      "scenario_id": "S-AUTH-007",
+      "fixture_category": "Dynamic",
+      "title": "setup password 长度边界：11/12/256/257",
+      "precondition": "空库（每个子步骤需独立空库或依次使用唯一邮箱）",
+      "steps": [
+        {
+          "action": "11 字符密码 setup",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "b11@example.test",
+            "password": "12345678901",
+            "tenantName": "t",
+            "workspaceName": "w"
+          }
+        },
+        {
+          "action": "12 字符密码 setup",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "b12@example.test",
+            "password": "123456789012",
+            "tenantName": "t",
+            "workspaceName": "w"
+          }
+        },
+        {
+          "action": "256 字符密码 setup",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "b256@example.test",
+            "password": "{256_chars}",
+            "tenantName": "t",
+            "workspaceName": "w"
+          }
+        },
+        {
+          "action": "257 字符密码 setup",
+          "endpoint": "/auth/setup",
+          "method": "POST",
+          "input": {
+            "email": "b257@example.test",
+            "password": "{257_chars}",
+            "tenantName": "t",
+            "workspaceName": "w"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 422,
+          "assertion": "11 字符被拒绝"
+        },
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 201,
+          "assertion": "12 字符通过"
+        },
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 201,
+          "assertion": "256 字符通过"
+        },
+        {
+          "endpoint": "/auth/setup",
+          "expect_status": 422,
+          "assertion": "257 字符被拒绝"
+        }
+      ],
+      "constraint_refs": [
+        "C-002"
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-008",
+      "req_id": "Q-AUTH-003",
+      "rule_id": "R-AUTH-006",
+      "scenario_id": "S-AUTH-008",
+      "fixture_category": "Static",
+      "title": "无会话凭据访问 /auth/me 返回 401 且响应仍为统一信封",
+      "precondition": "客户端不携带 Authorization 与 Cookie",
+      "steps": [
+        {
+          "action": "裸访问当前用户接口",
+          "endpoint": "/auth/me",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/me",
+          "expect_status": 401,
+          "assertion": "code == UNAUTHORIZED；响应体含 code/message/traceId"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-001",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-001",
+      "scenario_id": "S-WI-001",
+      "fixture_category": "Dynamic",
+      "title": "携带全部必填字段创建工作项返回 201",
+      "precondition": "已登录且持有 workspaceId",
+      "steps": [
+        {
+          "action": "创建 GENERAL 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemType": "GENERAL",
+            "title": "冒烟-创建工作项",
+            "objective": "验证创建链路",
+            "acceptanceCriteria": "返回201且可查询",
+            "requiresReview": true,
+            "priority": "P2",
+            "riskLevel": "MEDIUM"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 201,
+          "assertion": "data.id 非空；data.status == BACKLOG；data.lockVersion == 0；data.createdAt 非空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-002",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-WI-002",
+      "fixture_category": "Static",
+      "title": "工作项列表分页返回 page/pageSize/total",
+      "precondition": "已登录，工作区至少存在 1 个工作项",
+      "steps": [
+        {
+          "action": "按默认分页查询列表",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 200,
+          "assertion": "data 为数组；信封含 page == 1 且 pageSize == 20 且 total >= 1"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-003",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-003",
+      "scenario_id": "S-WI-003",
+      "fixture_category": "Hybrid",
+      "title": "按 ID 读取新建工作项返回完整字段",
+      "precondition": "TC-WI-001 已创建工作项",
+      "steps": [
+        {
+          "action": "读取工作项详情",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "{work_item_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}",
+          "expect_status": 200,
+          "assertion": "data.id == {work_item_id}；必填字段（title/objective/acceptanceCriteria/requiresReview/priority/riskLevel/status/lockVersion）全部存在"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-004",
+      "req_id": "Q-WI-004",
+      "rule_id": "R-WI-011",
+      "scenario_id": "S-WI-004",
+      "fixture_category": "Dynamic",
+      "title": "SLA 汇总结构：分组 P0/P1/P2 与 overall 口径",
+      "precondition": "工作区内存在 P0/P1/P2/P3 各优先级工作项若干",
+      "steps": [
+        {
+          "action": "创建多优先级工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "repeat": "按矩阵",
+          "input": {
+            "priority": "[P0|P1|P2|P3]循环",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "查询 SLA 汇总",
+          "endpoint": "/work-items/sla-overview",
+          "method": "GET",
+          "input": {
+            "query": {
+              "workspaceId": "{workspace_id}"
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/sla-overview",
+          "expect_status": 200,
+          "assertion": "groups 恰含 P0/P1/P2 三组；每组 total/met/overdue/metRate 齐全且 met+overdue <= total；overall.total == 各组与 P3/CANCELLED 总和"
+        }
+      ],
+      "constraint_refs": [
+        "C-004"
+      ]
+    },
+    {
+      "case_id": "TC-WI-005",
+      "req_id": "Q-WI-002",
+      "rule_id": "R-WI-007",
+      "scenario_id": "S-WI-005",
+      "fixture_category": "Hybrid",
+      "entity_id": "ENT-WORKITEM",
+      "title": "BACKLOG 工作项流转到 REWORK 并推进 lockVersion",
+      "precondition": "存在 status=BACKLOG 且 lockVersion=0 的工作项",
+      "steps": [
+        {
+          "action": "提交 REWORK 流转",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "targetStatus": "REWORK",
+            "reason": "退回返工",
+            "lockVersion": 0
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "state": "REWORK",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "expect_status": 200,
+          "assertion": "data.status == REWORK 且 data.lockVersion == 1"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-006",
+      "req_id": "Q-WI-003",
+      "rule_id": "R-WI-010",
+      "scenario_id": "S-WI-006",
+      "fixture_category": "Hybrid",
+      "title": "分派合法 assignee 成功且响应携带 assigneeId",
+      "precondition": "工作项存在；assignee 为同租户用户 UUID",
+      "steps": [
+        {
+          "action": "提交分派",
+          "endpoint": "/work-items/{workItemId}/assign",
+          "method": "POST",
+          "input": {
+            "workItemId": "{work_item_id}",
+            "workspaceId": "{workspace_id}",
+            "assigneeId": "{assignee_uuid}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/assign",
+          "expect_status": 200,
+          "assertion": "data.assigneeId == {assignee_uuid}"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-007",
+      "req_id": "Q-WI-003",
+      "rule_id": "R-WI-010",
+      "scenario_id": "S-WI-006",
+      "fixture_category": "Hybrid",
+      "title": "重复分派同一 assignee 幂等 no-op 返回 200",
+      "precondition": "TC-WI-006 已分派 {assignee_uuid}",
+      "steps": [
+        {
+          "action": "再次提交同一分派",
+          "endpoint": "/work-items/{workItemId}/assign",
+          "method": "POST",
+          "input": {
+            "workItemId": "{work_item_id}",
+            "workspaceId": "{workspace_id}",
+            "assigneeId": "{assignee_uuid}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/assign",
+          "expect_status": 200,
+          "assertion": "返回当前工作项且 lockVersion 不变（no-op）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-008",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-001",
+      "scenario_id": "S-WI-007",
+      "fixture_category": "Dynamic",
+      "title": "缺失 title 创建工作项返回 422",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "提交缺 title 的创建",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemType": "GENERAL",
+            "objective": "缺title",
+            "acceptanceCriteria": "422",
+            "requiresReview": true,
+            "priority": "P2",
+            "riskLevel": "MEDIUM"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "校验失败；列表 total 不增加"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-009",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-003",
+      "scenario_id": "S-WI-008",
+      "fixture_category": "Static",
+      "title": "读取随机不存在的工作项 ID 返回 404",
+      "precondition": "已登录；使用合法但未占用的 UUID",
+      "steps": [
+        {
+          "action": "读取不存在的工作项",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "{random_uuid}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}",
+          "expect_status": 404,
+          "assertion": "code == NOT_FOUND；响应体仍为统一信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-010",
+      "req_id": "Q-WI-002",
+      "rule_id": "R-WI-004",
+      "scenario_id": "S-WI-009",
+      "fixture_category": "Hybrid",
+      "title": "lockVersion 陈旧时流转返回 409 STALE_LOCK_VERSION",
+      "precondition": "工作项当前 lockVersion=N（用 N+1 提交）",
+      "steps": [
+        {
+          "action": "提交陈旧 lockVersion 的流转",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "targetStatus": "REWORK",
+            "reason": "过期版本",
+            "lockVersion": "{current_lock_version_plus_1}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "expect_status": 409,
+          "assertion": "code == STALE_LOCK_VERSION；随后 GET 详情确认 status 与 lockVersion 均未变化"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-011",
+      "req_id": "Q-WI-002",
+      "rule_id": "R-WI-005",
+      "scenario_id": "S-WI-010",
+      "fixture_category": "Hybrid",
+      "title": "expectedCurrentStatus 不符时流转返回 409 INVALID_STATE_TRANSITION",
+      "precondition": "工作项实际 status=BACKLOG，请求声明 expectedCurrentStatus=IN_PROGRESS",
+      "steps": [
+        {
+          "action": "提交带错误预期的流转",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "targetStatus": "REWORK",
+            "reason": "预期不符",
+            "expectedCurrentStatus": "IN_PROGRESS",
+            "lockVersion": "{current_lock_version}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "expect_status": 409,
+          "assertion": "code == INVALID_STATE_TRANSITION；状态不变"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-012",
+      "req_id": "Q-WI-002",
+      "rule_id": "R-WI-006",
+      "scenario_id": "S-WI-011",
+      "fixture_category": "Hybrid",
+      "title": "targetStatus=DONE 时流转返回 422（M1 仅支持 REWORK）",
+      "precondition": "工作项存在且 lockVersion 正确",
+      "steps": [
+        {
+          "action": "提交 targetStatus=DONE 的流转",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "targetStatus": "DONE",
+            "reason": "不支持的迁移",
+            "lockVersion": "{current_lock_version}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "expect_status": 422,
+          "assertion": "code 为 VALIDATION_FAILED 类且消息含仅支持 REWORK；状态不变"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-013",
+      "req_id": "Q-WI-003",
+      "rule_id": "R-WI-009",
+      "scenario_id": "S-WI-012",
+      "fixture_category": "Hybrid",
+      "title": "assigneeId 非法字符串分派返回 422",
+      "precondition": "工作项存在",
+      "steps": [
+        {
+          "action": "提交非法 assigneeId 分派",
+          "endpoint": "/work-items/{workItemId}/assign",
+          "method": "POST",
+          "input": {
+            "workItemId": "{work_item_id}",
+            "workspaceId": "{workspace_id}",
+            "assigneeId": "not-a-uuid"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/assign",
+          "expect_status": 422,
+          "assertion": "校验失败；工作项 assigneeId 保持为空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-014",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-002",
+      "scenario_id": "S-WI-013",
+      "fixture_category": "Dynamic",
+      "title": "title 边界：256 字符通过、257 字符拒绝",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "创建 256 字符 title 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "title": "{256_char_title}",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "创建 257 字符 title 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "title": "{257_char_title}",
+            "其他字段": "同 TC-WI-001"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 201,
+          "assertion": "256 字符通过"
+        },
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "257 字符拒绝"
+        }
+      ],
+      "constraint_refs": [
+        "C-001"
+      ]
+    },
+    {
+      "case_id": "TC-WI-015",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-WI-014",
+      "fixture_category": "Static",
+      "title": "pageSize 边界：1 与 200 通过、0 与 201 拒绝",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "pageSize=1 查询",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 1
+            }
+          }
+        },
+        {
+          "action": "pageSize=200 查询",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 200
+            }
+          }
+        },
+        {
+          "action": "pageSize=0 查询",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 0
+            }
+          }
+        },
+        {
+          "action": "pageSize=201 查询",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 201
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 200,
+          "assertion": "pageSize=1 与 =200 均返回 200"
+        },
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "pageSize=0 与 =201 均返回 422"
+        }
+      ],
+      "constraint_refs": [
+        "C-003"
+      ]
+    },
+    {
+      "case_id": "TC-WI-016",
+      "req_id": "Q-WI-004",
+      "rule_id": "R-WI-012",
+      "scenario_id": "S-WI-015",
+      "fixture_category": "Dynamic",
+      "title": "仅含 P3/CANCELLED 工作项时分组 metRate 为 0 不误报 overdue",
+      "precondition": "全新工作区仅有 P3 工作项",
+      "steps": [
+        {
+          "action": "创建 P3 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "priority": "P3",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "查询 SLA 汇总",
+          "endpoint": "/work-items/sla-overview",
+          "method": "GET",
+          "input": {
+            "query": {
+              "workspaceId": "{workspace_id}"
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/sla-overview",
+          "expect_status": 200,
+          "assertion": "P3 计入 overall.total 但不出现在 groups；P0 组 total == 0 且 metRate == 0（不除零）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-017",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-003",
+      "scenario_id": "S-WI-016",
+      "fixture_category": "Hybrid",
+      "title": "使用其他 workspace 的工作项 ID 访问返回 404",
+      "precondition": "持有 workspace A 会话；工作项属于 workspace B",
+      "steps": [
+        {
+          "action": "读取跨租户工作项",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "{other_workspace_work_item_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}",
+          "expect_status": 404,
+          "assertion": "code == NOT_FOUND（与不存在 ID 同响应码，不泄漏存在性）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-001",
+      "req_id": "Q-RT-001",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-RT-001",
+      "fixture_category": "Hybrid",
+      "title": "携带幂等键创建绑定精确版本的审核任务返回 201",
+      "precondition": "存在产出物版本（artifactId/artifactVersionId/contentDigest 三元组）",
+      "steps": [
+        {
+          "action": "创建审核任务",
+          "endpoint": "/review-tasks",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "artifactType": "TEST_STRATEGY",
+            "artifactId": "{artifact_id}",
+            "artifactVersionId": "{artifact_version_id}",
+            "contentDigest": "{sha256_digest}",
+            "policyType": "SINGLE_REVIEW"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks",
+          "expect_status": 201,
+          "assertion": "data.status == OPEN；data.contentDigest 匹配输入"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-002",
+      "req_id": "Q-RT-001",
+      "rule_id": "R-RT-007",
+      "scenario_id": "S-RT-002",
+      "fixture_category": "Hybrid",
+      "title": "读取审核产物返回不可变版本与 64 位摘要",
+      "precondition": "审核任务已创建",
+      "steps": [
+        {
+          "action": "读取审核产物",
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{review_task_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+          "expect_status": 200,
+          "assertion": "data.artifactVersionId 与任务绑定一致；data.contentDigest 匹配 ^[a-f0-9]{64}$"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-003",
+      "req_id": "Q-RT-003",
+      "rule_id": "R-RT-007",
+      "scenario_id": "S-RT-003",
+      "fixture_category": "Hybrid",
+      "title": "首版产物 Diff 无基线降级返回 hasBaseline=false",
+      "precondition": "审核任务绑定的版本是该产出物根下唯一版本",
+      "steps": [
+        {
+          "action": "读取版本 Diff",
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact/diff",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{review_task_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact/diff",
+          "expect_status": 200,
+          "assertion": "data.hasBaseline == false；data.fields == []；data.baseVersionId 为 null（不报错）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-004",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-WI-008",
+      "scenario_id": "S-RT-004",
+      "fixture_category": "Hybrid",
+      "title": "同一幂等键重放审核决策返回首次结果且无二次副作用",
+      "precondition": "已执行一次 APPROVE 决策并记录响应",
+      "steps": [
+        {
+          "action": "以相同 Idempotency-Key 重放决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{same_key_as_first}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "响应与首次一致；事件流中 review.decided 仅出现一次"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-005",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-004",
+      "scenario_id": "S-RT-005",
+      "fixture_category": "Hybrid",
+      "entity_id": "ENT-REVIEWTASK",
+      "title": "APPROVE 决策使 OPEN 任务迁移到 APPROVED",
+      "precondition": "审核任务 status=OPEN；contentDigest 为任务当前摘要",
+      "steps": [
+        {
+          "action": "提交批准决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "state": "APPROVED",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "data.status == APPROVED（决策对象不回传：实现剥离 decision 字段）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-006",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-004",
+      "scenario_id": "S-RT-006",
+      "fixture_category": "Hybrid",
+      "entity_id": "ENT-REVIEWTASK",
+      "title": "REQUEST_CHANGES 决策使 OPEN 任务迁移到 CHANGES_REQUESTED",
+      "precondition": "审核任务 status=OPEN",
+      "steps": [
+        {
+          "action": "提交退回决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "REQUEST_CHANGES",
+            "contentDigest": "{sha256_digest}",
+            "comments": "请补充断言"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "state": "CHANGES_REQUESTED",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "data.status == CHANGES_REQUESTED"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-007",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-004",
+      "scenario_id": "S-RT-007",
+      "fixture_category": "Hybrid",
+      "entity_id": "ENT-REVIEWTASK",
+      "title": "REJECT 决策使 OPEN 任务迁移到 REJECTED",
+      "precondition": "审核任务 status=OPEN",
+      "steps": [
+        {
+          "action": "提交拒绝决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "REJECT",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "state": "REJECTED",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "data.status == REJECTED"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-008",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-005",
+      "scenario_id": "S-RT-008",
+      "fixture_category": "Hybrid",
+      "title": "退回决策后产出物版本 reviewStatus 回退 DRAFT",
+      "precondition": "产出物版本当前 reviewStatus=PENDING_REVIEW 且审核任务 OPEN",
+      "steps": [
+        {
+          "action": "提交 REQUEST_CHANGES 退回",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "REQUEST_CHANGES",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "读取产物版本校验状态",
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{review_task_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "任务迁移 CHANGES_REQUESTED"
+        },
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+          "expect_status": 200,
+          "assertion": "版本数据 reviewStatus == DRAFT（回草稿供修订）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-009",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-002",
+      "scenario_id": "S-RT-009",
+      "fixture_category": "Hybrid",
+      "title": "终态审核任务再决策返回 409",
+      "precondition": "任务已 APPROVED（TC-RT-005 产物）",
+      "steps": [
+        {
+          "action": "对终态任务再次提交决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{approved_task_id}",
+            "decision": "REJECT",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 409,
+          "assertion": "code == INVALID_STATE_TRANSITION 审核任务已结束；任务状态保持 APPROVED"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-010",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-003",
+      "scenario_id": "S-RT-010",
+      "fixture_category": "Hybrid",
+      "title": "contentDigest 与任务不一致时决策返回 409 STALE_ARTIFACT_VERSION",
+      "precondition": "审核任务 OPEN；使用不匹配的 64 位摘要提交",
+      "steps": [
+        {
+          "action": "提交陈旧摘要决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "APPROVE",
+            "contentDigest": "{mismatched_sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 409,
+          "assertion": "code == STALE_ARTIFACT_VERSION；任务保持 OPEN"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-011",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-001",
+      "scenario_id": "S-RT-011",
+      "fixture_category": "Hybrid",
+      "title": "非人类主体（AGENT 会话）提交决策返回 403",
+      "precondition": "以 AGENT 类型会话调用（actor_type != USER）",
+      "steps": [
+        {
+          "action": "以 Agent 身份提交决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "actor": "AGENT",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 403,
+          "assertion": "code == FORBIDDEN 正式产出物只能由人类审核；任务保持 OPEN"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-012",
+      "req_id": "Q-RT-002",
+      "rule_id": "R-RT-006",
+      "scenario_id": "S-RT-012",
+      "fixture_category": "Hybrid",
+      "title": "缺少产出物审批能力时决策返回 403",
+      "precondition": "会话 capabilities 不含该 artifactType 对应审批能力",
+      "steps": [
+        {
+          "action": "以受限会话提交决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "capabilities": "[]",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 403,
+          "assertion": "code == FORBIDDEN；任务保持 OPEN"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-EX-001",
+      "req_id": "Q-EX-001",
+      "rule_id": "R-EX-001",
+      "scenario_id": "S-EX-001",
+      "fixture_category": "Dynamic",
+      "title": "携带必填字段创建执行计划返回 201",
+      "precondition": "已存在 testPlanId",
+      "steps": [
+        {
+          "action": "创建执行计划",
+          "endpoint": "/execution-plans",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "planKey": "exec-plan-smoke-001",
+            "name": "冒烟执行计划",
+            "testPlanId": "{test_plan_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-plans",
+          "expect_status": 201,
+          "assertion": "data.planKey 与输入一致；信封完整"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-EX-002",
+      "req_id": "Q-EX-001",
+      "rule_id": "R-EX-001",
+      "scenario_id": "S-EX-002",
+      "fixture_category": "Dynamic",
+      "title": "缺失 planKey 创建执行计划返回 422",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "提交缺 planKey 的创建",
+          "endpoint": "/execution-plans",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "name": "缺planKey",
+            "testPlanId": "{test_plan_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-plans",
+          "expect_status": 422,
+          "assertion": "校验失败；列表不出现该计划"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-QA-001",
+      "req_id": "Q-QA-001",
+      "rule_id": "R-ENV-001",
+      "scenario_id": "S-QA-001",
+      "fixture_category": "Dynamic",
+      "title": "创建测试报告返回 201 与统一信封",
+      "precondition": "已登录且工作区存在可用 releaseId/executionResultRefs",
+      "steps": [
+        {
+          "action": "创建测试报告",
+          "endpoint": "/quality/reports",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "reportKey": "report-smoke-001"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/quality/reports",
+          "expect_status": 201,
+          "assertion": "信封含 code/message/traceId；data.id 非空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-QA-002",
+      "req_id": "Q-QA-002",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-QA-002",
+      "fixture_category": "Hybrid",
+      "title": "创建缺陷外部同步尝试返回 201 且带接收摘要",
+      "precondition": "存在已批准的缺陷版本、外部集成与批准记录",
+      "steps": [
+        {
+          "action": "创建同步尝试",
+          "endpoint": "/quality/defects/{defectId}/sync-attempts",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "defectId": "{defect_id}",
+            "defectVersionId": "{approved_defect_version_id}",
+            "integrationId": "{integration_id}",
+            "operation": "CREATE",
+            "payloadDigest": "{payload_digest}",
+            "approvalId": "{approval_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/quality/defects/{defectId}/sync-attempts",
+          "expect_status": 201,
+          "assertion": "data.receiptDigest 非空；绑定请求声明的批准版本"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-QA-003",
+      "req_id": "Q-QA-001",
+      "rule_id": "R-QA-001",
+      "scenario_id": "S-QA-003",
+      "fixture_category": "Dynamic",
+      "title": "executionResultRefs 空数组创建分析返回 422",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "提交空 refs 的分析创建",
+          "endpoint": "/quality/result-analyses",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "analysisKey": "analysis-invalid-001",
+            "executionResultRefs": []
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/quality/result-analyses",
+          "expect_status": 422,
+          "assertion": "校验失败（minItems 1）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-OBS-001",
+      "req_id": "Q-OBS-001",
+      "rule_id": "R-WI-007",
+      "scenario_id": "S-OBS-001",
+      "fixture_category": "Hybrid",
+      "title": "工作项流转后事件流可检索 work_item.transitioned",
+      "precondition": "已执行 TC-WI-005 流转",
+      "steps": [
+        {
+          "action": "按主体过滤事件",
+          "endpoint": "/observability/events",
+          "method": "GET",
+          "input": {
+            "query": {
+              "subjectType": "work_item",
+              "subjectId": "{work_item_id}"
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/observability/events",
+          "expect_status": 200,
+          "assertion": "data 中存在 eventType == work_item.transitioned 的事件，payload 含 fromStatus/toStatus（事件字段名为 eventType）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-OBS-002",
+      "req_id": "Q-OBS-001",
+      "rule_id": "R-ENV-001",
+      "scenario_id": "S-OBS-002",
+      "fixture_category": "Static",
+      "title": "指标接口返回 200 与统一信封",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询指标",
+          "endpoint": "/observability/metrics",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/observability/metrics",
+          "expect_status": 200,
+          "assertion": "信封含 code/message/traceId；data 结构非空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-ENV-001",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-ENV-001",
+      "scenario_id": "S-ENV-001",
+      "fixture_category": "Static",
+      "title": "采样多个接口断言信封必含 code/message/traceId",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "采样成功响应",
+          "endpoint": "/work-items",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "采样错误响应",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "{random_uuid}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 200,
+          "assertion": "200 与 404 响应体均含非空 code/message/traceId"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-ENV-002",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-ENV-002",
+      "scenario_id": "S-ENV-002",
+      "fixture_category": "Hybrid",
+      "title": "工作项响应字段为 camelCase 无 snake_case 泄漏",
+      "precondition": "存在工作项",
+      "steps": [
+        {
+          "action": "读取工作项详情",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "{work_item_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}",
+          "expect_status": 200,
+          "assertion": "data 所有键匹配 ^[a-z][a-zA-Z0-9]*$（无下划线；lockVersion 等驼峰键合法）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-001",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /test-strategies 返回 200 信封",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询测试策略列表",
+          "endpoint": "/test-strategies",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-strategies",
+          "expect_status": 200,
+          "assertion": "data 为数组且信封含分页字段"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-002",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /test-plans 返回 200 信封",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询测试计划列表",
+          "endpoint": "/test-plans",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-plans",
+          "expect_status": 200,
+          "assertion": "data 为数组且信封含分页字段"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-003",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /test-cases 返回 200 信封",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询正式用例列表",
+          "endpoint": "/test-cases",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-cases",
+          "expect_status": 200,
+          "assertion": "data 为数组且信封含分页字段"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-004",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /knowledge/requirements 与 /knowledge/entries 返回 200",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询需求文档列表",
+          "endpoint": "/knowledge/requirements",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询知识条目列表",
+          "endpoint": "/knowledge/entries",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/knowledge/requirements",
+          "expect_status": 200,
+          "assertion": "两个接口均返回 200 信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-005",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /ai/sessions 与 /ai/provider/status 返回 200",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询 Agent 会话列表",
+          "endpoint": "/ai/sessions",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询 Provider 状态",
+          "endpoint": "/ai/provider/status",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions",
+          "expect_status": 200,
+          "assertion": "两个接口均返回 200 信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-006",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /platform/workspaces/{id}/environments 返回 200",
+      "precondition": "已登录且 workspaceId 有效",
+      "steps": [
+        {
+          "action": "查询环境列表",
+          "endpoint": "/platform/workspaces/{workspaceId}/environments",
+          "method": "GET",
+          "input": {
+            "workspaceId": "{workspace_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/platform/workspaces/{workspaceId}/environments",
+          "expect_status": 200,
+          "assertion": "data 为数组"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-007",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /execution-tasks 与 /execution-results 返回 200",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询执行任务",
+          "endpoint": "/execution-tasks",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询执行结果",
+          "endpoint": "/execution-results",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-tasks",
+          "expect_status": 200,
+          "assertion": "两个接口均返回 200 信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-008",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "冒烟：GET /quality/reports、/quality/defects、/quality/result-analyses 返回 200",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "查询测试报告",
+          "endpoint": "/quality/reports",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询缺陷列表",
+          "endpoint": "/quality/defects",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询结果分析",
+          "endpoint": "/quality/result-analyses",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询失败聚类",
+          "endpoint": "/quality/failure-clusters",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        },
+        {
+          "action": "查询覆盖报告",
+          "endpoint": "/quality/coverage-reports",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1
+            }
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/quality/reports",
+          "expect_status": 200,
+          "assertion": "五个质量只读接口均返回 200 信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-009",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-PLN-002",
+      "fixture_category": "Dynamic",
+      "title": "关键写操作缺失 Idempotency-Key 返回 422",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "无幂等键创建工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": null
+          },
+          "input": {
+            "title": "无幂等键",
+            "其他字段": "同 TC-WI-001"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "校验失败提示 Idempotency-Key 必填；不创建工作项"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-009",
+      "req_id": "Q-AUTH-003",
+      "rule_id": "R-AUTH-006",
+      "scenario_id": "S-AUTH-008",
+      "fixture_category": "Hybrid",
+      "title": "logout 后原会话访问 /auth/me 返回 401",
+      "precondition": "已登录持有有效会话",
+      "steps": [
+        {
+          "action": "登出当前会话",
+          "endpoint": "/auth/logout",
+          "method": "POST",
+          "input": {}
+        },
+        {
+          "action": "以登出后的凭据读取 /auth/me",
+          "endpoint": "/auth/me",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/logout",
+          "expect_status": 200,
+          "assertion": "登出成功"
+        },
+        {
+          "endpoint": "/auth/me",
+          "expect_status": 401,
+          "assertion": "原凭据失效返回 401"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-018",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-WI-002",
+      "fixture_category": "Static",
+      "title": "查询工作项运行记录列表返回 200 信封",
+      "precondition": "已登录且工作项存在",
+      "steps": [
+        {
+          "action": "查询工作项运行记录",
+          "endpoint": "/work-items/{workItemId}/runs",
+          "method": "GET",
+          "input": {
+            "workItemId": "{work_item_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/runs",
+          "expect_status": 200,
+          "assertion": "data 为数组且信封完整；不存在的工作项 runs 返回空列表（实现为宽松语义，契约未声明 404）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-013",
+      "req_id": "Q-RT-001",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-RT-001",
+      "fixture_category": "Hybrid",
+      "title": "创建审核任务后读回详情字段一致",
+      "precondition": "TC-RT-001 已创建审核任务",
+      "steps": [
+        {
+          "action": "读取审核任务详情",
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{review_task_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "expect_status": 200,
+          "assertion": "data.artifactVersionId/contentDigest/policyType 与创建输入一致；不存在的任务返回 404"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VER-001",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Hybrid",
+      "title": "版本管理端点冒烟：策略/计划/需求/报告/缺陷版本与用例版本列表",
+      "precondition": "各根产出物已存在",
+      "steps": [
+        {
+          "action": "创建策略版本",
+          "endpoint": "/test-strategies/{testStrategyId}/versions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "testStrategyId": "{strategy_id}",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "创建计划版本",
+          "endpoint": "/test-plans/{testPlanId}/versions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "testPlanId": "{plan_id}",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "创建需求文档版本",
+          "endpoint": "/knowledge/requirements/{requirementId}/versions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "requirementId": "{requirement_id}",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "创建报告版本",
+          "endpoint": "/quality/reports/{testReportId}/versions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "testReportId": "{report_id}",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "创建缺陷版本",
+          "endpoint": "/quality/defects/{defectId}/versions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "defectId": "{defect_id}",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "查询用例版本列表",
+          "endpoint": "/test-cases/{testCaseId}/versions",
+          "method": "GET",
+          "input": {
+            "testCaseId": "{test_case_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions",
+          "expect_status": 201,
+          "assertion": "五个版本创建端点均返回 201 且版本号递增"
+        },
+        {
+          "endpoint": "/test-cases/{testCaseId}/versions",
+          "expect_status": 200,
+          "assertion": "版本列表 data 为数组"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-011",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Hybrid",
+      "title": "冒烟：执行计划启动与 AI 会话详情/Trace 读取",
+      "precondition": "执行计划已有冻结版本；存在 agentSessionId",
+      "steps": [
+        {
+          "action": "启动执行计划",
+          "endpoint": "/execution-plans/{executionPlanId}/runs",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "executionPlanId": "{execution_plan_id}",
+            "executionPlanVersionId": "{version_id}"
+          }
+        },
+        {
+          "action": "读取 AI 会话详情",
+          "endpoint": "/ai/sessions/{agentSessionId}",
+          "method": "GET",
+          "input": {
+            "agentSessionId": "{session_id}"
+          }
+        },
+        {
+          "action": "读取会话 Trace",
+          "endpoint": "/ai/sessions/{agentSessionId}/trace",
+          "method": "GET",
+          "input": {
+            "agentSessionId": "{session_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-plans/{executionPlanId}/runs",
+          "expect_status": 200,
+          "assertion": "启动受理；不存在的计划返回 404"
+        },
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}",
+          "expect_status": 200,
+          "assertion": "详情与 trace 均返回 200 信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-012",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-PLN-003",
+      "fixture_category": "Hybrid",
+      "title": "写操作冒烟：AI 会话/知识条目/需求文档/环境/覆盖报告/缺陷创建返回 201",
+      "precondition": "已登录；workItemRunId/agentId/promptVersionId 等前置引用由 fixture 提供",
+      "steps": [
+        {
+          "action": "创建 Agent 会话",
+          "endpoint": "/ai/sessions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemRunId": "{work_item_run_id}",
+            "agentId": "{agent_id}",
+            "promptVersionId": "{prompt_version_id}",
+            "inputDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "创建知识条目",
+          "endpoint": "/knowledge/entries",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "knowledgeKey": "kb-smoke-001",
+            "category": "TESTING"
+          }
+        },
+        {
+          "action": "创建需求文档",
+          "endpoint": "/knowledge/requirements",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "name": "需求冒烟文档",
+            "documentType": "PRD"
+          }
+        },
+        {
+          "action": "创建环境",
+          "endpoint": "/platform/workspaces/{workspaceId}/environments",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "name": "冒烟环境",
+            "environmentType": "TEST",
+            "endpointMappings": {
+              "api": "{base_url}"
+            }
+          }
+        },
+        {
+          "action": "创建覆盖报告",
+          "endpoint": "/quality/coverage-reports",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "denominatorDefinitionRef": "{denominator_ref}",
+            "scopeSnapshotRef": "{scope_snapshot_ref}"
+          }
+        },
+        {
+          "action": "创建缺陷",
+          "endpoint": "/quality/defects",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "defectKey": "defect-smoke-001",
+            "createdFromWorkItemId": "{work_item_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions",
+          "expect_status": 201,
+          "assertion": "六个写操作均返回 201 且信封含 code/message/traceId；data.id 非空"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PLN-013",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-PAGE-001",
+      "scenario_id": "S-PLN-001",
+      "fixture_category": "Static",
+      "title": "读操作冒烟：执行计划列表/审核任务列表/报告版本列表返回 200",
+      "precondition": "已登录；报告版本列表需已有报告根记录",
+      "steps": [
+        {
+          "action": "查询执行计划列表",
+          "endpoint": "/execution-plans",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        },
+        {
+          "action": "查询审核任务列表",
+          "endpoint": "/review-tasks",
+          "method": "GET",
+          "input": {
+            "query": {
+              "page": 1,
+              "pageSize": 20
+            }
+          }
+        },
+        {
+          "action": "查询报告版本列表",
+          "endpoint": "/quality/reports/{testReportId}/versions",
+          "method": "GET",
+          "input": {
+            "testReportId": "{test_report_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-plans",
+          "expect_status": 200,
+          "assertion": "三个读接口均返回 200 信封；列表 data 为数组且含分页字段"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VAL-001",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-VAL-001",
+      "scenario_id": "S-VAL-001",
+      "fixture_category": "Dynamic",
+      "title": "八个创建接口各缺一个必填字段均返回 422",
+      "precondition": "已登录；每步仅缺失一个 required 字段，其余字段合法",
+      "steps": [
+        {
+          "action": "审核任务缺 workItemId",
+          "endpoint": "/review-tasks",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "artifactType": "TEST_STRATEGY",
+            "artifactId": "{artifact_id}",
+            "artifactVersionId": "{artifact_version_id}",
+            "contentDigest": "{sha256_digest}",
+            "policyType": "SINGLE_REVIEW"
+          }
+        },
+        {
+          "action": "知识条目缺 knowledgeKey",
+          "endpoint": "/knowledge/entries",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "category": "TESTING"
+          }
+        },
+        {
+          "action": "需求文档缺 name",
+          "endpoint": "/knowledge/requirements",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "documentType": "PRD"
+          }
+        },
+        {
+          "action": "AI 会话缺 inputDigest",
+          "endpoint": "/ai/sessions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemRunId": "{work_item_run_id}",
+            "agentId": "{agent_id}",
+            "promptVersionId": "{prompt_version_id}"
+          }
+        },
+        {
+          "action": "环境缺 endpointMappings",
+          "endpoint": "/platform/workspaces/{workspaceId}/environments",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "name": "缺映射",
+            "environmentType": "TEST"
+          }
+        },
+        {
+          "action": "测试报告缺 reportKey",
+          "endpoint": "/quality/reports",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}"
+          }
+        },
+        {
+          "action": "缺陷缺 defectKey",
+          "endpoint": "/quality/defects",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "createdFromWorkItemId": "{work_item_id}"
+          }
+        },
+        {
+          "action": "覆盖报告缺 scopeSnapshotRef",
+          "endpoint": "/quality/coverage-reports",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{release_id}",
+            "denominatorDefinitionRef": "{denominator_ref}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks",
+          "expect_status": 422,
+          "assertion": "八个请求全部返回 422；对应资源在各自列表中不出现"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VAL-002",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-VAL-001",
+      "scenario_id": "S-VAL-002",
+      "fixture_category": "Dynamic",
+      "title": "非法枚举值与非 UUID 路径参数返回 422",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "创建工作项传非法 workItemType",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemType": "NOT_A_TYPE",
+            "title": "非法枚举",
+            "objective": "o",
+            "acceptanceCriteria": "a",
+            "requiresReview": true,
+            "priority": "P9",
+            "riskLevel": "EXTREME"
+          }
+        },
+        {
+          "action": "决策传非法 decision 值",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "APPROVE_TYPO",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "路径参数传非 UUID",
+          "endpoint": "/work-items/{workItemId}",
+          "method": "GET",
+          "input": {
+            "workItemId": "not-a-uuid"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "非法枚举与非 UUID 参数均 422；不产生部分创建的脏数据"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VAL-003",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-VAL-002",
+      "scenario_id": "S-VAL-003",
+      "fixture_category": "Static",
+      "title": "未占用资源 ID 访问审核/报告路径端点返回 404",
+      "precondition": "已登录；使用合法格式随机 UUID",
+      "steps": [
+        {
+          "action": "读取不存在的审核任务",
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{random_uuid}"
+          }
+        },
+        {
+          "action": "读取不存在任务的产物",
+          "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{random_uuid}"
+          }
+        },
+        {
+          "action": "对不存在任务提交决策",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{random_uuid}",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        },
+        {
+          "action": "读取不存在报告的版本列表",
+          "endpoint": "/quality/reports/{testReportId}/versions",
+          "method": "GET",
+          "input": {
+            "testReportId": "{random_uuid}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "expect_status": 404,
+          "assertion": "四个请求均返回 404 且响应为统一信封"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VAL-004",
+      "req_id": "Q-AUTH-003",
+      "rule_id": "R-AUTH-006",
+      "scenario_id": "S-AUTH-008",
+      "fixture_category": "Static",
+      "title": "无会话凭据调用核心写接口返回 401",
+      "precondition": "客户端不携带 Authorization 与 Cookie",
+      "steps": [
+        {
+          "action": "裸调用创建工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "title": "未认证写入",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "裸调用决策接口",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "reviewTaskId": "{review_task_id}",
+            "decision": "APPROVE",
+            "contentDigest": "{sha256_digest}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 401,
+          "assertion": "两个写接口均返回 401 且 code == UNAUTHORIZED；不产生任何资源与事件"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-AUTH-010",
+      "req_id": "Q-AUTH-002",
+      "rule_id": "R-AUTH-003",
+      "scenario_id": "S-AUTH-005",
+      "fixture_category": "Static",
+      "title": "不存在的邮箱登录返回 401 且不进入限流误伤其他账号",
+      "precondition": "该邮箱从未注册",
+      "steps": [
+        {
+          "action": "以未注册邮箱登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "email": "ghost@example.test",
+            "password": "whatever-12ch"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 401,
+          "assertion": "code == INVALID_CREDENTIALS（与错误密码同码，不泄漏账号存在性）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-WI-019",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-008",
+      "scenario_id": "S-WI-019",
+      "fixture_category": "Dynamic",
+      "title": "同一幂等键重放工作项创建返回同一 id",
+      "precondition": "首次创建成功并记录返回的 workItemId",
+      "steps": [
+        {
+          "action": "首次创建工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{same_key_for_replay}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemType": "GENERAL",
+            "title": "幂等重放",
+            "objective": "o",
+            "acceptanceCriteria": "a",
+            "requiresReview": true,
+            "priority": "P2",
+            "riskLevel": "MEDIUM"
+          }
+        },
+        {
+          "action": "同键重放同一请求",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{same_key_for_replay}"
+          },
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemType": "GENERAL",
+            "title": "幂等重放",
+            "objective": "o",
+            "acceptanceCriteria": "a",
+            "requiresReview": true,
+            "priority": "P2",
+            "riskLevel": "MEDIUM"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 201,
+          "assertion": "两次响应 data.id 完全一致；列表 total 仅 +1"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-ERR-001",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-VAL-003",
+      "scenario_id": "S-ERR-001",
+      "fixture_category": "Dynamic",
+      "title": "空对象/畸形 JSON/纯文本 Content-Type 提交创建均被 4xx 拒绝",
+      "precondition": "已登录",
+      "steps": [
+        {
+          "action": "提交空对象 body",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "raw_body": "{}"
+          }
+        },
+        {
+          "action": "提交畸形 JSON",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "raw_body": "{not-json",
+            "content_type": "application/json"
+          }
+        },
+        {
+          "action": "以 text/plain 提交 JSON body",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "raw_body": "{\"title\":\"x\"}",
+            "content_type": "text/plain"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "三个请求均 4xx（422）且响应为统一信封；不创建工作项、不进入业务逻辑（无事件产生）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-ERR-002",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-IDM-001",
+      "scenario_id": "S-ERR-002",
+      "fixture_category": "Dynamic",
+      "title": "Idempotency-Key 长度 15/16/128/129 边界",
+      "precondition": "已登录；每次使用唯一合法 body",
+      "steps": [
+        {
+          "action": "15 字符幂等键创建",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{15_chars}"
+          },
+          "input": {
+            "title": "idm-15",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "16 字符幂等键创建",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{16_chars}"
+          },
+          "input": {
+            "title": "idm-16",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "128 字符幂等键创建",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{128_chars}"
+          },
+          "input": {
+            "title": "idm-128",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "129 字符幂等键创建",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{129_chars}"
+          },
+          "input": {
+            "title": "idm-129",
+            "其他字段": "同 TC-WI-001"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 201,
+          "assertion": "16 与 128 字符创建成功"
+        },
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "15 与 129 字符被拒绝且不创建资源"
+        }
+      ],
+      "constraint_refs": [
+        "C-005"
+      ]
+    },
+    {
+      "case_id": "TC-ERR-003",
+      "req_id": "Q-WI-002",
+      "rule_id": "R-WI-004",
+      "scenario_id": "S-ERR-003",
+      "fixture_category": "Hybrid",
+      "title": "两个并发请求携带同一 lockVersion 流转，恰好一个 200 一个 409",
+      "precondition": "工作项 status=BACKLOG lockVersion=0；两个请求使用不同幂等键并发提交",
+      "steps": [
+        {
+          "action": "并发提交两个同 lockVersion 的 REWORK 流转",
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "method": "POST",
+          "concurrency": 2,
+          "headers": {
+            "Idempotency-Key": "{two_distinct_keys}"
+          },
+          "input": {
+            "workItemId": "{work_item_id}",
+            "targetStatus": "REWORK",
+            "reason": "并发竞争",
+            "lockVersion": 0
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/transitions",
+          "expect_status": 200,
+          "assertion": "恰好一个 200（lockVersion 0->1）；另一个 409 code == STALE_LOCK_VERSION；最终 GET 确认 lockVersion == 1 且只发一次 work_item.transitioned 事件"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-ERR-004",
+      "req_id": "Q-WI-001",
+      "rule_id": "R-WI-002",
+      "scenario_id": "S-ERR-004",
+      "fixture_category": "Dynamic",
+      "title": "title 含 emoji/引号/换行应通过，10KB 超长应拒绝",
+      "precondition": "已登录；特殊字符契约未限制（预期 201），超长受 maxLength=256 约束（预期 422）",
+      "steps": [
+        {
+          "action": "创建含特殊字符 title 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "title": "标题🚀含\"引号\"与\\n换行",
+            "其他字段": "同 TC-WI-001"
+          }
+        },
+        {
+          "action": "创建 10KB title 工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          },
+          "input": {
+            "title": "{10kb_string}",
+            "其他字段": "同 TC-WI-001"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items",
+          "expect_status": 201,
+          "assertion": "特殊字符 title 创建成功且读回内容一致（无转义丢失）；任何情况下不得返回 5xx"
+        },
+        {
+          "endpoint": "/work-items",
+          "expect_status": 422,
+          "assertion": "10KB title 被 422 拒绝"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-014",
+      "req_id": "Q-RT-001",
+      "rule_id": "R-RT-008",
+      "scenario_id": "S-RT-013",
+      "fixture_category": "Hybrid",
+      "title": "approveDisabledReason 判定表：TASK_CLOSED / STALE_VERSION / null",
+      "precondition": "三个审核任务：A 所属会话已终态；B 会话非终态但产出物已发布更新版本；C 正常最新版本",
+      "steps": [
+        {
+          "action": "读取终态会话任务 A",
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{task_closed_id}"
+          }
+        },
+        {
+          "action": "读取陈旧版本任务 B",
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{stale_version_id}"
+          }
+        },
+        {
+          "action": "读取正常任务 C",
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "method": "GET",
+          "input": {
+            "reviewTaskId": "{fresh_task_id}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}",
+          "expect_status": 200,
+          "assertion": "A.approveDisabledReason == TASK_CLOSED；B == STALE_VERSION；C == null（判定表三分支逐一精确断言）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-VAL-005",
+      "req_id": "Q-ENV-001",
+      "rule_id": "R-VAL-001",
+      "scenario_id": "S-VAL-001",
+      "fixture_category": "Static",
+      "title": "登录请求空对象与缺失 password 均返回 422",
+      "precondition": "无需登录",
+      "steps": [
+        {
+          "action": "提交空对象登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "raw_body": "{}"
+          }
+        },
+        {
+          "action": "缺失 password 登录",
+          "endpoint": "/auth/login",
+          "method": "POST",
+          "input": {
+            "email": "admin@example.test"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/auth/login",
+          "expect_status": 422,
+          "assertion": "两次均 422；不消耗限流窗口（随后正常失败登录仍返回 401 而非 429）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-CTX-001",
+      "req_id": "Q-CTX-001",
+      "rule_id": "R-CTX-001",
+      "scenario_id": "S-CTX-001",
+      "fixture_category": "Dynamic",
+      "title": "工作区投影、专用切换与驾驶舱上下文投影链",
+      "precondition": "本地管理员已初始化，身份绑定默认 Workspace（种子第二个工作区可用）",
+      "steps": [
+        {
+          "action": "读取成员域工作区投影",
+          "endpoint": "/workspaces",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "专用命令切换到第二个工作区",
+          "endpoint": "/auth/switch-workspace",
+          "method": "POST",
+          "input": {
+            "workspaceId": "{alt_workspace_id}"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "读取驾驶舱上下文投影",
+          "endpoint": "/workspaces/{workspaceId}/context-projection",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/workspaces",
+          "expect_status": 200,
+          "assertion": "data 数组每项含 id/name/createdAt/lastBusinessUpdatedAt/pinned 字段（camelCase），按 lastBusinessUpdatedAt DESC 排序"
+        },
+        {
+          "endpoint": "/auth/switch-workspace",
+          "expect_status": 200,
+          "assertion": "data.workspaceId == 请求切换的目标工作区；再调 GET /auth/me 验证绑定已重置且 Release 上下文清空"
+        },
+        {
+          "endpoint": "/workspaces/{workspaceId}/context-projection",
+          "expect_status": 200,
+          "assertion": "data.currentWorkspaceId == 目标工作区；data.lastBusinessUpdatedAt 非空；切换动作本身不推进 lastBusinessUpdatedAt"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-CTX-002",
+      "req_id": "Q-CTX-001",
+      "rule_id": "R-CTX-003",
+      "scenario_id": "S-CTX-002",
+      "fixture_category": "Dynamic",
+      "title": "常用项目置顶改变工作区排序",
+      "precondition": "至少两个工作区，第二个工作区未置顶",
+      "steps": [
+        {
+          "action": "置顶第二个工作区",
+          "endpoint": "/workspaces/{workspaceId}/pin",
+          "method": "POST",
+          "input": {
+            "workspaceId": "{alt_workspace_id}",
+            "pinned": true
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "重读工作区投影验证排序",
+          "endpoint": "/workspaces",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "取消置顶恢复原排序",
+          "endpoint": "/workspaces/{workspaceId}/pin",
+          "method": "POST",
+          "input": {
+            "workspaceId": "{alt_workspace_id}",
+            "pinned": false
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/workspaces/{workspaceId}/pin",
+          "expect_status": 200,
+          "assertion": "data.pinned == true"
+        },
+        {
+          "endpoint": "/workspaces",
+          "expect_status": 200,
+          "assertion": "data 首行为被置顶工作区且 pinned==true（置顶组内仍按 lastBusinessUpdatedAt DESC）"
+        },
+        {
+          "endpoint": "/workspaces/{workspaceId}/pin",
+          "expect_status": 200,
+          "assertion": "data.pinned == false；置顶/取消不产生领域事件，lastBusinessUpdatedAt 不变"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-CTX-003",
+      "req_id": "Q-CTX-001",
+      "rule_id": "R-CTX-002",
+      "scenario_id": "S-CTX-003",
+      "fixture_category": "Hybrid",
+      "title": "Release 归档后交付任务引用被拒",
+      "precondition": "存在 ACTIVE Release（认证种子）",
+      "steps": [
+        {
+          "action": "读取 Release 列表",
+          "endpoint": "/workspaces/{workspaceId}/releases",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "归档该 Release",
+          "endpoint": "/workspaces/{workspaceId}/releases/{releaseId}/archive",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "用已归档 Release 创建工作项",
+          "endpoint": "/work-items",
+          "method": "POST",
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "releaseId": "{archived_release_id}",
+            "workItemType": "GENERAL",
+            "title": "归档后引用",
+            "objective": "验证归档门",
+            "acceptanceCriteria": "被拒",
+            "requiresReview": false,
+            "priority": "P2",
+            "riskLevel": "LOW"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/workspaces/{workspaceId}/releases",
+          "expect_status": 200,
+          "assertion": "data 至少一条且 status == ACTIVE"
+        },
+        {
+          "endpoint": "/workspaces/{workspaceId}/releases/{releaseId}/archive",
+          "expect_status": 200,
+          "assertion": "data.status == ARCHIVED"
+        },
+        {
+          "endpoint": "/work-items",
+          "expect_status": 409,
+          "assertion": "code == RELEASE_NOT_IN_WORKSPACE；工作项未被创建"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-001",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-001",
+      "scenario_id": "S-COL-001",
+      "fixture_category": "Dynamic",
+      "title": "协作会话创建与消息只追加两面",
+      "precondition": "已认证且绑定 Workspace",
+      "steps": [
+        {
+          "action": "创建协作会话",
+          "endpoint": "/conversations",
+          "method": "POST",
+          "input": {
+            "topic": "退款链路澄清协作"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "读取会话列表",
+          "endpoint": "/conversations",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "追加消息",
+          "endpoint": "/conversations/{conversationId}/messages",
+          "method": "POST",
+          "input": {
+            "contentRef": "请归纳退款异常路径的 3 条业务规则",
+            "dataClass": "INTERNAL"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读消息列表",
+          "endpoint": "/conversations/{conversationId}/messages",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/conversations",
+          "expect_status": 201,
+          "assertion": "data.id 非空且 status == ACTIVE"
+        },
+        {
+          "endpoint": "/conversations",
+          "expect_status": 200,
+          "assertion": "data 含新建会话且 lastActivityAt 与创建时间一致"
+        },
+        {
+          "endpoint": "/conversations/{conversationId}/messages",
+          "expect_status": 201,
+          "assertion": "data.contentDigest 为 64 位十六进制；data.actorType == USER"
+        },
+        {
+          "endpoint": "/conversations/{conversationId}/messages",
+          "expect_status": 200,
+          "assertion": "data 恰好 1 条且内容与提交一致；消息列表按追加序返回"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-002",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-002",
+      "scenario_id": "S-COL-002",
+      "fixture_category": "Hybrid",
+      "title": "澄清答复闭环与重复答复拒绝",
+      "precondition": "会话存在 OPEN 澄清（AGENT/SERVICE 服务面种子，Session 处于 BLOCKED）",
+      "steps": [
+        {
+          "action": "读取澄清列表",
+          "endpoint": "/ai/sessions/{agentSessionId}/clarifications",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "人工答复澄清",
+          "endpoint": "/clarifications/{clarificationId}/responses",
+          "method": "POST",
+          "input": {
+            "answer": "按订单状态机仅允许 PENDING 订单退款"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "同一澄清再次答复",
+          "endpoint": "/clarifications/{clarificationId}/responses",
+          "method": "POST",
+          "input": {
+            "answer": "重复答复"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}/clarifications",
+          "expect_status": 200,
+          "assertion": "data 含 1 条 OPEN 澄清且 requiredBy 非空"
+        },
+        {
+          "endpoint": "/clarifications/{clarificationId}/responses",
+          "expect_status": 201,
+          "assertion": "data.evidenceClass == CONFIRMED（服务端钉死，请求不可指定）；Session 无其他 OPEN 澄清时回 RUNNING（执行验证：实现返回 201，设计用例同步修正）"
+        },
+        {
+          "endpoint": "/clarifications/{clarificationId}/responses",
+          "expect_status": 409,
+          "assertion": "code == CLARIFICATION_ALREADY_ANSWERED；不产生第二条答复记录"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-003",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-003",
+      "scenario_id": "S-COL-003",
+      "fixture_category": "Dynamic",
+      "title": "任务卡固化提交即 SUBMITTED 并可列表回读",
+      "precondition": "存在带 Release 的工作项且无未解澄清",
+      "steps": [
+        {
+          "action": "固化任务卡",
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "method": "POST",
+          "input": {
+            "objective": "生成退款链路回归资产",
+            "scope": "合法与非法路径各一批",
+            "acceptanceCriteria": "策略/计划/用例三层齐备",
+            "constraints": "不引入外部服务",
+            "requestedPermissions": [
+              "requirement.write"
+            ],
+            "budget": {
+              "maxMinutes": 30
+            }
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读任务卡列表",
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "expect_status": 201,
+          "assertion": "data.status == SUBMITTED；data.contentDigest 为 64 位十六进制"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "expect_status": 200,
+          "assertion": "data 含刚固化卡且状态 SUBMITTED；列表按版本序返回"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-004",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-004",
+      "scenario_id": "S-COL-004",
+      "fixture_category": "Hybrid",
+      "title": "AgentPlan 摘要漂移拒绝与批准联动任务卡 ACTIVE",
+      "precondition": "工作项存在 SUBMITTED 任务卡（TC-COL-003 产物）",
+      "steps": [
+        {
+          "action": "编制 AgentPlan",
+          "endpoint": "/work-items/{workItemId}/agent-plans",
+          "method": "POST",
+          "input": {
+            "taskCardId": "{task_card_id}",
+            "steps": [
+              {
+                "stepKey": "summarize",
+                "agentRole": "coordinator",
+                "description": "需求归纳"
+              },
+              {
+                "stepKey": "cases",
+                "agentRole": "case-designer",
+                "description": "用例编制"
+              }
+            ]
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "以漂移摘要提交批准",
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "method": "POST",
+          "input": {
+            "decision": "APPROVE",
+            "expectedContentDigest": "{sha256_digest}",
+            "reason": "摘要不一致负向"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "以正确摘要批准",
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "method": "POST",
+          "input": {
+            "decision": "APPROVE",
+            "expectedContentDigest": "{plan_content_digest}",
+            "reason": "计划确认"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读任务卡验证联动",
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/agent-plans",
+          "expect_status": 201,
+          "assertion": "data.status == PENDING_APPROVAL；data.planVersion == 1"
+        },
+        {
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "expect_status": 409,
+          "assertion": "code == STALE_ARTIFACT_VERSION；计划保持 PENDING_APPROVAL"
+        },
+        {
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "expect_status": 201,
+          "assertion": "data.status == APPROVED；决定记录 actorId 与 reason"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/task-cards",
+          "expect_status": 200,
+          "assertion": "被绑定任务卡 status == ACTIVE（SUBMITTED→ACTIVE 联动）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-005",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-004",
+      "scenario_id": "S-COL-005",
+      "fixture_category": "Hybrid",
+      "title": "终态计划重复裁决拒绝与版本链回读",
+      "precondition": "计划已 APPROVED（TC-COL-004 产物）",
+      "steps": [
+        {
+          "action": "对已批准计划再次裁决",
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "method": "POST",
+          "input": {
+            "decision": "REJECT",
+            "expectedContentDigest": "{plan_content_digest}",
+            "reason": "重复裁决负向"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读计划版本链",
+          "endpoint": "/work-items/{workItemId}/agent-plans",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/agent-plans/{agentPlanId}/decisions",
+          "expect_status": 409,
+          "assertion": "code == INVALID_STATE_TRANSITION；不追加第二条决定"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/agent-plans",
+          "expect_status": 200,
+          "assertion": "data 含 APPROVED 计划且 planVersion 自增链完整"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-COL-006",
+      "req_id": "Q-COL-001",
+      "rule_id": "R-COL-005",
+      "scenario_id": "S-COL-006",
+      "fixture_category": "Hybrid",
+      "title": "无已批准计划的工作项不能启动会话",
+      "precondition": "存在真实需求版本但工作项无 APPROVED AgentPlan",
+      "steps": [
+        {
+          "action": "直接启动会话",
+          "endpoint": "/ai/sessions",
+          "method": "POST",
+          "input": {
+            "workspaceId": "{workspace_id}",
+            "workItemId": "{work_item_id}",
+            "workflowKey": "gate0-planning-slice",
+            "requirementVersionId": "{requirement_version_id}",
+            "releaseId": "{release_id}",
+            "ownerId": "{user_id}"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions",
+          "expect_status": 409,
+          "assertion": "code == AGENT_PLAN_NOT_APPROVED；会话未创建"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RC-001",
+      "req_id": "Q-RC-001",
+      "rule_id": "R-RC-001",
+      "scenario_id": "S-RC-001",
+      "fixture_category": "Dynamic",
+      "title": "会话 PAUSE 到安全点生效并以回执为唯一事实",
+      "precondition": "存在 RUNNING 状态 Agent 会话",
+      "steps": [
+        {
+          "action": "下发暂停命令",
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "method": "POST",
+          "input": {
+            "commandType": "PAUSE",
+            "reason": "人工暂停审视中间产物"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读命令回执",
+          "endpoint": "/run-commands/{runCommandId}",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "下发恢复命令",
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "method": "POST",
+          "input": {
+            "commandType": "RESUME",
+            "reason": "恢复执行"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "expect_status": 201,
+          "assertion": "data.commandType == PAUSE；data.receipt.accepted == true；data.receipt.effectiveStatus == PAUSED"
+        },
+        {
+          "endpoint": "/run-commands/{runCommandId}",
+          "expect_status": 200,
+          "assertion": "data.receipt.safePointRef 形如 agent_session:{id}@RUNNING>PAUSED；reasonCode == EFFECTIVE_AT_STATUS_BOUNDARY"
+        },
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "expect_status": 201,
+          "assertion": "data.receipt.effectiveStatus == RUNNING（RESUME 生效）"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RC-002",
+      "req_id": "Q-RC-001",
+      "rule_id": "R-RC-002",
+      "scenario_id": "S-RC-002",
+      "fixture_category": "Hybrid",
+      "title": "命令幂等重放与终态目标拒绝",
+      "precondition": "会话已 CANCELLED（先发 CANCEL 命令）",
+      "steps": [
+        {
+          "action": "以同键重放暂停命令",
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "method": "POST",
+          "input": {
+            "commandType": "PAUSE",
+            "reason": "幂等重放"
+          },
+          "headers": {
+            "Idempotency-Key": "{replay_key_16_128}"
+          }
+        },
+        {
+          "action": "对终态会话再发暂停命令",
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "method": "POST",
+          "input": {
+            "commandType": "PAUSE",
+            "reason": "终态负向"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "expect_status": 201,
+          "assertion": "同键重放返回原命令记录（id 与首次一致），不产生新命令"
+        },
+        {
+          "endpoint": "/ai/sessions/{agentSessionId}/commands",
+          "expect_status": 409,
+          "assertion": "code == INVALID_STATE_TRANSITION；终态目标非 RETRY 命令被拒"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RC-003",
+      "req_id": "Q-RC-001",
+      "rule_id": "R-RC-004",
+      "scenario_id": "S-RC-003",
+      "fixture_category": "Dynamic",
+      "title": "执行任务命令与不可变检查点列表",
+      "precondition": "存在 RUNNING 状态执行任务",
+      "steps": [
+        {
+          "action": "暂停执行任务",
+          "endpoint": "/execution-tasks/{executionTaskId}/commands",
+          "method": "POST",
+          "input": {
+            "commandType": "PAUSE",
+            "reason": "执行暂停"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "读取检查点列表",
+          "endpoint": "/runs/{targetType}/{targetId}/checkpoints",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/execution-tasks/{executionTaskId}/commands",
+          "expect_status": 201,
+          "assertion": "data.receipt.effectiveStatus == PAUSED"
+        },
+        {
+          "endpoint": "/runs/{targetType}/{targetId}/checkpoints",
+          "expect_status": 200,
+          "assertion": "data 数组元素含 inputDigest/outputRefs/authorizationSnapshot/budgetSnapshot 且均为只读字段；非法 targetType 返回 422"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RC-004",
+      "req_id": "Q-RC-001",
+      "rule_id": "R-RC-003",
+      "scenario_id": "S-RC-004",
+      "fixture_category": "Dynamic",
+      "title": "运行时授权只追加与预算面读写",
+      "precondition": "存在工作项",
+      "steps": [
+        {
+          "action": "读取预算策略",
+          "endpoint": "/work-items/{workItemId}/budgets",
+          "method": "GET",
+          "input": {}
+        },
+        {
+          "action": "更新预算策略",
+          "endpoint": "/work-items/{workItemId}/budgets",
+          "method": "POST",
+          "input": {
+            "tokenLimit": 200000,
+            "costLimit": 50.0,
+            "warningThresholds": {
+              "token": 0.8
+            }
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "创建运行时授权",
+          "endpoint": "/work-items/{workItemId}/authorizations",
+          "method": "POST",
+          "input": {
+            "permissionKeys": [
+              "requirement.write"
+            ],
+            "resourceScope": "WORK_ITEM",
+            "validUntil": "2026-12-31T00:00:00Z"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "读取授权列表",
+          "endpoint": "/work-items/{workItemId}/authorizations",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/work-items/{workItemId}/budgets",
+          "expect_status": 200,
+          "assertion": "data 含 token/cost/time/concurrency/retryLimits 结构（camelCase）"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/budgets",
+          "expect_status": 200,
+          "assertion": "data.tokenLimit == 200000；更新登记 budget.updated 事件"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/authorizations",
+          "expect_status": 201,
+          "assertion": "data.status == ACTIVE；响应不包含 Secret 明文字段"
+        },
+        {
+          "endpoint": "/work-items/{workItemId}/authorizations",
+          "expect_status": 200,
+          "assertion": "data 含新建授权且 permissionKeys 与提交一致；决定只追加"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PUB-001",
+      "req_id": "Q-PUB-001",
+      "rule_id": "R-PUB-001",
+      "scenario_id": "S-PUB-001",
+      "fixture_category": "Hybrid",
+      "title": "APPROVED 策略版本发布成功并回填发布指针",
+      "precondition": "策略版本已获审核批准（reviewStatus == APPROVED）",
+      "steps": [
+        {
+          "action": "发布策略版本",
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "回读策略列表验证发布指针",
+          "endpoint": "/test-strategies",
+          "method": "GET",
+          "input": {}
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "expect_status": 200,
+          "assertion": "data.reviewStatus == PUBLISHED 且 data.id == 被发布版本 id"
+        },
+        {
+          "endpoint": "/test-strategies",
+          "expect_status": 200,
+          "assertion": "对应策略根 publishedVersionId == 被发布版本 id；同资产旧 PUBLISHED 版本转 STALE"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PUB-002",
+      "req_id": "Q-PUB-001",
+      "rule_id": "R-PUB-001",
+      "scenario_id": "S-PUB-002",
+      "fixture_category": "Hybrid",
+      "title": "非 APPROVED 发布拒绝与发布幂等重放",
+      "precondition": "存在 PENDING_REVIEW 版本与已发布版本（TC-PUB-001 产物）",
+      "steps": [
+        {
+          "action": "发布待审核版本",
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "以同键重放已成功发布",
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{publish_replay_key_16_128}"
+          }
+        },
+        {
+          "action": "以新键再次发布已发布版本",
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "expect_status": 409,
+          "assertion": "code == ASSET_NOT_APPROVED；版本保持 PENDING_REVIEW"
+        },
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "expect_status": 200,
+          "assertion": "同键同指纹重放返回原发布结果（id 与首次一致）"
+        },
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "expect_status": 409,
+          "assertion": "code == ASSET_NOT_APPROVED（版本已非 APPROVED）；不产生第二次发布事件"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PUB-003",
+      "req_id": "Q-PUB-001",
+      "rule_id": "R-PUB-001",
+      "scenario_id": "S-PUB-001",
+      "fixture_category": "Hybrid",
+      "title": "计划与用例版本发布两面",
+      "precondition": "计划版本与用例版本均已获审核批准",
+      "steps": [
+        {
+          "action": "发布计划版本",
+          "endpoint": "/test-plans/{testPlanId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "发布用例版本",
+          "endpoint": "/test-cases/{testCaseId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-plans/{testPlanId}/versions/{versionId}/publish",
+          "expect_status": 200,
+          "assertion": "data.reviewStatus == PUBLISHED；listTestPlans 对应根 publishedVersionId 回填"
+        },
+        {
+          "endpoint": "/test-cases/{testCaseId}/versions/{versionId}/publish",
+          "expect_status": 200,
+          "assertion": "data.reviewStatus == PUBLISHED；正式执行只选 PUBLISHED 版本"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-PUB-004",
+      "req_id": "Q-PUB-001",
+      "rule_id": "R-PUB-002",
+      "scenario_id": "S-PUB-003",
+      "fixture_category": "Hybrid",
+      "title": "发布取代触发旧版本与下游计划版本 STALE",
+      "precondition": "策略 v1 已发布且存在引用 v1 的计划版本；策略 v2 已批准",
+      "steps": [
+        {
+          "action": "发布策略 v2 取代 v1",
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "method": "POST",
+          "input": {},
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "检索领域事件",
+          "endpoint": "/observability/events",
+          "method": "GET",
+          "input": {
+            "eventType": "stage.invalidated"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+          "expect_status": 200,
+          "assertion": "data.reviewStatus == PUBLISHED；服务面核验 v1 reviewStatus == STALE 且引用 v1 的计划版本 reviewStatus == STALE、其未决审核任务 CANCELLED"
+        },
+        {
+          "endpoint": "/observability/events",
+          "expect_status": 200,
+          "assertion": "data 含 stage.invalidated 事件且 payload.trigger == UPSTREAM_PUBLISHED_VERSION_SUPERSEDED、payload.supersededVersionId == v1 版本 id；历史版本未被删除"
+        }
+      ]
+    },
+    {
+      "case_id": "TC-RT-015",
+      "req_id": "Q-PUB-001",
+      "rule_id": "R-RT-009",
+      "scenario_id": "S-PUB-004",
+      "fixture_category": "Hybrid",
+      "title": "CRITICAL 工作项 FOUR_EYES 双人门",
+      "precondition": "riskLevel=CRITICAL 工作项的会话已产出审核任务（政策派生 FOUR_EYES）",
+      "steps": [
+        {
+          "action": "第一名审批人批准",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "input": {
+            "decision": "APPROVE",
+            "contentDigest": "{critical_task_digest}"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        },
+        {
+          "action": "同一审批人换键二次批准",
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "method": "POST",
+          "input": {
+            "decision": "APPROVE",
+            "contentDigest": "{critical_task_digest}"
+          },
+          "headers": {
+            "Idempotency-Key": "{unique_key_16_128}"
+          }
+        }
+      ],
+      "expected_results": [
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 200,
+          "assertion": "data.status == IN_PROGRESS；data.approvals 长度 1；data.minApprovers == 2；产出物版本保持 PENDING_REVIEW"
+        },
+        {
+          "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+          "expect_status": 409,
+          "assertion": "code == FOUR_EYES_SAME_APPROVER；单人无法绕过双审"
+        }
+      ]
+    }
+  ]
+}

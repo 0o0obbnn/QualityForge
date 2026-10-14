@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 需求问题修复方案 v2.0 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--accent:#1f3a5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:22px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  h3{font-size:14px;margin:18px 0 8px;font-weight:700;}
+  p{margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.r{background:#a63a3a;color:#fff;border-color:#a63a3a;}
+  .tag.y{background:#8a6d3b;color:#fff;border-color:#8a6d3b;}
+  .tag.b{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .tag.g{background:#2e7d32;color:#fff;border-color:#2e7d32;}
+  .gate{background:#f4f4f4;border:1px solid var(--line);padding:10px 14px;margin:10px 0;}
+  .gate b{color:var(--accent);}
+  a{color:var(--link);}
+  .formula{background:#fafafa;border:1px solid var(--line);padding:10px 14px;margin:10px 0;font-size:13.5px;}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">FIX PLAN v2.0 · FINAL</div>
+  <h1>QualityForge 需求问题修复方案 v2.0(最终版)</h1>
+  <div class="meta">2026-08-14 ｜ v2.0:两级门禁分离、QF-REQ-005 拆层、完善度加权公式、工作量 5-6 人日、Golden Set 三档 ｜ 覆盖:48 条台账 + N1~N7 + 13 项风险</div>
+</header>
+
+<h2>一、三条执行原则(地基,强制执行)</h2>
+<p>① <b>裁决先行,分层同步</b>:03/04 → PRD → 32/33 → CHANGELOG。② <b>验证门禁</b>:"已修复"= 对照整改建议逐条打勾 + 可复现 grep 证据 + make contract/L1 扫描 + CHANGELOG 入册。③ <b>分批推进,工程优先</b>:以"M1 切片可验证"为完成线。</p>
+
+<h2>二、两级门禁(开工/准出分离)</h2>
+<table>
+  <tr><th>门禁</th><th>时点</th><th>内容</th><th>依据</th></tr>
+  <tr><td><span class="tag r">M1 开工硬门槛</span></td><td>M1 开始前</td><td>批次 1(P0 契约断层,7 条)</td><td>阻断未清、契约断层未接,需求收口无底座</td></tr>
+  <tr><td><span class="tag y">M1 准出门槛</span></td><td>M1 结束 / M2 开工前</td><td>批次 2(一致性收口,27 条,与 M1 并行)</td><td>纯文档收敛,须在 M1 产出物定稿前完成</td></tr>
+</table>
+<div class="gate">
+<b>M1 开工信号(四项齐备)</b>:① QF-REQ-001 四源 6/6 落齐并改判 ② B2-1/2/3 应用后 make contract PASS ③ QF-REQ-005 核心链 5 模块响应契约收敛(与 007 对照表绑定) ④ QF-REQ-007 对照表+建表清单发布(104 表与 33 比对)。<br>
+<b>M1 准出信号</b>:批次 2 全部应用后 L1 扫描零新增冲突 + 54 链接检查 + 台账逐条打勾。
+</div>
+
+<h2>三、QF-REQ-005 拆分(核心链/非核心链)</h2>
+<table>
+  <tr><th>层次</th><th>范围</th><th>归属</th><th>理由</th></tr>
+  <tr><td><span class="tag r">核心链</span></td><td>策略/计划/用例/执行/分析 5 模块 operation 响应契约逐条收敛(约 20 个)</td><td><b>批次 1</b>(与 007 对照表绑定)</td><td>V1 核心闭环,契约不定则 M2/M3 联调全卡</td></tr>
+  <tr><td><span class="tag b">非核心链</span></td><td>其余模块 Generic 响应</td><td>批次 3/4,随模块开发</td><td>V1 不全开工,开发时收敛成本最低</td></tr>
+</table>
+<p><b>联动</b>:007 的"每里程碑建表清单"同时标注该里程碑核心链 API 响应契约收敛义务。</p>
+
+<h2>四、48 条 → 批次映射表</h2>
+<table>
+  <tr><th>批次</th><th>条目</th><th>数量</th></tr>
+  <tr><td>已修复</td><td>002、030</td><td>2</td></tr>
+  <tr><td><span class="tag r">批次 1 · 开工前置</span></td><td>001、003、004、005(核心链)、006(载体)、007、028(并入 007)</td><td>7</td></tr>
+  <tr><td><span class="tag y">批次 2 · 准出前置</span></td><td>008~023、035、037~047(纯文档项;042/045 已落盘补验证)</td><td>27</td></tr>
+  <tr><td><span class="tag b">批次 3 · 度量载体</span></td><td>024、025、026、027、029、031、036、039(+005 非核心链)</td><td>8</td></tr>
+  <tr><td><span class="tag b">批次 4 · 运行时证据</span></td><td>032、033、034、048(+N7)</td><td>4</td></tr>
+  <tr><td><span class="tag b">批次 5 · 真实模型</span></td><td>006(实例,双归属)+ 033(效果评测)</td><td>2(双归属)</td></tr>
+  <tr><td><b>合计</b></td><td></td><td><b>48 ✓</b></td></tr>
+</table>
+<p>N 项:N1/N2/N3→批 1;N4→批 2(随 005);N5/N6→批 2;N7→批 4。归位说明:001/003/004 状态为部分/延期,由批 1 收口;035 归批 2(纯文档导航项)。</p>
+
+<h2>五、完善度加权公式(可复算)</h2>
+<div class="formula">
+<b>设计完善度 = 阻断级关闭率×0.3 + 严重级关闭率×0.3 + 一般级关闭率×0.25 + 建议级关闭率×0.15</b><br>
+关闭率口径(状态系数):已修复=1.0 / 部分修复=0.5 / 延期声明=0.3 / 未修复=0
+</div>
+<table>
+  <tr><th>时点</th><th>阻断</th><th>严重</th><th>一般</th><th>建议</th><th>完善度</th></tr>
+  <tr><td>当前(8-14)</td><td>50%</td><td>26.7%</td><td>6.2%</td><td>0%</td><td><b>≈24.6%</b></td></tr>
+  <tr><td>批次 1 后</td><td>100%</td><td>83.3%</td><td>6.9%</td><td>0%</td><td><b>≈56.7%</b></td></tr>
+  <tr><td>批次 1+2 后</td><td>100%</td><td>83.3%</td><td>65.5%</td><td>83.3%</td><td><b>≈83.9%</b></td></tr>
+  <tr><td>全部完成</td><td>100%</td><td>100%</td><td>100%</td><td>100%</td><td><b>100%</b></td></tr>
+</table>
+<p>计算假设:批 1 后 005 核心链完成计整条 0.5、006 载体计 0.5、028 计 0.5;M1 放行不依赖百分比,依赖第二节信号。</p>
+
+<h2>六、批次 1 工作量(5-6 人日)</h2>
+<table>
+  <tr><th>子项</th><th>工作量</th></tr>
+  <tr><td>007 对照表 + 建表清单(104 表逐表标注+与 33 比对)</td><td>1.5-2 人日</td></tr>
+  <tr><td>005 核心链响应契约收敛(5 模块 operation)</td><td>1-2 人日</td></tr>
+  <tr><td>B2-1/2/3 契约联动(6 文件)</td><td>1-1.5 人日</td></tr>
+  <tr><td>001 补 3 字段(参照纠正报告已做 3 字段)</td><td>0.5 人日</td></tr>
+  <tr><td>CHANGELOG + L1 扫描 + 台账 6/6 打勾</td><td>0.5-1 人日</td></tr>
+</table>
+
+<h2>七、Golden Set 三档阶梯(10→30→50)</h2>
+<table>
+  <tr><th>档位</th><th>样本量</th><th>用途</th><th>授予能力</th></tr>
+  <tr><td>冷启动档</td><td><b>10 条</b></td><td>验证管线与坏 Provider 防御(阶梯熔断)</td><td>仅排序/提示,不授予自治</td></tr>
+  <tr><td>常规档</td><td><b>≥30 条</b></td><td>非核心介入点正式校准</td><td>对应介入点 L2</td></tr>
+  <tr><td>核心档</td><td><b>≥50 条</b>(产品评估报告 §0)</td><td>用例生成/RCA,M5 准出前达标</td><td>L2/L3 自治启用</td></tr>
+</table>
+<p>衔接:10 条通过后逐介入点补档;未达标保持 fail-closed(21 号 AC-03)。B-4 承诺不被"10 条也算校准"稀释。</p>
+
+<h2>八、批次 2-5 明细</h2>
+<p><b>批 2(27 条,与 M1 并行)</b>:状态机/枚举对齐(008/009/010)、审核执行链术语(011/012/014/015/016)、模块承接补录(013/017/018/019/023)、导航数字(020/021/022/035)、建议级纯文档(037~047 中 10 条)+ N4/N5/N6。</p>
+<p><b>批 3(8 条)</b>:024 覆盖率口径、025 手工同步 AC、026 指标字典、027 看板载体、029 PRD 指标承接、031 多态溯源、036 三方对账、039 沙箱 AC;005 非核心链随模块。</p>
+<p><b>批 4(4 条+N7)</b>:032 切片证据(B2-6 顺序)、033 eval 效果口径、034 PG 冒烟、048 独立复审。</p>
+<p><b>批 5</b>:006 校准实例(三档)+ RSK-005/013 评测。</p>
+
+<h2>九、风险映射与复评</h2>
+<p>RSK-004(批 1/4)、RSK-005/013(批 5)、RSK-001/003(批 3)、RSK-006(批 4)、RSK-010(批 3/已落盘)、RSK-011/012(随 V1)、RSK-002/007/008/009(随试点)。复评:批 1 后 L1 复扫;M1 准出前全面复核;按第五节更新完善度。</p>
+
+<footer>QualityForge 修复方案 v2.0(最终版) · QF-FIX-2026-0814 ｜ 版本链:v1.0 → v1.1 → v2.0(第二轮评审整合)</footer>
+
+</div>
+</body>
+</html>

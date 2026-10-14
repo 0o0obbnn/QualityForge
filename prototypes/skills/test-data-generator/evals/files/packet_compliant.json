@@ -1,0 +1,5 @@
+{"run_id":"run-001","seed":42,"target_environment":"staging","entity_id":"ENT-RD","case_ref":"TC-td-001","fields":[
+  {"name":"id","value":"rd-001","masking_policy":null,"masked":false,"logged":true,"ir_bound":false},
+  {"name":"title","value":"Order Module PRD","masking_policy":null,"masked":false,"logged":true,"ir_bound":true},
+  {"name":"raw_content","value":"[MASKED-via-pseudonymize]","masking_policy":"pseudonymize","masked":true,"logged":true,"ir_bound":false}
+]}

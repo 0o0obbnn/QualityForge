@@ -1,0 +1,31 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "S-NEG-001",
+      "req_id": "REQ-999",
+      "rule_id": "BR-001",
+      "facet": "normal",
+      "title": "未知需求绑定"
+    },
+    {
+      "scenario_id": "S-NEG-002",
+      "req_id": "REQ-001",
+      "rule_id": "BR-999",
+      "facet": "happy",
+      "title": "未知规则 + 非法 facet"
+    },
+    {
+      "scenario_id": "BAD-ID",
+      "req_id": "REQ-003",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "畸形ID + 捏造迁移",
+      "transition_ref": "SM-001:等待处理->处理完毕有反馈"
+    },
+    {
+      "scenario_id": "S-NEG-003",
+      "facet": "boundary",
+      "title": "缺少 req_id 与 rule_id 的孤儿场景"
+    }
+  ]
+}

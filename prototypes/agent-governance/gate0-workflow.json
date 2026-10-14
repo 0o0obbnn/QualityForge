@@ -1,0 +1,161 @@
+{
+  "schemaVersion": "2.0",
+  "status": "prototype",
+  "id": "gate0-requirement-to-coverage",
+  "description": "从需求质量预检到策略、计划、用例与Coverage审核包的最小可验证工作流。",
+  "agentRegistry": "agents.json",
+  "preflight": {
+    "validatorId": "governance-structure-validator",
+    "requiredVerdict": "PASS",
+    "failureRoute": "STOP_INVALID_WORKFLOW"
+  },
+  "authorizationPolicy": {
+    "mode": "intersection_fail_closed",
+    "requiresAuthorizationDecisionFor": [
+      "workflow_start",
+      "skill_invocation",
+      "review_request_creation"
+    ],
+    "humanOnlyActions": [
+      "approve_formal_artifact",
+      "publish_formal_artifact"
+    ]
+  },
+  "artifactPolicy": {
+    "draftStatus": "PENDING_REVIEW",
+    "immutableOutputs": true,
+    "requiredReviewBinding": [
+      "artifactType",
+      "artifactId",
+      "artifactVersionId",
+      "contentDigest"
+    ],
+    "formalArtifactTypes": [
+      "TEST_STRATEGY",
+      "TEST_PLAN",
+      "TEST_CASE"
+    ],
+    "promotionActorType": "USER_VIA_APPLICATION_SERVICE"
+  },
+  "routingPolicy": {
+    "PASS": "continue",
+    "REJECT": "stop_and_preserve_evidence",
+    "BLOCK_HUMAN": "create_review_request_and_pause",
+    "ERROR": "stop_and_preserve_evidence",
+    "TIMEOUT": "stop_and_preserve_evidence"
+  },
+  "nodes": [
+    {
+      "id": "requirement_quality",
+      "agentId": "qf-requirement-ir",
+      "skillId": "requirement-quality-gate",
+      "dependsOn": [],
+      "output": "prototypes/agent-governance/runs/{runId}/01-requirement-quality.json"
+    },
+    {
+      "id": "business_rules",
+      "agentId": "qf-requirement-ir",
+      "skillId": "business-rule-extractor",
+      "dependsOn": ["requirement_quality"],
+      "output": "prototypes/agent-governance/runs/{runId}/02-business-rules.json"
+    },
+    {
+      "id": "domain_model",
+      "agentId": "qf-requirement-ir",
+      "skillId": "domain-model-extractor",
+      "dependsOn": ["requirement_quality"],
+      "output": "prototypes/agent-governance/runs/{runId}/02-domain-model.json"
+    },
+    {
+      "id": "state_machines",
+      "agentId": "qf-requirement-ir",
+      "skillId": "state-machine-builder",
+      "dependsOn": ["requirement_quality"],
+      "output": "prototypes/agent-governance/runs/{runId}/02-state-machines.json"
+    },
+    {
+      "id": "compile_ir",
+      "agentId": "qf-requirement-ir",
+      "skillId": "requirement-compiler",
+      "dependsOn": ["business_rules", "domain_model", "state_machines"],
+      "output": "prototypes/agent-governance/runs/{runId}/03-testing-ir-draft.json"
+    },
+    {
+      "id": "validate_ir",
+      "agentId": "qf-independent-verifier",
+      "skillId": "ir-validator",
+      "dependsOn": ["compile_ir"],
+      "output": "prototypes/agent-governance/runs/{runId}/04-ir-validation.json"
+    },
+    {
+      "id": "strategy",
+      "agentId": "qf-test-design",
+      "skillId": "strategy-planner",
+      "dependsOn": ["validate_ir"],
+      "output": "prototypes/agent-governance/runs/{runId}/05-strategy.json"
+    },
+    {
+      "id": "test_plan",
+      "agentId": "qf-test-design",
+      "skillId": "plan-orchestrator",
+      "dependsOn": ["strategy"],
+      "output": "prototypes/agent-governance/runs/{runId}/06-test-plan.json"
+    },
+    {
+      "id": "scenarios",
+      "agentId": "qf-test-design",
+      "skillId": "scenario-generator",
+      "dependsOn": ["test_plan"],
+      "output": "prototypes/agent-governance/runs/{runId}/07-scenarios.json"
+    },
+    {
+      "id": "test_cases",
+      "agentId": "qf-test-design",
+      "skillId": "test-case-generator",
+      "dependsOn": ["scenarios"],
+      "output": "prototypes/agent-governance/runs/{runId}/08-test-cases.json"
+    },
+    {
+      "id": "assertions",
+      "agentId": "qf-test-design",
+      "skillId": "assertion-generator",
+      "dependsOn": ["test_cases"],
+      "output": "prototypes/agent-governance/runs/{runId}/09-assertions.json"
+    },
+    {
+      "id": "verify_assertions",
+      "agentId": "qf-independent-verifier",
+      "skillId": "assertion-verifier",
+      "dependsOn": ["assertions"],
+      "output": "prototypes/agent-governance/runs/{runId}/10-assertion-verification.json"
+    },
+    {
+      "id": "coverage",
+      "agentId": "qf-independent-verifier",
+      "skillId": "coverage-analyzer",
+      "dependsOn": ["verify_assertions"],
+      "output": "prototypes/agent-governance/runs/{runId}/11-coverage.json"
+    },
+    {
+      "id": "human_gate",
+      "agentId": "qf-independent-verifier",
+      "skillId": "hitl-gatekeeper",
+      "dependsOn": ["coverage"],
+      "output": "prototypes/agent-governance/runs/{runId}/12-review-package.json",
+      "createsReviewTasksFor": [
+        "TEST_STRATEGY",
+        "TEST_PLAN",
+        "TEST_CASE"
+      ],
+      "requiredVerdict": "BLOCK_HUMAN"
+    }
+  ],
+  "terminalStates": [
+    "DRAFT_READY_FOR_HUMAN",
+    "STOP_REJECTED",
+    "PAUSED_FOR_HUMAN",
+    "STOP_ERROR",
+    "STOP_TIMEOUT",
+    "STOP_INVALID_WORKFLOW"
+  ]
+}

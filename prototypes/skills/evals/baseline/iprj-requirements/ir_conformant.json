@@ -1,0 +1,45 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {
+      "req_id": "REQ-IPRJ-001",
+      "title": "任务记录列表按上报月份倒序展示",
+      "description": "网页端支持机构对当月及历史月份上报与补充上报",
+      "validation_status": "PENDING",
+      "source_trace": "iprj-prd.md:数据上报（管理侧）:任务记录",
+      "confidence": 0.8
+    },
+    {
+      "req_id": "REQ-IPRJ-002",
+      "title": "调用量超限自动停用查询服务",
+      "description": "签约机构调用量超过最大调用量时次日12:00自动停用",
+      "validation_status": "PENDING",
+      "source_trace": "iprj-prd.md:检索次数管理（管理侧）:签约机构",
+      "confidence": 0.6
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-INSTITUTION-001",
+      "name": "接入机构",
+      "fields": [
+        {"name": "institution_name", "type": "string", "sensitivity_level": "INTERNAL"},
+        {"name": "social_credit_code", "type": "string", "sensitivity_level": "SENSITIVE"},
+        {"name": "status", "type": "string", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "机构启用状态面向列表展示"}
+      ]
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "RULE-IPRJ-001",
+      "condition": "institution.status == ENABLED",
+      "action": "include in monthly reporting task",
+      "source": "iprj-prd.md:数据上报（管理侧）:任务记录",
+      "source_trace": "iprj-prd.md:数据上报（管理侧）:任务记录",
+      "confidence": 0.8
+    }
+  ],
+  "state_machines": [],
+  "interface_contracts": [],
+  "constraints": []
+}

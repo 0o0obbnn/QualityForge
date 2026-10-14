@@ -1,0 +1,76 @@
+{
+  "test_cases": [
+    {
+      "name": "Test Allow Safe Heal",
+      "input": {
+        "asset_id": "TC-dashboard-filter-button",
+        "path_category": "normal",
+        "heal_type": "locator",
+        "touches_expected": false,
+        "heals_7d": 1
+      },
+      "expected_decision": "ALLOW",
+      "expected_vetoed_by": null
+    },
+    {
+      "name": "Test Deny Critical Path By Category",
+      "input": {
+        "asset_id": "TC-dashboard-filter-button",
+        "path_category": "critical",
+        "heal_type": "locator",
+        "touches_expected": false,
+        "heals_7d": 0
+      },
+      "expected_decision": "DENY",
+      "expected_vetoed_by": "CRITICAL_PATH"
+    },
+    {
+      "name": "Test Deny Critical Path By Asset Keyword",
+      "input": {
+        "asset_id": "TC-payment-charge-flow",
+        "path_category": "normal",
+        "heal_type": "locator",
+        "touches_expected": false,
+        "heals_7d": 0
+      },
+      "expected_decision": "DENY",
+      "expected_vetoed_by": "CRITICAL_PATH"
+    },
+    {
+      "name": "Test Deny Assertion Touch",
+      "input": {
+        "asset_id": "TC-dashboard-filter-button",
+        "path_category": "normal",
+        "heal_type": "assertion",
+        "touches_expected": true,
+        "heals_7d": 0
+      },
+      "expected_decision": "DENY",
+      "expected_vetoed_by": "ASSERTION_PROTECTION"
+    },
+    {
+      "name": "Test Deny Healing Cap Exceeded",
+      "input": {
+        "asset_id": "TC-dashboard-filter-button",
+        "path_category": "normal",
+        "heal_type": "locator",
+        "touches_expected": false,
+        "heals_7d": 4
+      },
+      "expected_decision": "DENY",
+      "expected_vetoed_by": "HEALING_CAP"
+    },
+    {
+      "name": "Test Allow At Healing Cap Boundary",
+      "input": {
+        "asset_id": "TC-dashboard-filter-button",
+        "path_category": "normal",
+        "heal_type": "locator",
+        "touches_expected": false,
+        "heals_7d": 3
+      },
+      "expected_decision": "ALLOW",
+      "expected_vetoed_by": null
+    }
+  ]
+}

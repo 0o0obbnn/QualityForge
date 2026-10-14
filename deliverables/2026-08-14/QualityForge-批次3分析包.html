@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 批次 3 分析包 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--accent:#1f3a5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:22px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  h3{font-size:14px;margin:18px 0 8px;font-weight:700;}
+  p{margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.r{background:#a63a3a;color:#fff;border-color:#a63a3a;}
+  .tag.y{background:#8a6d3b;color:#fff;border-color:#8a6d3b;}
+  .tag.g{background:#2e7d32;color:#fff;border-color:#2e7d32;}
+  .gate{background:#eef3f8;border:1px solid #c8d4e0;padding:10px 14px;margin:12px 0;}
+  .gate b{color:var(--accent);}
+  a{color:var(--link);}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">BATCH 3 ANALYSIS PACK · 2026-08-14</div>
+  <h1>QualityForge 批次 3 分析包(度量与载体)</h1>
+  <div class="meta">三份独立分析:三方对账表(QF-REQ-036)｜ 指标数据字典(QF-REQ-026)｜ 五类覆盖率口径(QF-REQ-024)+ 台账状态更新 ｜ 三路分析 Agent 产出,全部只读实算</div>
+</header>
+
+<h2>一、三方对账表(QF-REQ-036)关键结论</h2>
+<div class="gate">
+<b>实算口径:AI 介入点 22 个(21 号标题写 21 实为 22 行)｜ API operation 104 个/79 paths ｜ DB 表 105 张(33 号标题写 104,差 1 需对账)</b><br>
+<b>最高风险:INDEPENDENT_VERIFY(8-14 批次二裁决已写入 21 号 §5,但 32-API 无裁决端点、33-DB 无裁决表)→ 三层证据第二层当前无契约落点,V1 前必须补齐。</b>
+</div>
+<table>
+  <tr><th>状态</th><th>数量</th><th>说明</th></tr>
+  <tr><td>已实现(32+33 均有落点)</td><td>14</td><td>CRUD 承载(如 BOARD_TRIAGE→t_work_item 系列)</td></tr>
+  <tr><td>部分(缺专属端点/关键表)</td><td>7</td><td>仅读端点或通用 CRUD 承载</td></tr>
+  <tr><td><span class="tag r">待实现</span></td><td>1</td><td>INDEPENDENT_VERIFY:无端点无表</td></tr>
+</table>
+<p><b>治理盲区 4 类</b>:① 介入点无专属 operation 8 项 ② operation 无介入点覆盖 1 项 ③ 介入点无表 3 项 ④ <b>校准绑定缺口</b>:t_calibration_record 含 intervention_key 但无 operation/表绑定列(仅文本 subject_version)→ 校准记录无法机器化绑定实现点。<b>建议</b>:扩展 subject_operation/subject_table 列,或本对账表作为映射注册表。</p>
+
+<h2>二、指标数据字典(QF-REQ-026)关键结论</h2>
+<div class="gate">
+<b>51 项指标(M-01~M-51)完整定义:效率 14 / 质量 17 / AI 效果 11 / 追溯 2 / 运营 7;每项含分子/分母/采样窗口(默认滚动 14 天或整 Release)/数据来源/计算示例/metricKey 建议/防误导约束。</b>
+</div>
+<table>
+  <tr><th>模糊指标</th><th>口径建议</th><th>数据载体</th></tr>
+  <tr><td>人工修改率</td><td>版本级主口径(REQUEST_CHANGES 或修订链/AI 提交版本数)+ 内容级 V2</td><td>ReviewTask ✓</td></tr>
+  <tr><td>误放率</td><td>离线主口径(EvalRun 假阳性率)+ 线上口径(无载体)</td><td>EvalRun ✓</td></tr>
+  <tr><td>遗漏率</td><td>覆盖遗漏主口径(SourceTraceEdge/CoverageReport)+ 缺陷遗漏(无载体)</td><td>部分 ✓</td></tr>
+  <tr><td>重开率</td><td>Defect 重开(CLOSED→OPEN,DefectStatusEvent 可算)</td><td>DefectStatusEvent ✓</td></tr>
+  <tr><td>可复现率</td><td>缺陷复现成功率(无载体)+ 结果可复现备选</td><td>无 ⚠️</td></tr>
+  <tr><td>AI 草稿采用率</td><td>直接/修改后/退回/废弃四项合计 100%,分母统一</td><td>WorkItemRun ✓</td></tr>
+  <tr><td>人工净处理时间</td><td>HUMAN WorkItemRun 时长之和为可复算近似,需采集约定</td><td>WorkItemRun ✓(近似)</td></tr>
+  <tr><td>Lead/Cycle Time</td><td>事件计算、首次 DONE 无歧义、Cycle 含审核等待需 PRD 声明</td><td>WorkItemEvent ✓</td></tr>
+</table>
+<p><b>无数据载体指标 14 条</b>:缺 diff 量化、人工动作计时、复现采样执行、前端遥测、检索日志、快照比对、证伪回流等载体(与 QF-REQ-027 关联);"节省工时"建议废弃。<b>注意</b>:20-NFR 无已注册 metricKey 实例,本字典全部 metricKey 为建议命名,待 20 号登记。</p>
+
+<h2>三、五类覆盖率口径(QF-REQ-024)关键结论</h2>
+<div class="gate">
+<b>五类口径形成验证阶梯,分母互不推导:实例覆盖(触达)→ 设计覆盖(追溯)→ 可执行覆盖(代码+执行)→ 严格有效覆盖(断言验证)→ 人工验收(审核闭环)。全库此前只有原则无定义——本草案给出每类分母/分子/规则/样例。</b>
+</div>
+<table>
+  <tr><th>口径</th><th>分母</th><th>分子</th><th>关键缺口</th></tr>
+  <tr><td>实例覆盖 INSTANCE</td><td>被测实例总数(按规则/状态/API/需求分层)</td><td>被已批准用例引用的实例数</td><td>04 五维对应其四个子分母</td></tr>
+  <tr><td>设计覆盖 DESIGN</td><td>inScope 需求条目总数</td><td>SourceTrace 映射到已批准用例的需求条目数</td><td>归 12 号(裁决 B2-1)</td></tr>
+  <tr><td>可执行覆盖 EXECUTABLE</td><td>已批准用例版本总数 / 执行计划选中数</td><td>绑定脚本数 / 产生 ExecutionResult 数</td><td><b>04 实体无对应维度(结构缺口)</b></td></tr>
+  <tr><td>严格有效覆盖 EFFECTIVE</td><td>冻结范围内全部必需断言</td><td>verdict=PASS 的断言数</td><td>assertion 维唯一完全对应</td></tr>
+  <tr><td>人工验收 HUMAN_ACCEPTANCE</td><td>必须人工审核的产出物版本总数</td><td>全部 ReviewTask APPROVED 且 PUBLISHED 数</td><td><b>04 实体无对应维度(结构缺口)</b></td></tr>
+</table>
+<p><b>与 coverage-analyzer 现状差距</b>:已实现 rule/scenario/state/assertion 四维(assertion 最完整),缺 api 维、设计覆盖、可执行链路、人工验收、denominatorDefinitionRef 结构化输出。<b>落地路径</b>:五类定义写入 22 号附录,04/33 补 denominatorDefinitionRef 枚举与 api 维,32 补 CoverageReport schema,原型扩展后试点冻结影子试算,再冻结基线批准目标值(22 §6)。</p>
+
+<h2>四、台账状态(批 1+2 后)</h2>
+<table>
+  <tr><th>状态</th><th>数量</th><th>编号</th></tr>
+  <tr><td><span class="tag g">已修复</span></td><td>34</td><td>001-005(核心链)/007-023/030/035/037-047 等</td></tr>
+  <tr><td><span class="tag y">部分修复</span></td><td>5</td><td>006(载体✅实例⏳)、005(非核心链)、025、028、039、048</td></tr>
+  <tr><td><span class="tag r">未修复(批 3-4)</span></td><td>9</td><td>024/026/027/029/031/032/033/034/036(其中 024/026/031/036 本分析包已产出方案)</td></tr>
+</table>
+<p><b>完善度复算:≈85.5%</b>(加权关闭率公式,批 1+2 后)。批 3 四项(024/026/031/036)方案已就绪,剩余为 027/029(载体承接)+ 批 4 运行时证据。</p>
+
+<h2>五、需要决策/跟进的事项</h2>
+<ul>
+  <li><b>决策 1</b>:INDEPENDENT_VERIFY 契约落点——新增 /ai/independent-verify 端点 + t_verify_verdict 表(建议,随 M1 或 M2)</li>
+  <li><b>决策 2</b>:t_calibration_record 扩展 subject_operation/subject_table 绑定列(建议,随批 3 落地)</li>
+  <li><b>决策 3</b>:指标字典 metricKey 命名登记入 20-NFR(建议,试点前)</li>
+  <li><b>决策 4</b>:五类覆盖率定义写入 22 号附录(建议,试点前冻结)</li>
+  <li><b>对账遗留</b>:33 号"104 表" vs 实算 105 张——差 1 需查明(t_calibration_record 为新表,可能未计入标题)</li>
+</ul>
+
+<footer>批次 3 分析包 · 2026-08-14 ｜ 三份完整分析见配套文件:三方对账表 / 指标数据字典 / 覆盖率口径草稿 ｜ 关联:修复方案 v2.0 批次 3</footer>
+
+</div>
+</body>
+</html>

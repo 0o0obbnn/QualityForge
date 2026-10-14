@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 批 1-3 执行后整体评审复核报告 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--accent:#1f3a5f;--green:#2e7d32;--red:#a63a3a;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:22px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  p{margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.g{background:var(--green);color:#fff;border-color:var(--green);}
+  .tag.r{background:var(--red);color:#fff;border-color:var(--red);}
+  .tag.y{background:#8a6d3b;color:#fff;border-color:#8a6d3b;}
+  .gate{background:#eef3f8;border:1px solid #c8d4e0;padding:10px 14px;margin:12px 0;}
+  .gate b{color:var(--accent);}
+  a{color:var(--link);}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">OVERALL REVIEW · 2026-08-14</div>
+  <h1>QualityForge 批 1-3 执行后整体评审复核报告</h1>
+  <div class="meta">独立复核审计员产出 + 主线收口 ｜ 对照基线:8-13 首评(48 条台账、六维 4.0)｜ 复核方式:只读实算,未改写源文件(收口动作除外)</div>
+</header>
+
+<h2>一、总体结论</h2>
+<div class="gate">
+<b>批 1-3 执行有效性:高,证据可复现;M1 可开工,但准出承压。</b><br>
+① 抽查 5 条全部属实(4 条与台账一致,1 条台账滞后但实际更好);② 六维均分 <b>4.01 → 4.35</b>(一致性 +0.63、完整性 +0.75 为两大提升主轴,无回落维度);③ 完善度独立复算 <b>≈88.8%</b>(高于台账声称 85.5%,且台账内部有算术笔误已修正);④ 剩余开放 10 项全部为运行时证据或文档并行小项,<b>无任何条目阻塞 M1 开工</b>。
+</div>
+
+<h2>二、六维复评(首评 → 复评)</h2>
+<table>
+  <tr><th>模块</th><th>明确性</th><th>可测试性</th><th>一致性</th><th>完整性</th><th>可行性</th><th>必要性</th><th>均分(Δ)</th></tr>
+  <tr><td>10 任务看板</td><td>4→4</td><td>5→5</td><td>3→4</td><td>3→4</td><td>4→4</td><td>5→5</td><td>4.0→4.33(+0.33)</td></tr>
+  <tr><td>11 知识库</td><td>4→4</td><td>4→5</td><td>5→5</td><td>4→4</td><td>4→4</td><td>5→5</td><td>4.3→4.50(+0.20)</td></tr>
+  <tr><td>12 测试策划与设计</td><td>4→5</td><td>5→5</td><td>3→5</td><td>4→4</td><td>5→5</td><td>5→5</td><td>4.3→4.83(+0.53)</td></tr>
+  <tr><td>13 自动化测试开发</td><td>4→4</td><td>5→5</td><td>4→4</td><td>3→4</td><td>4→4</td><td>5→5</td><td>4.2→4.33(+0.13)</td></tr>
+  <tr><td>14 测试执行</td><td>4→4</td><td>4→5</td><td>3→5</td><td>3→4</td><td>4→4</td><td>4→4</td><td>3.7→4.33(<b>+0.63</b>)</td></tr>
+  <tr><td>15 质量分析与缺陷</td><td>4→4</td><td>4→5</td><td>4→4</td><td>3→4</td><td>4→4</td><td>5→5</td><td>4.0→4.33(+0.33)</td></tr>
+  <tr><td>16 AI Agent中心</td><td>3→4</td><td>4→4</td><td>4→4</td><td>3→4</td><td>4→4</td><td>5→5</td><td>3.8→4.17(+0.37)</td></tr>
+  <tr><td>17 平台管理</td><td>4→4</td><td>4→4</td><td>4→4</td><td>3→4</td><td>4→4</td><td>4→4</td><td>3.8→4.00(+0.20)</td></tr>
+  <tr><td><b>维度均分</b></td><td>3.88→4.13</td><td>4.38→4.75</td><td><b>3.75→4.38</b></td><td><b>3.25→4.00</b></td><td>4.00→4.00</td><td>4.75→4.75</td><td><b>4.01→4.35</b></td></tr>
+</table>
+<p>提升依据:一致性(批 1/2 收敛全部枚举冲突/状态机双重权威/CoverageReport 边界/术语命名)、完整性(WorkItem 六字段、五类覆盖口径、指标载体、校准载体、独立验证落点)、可测试性(AC-01 判定口径、ContractCheckResult 四态 AC、沙箱量化)。首评最低的 14 模块提升最大。</p>
+
+<h2>三、完善度复算(独立)</h2>
+<table>
+  <tr><th>级</th><th>已修复(1.0)</th><th>部分(0.5)</th><th>未修复(0.3)</th><th>级关闭率</th></tr>
+  <tr><td>阻断(0.3)</td><td>1</td><td>—</td><td>—</td><td>100%</td></tr>
+  <tr><td>严重(0.3)</td><td>4</td><td>2</td><td>—</td><td>83.3%</td></tr>
+  <tr><td>一般(0.25)</td><td>19</td><td>6</td><td>4</td><td>80.0%</td></tr>
+  <tr><td>建议(0.15)</td><td>10</td><td>2</td><td>—</td><td>91.7%</td></tr>
+</table>
+<p><b>完善度 = 0.3×1.0 + 0.3×0.833 + 0.25×0.800 + 0.15×0.917 ≈ 88.8%</b>。台账原声称 85.5% 偏低约 3 个百分点且内部子项与自身列表不符,已按复核口径修正;另修正计数笔误(部分标 5 实列 10、未修复标 7 实列 4)。</p>
+
+<h2>四、新引入 4 项问题 → 收口动作(已执行)</h2>
+<table>
+  <tr><th>问题</th><th>收口动作</th><th>状态</th></tr>
+  <tr><td>表数口径漂移(33 标题 105 vs 实算 106)</td><td>33 标题改 106;对照表统计同步(93/106=87.7%)</td><td><span class="tag g">已修</span></td></tr>
+  <tr><td>L1 门禁 26/26 过期(16:21 新增端点后)</td><td><b>L1 复扫 v2</b> 重跑(80 paths/105 ops 自动更新;含新端点/新表/新枚举回归;6 项旧术语判定复核)</td><td><span class="tag g">已修</span></td></tr>
+  <tr><td>37 号 header 双重过期(78/102/80;AI 中心 10)</td><td>37 header 更新为 80/105(标注"以 32 号实算为准");AI 中心 10→11</td><td><span class="tag g">已修</span></td></tr>
+  <tr><td>011 残留(33 approval_review_task_id 未统一)</td><td>33 t_defect_sync_attempt 列名改 approval_id(与 05/32 对齐,加裁决注)</td><td><span class="tag g">已修</span></td></tr>
+</table>
+<p>另:INDEPENDENT_VERIFY 运行时 + 031 六条负向用例 + PG 冒烟三项叠加压入 M1,准出承压(QF-RSK-004 可见化未消除)——建议 M1 计划显式排入。</p>
+
+<h2>五、M1 可开工性判定</h2>
+<div class="gate">
+<b>可以开工。</b>四项开工信号实证成立,无条目阻塞开工。开工前 3 个低成本动作已在本轮全部完成(L1 复扫 v2、表数口径 106、37 header)。M1 准出压力集中在 INDEPENDENT_VERIFY 运行时、031 负向用例、PG 冒烟三项,需显式排期。
+</div>
+
+<h2>六、剩余开放项(10 项,均不阻塞开工)</h2>
+<table>
+  <tr><th>条目</th><th>性质</th><th>窗口</th></tr>
+  <tr><td>031 多态溯源运行时(N1-N6)</td><td>运行时实现</td><td>M1 内必须完成(进 M1 验收)</td></tr>
+  <tr><td>034 PG 冒烟</td><td>工程验证</td><td>M1/M2 门禁(B2-7 已定 M2 准出)</td></tr>
+  <tr><td>032/033/048/006 实例</td><td>运行时证据/真实模型</td><td>M3-M5</td></tr>
+  <tr><td>025/039 运行时</td><td>运行时实现</td><td>M4/M3(防软关闭声明已立)</td></tr>
+  <tr><td>029 剩余 6 PRD / 026 metricKey 登记 / 036 进扫描基线</td><td>文档并行项</td><td>M1 期间建议完成</td></tr>
+</table>
+
+<footer>整体评审复核报告 · 2026-08-14 ｜ 复核:独立审计员 + 主线收口 ｜ 关联:L1 复扫 v2 / 台账状态更新(88.8%)/ 批 1-3 交付报告</footer>
+
+</div>
+</body>
+</html>

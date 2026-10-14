@@ -1,0 +1,84 @@
+{
+  "review_id": "NEG-STRUCTURAL",
+  "source_ids": [
+    "SRC-A"
+  ],
+  "assessments": [
+    {
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "负例：维度覆盖不全",
+      "finding_ids": []
+    },
+    {
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "负例：维度覆盖不全",
+      "finding_ids": []
+    },
+    {
+      "dimension": "testability",
+      "status": "CLEAR",
+      "rationale": "负例：维度覆盖不全",
+      "finding_ids": []
+    },
+    {
+      "dimension": "completeness",
+      "status": "CLEAR",
+      "rationale": "负例：维度覆盖不全",
+      "finding_ids": []
+    },
+    {
+      "dimension": "nfr_measurability",
+      "status": "CLEAR",
+      "rationale": "负例：维度覆盖不全",
+      "finding_ids": []
+    },
+    {
+      "dimension": "consistency",
+      "status": "FINDING",
+      "rationale": "负例：引用幽灵finding",
+      "finding_ids": [
+        "F-GHOST"
+      ]
+    },
+    {
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "负例：重复评估",
+      "finding_ids": []
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-101",
+      "code": "CROSS_SOURCE_CONFLICT",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-A§2"
+      ],
+      "evidence": "负例：硬finding被降级",
+      "question": "负例问题"
+    },
+    {
+      "finding_id": "F-102",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-UNDECLARED§1"
+      ],
+      "evidence": "负例：来源未声明且未绑定",
+      "question": "负例问题"
+    },
+    {
+      "finding_id": "F-103",
+      "code": "INCOMPLETE_REQUIREMENT",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-A§3"
+      ],
+      "evidence": "",
+      "question": ""
+    }
+  ]
+}

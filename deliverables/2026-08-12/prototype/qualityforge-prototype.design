@@ -1,0 +1,632 @@
+{
+  "data": [
+    {
+      "id": "page-login",
+      "title": "登录",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-6d48cfb4",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "01-login.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workspace-create",
+      "title": "创建项目",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-4ffb1412",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "02-workspace-create.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-board",
+      "title": "任务看板",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 373,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1011,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-2e544fe1",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "10-board.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-reviews",
+      "title": "待我审核",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 373,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 931,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-e9128f6b",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "11-reviews.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workitem",
+      "title": "工作项详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 373,
+        "group": 1,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1113,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-6b1cc441",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "12-workitem.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-sources",
+      "title": "来源与需求",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 808,
+        "group": 2,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-99fed6b2",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "20-sources.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-api-contracts",
+      "title": "API 契约",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 808,
+        "group": 2,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-472f53c3",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "21-api-contracts.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-knowledge",
+      "title": "知识库",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 808,
+        "group": 2,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-28cc31d4",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "22-knowledge.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-strategies",
+      "title": "测试策略",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 1181,
+        "group": 3,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-78883fac",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "30-strategies.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-plans",
+      "title": "测试计划",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 1181,
+        "group": 3,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-0fb2e826",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "31-plans.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-cases",
+      "title": "场景与用例",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 1181,
+        "group": 3,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1001,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-7d9b7cd9",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "32-cases.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-scripts",
+      "title": "自动化工作台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 1583,
+        "group": 4,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-55fbdff8",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "40-scripts.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-code-review",
+      "title": "代码审核",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 1583,
+        "group": 4,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-02b16e09",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "41-code-review.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-assets",
+      "title": "配套资产",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 1583,
+        "group": 4,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-f3c39852",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "42-assets.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-execution-plans",
+      "title": "执行计划",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 1956,
+        "group": 5,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-617884cd",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "50-execution-plans.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-execution-monitor",
+      "title": "执行监控",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 1956,
+        "group": 5,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1043,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-b0cefcc3",
+          "measuredAt": 1788578350725
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "51-execution-monitor.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-evidence",
+      "title": "结果与证据",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 1956,
+        "group": 5,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-d55da1ad",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "52-evidence.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-analyses",
+      "title": "结果分析",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 2380,
+        "group": 6,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-5deadfec",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "60-analyses.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-defects",
+      "title": "Defect",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 2380,
+        "group": 6,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-8d6810bf",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "61-defects.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-reports",
+      "title": "报告与门禁",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 2380,
+        "group": 6,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-f996c47e",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "62-reports.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-capabilities",
+      "title": "能力注册",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 2753,
+        "group": 7,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-4c75e7c4",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "70-capabilities.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-operations",
+      "title": "运行与评测",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 2753,
+        "group": 7,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-cad07aab",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "71-operations.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-trace",
+      "title": "Agent Trace 回放",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 2753,
+        "group": 7,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-ac656e03",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "72-trace.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workspaces",
+      "title": "项目与 Release",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 3126,
+        "group": 8,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-3ee8ae56",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "80-workspaces.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-environments",
+      "title": "环境与资源",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 3126,
+        "group": 8,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-61c4736b",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "81-environments.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-governance",
+      "title": "集成与权限",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 3126,
+        "group": 8,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-630bdd3c",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "82-governance.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-modals",
+      "title": "弹窗体系规范",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 3499,
+        "group": 9,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 1927,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-4c2198c2",
+          "measuredAt": 1787149833413
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "99-modals.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "QualityForge 原型 V1",
+    "designLibrary": null,
+    "visualEditorEnabled": false
+  }
+}

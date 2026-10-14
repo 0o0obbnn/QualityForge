@@ -1,0 +1,8 @@
+{
+  "gate_thresholds": {
+    "rule": 1.0,
+    "scenario": 0.7,
+    "state": 0.9,
+    "assertion": 0.85
+  }
+}

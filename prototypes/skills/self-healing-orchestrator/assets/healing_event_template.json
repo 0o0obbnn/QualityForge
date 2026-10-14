@@ -1,0 +1,20 @@
+{
+ "$comment": "自愈事件审计记录。每次被 ALLOW 的自愈都会写入（DENY 不产生自愈事件——而是产生一个人工评审 review task）。before/after 快照使自愈可审计；缺少它，自愈就是不可见的债务。",
+ "event_id": "HEAL-<12hex>",
+ "skill": "24",
+ "timestamp": "<ISO-8601 UTC>",
+ "asset_id": "<被自愈的 asset>",
+ "path_category": "normal | critical",
+ "heal_type": "locator | fixture | assertion | other",
+ "touches_expected": false,
+ "heals_7d_before": 0,
+ "heals_7d_after": 1,
+ "decision": "ALLOW",
+ "vetoed_by": null,
+ "reason": "自愈执行的原因（上游失败分析的失败分类）",
+ "skill28_routing": "sample",
+ "audit_required": true,
+ "before": "<自愈前的 asset 快照>",
+ "after": "<自愈后的 asset 快照>",
+ "$veto_codes": ["CRITICAL_PATH", "ASSERTION_PROTECTION", "HEALING_CAP"]
+}

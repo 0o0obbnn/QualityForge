@@ -1,0 +1,33 @@
+{
+  "skill_name": "assertion-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "accept-list-shaped-e2e-batch",
+      "prompt": "校验一个以顶层 JSON 数组表示的 assertion batch,其中包含一条 strong 的字段值 assertion。",
+      "expected_output": "PASS 且 total_assertions 为 1;E2E 的列表表示被接受,视为与对象包装等价。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-empty-batch",
+      "prompt": "校验一个空的 assertion batch。",
+      "expected_output": "REJECT 并给出 EMPTY_BATCH;断言缺失绝不能因 weak ratio 为零而通过。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "reject-weak-dominated-batch",
+      "prompt": "校验四条 assertion,其中三条仅检查 status code,weak 阈值为 0.3。",
+      "expected_output": "REJECT 并给出 WEAK_RATIO_EXCEEDED,weak_count 为 3、total_assertions 为 4、weak_ratio 为 0.75。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "reject-target-without-comparison",
+      "prompt": "校验一条包含 assertion_id 和 target 但没有 expression 或期望值的 assertion。",
+      "expected_output": "REJECT 并给出 INVALID_ASSERTION_STRUCTURE;仅有 target 不构成可执行的 assertion,不能归类为 strong。",
+      "files": []
+    }
+  ]
+}

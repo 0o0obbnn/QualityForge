@@ -1,0 +1,91 @@
+{
+  "skill": "api-test-generator",
+  "pass_rate": "3/4",
+  "results": [
+    {
+      "eval_id": "eval-1",
+      "passed": true,
+      "actual_verdict": "REJECT",
+      "expected_verdict": "REJECT",
+      "actual_codes": [
+        "HARDCODED_ENV"
+      ],
+      "expected_codes": [
+        "HARDCODED_ENV"
+      ],
+      "findings": [
+        {
+          "code": "HARDCODED_ENV",
+          "severity": "REJECT",
+          "target": "pos:30",
+          "msg": "hardcoded URL/host 'http://localhost:8080\"'; use config injection"
+        }
+      ]
+    },
+    {
+      "eval_id": "eval-2",
+      "passed": true,
+      "actual_verdict": "REJECT",
+      "expected_verdict": "REJECT",
+      "actual_codes": [
+        "HARDCODED_SECRET"
+      ],
+      "expected_codes": [
+        "HARDCODED_SECRET"
+      ],
+      "findings": [
+        {
+          "code": "HARDCODED_SECRET",
+          "severity": "REJECT",
+          "target": "pos:67",
+          "msg": "secret-like literal '\"Bearer ghp_abc123xyz\"'"
+        }
+      ]
+    },
+    {
+      "eval_id": "eval-3",
+      "passed": true,
+      "actual_verdict": "REJECT",
+      "expected_verdict": "REJECT",
+      "actual_codes": [
+        "UNCOVERED_EXPECTED_RESULT"
+      ],
+      "expected_codes": [
+        "UNCOVERED_EXPECTED_RESULT"
+      ],
+      "findings": [
+        {
+          "code": "UNCOVERED_EXPECTED_RESULT",
+          "severity": "REJECT",
+          "target": "ER-002",
+          "msg": "expected_result 'ER-002' has no corresponding assert"
+        }
+      ]
+    },
+    {
+      "eval_id": "eval-4",
+      "passed": false,
+      "actual_verdict": "REJECT",
+      "expected_verdict": "PASS",
+      "actual_codes": [
+        "HARDCODED_SECRET",
+        "HARDCODED_SECRET"
+      ],
+      "expected_codes": [],
+      "findings": [
+        {
+          "code": "HARDCODED_SECRET",
+          "severity": "REJECT",
+          "target": "line:5",
+          "msg": "possible secret literal: AUTH_TOKEN = os.environ[\"AUTH_TOKEN\"]"
+        },
+        {
+          "code": "HARDCODED_SECRET",
+          "severity": "REJECT",
+          "target": "line:8",
+          "msg": "possible secret literal: headers = {\"Authorization\": f\"Bearer {AUTH_TOKEN}\"}"
+        }
+      ]
+    }
+  ]
+}

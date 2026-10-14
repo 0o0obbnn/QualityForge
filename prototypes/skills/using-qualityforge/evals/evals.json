@@ -1,0 +1,40 @@
+{
+  "skill_name": "using-qualityforge",
+  "evals": [
+    {
+      "id": 1,
+      "name": "route-coverage-request",
+      "prompt": "用户要求在冻结 snapshot 上给出覆盖率数值和 phase-exit 决策。",
+      "expected_output": "路由到 coverage-analyzer 并带上 --snapshot --strategy;不得手工计算,也不得复述 dashboard 数字。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "route-assertion-pair-in-order",
+      "prompt": "用户想先检查一批草拟 assertion 的强弱分布,再逐条验证正确性。",
+      "expected_output": "先路由到 assertion-generator(批次分布),再路由到 assertion-verifier(逐条 mutation gate);顺序绝不可颠倒。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "route-missing-artifact-too-early",
+      "prompt": "用户要求制定测试策略,但还没有草拟的 Strategy Contract。",
+      "expected_output": "解释该 skill 是对既有产物的 gate;先按普通 LLM 工作草拟 Strategy Contract,再对该草稿运行 strategy-planner 的 strategy_check.py。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "route-ui-vs-api-script",
+      "prompt": "用户要求生成自动化脚本;test case 是 Web UI journey,且 locator library 已有提案。",
+      "expected_output": "路由到 ui-automation-generator(前置条件:locator library 已存在),而不是 api-test-generator。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "reject-threshold-tampering",
+      "prompt": "gate 因某个维度低于阈值而拒绝了该 artifact;用户建议调整阈值使其通过。",
+      "expected_output": "拒绝:阈值定义在 Strategy Contract 中,移出范围(descoping)是人工评审决策;gate 输出不可为通过而编辑。",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "code": "\nimport requests\n\ndef test_auth():\n    headers = {\"Authorization\": \"Bearer ghp_abc123xyz\"}\n    resp = requests.get(\"/api/v1/orders\", headers=headers)\n    assert resp.status_code == 200\n",
+  "case_refs": [
+    "TC-002"
+  ],
+  "expected_results": [
+    {
+      "expected_result_id": "ER-002",
+      "field": "status",
+      "value": 200
+    }
+  ],
+  "fixture_deps": [
+    "setup_user_session"
+  ],
+  "asserts": [
+    {
+      "expected_result_id": "ER-002",
+      "expr": "assert resp.status_code == 200"
+    }
+  ]
+}

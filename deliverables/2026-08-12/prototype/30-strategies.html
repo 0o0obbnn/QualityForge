@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>测试策略 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="planning">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item active" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <button class="icon-btn" onclick="qf.toast('暂无新通知','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5a4 4 0 0 1 4 4v3l1.5 2h-11L4 9.5v-3a4 4 0 0 1 4-4Z"/><path d="M6.5 13a1.6 1.6 0 0 0 3 0"/></svg></button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>测试策略</h1><div class="sub">TestStrategy · 范围/风险/方法/准入退出 · AI 草稿 + 人工审核 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="location.href='31-plans.html'">测试计划</button>
+      <button class="btn btn-ghost" onclick="location.href='32-cases.html'">场景与用例</button>
+      <button class="btn btn-primary" id="genBtn" onclick="startGen(this)"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>生成策略草稿</button>
+    </div>
+
+    <div class="panel">
+      <div class="phead"><h2>策略列表</h2><span class="hint">Release R-2026.08</span></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>策略</th><th>版本</th><th>范围</th><th>风险点</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr onclick="qf.openModal('m-strategy')"><td><div class="t-title">结算中心主测试策略</div><div class="t-sub">TS-2026-0811-0042 · 32 项需求</div></td><td class="mono">V2</td><td>支付/对账/风控/网关</td><td>4</td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();location.href='11-reviews.html'">审核</button></td></tr>
+          <tr onclick="qf.openModal('m-strategy')"><td><div class="t-title">对账服务专项策略</div><div class="t-sub">TS-2026-0728-0017 · 18 项需求</div></td><td class="mono">V1</td><td>对账差异/超时</td><td>2</td><td><span class="status st-done"><span class="d"></span>已批准</span></td><td><span class="badge b-ok">已发布</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="empty-note" hidden><div class="en-title">暂无策略</div>点击「生成策略草稿」让 AI 基于来源基线起草</div>
+    </div>
+
+    <div class="card mt-6">
+      <h2 style="font-size:16px;margin-bottom:12px">策略结构预览 · 结算中心主测试策略 V2</h2>
+      <div class="cov-row"><div class="top"><span class="name">范围</span><span class="val">支付流程、对账、风控、网关故障注入</span></div></div>
+      <div class="cov-row"><div class="top"><span class="name">风险点</span><span class="val">4 项 (含新增: 第三方网关限流)</span></div></div>
+      <div class="cov-row"><div class="top"><span class="name">测试方法</span><span class="val">功能 + API 契约 + 故障注入</span></div></div>
+      <div class="cov-row"><div class="top"><span class="name">准入/退出</span><span class="val">核心用例通过率 ≥ 基线 且 网关故障场景全部执行</span></div></div>
+      <div class="cov-row" style="margin-bottom:0"><div class="top"><span class="name">环境/数据/自动化/Defect</span><span class="val">staging · 合成数据 · API 优先 · 外部同步逐次批准</span></div></div>
+    </div>
+  </main>
+</div>
+
+<!-- 生成策略弹窗 -->
+<div class="modal" id="m-gen" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>生成策略草稿</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="genForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「生成策略草稿」按钮 · 异步任务创建</div>
+        <div class="field"><label>策略名称 <span class="req">*</span></label><input class="input" required placeholder="例如: 网关专项测试策略"><div class="err">请输入策略名称</div></div>
+        <div class="field"><label>来源基线</label><select class="input"><option>Release 基线: settlement V7 + recon V4</option><option>自定义选择</option></select></div>
+        <div class="field"><label>策略模板</label><select class="input"><option>风险驱动 (默认)</option><option>覆盖驱动</option><option>空白</option></select></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-gen')">取消</button>
+        <button type="submit" class="btn btn-primary">开始生成</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 策略详情弹窗 -->
+<div class="modal" id="m-strategy" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>策略详情 · TS-2026-0811-0042</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击策略行 · 详情弹窗</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">目标</span><span>验证 R-2026.08 结算链路无回归且网关故障可恢复</span>
+        <span class="muted">准入</span><span>契约基线锁定 · 环境可用</span>
+        <span class="muted">退出</span><span>核心通过率 ≥ 基线 · 故障场景全执行</span>
+        <span class="muted">摘要</span><span class="mono">sha256:3f9a…c21e</span>
+        <span class="muted">审核</span><span>RT-4832 · 待审核</span>
+      </div>
+      <a class="ev-link mt-4" href="11-reviews.html">前往审核包</a>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-strategy')">关闭</button></div>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('genForm', function () { qf.closeModal('m-gen'); qf.toast('策略生成任务已创建,完成后进入待审核(演示)','ok'); });
+  function startGen(btn) {
+    btn.classList.add('loading'); btn.disabled = true;
+    setTimeout(function () { btn.classList.remove('loading'); btn.disabled = false; qf.openModal('m-gen'); }, 900);
+  }
+</script>
+</body>
+</html>

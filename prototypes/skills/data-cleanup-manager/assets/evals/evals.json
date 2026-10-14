@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Valid cleanup plan",
+    "input": {
+      "construction_order": ["A", "B", "C"],
+      "cleanup_plan": ["C", "B", "A"],
+      "static_baselines": ["STATIC_1"],
+      "results": [
+        {"node_id": "C", "status": "success"},
+        {"node_id": "B", "status": "success"},
+        {"node_id": "A", "status": "success"}
+      ],
+      "residuals": []
+    },
+    "expected_verdict": "PASS"
+  },
+  {
+    "name": "Invalid - Static baseline in cleanup",
+    "input": {
+      "construction_order": ["A", "B"],
+      "cleanup_plan": ["B", "A", "STATIC_1"],
+      "static_baselines": ["STATIC_1"],
+      "results": [
+        {"node_id": "B", "status": "success"},
+        {"node_id": "A", "status": "success"},
+        {"node_id": "STATIC_1", "status": "success"}
+      ],
+      "residuals": []
+    },
+    "expected_verdict": "REJECT"
+  },
+  {
+    "name": "Invalid - Wrong cleanup order",
+    "input": {
+      "construction_order": ["A", "B", "C"],
+      "cleanup_plan": ["A", "B", "C"],
+      "static_baselines": [],
+      "results": [
+        {"node_id": "A", "status": "success"},
+        {"node_id": "B", "status": "success"},
+        {"node_id": "C", "status": "success"}
+      ],
+      "residuals": []
+    },
+    "expected_verdict": "REJECT"
+  }
+]

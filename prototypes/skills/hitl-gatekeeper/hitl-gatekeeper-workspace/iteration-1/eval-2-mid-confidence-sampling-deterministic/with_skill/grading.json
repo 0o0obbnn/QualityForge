@@ -1,0 +1,22 @@
+{
+  "eval_id": 2,
+  "eval_name": "mid-confidence-sampling-deterministic",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "same_decision_both_runs",
+      "passed": true
+    },
+    {
+      "text": "explains_deterministic_mechanism",
+      "passed": true
+    },
+    {
+      "text": "mentions_reproducibility_or_audit_rationale",
+      "passed": true
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 3,
+  "total": 3
+}

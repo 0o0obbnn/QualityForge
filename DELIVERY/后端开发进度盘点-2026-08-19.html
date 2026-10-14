@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 后端开发进度盘点 · 2026-08-19</title>
+<style>
+  :root {
+    --bg: #f6f4f1;
+    --card: #ffffff;
+    --ink: #2b2a27;
+    --muted: #8a8378;
+    --line: #e8e3da;
+    --accent: #d96c1f;
+    --accent-soft: #fdf1e8;
+    --ok: #3a7d44;
+    --ok-soft: #eef6ee;
+    --warn: #b8860b;
+    --warn-soft: #fdf6e3;
+    --bad: #b3402f;
+    --bad-soft: #fbecea;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: -apple-system, "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif; line-height: 1.65; padding: 40px 20px 64px; }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header { padding-bottom: 28px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+  h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; }
+  .sub { color: var(--muted); font-size: 13px; margin-top: 6px; }
+  h2 { font-size: 18px; margin: 36px 0 14px; font-weight: 650; }
+  h2 .num { color: var(--accent); margin-right: 8px; }
+  .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin: 18px 0; }
+  .metric { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .metric .v { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .metric .l { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+  .metric.ok .v { color: var(--ok); }
+  .metric.warn .v { color: var(--warn); }
+  .metric.acc .v { color: var(--accent); }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin-bottom: 16px; }
+  .panel h3 { font-size: 15px; margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th { text-align: left; color: var(--muted); font-weight: 550; font-size: 12.5px; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 9px 10px; border-bottom: 1px solid #f0ece4; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .tag { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .tag.done { background: var(--ok-soft); color: var(--ok); }
+  .tag.partial { background: var(--warn-soft); color: var(--warn); }
+  .tag.p0 { background: var(--bad-soft); color: var(--bad); }
+  .tag.p1 { background: var(--warn-soft); color: var(--warn); }
+  .tag.p2 { background: #eef1f5; color: #5a6675; }
+  .verdict { border-left: 4px solid var(--accent); background: var(--accent-soft); padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0; font-size: 14px; }
+  .verdict b { color: var(--accent); }
+  .foot { color: var(--muted); font-size: 12px; margin-top: 28px; border-top: 1px solid var(--line); padding-top: 14px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12.5px; }
+  @media (max-width: 700px) { .metrics { grid-template-columns: repeat(2, 1fr); } th, td { font-size: 12px; padding: 7px 6px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>QualityForge 后端开发进度盘点</h1>
+  <div class="sub">盘点日期 2026-08-19 ｜ 基线 HEAD e5017c1（含未提交工作树）｜ 依据：三路独立审计（端点盘点 / 里程碑验收 / 质量门禁实测）｜ 审计方法：源码全量扫描 + 契约对照 + 测试实跑</div>
+</header>
+
+<div class="verdict"><b>总体结论：</b>后端 M1 / M3 / M4 / M5 里程碑后端轨全部验收通过；M2 为部分达成（缺 SLA 接口与工作项分派端点）；V1 六类门禁证据包齐备、D3 事件与指标管道已实现但未提交。当前真正阻塞前端联调的只剩 2 项，合计约 <b>1 人日</b>即可清障。</div>
+
+<div class="metrics">
+  <div class="metric ok"><div class="v">47</div><div class="l">已实现业务端点（+ /health）</div></div>
+  <div class="metric acc"><div class="v">69/69</div><div class="l">后端测试全绿（9.4s，13 文件）</div></div>
+  <div class="metric warn"><div class="v">65+5</div><div class="l">契约声明未落地（REST 延期 65 + WS 5 项）</div></div>
+  <div class="metric warn"><div class="v">2</div><div class="l">P0 阻塞前端联调项（约 1 人日）</div></div>
+  <div class="metric"><div class="v">4/5</div><div class="l">里程碑后端轨全绿（M2 partial）</div></div>
+</div>
+
+<h2><span class="num">一</span>里程碑验收判定</h2>
+<div class="panel">
+<table>
+  <tr><th>里程碑</th><th>后端轨判定</th><th>关键证据</th><th>遗留</th></tr>
+  <tr><td><b>M1 需求与审核收口</b></td><td><span class="tag done">全绿</span></td><td>退回→新版本闭环（f53ed00）、三 operation + 乐观锁 409、characterization 基线 7 例、QF-REQ-001 四源一致（22d4d3f）</td><td>无</td></tr>
+  <tr><td><b>M2 任务看板工作化</b></td><td><span class="tag partial">partial</span></td><td>看板数据面 3 op + 过滤/分页/审核任务分派（dc18b0e）</td><td>缺 SLA 数据接口、缺工作项级分派端点（U3/U4）</td></tr>
+  <tr><td><b>M3 执行与证据</b></td><td><span class="tag done">全绿</span></td><td>治理先行 fail-closed、不可变证据 + 人工批准、三条隔离验证、C3 并发/性能/强杀恢复实证</td><td>B1 字段缺口（U1，P0）</td></tr>
+  <tr><td><b>M4 分析与报告</b></td><td><span class="tag done">全绿</span></td><td>质量域 11 op、FailureCluster 独立、同步回执防伪、effective 口径 Literal 强制（903a687）</td><td>报告版本层 P0-1 闭合在未提交批次中</td></tr>
+  <tr><td><b>M5 真实模型准入</b></td><td><span class="tag done">全绿</span></td><td>Provider 超时/重试/降级/成本、黄金集闸门 fail-closed、eval 基线归档、deterministic-local 锚点（a85ed94）</td><td>无</td></tr>
+  <tr><td><b>V1 试点总验收</b></td><td><span class="tag partial">partial</span></td><td>六类门禁证据包齐备（78203cd + 1699d81 恢复）、D3 事件/指标管道已实现（未提交）</td><td>五类覆盖率分别报告、D4 人工基线（试点前置，U5/U6）</td></tr>
+</table>
+</div>
+
+<h2><span class="num">二</span>未完成任务清单（按优先级）</h2>
+<div class="panel">
+<table>
+  <tr><th>#</th><th>任务</th><th>所属</th><th>优先级</th><th>工作量</th><th>说明</th></tr>
+  <tr><td>U1</td><td><b>ExecutionResult 补 resultDigest / assertionResultsRef</b>（旧阻塞项 B1）</td><td>M3 遗留</td><td><span class="tag p0">P0</span></td><td>0.5d</td><td>产品域模型已声明、契约 yaml 与后端均未落地；阻塞前端证据页真实模式渲染「结果摘要/断言明细」</td></tr>
+  <tr><td>U2</td><td><b>未提交批次提交 + 门禁复跑</b>（D3 事件管道 + TestReport 版本层 P0-1，含 B2 REST 补读端点）</td><td>V1 D3 / M4</td><td><span class="tag p0">P0</span></td><td>0.5d</td><td>14 个 M 文件 + 5 个新增文件已在工作树；提交前跑全量测试/lint/contract，backend/data/ 勿入库</td></tr>
+  <tr><td>U3</td><td>SLA 数据接口</td><td>M2</td><td><span class="tag p1">P1</span></td><td>1d</td><td>看板 SLA 指标后端零实现，M2 计划已登记 lingma 排期未见交付</td></tr>
+  <tr><td>U4</td><td>工作项级分派 endpoint</td><td>M2</td><td><span class="tag p1">P1</span></td><td>0.5–1d</td><td>契约无 workitem:assign 路径，现仅 createReviewTask 兜底；需契约确认后补</td></tr>
+  <tr><td>U5</td><td>五类覆盖率「分别报告」试点数据</td><td>V1-2</td><td><span class="tag p1">P1</span></td><td>试点期</td><td>机制已就绪（口径 Literal 强制互不推导），缺试点 Workspace 实测数据</td></tr>
+  <tr><td>U6</td><td>D4 人工/影子基线对照归档</td><td>V1-4</td><td><span class="tag p1">P1</span></td><td>试点期 1–2d</td><td>黄金集锚点已归档，人工基线按 N3 采集安排</td></tr>
+  <tr><td>U7</td><td>前端接入 B1/B2 后证据页+事件流切真实</td><td>V1 集成</td><td><span class="tag p2">P2</span></td><td>前端轨</td><td>HANDOFF.md:161 已列待办</td></tr>
+  <tr><td>U8</td><td>backend/data/*.sqlite3 加 .gitignore</td><td>工程卫生</td><td><span class="tag p2">P2</span></td><td>10min</td><td>运行期产物勿入库</td></tr>
+  <tr><td>U9</td><td>M1-实施台账状态陈旧更新</td><td>台账</td><td><span class="tag p2">P2</span></td><td>15min</td><td>台账仍标 M1-B0/B1「待动工」，与代码事实不符</td></tr>
+</table>
+</div>
+
+<h2><span class="num">三</span>前端真实模式暴露的后端缺口（联调风险面）</h2>
+<div class="panel">
+<table>
+  <tr><th>位置</th><th>问题</th><th>后果</th></tr>
+  <tr><td><span class="mono">GET /api/v1/quality/result-analyses</span></td><td>前端调用，后端只有 POST，契约亦无 GET</td><td>真实模式 404 → 回落空态</td></tr>
+  <tr><td><span class="mono">POST /api/v1/execution-plans</span></td><td>前端 payload（releaseId/environment/triggerType/concurrency）与后端 ExecutionPlanCreate（planKey/name/testPlanId）字段错位</td><td>真实模式必 422</td></tr>
+  <tr><td><span class="mono">GET /api/v1/ai/provider/status</span></td><td>后端无路由、契约无此路径（前端假设契约，已发墙 M-136）</td><td>M5 状态 chip 回落「未知」</td></tr>
+  <tr><td>执行事件流（WS/SSE）</td><td>36 号契约 4 通道 + 1 票据端点全部未实现；仅未提交的 REST 补读端点 listEvents 兜底</td><td>实时推送不可用，仅轮询补读</td></tr>
+  <tr><td>list 系列查询</td><td>listExecutionPlans / listSourceSnapshots / listKnowledgeEntries / listEnvironments / createEnvironment 契约有声明、后端无路由</td><td>对应页面真实模式空态</td></tr>
+</table>
+</div>
+
+<h2><span class="num">四</span>质量门禁实测基线</h2>
+<div class="panel">
+<table>
+  <tr><th>门禁</th><th>实测结果</th></tr>
+  <tr><td>后端全量测试</td><td><b>69/69 通过</b>（9.4s，0 失败 0 跳过，13 个测试文件，工作树实测）</td></tr>
+  <tr><td>契约一致性守卫</td><td>47 个已实现端点全部存在契约且 operationId 一致；65 延期计数防漂移断言</td></tr>
+  <tr><td>六类版本门禁证据包</td><td>产品/质量/安全/AI/运行/发布齐备（归档提交 78203cd），8/8 指针文件存在性核验通过</td></tr>
+  <tr><td>CI</td><td>backend.yml（uv sync → ruff → mypy strict → pytest → openapi 校验）、frontend.yml、skill-eval.yml 三条 workflow</td></tr>
+  <tr><td>运行门禁</td><td>进程强杀 kill -9 重启完整性校验实证 + 并发收敛 + 延迟哨兵（1.2ms 级）</td></tr>
+</table>
+</div>
+
+<div class="verdict"><b>下一步建议：</b>① 后端轨立即做 U1 + U2（合计约 1 人日），清掉两个 P0 阻塞；② U3/U4 走契约确认后补 M2 缺口；③ U5/U6 随试点 Workspace 选定后启动；④ 前端轨在 U1/U2 落地后把证据页与事件流切真实模式。</div>
+
+<div class="foot">审计报告源：.cluster/qf-backend-progress-20260819/subagent_01a-后端端点盘点.md ｜ subagent_01b-后端里程碑验收.md ｜ subagent_02-后端质量门禁.md（三路独立审计，只读核验，未改代码）</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "artifact_kind": "test_case_ir",
+    "artifact_id": "TCIR-SYN-SLICE-001",
+    "generated_at": "2026-09-27T00:00:00+08:00",
+    "lifecycle_status": "ACCEPTED"
+  },
+  "source_artifacts": {
+    "test_design_input": "evals/files/synthetic_reset_slice_test_design_input.json",
+    "test_design_input_sha256": "9e388b6a5695231b6902e96a28dc0f5228fda608dfc6ede69b6ebc51c93b8497",
+    "graph_snapshot_id": "GRAPH-SYN-2026A"
+  },
+  "generation_scope": {
+    "mode": "SELECTED_SLICE",
+    "policy": "READY_DIMENSIONS_ONLY",
+    "selected_test_design_item_ids": ["TDI-SYN-01"],
+    "excluded_dimensions": [
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "permission",
+        "status": "BLOCKED",
+        "reasons": ["执行角色与数据范围未在需求中声明"]
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "sorting",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "state_transition",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "integration",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "nfr",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      }
+    ]
+  },
+  "data_requirements": [
+    {
+      "data_requirement_id": "DR-SYN-011",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "设备编号",
+      "field_usage_id": "FUSE-SYN-011",
+      "value_class": "VALID",
+      "purpose": "提供满足字段规则的合法设备编号",
+      "constraint_rule_ids": ["RULE-SYN-012"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "data_requirement_id": "DR-SYN-012",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "紧急程度",
+      "field_usage_id": "FUSE-SYN-012",
+      "value_class": "VALID",
+      "purpose": "选择需求声明的合法枚举值",
+      "constraint_rule_ids": ["RULE-SYN-013"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "data_requirement_id": "DR-SYN-013",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "设备编号",
+      "field_usage_id": "FUSE-SYN-011",
+      "value_class": "INVALID",
+      "purpose": "构造违反格式规则的设备编号以验证拒绝路径",
+      "constraint_rule_ids": ["RULE-SYN-012"],
+      "provenance_type": "TEST_DERIVATION"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "TC-SYN01-001",
+      "title": "提交合法报修单生成工单编号",
+      "module": "报修管理",
+      "function_name": "报修单管理",
+      "minimum_function": "提交报修单",
+      "objective": "验证合法输入的报修单提交成功并生成唯一工单编号，同时校验设备编号格式与紧急程度枚举",
+      "priority": "P1",
+      "test_level": "SYSTEM",
+      "test_techniques": ["REQUIREMENT_BASED", "EQUIVALENCE_PARTITION"],
+      "covered_dimensions": ["functional", "field_validation"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-SYN-2026A",
+        "test_design_item_id": "TDI-SYN-01",
+        "atomic_id": "AF-SYN-01",
+        "requirement_ids": ["REQ-SYN-01"],
+        "rule_ids": ["RULE-SYN-011", "RULE-SYN-012", "RULE-SYN-013"],
+        "field_usage_ids": ["FUSE-SYN-011", "FUSE-SYN-012"],
+        "evidence_ids": ["EVD-SYN-011", "EVD-SYN-012", "EVD-SYN-013"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "API_AUTOMATION"],
+        "fixture_category": "Static"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-001",
+          "description": "用户已登录并进入报修管理模块",
+          "provenance_type": "REQUIREMENT_FACT",
+          "source_refs": ["EVD-SYN-011"]
+        }
+      ],
+      "data_requirement_refs": ["DR-SYN-011", "DR-SYN-012", "DR-SYN-013"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "填写合法设备编号与紧急程度“中”，提交报修单",
+          "target": "提交报修单",
+          "data_requirement_refs": ["DR-SYN-011", "DR-SYN-012"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-001",
+              "description": "系统提示提交成功并展示生成的唯一工单编号",
+              "oracle_type": "BUSINESS_RULE",
+              "oracle_rule_ids": ["RULE-SYN-011"],
+              "oracle_evidence_ids": ["EVD-SYN-011"],
+              "machine_checkable": true
+            }
+          ]
+        },
+        {
+          "step_no": 2,
+          "action": "填写 7 位设备编号并提交报修单",
+          "target": "设备编号校验",
+          "data_requirement_refs": ["DR-SYN-013"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-002",
+              "description": "系统拒绝提交并提示设备编号必须为 8 位字母数字",
+              "oracle_type": "FIELD_RULE",
+              "oracle_rule_ids": ["RULE-SYN-012"],
+              "oracle_evidence_ids": ["EVD-SYN-012"],
+              "machine_checkable": true
+            }
+          ]
+        },
+        {
+          "step_no": 3,
+          "action": "紧急程度选择枚举之外的“紧急”并提交报修单",
+          "target": "紧急程度校验",
+          "data_requirement_refs": ["DR-SYN-012"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-003",
+              "description": "系统拒绝提交并提示紧急程度取值非法",
+              "oracle_type": "FIELD_RULE",
+              "oracle_rule_ids": ["RULE-SYN-013"],
+              "oracle_evidence_ids": ["EVD-SYN-013"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "input_item_count": 1,
+    "selected_item_count": 1,
+    "no_ready_item_count": 0,
+    "ready_dimension_count": 2,
+    "covered_ready_dimension_count": 2,
+    "case_count": 1
+  },
+  "acceptance": {
+    "verdict": "PASS",
+    "publishable": true,
+    "scope": "READY_DIMENSIONS_ONLY",
+    "reasons": []
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {
+      "req_id": "Q-TD-001",
+      "title": "需求文档解析",
+      "description": "用户上传 PRD/Markdown/Swagger，系统解析为结构化要素（功能点、角色、限制条件）",
+      "validation_status": "VALIDATED",
+      "source_trace": "11-PRD-TestDesign.md#2",
+      "confidence": 0.92
+    },
+    {
+      "req_id": "Q-TD-002",
+      "title": "测试用例生成",
+      "description": "AI 根据场景与边界条件合成正向与逆向用例，含步骤、测试数据、预期结果",
+      "validation_status": "VALIDATED",
+      "source_trace": "12-PRD-TestAsset.md#3",
+      "confidence": 0.9
+    },
+    {
+      "req_id": "Q-TD-003",
+      "title": "用例置信度分级",
+      "description": "模型分数只用于排序和提示；任何TestCase正式版本都必须创建ReviewTask并由人类批准",
+      "validation_status": "VALIDATED",
+      "source_trace": "12-PRD-TestAsset.md#4",
+      "confidence": 0.95
+    },
+    {
+      "req_id": "Q-TD-004",
+      "title": "退款金额计算",
+      "description": "订单退款时的金额计算规则（是否包含优惠券抵扣部分未在 PRD 中明确）",
+      "validation_status": "NEED_HUMAN_REVIEW",
+      "source_trace": "SourceSnapshot:refund-rule:ambiguous",
+      "confidence": 0.45
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "R-TD-001",
+      "condition": "RequirementDocument.status == 'COMPLETED'",
+      "action": "允许进入测试策略与计划草稿生成",
+      "source": "11-PRD-TestDesign.md#3",
+      "source_trace": "11-PRD-TestDesign.md#3",
+      "confidence": 0.9
+    },
+    {
+      "rule_id": "R-TD-002",
+      "condition": "DesignTestCase.status 经历 DRAFT→GENERATING→PENDING_REVIEW→APPROVED",
+      "action": "用例状态机流转",
+      "source": "12-PRD-TestAsset.md#4",
+      "source_trace": "12-PRD-TestAsset.md#4",
+      "confidence": 0.95
+    },
+    {
+      "rule_id": "R-TD-003",
+      "condition": "artifact_type == 'TEST_CASE'",
+      "action": "无论confidence_score高低都路由BLOCK_HUMAN并创建绑定versionId与contentDigest的ReviewTask",
+      "source": "12-PRD-TestAsset.md#4",
+      "source_trace": "12-PRD-TestAsset.md#4",
+      "confidence": 0.95
+    },
+    {
+      "rule_id": "R-TD-004",
+      "condition": "退款金额 = 订单总额 - 优惠券抵扣（推测，PRD 未明确）",
+      "action": "计算退款金额",
+      "source": "试点需求来源存在歧义",
+      "source_trace": "SourceSnapshot:refund-rule:ambiguous",
+      "conflict": true,
+      "conflict_refs": ["PRD §5.4 未明确含优惠券", "业务常识：退款应含优惠券"],
+      "resolution_status": "RESOLVED",
+      "resolution": "人工裁定（经 Skill 28 强制卡点）：退款金额 = 订单总额 - 优惠券抵扣部分。confidence 提升至 0.8。",
+      "confidence": 0.8
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-RD",
+      "name": "RequirementDocument",
+      "fields": [
+        {"name": "id", "type": "VARCHAR(64)", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "系统生成的 UUID，无 PII"},
+        {"name": "workspace_id", "type": "VARCHAR(64)", "sensitivity_level": "INTERNAL"},
+        {"name": "title", "type": "VARCHAR(256)", "sensitivity_level": "INTERNAL"},
+        {"name": "raw_content", "type": "MEDIUMTEXT", "sensitivity_level": "SENSITIVE", "sensitivity_rationale": "可能含客户业务信息，需脱敏"},
+        {"name": "parsed_elements", "type": "MEDIUMTEXT", "sensitivity_level": "INTERNAL"},
+        {"name": "status", "type": "VARCHAR(32)", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "枚举状态，无敏感信息"}
+      ]
+    },
+    {
+      "entity_id": "ENT-DTC",
+      "name": "DesignTestCase",
+      "fields": [
+        {"name": "id", "type": "VARCHAR(64)", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "UUID"},
+        {"name": "scenario_id", "type": "VARCHAR(64)", "sensitivity_level": "INTERNAL"},
+        {"name": "title", "type": "VARCHAR(256)", "sensitivity_level": "INTERNAL"},
+        {"name": "steps", "type": "TEXT", "sensitivity_level": "INTERNAL"},
+        {"name": "expected_result", "type": "TEXT", "sensitivity_level": "INTERNAL"},
+        {"name": "confidence_score", "type": "DECIMAL(3,2)", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "0-1 的分数，无敏感信息"}
+      ]
+    }
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-DTC",
+      "entity_id": "ENT-DTC",
+      "initial_state": "DRAFT",
+      "states": ["DRAFT", "GENERATING", "PENDING_REVIEW", "APPROVED"],
+      "transitions": [
+        {"from": "DRAFT", "to": "GENERATING", "trigger": "点击开始生成", "guard": null},
+        {"from": "GENERATING", "to": "PENDING_REVIEW", "trigger": "生成与机器检查完毕", "guard": null},
+        {"from": "PENDING_REVIEW", "to": "APPROVED", "trigger": "授权工程师确认", "guard": "ReviewPolicy satisfied"},
+        {"from": "PENDING_REVIEW", "to": "DRAFT", "trigger": "退回修改", "guard": null}
+      ],
+      "terminal_states": {"APPROVED": true}
+    }
+  ],
+  "interface_contracts": [
+    {
+      "contract_id": "IFC-UPLOAD",
+      "endpoint": "/api/v1/knowledge/source-imports",
+      "method": "POST",
+      "request_schema": {},
+      "response_schema": {"properties": {"designId": {}, "status": {}}}
+    },
+    {
+      "contract_id": "IFC-PARSE",
+      "endpoint": "/api/v1/testing-irs/compile",
+      "method": "POST",
+      "request_schema": {},
+      "response_schema": {"properties": {"parsedElements": {}, "status": {}}}
+    },
+    {
+      "contract_id": "IFC-GENCASES",
+      "endpoint": "/api/v1/test-case-drafts/generate",
+      "method": "POST",
+      "request_schema": {"properties": {"scenarioId": {}, "focusAreas": {}, "temperature": {}}},
+      "response_schema": {"properties": {"scenarioId": {}, "generatedCasesCount": {}, "cases": {}}}
+    },
+    {
+      "contract_id": "IFC-REVIEW-DECISION",
+      "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions",
+      "method": "POST",
+      "request_schema": {"properties": {"decision": {}, "contentDigest": {}}},
+      "response_schema": {"properties": {"reviewTaskId": {}, "status": {}, "code": {}}}
+    }
+  ],
+  "constraints": [
+    {"constraint_id": "C-TD-001", "target": "ENT-DTC.confidence_score", "expression": "0.00 <= x <= 1.00", "source_trace": "21-AI介入点降级矩阵.md#4"},
+    {"constraint_id": "C-TD-002", "target": "ENT-RD.status", "expression": "in {DRAFT, PARSING, COMPLETED, FAILED}", "source_trace": "03-术语表Glossary.md"}
+  ]
+}

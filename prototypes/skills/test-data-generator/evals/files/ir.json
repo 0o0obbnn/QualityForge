@@ -1,0 +1,5 @@
+{"entities":[{"entity_id":"ENT-RD","name":"RequirementDocument","fields":[
+  {"name":"id","type":"VARCHAR(64)","sensitivity_level":"PUBLIC","sensitivity_rationale":"UUID"},
+  {"name":"title","type":"VARCHAR(256)","sensitivity_level":"INTERNAL"},
+  {"name":"raw_content","type":"MEDIUMTEXT","sensitivity_level":"SENSITIVE","sensitivity_rationale":"may contain customer info"}
+]}]}

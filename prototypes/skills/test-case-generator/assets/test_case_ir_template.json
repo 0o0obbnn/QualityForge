@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "artifact_kind": "test_case_ir",
+    "artifact_id": "TCIR-<stable-id>",
+    "generated_at": "<ISO-8601>",
+    "lifecycle_status": "DRAFT | ACCEPTED"
+  },
+  "source_artifacts": {
+    "test_design_input": "<path-or-id>",
+    "test_design_input_sha256": "<sha256>",
+    "graph_snapshot_id": "<GRAPH-id>"
+  },
+  "generation_scope": {
+    "mode": "FULL_READY_SCOPE | SELECTED_SLICE",
+    "policy": "READY_DIMENSIONS_ONLY",
+    "selected_test_design_item_ids": ["<TDI-id>"],
+    "excluded_dimensions": [
+      {"test_design_item_id": "<TDI-id>", "dimension": "permission", "status": "BLOCKED", "reasons": ["<reason>"]}
+    ]
+  },
+  "data_requirements": [
+    {
+      "data_requirement_id": "DR-<stable-id>",
+      "test_design_item_id": "<TDI-id>",
+      "business_name": "<name>",
+      "field_usage_id": "<FUSE-id>",
+      "value_class": "VALID | INVALID | BOUNDARY | STATE_SETUP | REPRESENTATIVE",
+      "purpose": "<why this data is needed>",
+      "constraint_rule_ids": ["<RULE-id>"],
+      "provenance_type": "REQUIREMENT_FACT | TEST_DERIVATION"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "TC-<atomic>-001",
+      "title": "<human-readable title>",
+      "module": "<module>",
+      "function_name": "<function>",
+      "minimum_function": "<atomic title>",
+      "objective": "<single test intent>",
+      "priority": "P0 | P1 | P2 | P3",
+      "test_level": "SYSTEM",
+      "test_techniques": ["REQUIREMENT_BASED"],
+      "covered_dimensions": ["functional"],
+      "traceability": {
+        "graph_snapshot_id": "<GRAPH-id>",
+        "test_design_item_id": "<TDI-id>",
+        "atomic_id": "<AF-id>",
+        "requirement_ids": ["<REQ-id>"],
+        "rule_ids": ["<RULE-id>"],
+        "field_usage_ids": ["<FUSE-id>"],
+        "evidence_ids": ["<EVD-id>"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC | HUMAN_JUDGMENT | MIXED",
+        "candidate_channels": ["MANUAL", "UI_AUTOMATION"],
+        "fixture_category": "Static | Dynamic | Hybrid"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-001",
+          "description": "<condition>",
+          "provenance_type": "REQUIREMENT_FACT | TEST_DERIVATION",
+          "source_refs": ["<RULE/EVD/FUSE-id>"]
+        }
+      ],
+      "data_requirement_refs": ["<DR-id>"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "<observable action>",
+          "target": "<business target, not locator>",
+          "data_requirement_refs": ["<DR-id>"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-001",
+              "description": "<observable expected result>",
+              "oracle_type": "BUSINESS_RULE | FIELD_RULE | STATE | CONTRACT | DISPLAY | DERIVED",
+              "oracle_rule_ids": ["<RULE-id>"],
+              "oracle_evidence_ids": ["<EVD-id>"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "input_item_count": 1,
+    "selected_item_count": 1,
+    "no_ready_item_count": 0,
+    "ready_dimension_count": 1,
+    "covered_ready_dimension_count": 1,
+    "case_count": 1
+  },
+  "acceptance": {
+    "verdict": "PASS | REJECT",
+    "publishable": true,
+    "scope": "READY_DIMENSIONS_ONLY",
+    "reasons": []
+  }
+}

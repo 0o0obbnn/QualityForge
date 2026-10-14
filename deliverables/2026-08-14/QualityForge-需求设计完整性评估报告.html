@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 需求设计完整性评估报告 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--accent:#c62828;--line:#ccc;--bg:#fff;--muted:#555;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:"Akzidenz-Grotesk","Helvetica Neue",Helvetica,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.6;}
+  .wrap{max-width:920px;margin:0 auto;padding:48px 32px 96px;}
+  header{border-bottom:4px solid var(--ink);padding-bottom:16px;margin-bottom:32px;}
+  .kicker{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+  h1{font-size:28px;font-weight:700;margin:8px 0 6px;letter-spacing:-0.5px;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:17px;font-weight:700;margin:40px 0 12px;padding-top:12px;border-top:1px solid var(--line);letter-spacing:-0.3px;}
+  h3{font-size:14px;font-weight:700;margin:20px 0 8px;}
+  p{margin:6px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:12px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:11px;letter-spacing:0.5px;text-transform:uppercase;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .verdict{border:2px solid var(--ink);padding:18px 20px;margin:16px 0;font-size:15px;font-weight:600;}
+  .verdict .big{font-size:19px;display:block;margin-bottom:6px;}
+  .verdict .accent{color:var(--accent);}
+  .score{display:inline-block;min-width:34px;text-align:center;font-weight:700;padding:1px 6px;border:1px solid var(--ink);}
+  .tag{display:inline-block;padding:1px 8px;font-size:11px;font-weight:700;letter-spacing:0.5px;}
+  .tag.r{background:var(--accent);color:#fff;}
+  .tag.y{background:#eee;color:var(--ink);border:1px solid var(--ink);}
+  .tag.g{background:var(--ink);color:#fff;}
+  .note{font-size:12px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:8px 0;}
+  footer{margin-top:56px;border-top:2px solid var(--ink);padding-top:12px;font-size:11px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Requirement Completeness Assessment · QF-CA-2026-0814</div>
+  <h1>QualityForge 需求设计完整性评估报告</h1>
+  <div class="meta">评审对象:重构后需求体系(8 模块,2026-08-14 批 1-3 执行后状态) ｜ 版本:docs 现行(批次十八收口后) ｜ 责任人:项目负责人(yount)<br>
+  评审方法:六维框架(IEEE 29148)+ 异常/边界路径 16 场景 + 数据台账 11 实体 + 合规 8 维 + 第二视角反方审查 ｜ 证据:全部可追溯至文件与行号</div>
+</header>
+
+<h2>一、总体结论</h2>
+<div class="verdict">
+  <span class="big">需求设计<b>尚未完善</b>,但已具备 <span class="accent">「可开工」</span>条件;<b>「按当前文档直接开工不卡壳」不成立</b>。</span>
+  文档/契约层完善度 ≈88.8%(已知台账关闭率);生产就绪口径的完整性评分需下调至 3.5/5。反方审查发现 5 个两轮复核未覆盖的盲区,集中在执行域与独立验证域——恰好是 M1 准出所在域,预计直接开工会在 M1 中段卡 2-3 周。放行前提:3 项第 0 周补丁 + 6 项卡点显式登记。
+</div>
+
+<h2>二、分维度评分(修正后)</h2>
+<table>
+  <tr><th>维度</th><th>8-13 首评</th><th>8-14 复核</th><th>本次修正</th><th>依据</th></tr>
+  <tr><td>明确性</td><td>3.88</td><td>4.13</td><td><span class="score">4.0</span></td><td>PAUSED 矛盾、"独立 verifier"所指未定义、文件名-内容错位</td></tr>
+  <tr><td>可测试性</td><td>4.38</td><td>4.75</td><td><span class="score">4.3</span></td><td>新增对象(INDEPENDENT_VERIFY/租约/暂停/CoverageReport 维度)无 AC;4.75 过高</td></tr>
+  <tr><td>一致性</td><td>3.75</td><td>4.38</td><td><span class="score">4.0</span></td><td>38/53 口径残留 104、21 号引用落点漂移、PAUSED、幂等接线不齐</td></tr>
+  <tr><td>完整性</td><td>3.25</td><td>4.00</td><td><span class="score">3.5</span></td><td>生产就绪口径:执行域三件套、INDEPENDENT_VERIFY 行为、CoverageReport API、GDPR 删除权均缺</td></tr>
+  <tr><td>可行性</td><td>4.00</td><td>4.00</td><td><span class="score">4.0</span></td><td>维持(承压:第 0 周补丁 + M1 准出三项叠加)</td></tr>
+  <tr><td>必要性</td><td>4.75</td><td>4.75</td><td><span class="score">4.75</span></td><td>维持(轻议:INDEPENDENT_VERIFY 成本收益未论证)</td></tr>
+  <tr><td><b>综合</b></td><td>4.01</td><td>4.35</td><td><span class="score">≈4.1</span></td><td>文档层口径;生产就绪口径完整性 3.5 拉低综合</td></tr>
+</table>
+<p class="note">口径声明:88.8% 与 4.35 均为「文档层+方案层」口径(方案就绪计 0.5 分),不度量运行时验证,也不度量台账之外的未知盲区——系统性乐观偏差已识别。</p>
+
+<h2>三、反方审查发现的 5 个盲区(均不在 48 条台账内)</h2>
+<table>
+  <tr><th>#</th><th>盲区</th><th>级别</th><th>证据</th><th>影响</th></tr>
+  <tr><td>B1</td><td>表数口径只修一半:38 号仍写 104、53 号写 71 条路径/104 表;L1 复扫对此无感知</td><td><span class="tag y">中</span></td><td>38 §1/§139、53 §138 vs 实算 106 表/80 paths</td><td>迁移核对脚本断言与文档对不上</td></tr>
+  <tr><td>B2</td><td>INDEPENDENT_VERIFY 有存储无行为:verifier 独立性/裁决规则/失败流向/超时/证据呈现全无 AC;21 号引用 05 §5.6.3 落点不存在</td><td><span class="tag r">高</span></td><td>32 L539、33 L1879 vs 05 §5.6.3 实测</td><td>M1 准出开发自创行为,评审无依据</td></tr>
+  <tr><td>B3</td><td>执行域三件套缺失:t_execution_task 无租约/超时字段、32 无 Runner 心跳端点、任务状态无只追加事件表</td><td><span class="tag r">高</span></td><td>33 L1238 vs 14 §5、32 全量 operationId、20 §4.2</td><td>"失联→租约到期→新 attempt"链路无落点</td></tr>
+  <tr><td>B4</td><td>"暂停"需求与状态机矛盾:14 §2 可暂停,33/05 状态枚举无 PAUSED</td><td><span class="tag r">高</span></td><td>14 §2 vs 33 L1241 vs 05 §5.5.4</td><td>实现时必然发明第四套状态</td></tr>
+  <tr><td>B5</td><td>CoverageReport 表有/口径有/API 没有:32 无覆盖报告操作;EXECUTABLE/HUMAN_ACCEPTANCE 维无存储</td><td><span class="tag r">高</span></td><td>32 全量 operationId vs 33 L1410 vs 04 §8.1</td><td>报告写不进去,15 号 AC-03 无法验收</td></tr>
+</table>
+
+<h2>四、异常/边界路径核对(16 场景)</h2>
+<table>
+  <tr><th>判定</th><th>场景</th><th>说明</th></tr>
+  <tr><td><span class="tag g">已覆盖 7 项</span></td><td>权限不足(E5)/并发冲突(E6)/断网(E7)/重复数据(E9)/损坏数据(E10)/Jira 不可达(E13)/版本陈旧(E16)</td><td>34/36/05/11/15 号均有行为定义与 AC</td></tr>
+  <tr><td><span class="tag y">部分缺口 5 项</span></td><td>审核超时(E1)/API 超时(E3)/幂等接线(E4)/空分母 N/A 载体(E8)/配额预算(E11)</td><td>原则有、阈值与载体缺;not_applicable_dimensions 无结构化字段</td></tr>
+  <tr><td><span class="tag r">实质缺口 3 项</span></td><td>执行超时(E2)/暂停语义(E14)/Runner 失联(E15)</td><td>与盲区 B3/B4 同源:租约/心跳/暂停均无落点</td></tr>
+</table>
+
+<h2>五、数据台账核对(11 实体)</h2>
+<table>
+  <tr><th>判定</th><th>实体</th></tr>
+  <tr><td><span class="tag g">三件齐备 7 项</span></td><td>WorkItem/ReviewTask/Defect/TestReport/KnowledgeEntry/AgentSession/CalibrationRecord(存储+事件/版本+只追加可追踪)</td></tr>
+  <tr><td><span class="tag y">可接受 2 项</span></td><td>Workspace(audit 兜底)、VerifyVerdict(表语义只追加但行为契约缺)</td></tr>
+  <tr><td><span class="tag r">实质缺口 2 项</span></td><td>ExecutionTask(无事件表、不在只追加清单)、CoverageReport(无 API 落点、缺两维存储)</td></tr>
+</table>
+
+<h2>六、合规核对</h2>
+<table>
+  <tr><th>维度</th><th>判定</th><th>说明</th></tr>
+  <tr><td>RBAC 六模板/审计/Secret 双信封/日志不泄密/安全测试范围</td><td><span class="tag g">✅</span></td><td>34/33/20 号完整,AC 齐备</td></tr>
+  <tr><td>数据出站(真实 LLM)</td><td><span class="tag y">🟡</span></td><td>V1 deterministic-local 规避,但 V2 切换路径与出站审批流无需求</td></tr>
+  <tr><td><b>GDPR 数据主体权利</b></td><td><span class="tag r">🔴</span></td><td>无删除请求流程、无数据导出、无 PII 标记、无保留期限默认值;20 §4.6 归档策略与删除权冲突且无处理路径——连"非目标"声明都没有</td></tr>
+</table>
+
+<h2>七、缺口清单与优先级(必改项)</h2>
+<table>
+  <tr><th>优先级</th><th>缺口</th><th>改进建议</th><th>责任</th></tr>
+  <tr><td><span class="tag r">第 0 周补丁</span></td><td>B2 INDEPENDENT_VERIFY 行为契约</td><td>补 verifier 独立性定义(建议:与 producer 不同模型或至少不同会话+权限隔离)、裁决组合规则(确定性检查通过→verifier 裁决)、FAIL/REVIEW_REQUIRED 流向、超时处理、三层证据呈现;修正 21 号对 05 §5.6.3 的错误引用</td><td>PO 裁决 + ENG 起草 + REV 审定</td></tr>
+  <tr><td><span class="tag r">第 0 周补丁</span></td><td>B3 执行域三件套</td><td>t_execution_task 补 timeout_seconds/lease_expires_at;32 补 Runner 心跳上报端点(/runners/heartbeat);任务状态事件表或显式声明 AuditLog 承载</td><td>ENG + PO</td></tr>
+  <tr><td><span class="tag r">第 0 周补丁</span></td><td>B5 CoverageReport API + 两维存储</td><td>32 补覆盖报告读写 operation(schema 已有骨架);04/33 定义 EXECUTABLE/HUMAN_ACCEPTANCE 汇总计算与存储方案</td><td>PO + ENG</td></tr>
+  <tr><td><span class="tag r">第 0 周补丁</span></td><td>B1 表数口径全库收敛 + L1 增补</td><td>38/53/05 同步 106 表/80 paths;L1 复扫增加"38/53 口径核对"检查项</td><td>评审 Agent + PO</td></tr>
+  <tr><td><span class="tag y">M1 内裁决</span></td><td>B4 PAUSED 语义</td><td>裁决:暂停=新状态(入状态机)或=BLOCKED+原因码(复用)二选一,落 05/33/14</td><td>PO</td></tr>
+  <tr><td><span class="tag y">M1 内定义</span></td><td>E1 审核超时行为、E8 空分母载体、E11 配额行为</td><td>超时升级/催办流程;not_applicable_dimensions 结构化字段;Workspace 级配额表或显式非目标</td><td>PO + ENG</td></tr>
+  <tr><td><span class="tag y">V1 显式声明</span></td><td>GDPR 删除权/导出</td><td>至少声明"内部工具 V1 非目标"并登记;或补删除请求流程</td><td>PO</td></tr>
+</table>
+
+<h2>八、风险登记与决策记录</h2>
+<table>
+  <tr><th>风险</th><th>级别</th><th>应对</th><th>决策记录</th></tr>
+  <tr><td>M1 中段卡壳(执行域+独立验证域契约真空)</td><td>高</td><td>第 0 周补丁先行;卡点 1-6 显式登记进 M1 计划</td><td>待 PO 采纳</td></tr>
+  <tr><td>开发自创契约污染评审基线</td><td>高</td><td>补丁完成前禁止 INDEPENDENT_VERIFY/执行域实现;实现后评审基线更新</td><td>待 PO 采纳</td></tr>
+  <tr><td>完善度误读(88.8%≈接近完成)</td><td>中</td><td>本报告口径声明 + 运行时维度以 M1/M2 准出验收为唯一判据</td><td>已声明(本报告 §二)</td></tr>
+  <tr><td>QP-RSK-004(延期/缩范围)</td><td>高</td><td>M1 计划显式排入三项准出项(维持既有裁决)</td><td>已记录(8-14 对照表)</td></tr>
+</table>
+
+<h2>九、可执行路线图</h2>
+<table>
+  <tr><th>窗口</th><th>动作</th><th>验收</th></tr>
+  <tr><td>第 0 周</td><td>3 项补丁(INDEPENDENT_VERIFY 行为、执行域三件套、CoverageReport API)+ 口径收敛 + L1 增补</td><td>补丁后 L1 复扫 v3 全绿;卡点 1-6 关闭或显式登记</td></tr>
+  <tr><td>M1 期间</td><td>PAUSED 裁决、E1/E8/E11 定义、029 剩余 6 PRD(已落盘)、026 已登记</td><td>M1 准出验收(INDEPENDENT_VERIFY 运行时 + 031 N1-N6 + 三类产出物闭环)</td></tr>
+  <tr><td>V1 声明</td><td>GDPR 非目标声明或删除流程;V2 真实 LLM 出站审批流</td><td>合规登记表更新</td></tr>
+</table>
+
+<h2>十、完整度检查框架(可复用复核清单)</h2>
+<ol>
+  <li><b>六维</b>:明确性(矛盾/所指)/可测试性(每对象有 AC)/一致性(口径全库收敛,含 38/53)/完整性(生产就绪口径)/可行性(契约真空)/必要性(新增项有成本收益)</li>
+  <li><b>异常 16 场景</b>:超时(审核/执行/API)/幂等/权限/并发/断网/数据异常(空分母/重复/损坏)/资源耗尽/外部依赖失效/取消暂停/Runner 失联/版本陈旧</li>
+  <li><b>数据三件套</b>:每实体=存储+事件/版本+只追加可追踪</li>
+  <li><b>合规 8 维</b>:RBAC/审计/Secret/出站/日志/GDPR 权利/MFA/安全测试</li>
+  <li><b>反方视角</b>:评分挑战(新契约是否无 AC)、口径声明(评分是文档层还是生产就绪)、盲区假设(台账之外还有什么)</li>
+</ol>
+
+<h2>十一、评审答疑(关键 Q&A)</h2>
+<table>
+  <tr><th>问题</th><th>回答</th></tr>
+  <tr><td>需求设计是否已完善?</td><td><b>未完善</b>。文档层 88.8%(已知台账口径),生产就绪口径完整性 3.5/5;5 个新盲区待补</td></tr>
+  <tr><td>可否进入开发?</td><td><b>条件性可开工</b>:3 项第 0 周补丁完成后放行;不满足则 M1 中段卡 2-3 周</td></tr>
+  <tr><td>为什么两轮复核没发现这些?</td><td>复核度量"已知台账关闭率",盲区在台账之外(执行域/独立验证域契约真空);这正是反方视角的价值</td></tr>
+  <tr><td>88.8% 意味着什么?</td><td>只表示 48 条已知问题的文档层关闭率;不度量运行时验证与未知盲区,不可读作"接近完成"</td></tr>
+</table>
+
+<footer>QualityForge 需求设计完整性评估报告 · QF-CA-2026-0814 ｜ 方法:六维框架 + 16 异常场景 + 11 实体台账 + 8 维合规 + 反方第二视角 ｜ 证据全部可追溯(文件+行号)</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,673 @@
+[
+  {
+    "scenario_id": "S-AUTH-001",
+    "req_id": "Q-AUTH-001",
+    "rule_id": "R-AUTH-002",
+    "facet": "normal",
+    "title": "首次部署使用合规密码完成管理员初始化"
+  },
+  {
+    "scenario_id": "S-AUTH-002",
+    "req_id": "Q-AUTH-002",
+    "rule_id": "R-AUTH-005",
+    "facet": "normal",
+    "title": "正确邮箱密码登录成功并签发会话"
+  },
+  {
+    "scenario_id": "S-AUTH-003",
+    "req_id": "Q-AUTH-003",
+    "rule_id": "R-AUTH-005",
+    "facet": "normal",
+    "title": "携带有效会话读取当前用户档案"
+  },
+  {
+    "scenario_id": "S-AUTH-004",
+    "req_id": "Q-AUTH-001",
+    "rule_id": "R-AUTH-001",
+    "facet": "abnormal",
+    "title": "setup 已完成后重复初始化被 409 拒绝"
+  },
+  {
+    "scenario_id": "S-AUTH-005",
+    "req_id": "Q-AUTH-002",
+    "rule_id": "R-AUTH-003",
+    "facet": "abnormal",
+    "title": "错误密码登录返回 401 INVALID_CREDENTIALS"
+  },
+  {
+    "scenario_id": "S-AUTH-006",
+    "req_id": "Q-AUTH-002",
+    "rule_id": "R-AUTH-004",
+    "facet": "abnormal",
+    "title": "60 秒内 5 次登录失败后触发 429 限流"
+  },
+  {
+    "scenario_id": "S-AUTH-007",
+    "req_id": "Q-AUTH-001",
+    "rule_id": "R-AUTH-002",
+    "facet": "boundary",
+    "title": "setup password 在 12/256 边界及越界值的行为"
+  },
+  {
+    "scenario_id": "S-AUTH-008",
+    "req_id": "Q-AUTH-003",
+    "rule_id": "R-AUTH-006",
+    "facet": "permission",
+    "title": "未认证访问受保护接口返回 401"
+  },
+  {
+    "scenario_id": "S-WI-001",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-001",
+    "facet": "normal",
+    "title": "携带全部必填字段创建工作项成功"
+  },
+  {
+    "scenario_id": "S-WI-002",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-PAGE-001",
+    "facet": "normal",
+    "title": "工作项列表分页查询返回信封与分页字段"
+  },
+  {
+    "scenario_id": "S-WI-003",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-003",
+    "facet": "normal",
+    "title": "按 ID 读取存在的工作项返回完整字段"
+  },
+  {
+    "scenario_id": "S-WI-004",
+    "req_id": "Q-WI-004",
+    "rule_id": "R-WI-011",
+    "facet": "normal",
+    "title": "SLA 汇总按优先级窗口正确分类 met/overdue"
+  },
+  {
+    "scenario_id": "S-WI-005",
+    "req_id": "Q-WI-002",
+    "rule_id": "R-WI-007",
+    "facet": "state_transition",
+    "title": "BACKLOG 工作项成功流转到 REWORK",
+    "transition_ref": "SM-WORKITEM:BACKLOG->REWORK"
+  },
+  {
+    "scenario_id": "S-WI-006",
+    "req_id": "Q-WI-003",
+    "rule_id": "R-WI-010",
+    "facet": "normal",
+    "title": "分派工作项给合法 assignee 成功"
+  },
+  {
+    "scenario_id": "S-WI-007",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-001",
+    "facet": "abnormal",
+    "title": "缺失任一必填字段创建工作项返回 422"
+  },
+  {
+    "scenario_id": "S-WI-008",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-003",
+    "facet": "abnormal",
+    "title": "读取不存在的工作项返回 404"
+  },
+  {
+    "scenario_id": "S-WI-009",
+    "req_id": "Q-WI-002",
+    "rule_id": "R-WI-004",
+    "facet": "abnormal",
+    "title": "lockVersion 陈旧时流转返回 409 STALE_LOCK_VERSION"
+  },
+  {
+    "scenario_id": "S-WI-010",
+    "req_id": "Q-WI-002",
+    "rule_id": "R-WI-005",
+    "facet": "abnormal",
+    "title": "expectedCurrentStatus 不符时流转返回 409"
+  },
+  {
+    "scenario_id": "S-WI-011",
+    "req_id": "Q-WI-002",
+    "rule_id": "R-WI-006",
+    "facet": "abnormal",
+    "title": "targetStatus 非 REWORK 时流转返回 422"
+  },
+  {
+    "scenario_id": "S-WI-012",
+    "req_id": "Q-WI-003",
+    "rule_id": "R-WI-009",
+    "facet": "abnormal",
+    "title": "assigneeId 缺失或非法 UUID 时分派返回 422"
+  },
+  {
+    "scenario_id": "S-WI-013",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-002",
+    "facet": "boundary",
+    "title": "title 恰 256 字符通过、257 字符拒绝"
+  },
+  {
+    "scenario_id": "S-WI-014",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-PAGE-001",
+    "facet": "boundary",
+    "title": "pageSize 在 1/200 边界通过、0/201 拒绝"
+  },
+  {
+    "scenario_id": "S-WI-015",
+    "req_id": "Q-WI-004",
+    "rule_id": "R-WI-012",
+    "facet": "boundary",
+    "title": "分组 total=0 时 metRate 返回 0，P3/CANCELLED 不算 overdue"
+  },
+  {
+    "scenario_id": "S-WI-016",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-003",
+    "facet": "permission",
+    "title": "跨 workspace 访问他人工作项返回 404"
+  },
+  {
+    "scenario_id": "S-RT-001",
+    "req_id": "Q-RT-001",
+    "rule_id": "R-IDM-001",
+    "facet": "normal",
+    "title": "携带幂等键创建绑定精确版本的审核任务"
+  },
+  {
+    "scenario_id": "S-RT-002",
+    "req_id": "Q-RT-001",
+    "rule_id": "R-RT-007",
+    "facet": "normal",
+    "title": "读取审核任务绑定的不可变产物与摘要"
+  },
+  {
+    "scenario_id": "S-RT-003",
+    "req_id": "Q-RT-003",
+    "rule_id": "R-RT-007",
+    "facet": "boundary",
+    "title": "首版产物 Diff 无基线时降级返回 hasBaseline=false"
+  },
+  {
+    "scenario_id": "S-RT-004",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-WI-008",
+    "facet": "normal",
+    "title": "同一幂等键重放审核决策返回首次结果"
+  },
+  {
+    "scenario_id": "S-RT-005",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-004",
+    "facet": "state_transition",
+    "title": "APPROVE 决策使任务迁移到 APPROVED",
+    "transition_ref": "SM-REVIEWTASK:OPEN->APPROVED"
+  },
+  {
+    "scenario_id": "S-RT-006",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-004",
+    "facet": "state_transition",
+    "title": "REQUEST_CHANGES 决策使任务迁移到 CHANGES_REQUESTED",
+    "transition_ref": "SM-REVIEWTASK:OPEN->CHANGES_REQUESTED"
+  },
+  {
+    "scenario_id": "S-RT-007",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-004",
+    "facet": "state_transition",
+    "title": "REJECT 决策使任务迁移到 REJECTED",
+    "transition_ref": "SM-REVIEWTASK:OPEN->REJECTED"
+  },
+  {
+    "scenario_id": "S-RT-008",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-005",
+    "facet": "normal",
+    "title": "退回决策使产出物版本 reviewStatus 回 DRAFT"
+  },
+  {
+    "scenario_id": "S-RT-009",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-002",
+    "facet": "abnormal",
+    "title": "终态审核任务再决策返回 409"
+  },
+  {
+    "scenario_id": "S-RT-010",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-003",
+    "facet": "abnormal",
+    "title": "contentDigest 陈旧时决策返回 409 STALE_ARTIFACT_VERSION"
+  },
+  {
+    "scenario_id": "S-RT-011",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-001",
+    "facet": "permission",
+    "title": "非人类主体提交审核决策返回 403"
+  },
+  {
+    "scenario_id": "S-RT-012",
+    "req_id": "Q-RT-002",
+    "rule_id": "R-RT-006",
+    "facet": "permission",
+    "title": "缺少产出物审批能力时决策返回 403"
+  },
+  {
+    "scenario_id": "S-EX-001",
+    "req_id": "Q-EX-001",
+    "rule_id": "R-EX-001",
+    "facet": "normal",
+    "title": "携带必填字段创建执行计划成功"
+  },
+  {
+    "scenario_id": "S-EX-002",
+    "req_id": "Q-EX-001",
+    "rule_id": "R-EX-001",
+    "facet": "abnormal",
+    "title": "缺失必填字段创建执行计划返回 422"
+  },
+  {
+    "scenario_id": "S-QA-001",
+    "req_id": "Q-QA-001",
+    "rule_id": "R-ENV-001",
+    "facet": "normal",
+    "title": "创建测试报告返回 201 与统一信封"
+  },
+  {
+    "scenario_id": "S-QA-002",
+    "req_id": "Q-QA-002",
+    "rule_id": "R-IDM-001",
+    "facet": "normal",
+    "title": "创建缺陷外部同步尝试并绑定幂等键"
+  },
+  {
+    "scenario_id": "S-QA-003",
+    "req_id": "Q-QA-001",
+    "rule_id": "R-QA-001",
+    "facet": "abnormal",
+    "title": "executionResultRefs 为空创建分析返回 422"
+  },
+  {
+    "scenario_id": "S-OBS-001",
+    "req_id": "Q-OBS-001",
+    "rule_id": "R-WI-007",
+    "facet": "normal",
+    "title": "工作项流转后事件流可检索 work_item.transitioned"
+  },
+  {
+    "scenario_id": "S-OBS-002",
+    "req_id": "Q-OBS-001",
+    "rule_id": "R-ENV-001",
+    "facet": "normal",
+    "title": "指标接口返回受控指标与统一信封"
+  },
+  {
+    "scenario_id": "S-ENV-001",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-ENV-001",
+    "facet": "normal",
+    "title": "所有响应包含 code/message/traceId 必填信封字段"
+  },
+  {
+    "scenario_id": "S-ENV-002",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-ENV-002",
+    "facet": "normal",
+    "title": "响应体 JSON 字段为 camelCase 无 snake_case 泄漏"
+  },
+  {
+    "scenario_id": "S-PLN-001",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-PAGE-001",
+    "facet": "normal",
+    "title": "已实现列表接口冒烟返回 200 信封"
+  },
+  {
+    "scenario_id": "S-PLN-002",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-IDM-001",
+    "facet": "abnormal",
+    "title": "关键写操作缺失幂等键返回 422"
+  },
+  {
+    "scenario_id": "S-PLN-003",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-IDM-001",
+    "facet": "normal",
+    "title": "已实现写操作携带幂等键按契约必填字段创建成功"
+  },
+  {
+    "scenario_id": "S-VAL-001",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-VAL-001",
+    "facet": "abnormal",
+    "title": "创建接口缺失任一必填字段返回 422"
+  },
+  {
+    "scenario_id": "S-VAL-002",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-VAL-001",
+    "facet": "abnormal",
+    "title": "非法枚举值与非 UUID 路径参数被 422 拒绝"
+  },
+  {
+    "scenario_id": "S-VAL-003",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-VAL-002",
+    "facet": "abnormal",
+    "title": "未占用资源 ID 访问路径端点返回 404"
+  },
+  {
+    "scenario_id": "S-WI-019",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-008",
+    "facet": "normal",
+    "title": "同一幂等键重放工作项创建返回同一资源"
+  },
+  {
+    "scenario_id": "S-ERR-001",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-VAL-003",
+    "facet": "abnormal",
+    "title": "空请求体/畸形 JSON/错误 Content-Type 被 4xx 拒绝"
+  },
+  {
+    "scenario_id": "S-ERR-002",
+    "req_id": "Q-ENV-001",
+    "rule_id": "R-IDM-001",
+    "facet": "boundary",
+    "title": "Idempotency-Key 15/16/128/129 边界行为"
+  },
+  {
+    "scenario_id": "S-ERR-003",
+    "req_id": "Q-WI-002",
+    "rule_id": "R-WI-004",
+    "facet": "abnormal",
+    "title": "并发乐观锁竞争恰好一个请求成功"
+  },
+  {
+    "scenario_id": "S-ERR-004",
+    "req_id": "Q-WI-001",
+    "rule_id": "R-WI-002",
+    "facet": "boundary",
+    "title": "title 特殊字符契约未禁止应通过、超长应拒绝"
+  },
+  {
+    "scenario_id": "S-RT-013",
+    "req_id": "Q-RT-001",
+    "rule_id": "R-RT-008",
+    "facet": "abnormal",
+    "title": "approveDisabledReason 判定：TASK_CLOSED 与 STALE_VERSION"
+  },
+  {
+    "scenario_id": "S-CTX-001",
+    "req_id": "Q-CTX-001",
+    "rule_id": "R-CTX-001",
+    "facet": "normal",
+    "title": "成员域工作区投影、专用切换与驾驶舱上下文投影"
+  },
+  {
+    "scenario_id": "S-CTX-002",
+    "req_id": "Q-CTX-001",
+    "rule_id": "R-CTX-003",
+    "facet": "normal",
+    "title": "常用项目置顶后 listWorkspaces 置顶组优先排序"
+  },
+  {
+    "scenario_id": "S-CTX-003",
+    "req_id": "Q-CTX-001",
+    "rule_id": "R-CTX-002",
+    "facet": "abnormal",
+    "title": "Release 归档后不可再被交付任务引用"
+  },
+  {
+    "scenario_id": "S-COL-001",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-001",
+    "facet": "normal",
+    "title": "协作会话创建与消息只追加两面"
+  },
+  {
+    "scenario_id": "S-COL-002",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-002",
+    "facet": "state_transition",
+    "title": "澄清答复形成 CONFIRMED 证据并解除会话阻塞，重复答复被拒",
+    "transition_ref": "SM-CLARIFICATION:OPEN->ANSWERED"
+  },
+  {
+    "scenario_id": "S-COL-003",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-003",
+    "facet": "normal",
+    "title": "任务卡固化提交即 SUBMITTED 并可列表回读"
+  },
+  {
+    "scenario_id": "S-COL-004",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-004",
+    "facet": "state_transition",
+    "title": "AgentPlan 摘要漂移拒绝、批准联动任务卡 ACTIVE",
+    "transition_ref": "SM-AGENTPLAN:PENDING_APPROVAL->APPROVED"
+  },
+  {
+    "scenario_id": "S-COL-005",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-004",
+    "facet": "abnormal",
+    "title": "非 PENDING_APPROVAL 计划重复裁决 409"
+  },
+  {
+    "scenario_id": "S-COL-006",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-005",
+    "facet": "abnormal",
+    "title": "工作项无已批准 AgentPlan 时启动会话被拒"
+  },
+  {
+    "scenario_id": "S-RC-001",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-001",
+    "facet": "state_transition",
+    "title": "会话 PAUSE 命令到安全点生效并以回执为唯一事实",
+    "transition_ref": "SM-AGENTSESSION:RUNNING->PAUSED"
+  },
+  {
+    "scenario_id": "S-RC-002",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-002",
+    "facet": "abnormal",
+    "title": "终态会话非 RETRY 命令 409 与幂等重放"
+  },
+  {
+    "scenario_id": "S-RC-003",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-004",
+    "facet": "normal",
+    "title": "执行任务命令与不可变检查点列表"
+  },
+  {
+    "scenario_id": "S-RC-004",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-003",
+    "facet": "normal",
+    "title": "运行时授权只追加与预算面读写"
+  },
+  {
+    "scenario_id": "S-PUB-001",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "normal",
+    "title": "APPROVED 策略版本发布成功并回填根发布指针"
+  },
+  {
+    "scenario_id": "S-PUB-002",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "abnormal",
+    "title": "非 APPROVED 版本发布 409 ASSET_NOT_APPROVED 与幂等重放"
+  },
+  {
+    "scenario_id": "S-PUB-003",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-002",
+    "facet": "state_transition",
+    "title": "发布取代触发旧版本与下游计划版本 STALE",
+    "transition_ref": "SM-ASSETVERSION:PUBLISHED->STALE"
+  },
+  {
+    "scenario_id": "S-PUB-004",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-RT-009",
+    "facet": "state_transition",
+    "title": "CRITICAL 工作项 FOUR_EYES 双人门：部分批准与同人二次批准 409",
+    "transition_ref": "SM-REVIEWTASK:OPEN->IN_PROGRESS"
+  },
+  {
+    "scenario_id": "S-RT-014",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-RT-009",
+    "facet": "state_transition",
+    "title": "第二名不同审批人批准使 approvals 达标，任务 IN_PROGRESS→APPROVED",
+    "transition_ref": "SM-REVIEWTASK:IN_PROGRESS->APPROVED"
+  },
+  {
+    "scenario_id": "S-RT-015",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-002",
+    "facet": "state_transition",
+    "title": "上游发布取代触发下游失效，未决审核任务 CANCELLED",
+    "transition_ref": "SM-REVIEWTASK:OPEN->CANCELLED"
+  },
+  {
+    "scenario_id": "S-PUB-005",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "state_transition",
+    "title": "审核批准使资产版本 PENDING_REVIEW→APPROVED",
+    "transition_ref": "SM-ASSETVERSION:PENDING_REVIEW->APPROVED"
+  },
+  {
+    "scenario_id": "S-PUB-006",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "state_transition",
+    "title": "退回使资产版本回 DRAFT 待修订",
+    "transition_ref": "SM-ASSETVERSION:PENDING_REVIEW->DRAFT"
+  },
+  {
+    "scenario_id": "S-PUB-007",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "state_transition",
+    "title": "发布命令使资产版本 APPROVED→PUBLISHED",
+    "transition_ref": "SM-ASSETVERSION:APPROVED->PUBLISHED"
+  },
+  {
+    "scenario_id": "S-PUB-008",
+    "req_id": "Q-PUB-001",
+    "rule_id": "R-PUB-001",
+    "facet": "state_transition",
+    "title": "提交新版本使 DRAFT 版本重新进入 PENDING_REVIEW",
+    "transition_ref": "SM-ASSETVERSION:DRAFT->PENDING_REVIEW"
+  },
+  {
+    "scenario_id": "S-COL-007",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-004",
+    "facet": "state_transition",
+    "title": "计划批准联动任务卡 SUBMITTED→ACTIVE",
+    "transition_ref": "SM-TASKCARD:SUBMITTED->ACTIVE"
+  },
+  {
+    "scenario_id": "S-COL-008",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-003",
+    "facet": "state_transition",
+    "title": "新任务卡提交使旧 SUBMITTED 卡 SUPERSEDED",
+    "transition_ref": "SM-TASKCARD:SUBMITTED->SUPERSEDED"
+  },
+  {
+    "scenario_id": "S-COL-009",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-003",
+    "facet": "state_transition",
+    "title": "新任务卡提交使旧 ACTIVE 卡 SUPERSEDED",
+    "transition_ref": "SM-TASKCARD:ACTIVE->SUPERSEDED"
+  },
+  {
+    "scenario_id": "S-COL-010",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-004",
+    "facet": "state_transition",
+    "title": "拒绝使计划进入 REJECTED 终态",
+    "transition_ref": "SM-AGENTPLAN:PENDING_APPROVAL->REJECTED"
+  },
+  {
+    "scenario_id": "S-COL-011",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-004",
+    "facet": "state_transition",
+    "title": "新版本计划使旧 PENDING_APPROVAL 计划 SUPERSEDED",
+    "transition_ref": "SM-AGENTPLAN:PENDING_APPROVAL->SUPERSEDED"
+  },
+  {
+    "scenario_id": "S-COL-012",
+    "req_id": "Q-COL-001",
+    "rule_id": "R-COL-001",
+    "facet": "state_transition",
+    "title": "澄清提出（AGENT/SERVICE 面）使会话 RUNNING→BLOCKED",
+    "transition_ref": "SM-AGENTSESSION:RUNNING->BLOCKED"
+  },
+  {
+    "scenario_id": "S-RC-005",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-001",
+    "facet": "state_transition",
+    "title": "RESUME 命令使暂停会话 PAUSED→RUNNING（恢复前重新预检）",
+    "transition_ref": "SM-AGENTSESSION:PAUSED->RUNNING"
+  },
+  {
+    "scenario_id": "S-RC-006",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-001",
+    "facet": "state_transition",
+    "title": "审核全部通过使会话收敛 SUCCEEDED",
+    "transition_ref": "SM-AGENTSESSION:RUNNING->SUCCEEDED"
+  },
+  {
+    "scenario_id": "S-RC-007",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-002",
+    "facet": "state_transition",
+    "title": "审核 REJECT 使会话收敛 FAILED",
+    "transition_ref": "SM-AGENTSESSION:RUNNING->FAILED"
+  },
+  {
+    "scenario_id": "S-RC-008",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-002",
+    "facet": "state_transition",
+    "title": "CANCEL 命令使会话进入 CANCELLED 终态",
+    "transition_ref": "SM-AGENTSESSION:RUNNING->CANCELLED"
+  },
+  {
+    "scenario_id": "S-RC-009",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-COL-002",
+    "facet": "state_transition",
+    "title": "澄清全部答复使阻塞会话 BLOCKED→RUNNING",
+    "transition_ref": "SM-AGENTSESSION:BLOCKED->RUNNING"
+  },
+  {
+    "scenario_id": "S-RC-010",
+    "req_id": "Q-RC-001",
+    "rule_id": "R-RC-001",
+    "facet": "state_transition",
+    "title": "阻塞会话在审核全部通过后收敛 SUCCEEDED",
+    "transition_ref": "SM-AGENTSESSION:BLOCKED->SUCCEEDED"
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "skill": "12",
+  "checked_at": "2026-08-11T15:53:10.670000+00:00",
+  "overall_verdict": "GATE_PASS",
+  "dimensions": {
+    "rule": {
+      "dimension": "rule",
+      "numerator": 2,
+      "denominator": 2,
+      "coverage": 1.0,
+      "missing": [],
+      "threshold": 1.0,
+      "verdict": "PASS"
+    },
+    "scenario": {
+      "dimension": "scenario",
+      "numerator": 6,
+      "denominator": 6,
+      "coverage": 1.0,
+      "missing": [],
+      "threshold": 1.0,
+      "verdict": "PASS"
+    },
+    "state": {
+      "dimension": "state",
+      "numerator": 2,
+      "denominator": 2,
+      "coverage": 1.0,
+      "missing": [],
+      "threshold": 1.0,
+      "verdict": "PASS"
+    },
+    "assertion": {
+      "dimension": "assertion",
+      "numerator": 6,
+      "denominator": 6,
+      "coverage": 1.0,
+      "passed": 6,
+      "repair": 0,
+      "reject": 0,
+      "unverified": 0,
+      "missing_verdict_ids": [],
+      "duplicate_verdict_ids": [],
+      "duplicate_required_ids": [],
+      "unexpected_verdict_ids": [],
+      "malformed_verdict_count": 0,
+      "malformed_assertion_count": 0,
+      "evidence_errors": 0,
+      "threshold": 1.0,
+      "verdict": "PASS"
+    }
+  },
+  "thresholds_used": {
+    "rule": 1.0,
+    "scenario": 1.0,
+    "state": 1.0,
+    "assertion": 1.0
+  },
+  "gate_failures": [],
+  "routing": "Phase may close"
+}

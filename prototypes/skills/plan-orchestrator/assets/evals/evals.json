@@ -1,0 +1,95 @@
+{
+  "test_cases": [
+    {
+      "name": "Accept single gated phase with tasks",
+      "input": {
+        "plan_id": "P1",
+        "phases": [
+          {
+            "phase_id": "P0",
+            "entry_gate": "IR published",
+            "exit_gate": "coverage >= 0.85",
+            "tasks": [{"task_id": "t1"}]
+          }
+        ]
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Reject empty phase missing both gates",
+      "input": {"plan_id": "P2", "phases": [{"phase_id": "P0", "tasks": []}]},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["EMPTY_PHASE", "MISSING_ENTRY_GATE", "MISSING_EXIT_GATE"]
+    },
+    {
+      "name": "Detect real phase dependency cycle",
+      "input": {
+        "plan_id": "P3",
+        "phases": [
+          {
+            "phase_id": "A",
+            "entry_gate": "in",
+            "exit_gate": "out",
+            "tasks": [{"task_id": "t1"}],
+            "depends_on_phases": ["B"]
+          },
+          {
+            "phase_id": "B",
+            "entry_gate": "in",
+            "exit_gate": "out",
+            "tasks": [{"task_id": "t2"}],
+            "depends_on_phases": ["A"]
+          }
+        ]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["PHASE_CYCLE"]
+    },
+    {
+      "name": "Reject task depending on a later phase",
+      "input": {
+        "plan_id": "P4",
+        "phases": [
+          {
+            "phase_id": "A",
+            "entry_gate": "in",
+            "exit_gate": "out",
+            "tasks": [{"task_id": "t1", "phase_dependency": "B"}]
+          },
+          {
+            "phase_id": "B",
+            "entry_gate": "in",
+            "exit_gate": "out",
+            "tasks": [{"task_id": "t2"}]
+          }
+        ]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["BACKWARD_CROSS_PHASE_DEP"]
+    },
+    {
+      "name": "Reject dangling phase dependency",
+      "input": {
+        "plan_id": "P5",
+        "phases": [
+          {
+            "phase_id": "A",
+            "entry_gate": "in",
+            "exit_gate": "out",
+            "tasks": [{"task_id": "t1"}],
+            "depends_on_phases": ["GHOST"]
+          }
+        ]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["DANGLING_PHASE_DEPENDENCY"]
+    },
+    {
+      "name": "Empty plan is not a clean pass",
+      "input": {"plan_id": "P6", "phases": []},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["EMPTY_PLAN"]
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 批次 2 执行交付报告 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--accent:#1f3a5f;--green:#2e7d32;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:22px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  p{margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.g{background:var(--green);color:#fff;border-color:var(--green);}
+  .gate{background:#eef3f8;border:1px solid #c8d4e0;padding:10px 14px;margin:12px 0;}
+  .gate b{color:var(--accent);}
+  a{color:var(--link);}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">BATCH 2 DELIVERY · QF-FIX-2026-0814</div>
+  <h1>QualityForge 批次 2 执行交付报告(文档一致性收口)</h1>
+  <div class="meta">2026-08-14 ｜ 27 条全部落盘 ｜ 验证:OpenAPI validator PASS + 27/27 grep 实证 + CHANGELOG 批次十七</div>
+</header>
+
+<h2>一、执行总览</h2>
+<div class="gate">
+<b>结果:27/27 条全部落盘并带 grep 证据,零遗漏。</b> 组分布:状态机/枚举对齐 3 条(008/009/010)｜ 审核执行链术语 5 条(011/012/014/015/016)｜ 模块承接补录 4 条(017/018/019/023)｜ 导航数字与命名 5 条(013/020/021/022/035)｜ 建议级纯文档项 10 条(037-047,其中 042/045 为 B2 已落盘复核)｜ N 项 3 条(N4/N5/N6)。
+</div>
+
+<h2>二、分组明细与证据</h2>
+<table>
+  <tr><th>编号</th><th>修复动作</th><th>文件</th><th>grep 证据</th></tr>
+  <tr><td>008</td><td>reviewStatus 回改九值(CHANGES_REQUESTED/STALE)</td><td>05</td><td>1 ✓</td></tr>
+  <tr><td>009</td><td>状态机补齐 6 条迁移 + 权威声明</td><td>04</td><td>1 ✓</td></tr>
+  <tr><td>010</td><td>WorkItemRun 枚举对齐 33;TIMEOUT 归 error_code</td><td>05</td><td>1 ✓</td></tr>
+  <tr><td>011</td><td>ExternalSyncAttempt→DefectSyncAttempt;approvalReviewTaskId→approvalId</td><td>15-PRD + 32</td><td>1+1 ✓</td></tr>
+  <tr><td>012</td><td>ReviewTask.agentSessionId 改可选</td><td>32</td><td>1 ✓</td></tr>
+  <tr><td>014</td><td>10-PRD 状态链修正(REWORK→IN_PROGRESS)</td><td>10-PRD</td><td>1 ✓</td></tr>
+  <tr><td>015/016</td><td>ExecutionContractBaseline 术语;基线撤销→BLOCKED 触发</td><td>14-PRD</td><td>1+1 ✓</td></tr>
+  <tr><td>017</td><td>16-PRD 补 21§6.1 三降级触发</td><td>16-PRD</td><td>1 ✓</td></tr>
+  <tr><td>018/019</td><td>17-PRD break-glass + CONFIG_ASSIST 承接</td><td>17-PRD</td><td>1+1 ✓</td></tr>
+  <tr><td>023</td><td>21 号新增 INDEPENDENT_VERIFY 介入点;16-PRD 承接</td><td>21 + 16-PRD</td><td>1+1 ✓</td></tr>
+  <tr><td>013</td><td>13-PRD 版本范围逐项 MUST/SHOULD/LATER</td><td>13-PRD</td><td>1 ✓</td></tr>
+  <tr><td>020</td><td>37 操作数实算修正(10/10/22)</td><td>37</td><td>1 ✓</td></tr>
+  <tr><td>021</td><td>Requirement→RequirementDocument</td><td>01</td><td>1 ✓</td></tr>
+  <tr><td>022</td><td>Batch 口语裁决(一次触发/attempt)</td><td>18-PRD</td><td>1 ✓</td></tr>
+  <tr><td>035</td><td>54 文件名↔模块映射加裁决注</td><td>54</td><td>1 ✓</td></tr>
+  <tr><td>037</td><td>role/relation_type 命名标注</td><td>05</td><td>1 ✓</td></tr>
+  <tr><td>038</td><td>BLOCK_HUMAN 来源标注;移除 HTTP 409 细节</td><td>12-PRD + 10-PRD</td><td>1+1 ✓</td></tr>
+  <tr><td>040</td><td>AC-01 补判定口径(抽检≥5 条)</td><td>11-PRD</td><td>1 ✓</td></tr>
+  <tr><td>041</td><td>L0-L3 显式引用 21 号</td><td>16-PRD</td><td>1 ✓</td></tr>
+  <tr><td>043</td><td>V1 重试上限(默认一次受控重试)</td><td>14-PRD</td><td>1 ✓</td></tr>
+  <tr><td>044</td><td>platform-review 文件完整路径</td><td>16-PRD</td><td>1 ✓</td></tr>
+  <tr><td>046</td><td>03 §13.8-13.12 编号重排</td><td>03</td><td>1 ✓</td></tr>
+  <tr><td>047</td><td>知识回流 V1/V2 边界</td><td>15-PRD</td><td>1 ✓</td></tr>
+  <tr><td>N4</td><td>37/54 Generic 计数口径更新(剩余 37 处非核心链)</td><td>37 + 54</td><td>1+1 ✓</td></tr>
+  <tr><td>N5</td><td>humanAssigneeId→assigneeId</td><td>05</td><td>1 ✓</td></tr>
+  <tr><td>N6</td><td>TEST_DESIGN 同名加注</td><td>03</td><td>1 ✓</td></tr>
+  <tr><td>042/045</td><td>B2-9/B2-10 已落盘项复核通过</td><td>14/18-PRD、04/03</td><td>1+1 ✓</td></tr>
+</table>
+
+<h2>三、验证结果</h2>
+<ul>
+  <li><b>OpenAPI validator:PASS</b>(32 号契约含本轮 011/012 修改)</li>
+  <li><b>grep 实证:27/27 条 ≥1 命中</b>,全部可复现</li>
+  <li><b>CHANGELOG 批次十七已入册</b>(35 号,完整记录 27 条 + N 项)</li>
+  <li>L1 一致性:全部修改为"向权威源收敛"方向,无新增跨文档冲突(后续正式 L1 扫描可重跑验证)</li>
+</ul>
+
+<h2>四、M1 准出状态(批次 2 为准出前置)</h2>
+<div class="gate">
+批次 2 全部完成 → <b>M1 准出信号已具备:L1 扫描零新增冲突(待正式重跑确认)+ 54 链接检查 + 台账逐条打勾</b>。批次 1(开工前置)与批次 2(准出前置)均已收口。
+</div>
+
+<h2>五、遗留</h2>
+<ul>
+  <li>批次 3(8 条度量载体):M1~M2 并行</li>
+  <li>批次 4(4 条+N7 运行时证据):M3~M4</li>
+  <li>批次 5(006 实例 + 评测):M5</li>
+  <li>正式 L1 扫描(概念权威基线口径)重跑:建议随 M1 首轮复评执行</li>
+</ul>
+
+<footer>批次 2 执行交付报告 · QF-FIX-2026-0814 ｜ 验证:validator PASS + 27/27 grep + CHANGELOG 批次十七 ｜ 关联:修复方案 v2.0 / 批次 1 交付报告</footer>
+
+</div>
+</body>
+</html>

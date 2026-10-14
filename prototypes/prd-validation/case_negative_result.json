@@ -1,0 +1,107 @@
+{
+  "skill": "requirement-quality-gate",
+  "checked_at": "2026-09-06T06:41:38.752342+00:00",
+  "review_id": "NEG-STRUCTURAL",
+  "verdict": "REJECT",
+  "reject_findings": 11,
+  "review_findings": 3,
+  "findings": [
+    {
+      "code": "DUPLICATE_QUALITY_DIMENSION",
+      "severity": "REJECT",
+      "target": "consistency",
+      "evidence": "同一 dimension 被评估多次"
+    },
+    {
+      "code": "DUPLICATE_QUALITY_DIMENSION",
+      "severity": "REJECT",
+      "target": "ambiguity",
+      "evidence": "同一 dimension 被评估多次"
+    },
+    {
+      "code": "MISSING_QUALITY_DIMENSION",
+      "severity": "REJECT",
+      "target": "role_permission",
+      "evidence": "强制质量维度未被评估"
+    },
+    {
+      "code": "INVALID_SEVERITY_FOR_CODE",
+      "severity": "REJECT",
+      "target": "F-101",
+      "evidence": "CROSS_SOURCE_CONFLICT 必须为 REJECT"
+    },
+    {
+      "code": "UNDECLARED_FINDING_SOURCE",
+      "severity": "REJECT",
+      "target": "F-102",
+      "evidence": "source 引用 'SRC-UNDECLARED§1' 未在 source_ids 中声明"
+    },
+    {
+      "code": "MISSING_FINDING_EVIDENCE",
+      "severity": "REJECT",
+      "target": "F-103",
+      "evidence": "必须提供逐字或忠实的证据"
+    },
+    {
+      "code": "MISSING_RESOLUTION_QUESTION",
+      "severity": "REJECT",
+      "target": "F-103",
+      "evidence": "必须提供具体的澄清问题"
+    },
+    {
+      "code": "UNKNOWN_FINDING_REF",
+      "severity": "REJECT",
+      "target": "consistency",
+      "evidence": "finding 'F-GHOST' 不存在"
+    },
+    {
+      "code": "UNBOUND_QUALITY_FINDING",
+      "severity": "REJECT",
+      "target": "F-101",
+      "evidence": "finding 未绑定到任何 assessment 维度"
+    },
+    {
+      "code": "UNBOUND_QUALITY_FINDING",
+      "severity": "REJECT",
+      "target": "F-102",
+      "evidence": "finding 未绑定到任何 assessment 维度"
+    },
+    {
+      "code": "UNBOUND_QUALITY_FINDING",
+      "severity": "REJECT",
+      "target": "F-103",
+      "evidence": "finding 未绑定到任何 assessment 维度"
+    },
+    {
+      "finding_id": "F-101",
+      "code": "CROSS_SOURCE_CONFLICT",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-A§2"
+      ],
+      "evidence": "负例：硬finding被降级",
+      "question": "负例问题"
+    },
+    {
+      "finding_id": "F-102",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-UNDECLARED§1"
+      ],
+      "evidence": "负例：来源未声明且未绑定",
+      "question": "负例问题"
+    },
+    {
+      "finding_id": "F-103",
+      "code": "INCOMPLETE_REQUIREMENT",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-A§3"
+      ],
+      "evidence": "",
+      "question": ""
+    }
+  ],
+  "routing": "阻断需求融合"
+}

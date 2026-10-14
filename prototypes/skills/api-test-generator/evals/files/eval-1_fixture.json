@@ -1,0 +1,22 @@
+{
+  "code": "\nimport requests\n\nBASE_URL = \"http://localhost:8080\"\n\ndef test_get_orders():\n    resp = requests.get(BASE_URL + \"/api/v1/orders\")\n    assert resp.status_code == 200\n",
+  "case_refs": [
+    "TC-001"
+  ],
+  "expected_results": [
+    {
+      "expected_result_id": "ER-001",
+      "field": "status",
+      "value": 200
+    }
+  ],
+  "fixture_deps": [
+    "setup_user_session"
+  ],
+  "asserts": [
+    {
+      "expected_result_id": "ER-001",
+      "expr": "assert resp.status_code == 200"
+    }
+  ]
+}

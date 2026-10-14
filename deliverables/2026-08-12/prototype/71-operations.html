@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>运行与评测 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="agent">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item active" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button></div>
+    <div class="spacer"></div>
+    <button class="btn btn-sm btn-ghost" onclick="location.href='70-capabilities.html'">能力注册</button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>运行与评测</h1><div class="sub">Session / Trace / Eval / 成本 · 运行事实只追加 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-eval')">运行 Eval</button>
+      <button class="btn btn-primary" onclick="qf.openModal('m-session')">发起 Session</button>
+    </div>
+
+    <div class="grid g4" style="margin-bottom:18px">
+      <div class="kpi"><div class="label">今日 Session</div><div class="value"><b>27</b></div><div class="note">Gate 0 链 9 次</div></div>
+      <div class="kpi"><div class="label">成功率</div><div class="value num-ok"><b>92.4%</b></div><div class="note">Eval Golden Set v2</div></div>
+      <div class="kpi"><div class="label">越权拦截</div><div class="value num-err"><b>0</b></div><div class="note">fail-closed 生效</div></div>
+      <div class="kpi"><div class="label">今日成本</div><div class="value num-acc"><b>¥3.42</b></div><div class="note">24,812 token 均值</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="phead"><h2>Session 列表</h2></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Session</th><th>Workflow</th><th>状态</th><th>成本</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr onclick="location.href='72-trace.html'"><td><div class="t-title">run a9f2c1 · 策略生成</div><div class="t-sub">WI-0246 · qf-test-design · prompt v3</div></td><td class="mono">gate0-…</td><td><span class="status st-run"><span class="d"></span>运行中</span></td><td class="mono">¥0.042</td><td><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();location.href='72-trace.html'">Trace</button></td></tr>
+          <tr onclick="location.href='72-trace.html'"><td><div class="t-title">run 8d31e2 · IR 编译</div><div class="t-sub">WI-0241 · qf-requirement-ir</div></td><td class="mono">gate0-…</td><td><span class="status st-done"><span class="d"></span>完成</span></td><td class="mono">¥0.118</td><td><button class="btn btn-sm btn-ghost" onclick="event.stopPropagation();location.href='72-trace.html'">Trace</button></td></tr>
+        </tbody>
+      </table>
+        <div class="empty-note" hidden><div class="en-title">暂无 Session</div>发起 Session 后运行记录将出现在这里</div>
+        <div class="pagination"><span class="pg-info">共 27 个 Session · 第 1/14 页</span><button disabled>‹</button><button class="on">1</button><button>2</button><button>3</button><button>›</button></div>
+      </div>
+    </div>
+
+    <div class="panel mt-6">
+      <div class="phead"><h2>Eval 记录</h2><span class="hint">版本可复现</span></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>Eval Run</th><th>目标</th><th>数据集</th><th>通过率</th><th>裁决</th></tr></thead>
+        <tbody>
+          <tr onclick="qf.openModal('m-eval-detail')"><td><div class="t-title">EV-2026-08-11-01</div><div class="t-sub">Prompt v3 准入评测</div></td><td class="mono">requirement-ir v3</td><td class="mono">golden-v2 (120 例)</td><td><span class="t-num" style="color:var(--qf-success-600);font-weight:600">92.4%</span></td><td><span class="status st-done"><span class="d"></span>准入通过</span></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="m-session" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>发起 Session</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="sessionForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「发起 Session」按钮</div>
+        <div class="field"><label>Workflow</label><select class="input"><option>gate0-requirement-to-coverage</option><option>其他(草稿)</option></select></div>
+        <div class="field"><label>来源版本</label><select class="input"><option>Req V3 · APIContract V7</option></select></div>
+        <label class="check"><input type="checkbox" checked> 权限预检(默认)</label>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-session')">取消</button>
+        <button type="submit" class="btn btn-primary">启动</button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="modal" id="m-eval" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>运行 Eval</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「运行 Eval」按钮</div>
+      <div class="field"><label>目标</label><select class="input"><option>Agent: qf-requirement-ir (prompt v3)</option></select></div>
+      <div class="field"><label>数据集</label><select class="input"><option>golden-v2 (120 例)</option></select></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-eval')">取消</button><button class="btn btn-primary" onclick="qf.closeModal('m-eval');qf.toast('Eval 已启动(演示)','ok')">运行</button></div>
+  </div>
+</div>
+<div class="modal" id="m-eval-detail" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>Eval 详情</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击 Eval 行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">指标</span><span>准确率 92.4% · 路由正确率 97% · 越权率 0%</span>
+        <span class="muted">环境</span><span class="mono">eval-env-1 · 2026-08-11</span>
+        <span class="muted">版本绑定</span><span class="mono">prompt v3 · golden-v2</span>
+      </div>
+      <p class="small muted mt-4">文档静态 PASS 不等于运行时有效;校准只基于版本化 Eval 证据。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-eval-detail')">关闭</button></div>
+  </div>
+</div>
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('sessionForm', function () { qf.closeModal('m-session'); qf.toast('Session 已启动,权限预检通过(演示)','ok'); });
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<mxGraphModel adaptiveColors="auto" dx="1422" dy="757" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=none;" vertex="1" parent="1">
+      <mxGeometry x="20" y="20" width="1100" height="680" as="geometry" />
+    </mxCell>
+    <mxCell id="breadcrumb_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e0e0e0;" vertex="1" parent="1">
+      <mxGeometry x="20" y="20" width="1100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="logo" value="QualityForge" style="text;html=1;fontStyle=1;fontSize=14;fontColor=#1a1a2e;align=left;" vertex="1" parent="1">
+      <mxGeometry x="40" y="30" width="120" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="crumb1" value="测试规划与设计" style="text;html=1;fontSize=12;fontColor=#666666;align=left;" vertex="1" parent="1">
+      <mxGeometry x="170" y="30" width="80" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="crumb_sep" value="&gt;" style="text;html=1;fontSize=12;fontColor=#cccccc;align=left;" vertex="1" parent="1">
+      <mxGeometry x="250" y="30" width="20" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="crumb2" value="[需求: 购物车服务PRD]" style="text;html=1;fontSize=12;fontColor=#008cff;fontStyle=6;align=left;" vertex="1" parent="1">
+      <mxGeometry x="270" y="30" width="200" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="plan_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e0e0e0;" vertex="1" parent="1">
+      <mxGeometry x="20" y="70" width="1100" height="55" as="geometry" />
+    </mxCell>
+    <mxCell id="plan_label" value="测试策略:" style="text;html=1;fontSize=12;fontColor=#999999;align=left;" vertex="1" parent="1">
+      <mxGeometry x="40" y="80" width="70" height="35" as="geometry" />
+    </mxCell>
+    <mxCell id="plan_name" value="购物车核心功能回归策略" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0f7ff;strokeColor=#008cff;fontColor=#008cff;fontSize=12;align=left;spacingLeft=8;" vertex="1" parent="1">
+      <mxGeometry x="110" y="85" width="250" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="plan_ai_tag" value="AI 生成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#4caf50;fontColor=#4caf50;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="370" y="87" width="55" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="cov_label1" value="覆盖率" style="text;html=1;fontSize=11;fontColor=#999999;align=right;" vertex="1" parent="1">
+      <mxGeometry x="750" y="78" width="50" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="cov_req" value="需求 92%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#4caf50;fontColor=#2e7d32;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="805" y="78" width="80" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="cov_api" value="API 85%" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff8e1;strokeColor=#ff9800;fontColor=#e65100;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="895" y="78" width="80" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="ai_bar_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#e0e0e0;dashed=1;" vertex="1" parent="1">
+      <mxGeometry x="20" y="125" width="1100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="ai_icon" value="🤖" style="text;html=1;fontSize=18;align=center;" vertex="1" parent="1">
+      <mxGeometry x="35" y="133" width="30" height="35" as="geometry" />
+    </mxCell>
+    <mxCell id="ai_label" value="AI 优化工具栏" style="text;html=1;fontSize=11;fontColor=#673ab7;fontStyle=1;align=left;" vertex="1" parent="1">
+      <mxGeometry x="65" y="130" width="100" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="ai_input" value="输入要求: 让所有用例都包含异常网络重试断言..." style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d0d0d0;fontColor=#999999;fontSize=11;align=left;spacingLeft=8;" vertex="1" parent="1">
+      <mxGeometry x="65" y="150" width="850" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="ai_btn" value="执行重生成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#673ab7;strokeColor=#512da8;fontColor=#ffffff;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="925" y="147" width="90" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="table_header" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#bbdefb;" vertex="1" parent="1">
+      <mxGeometry x="20" y="175" width="1100" height="35" as="geometry" />
+    </mxCell>
+    <mxCell id="th_check" value="☐" style="text;html=1;fontSize=14;align=center;" vertex="1" parent="1">
+      <mxGeometry x="30" y="178" width="30" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="th_code" value="编号" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1565c0;align=left;" vertex="1" parent="1">
+      <mxGeometry x="60" y="180" width="80" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="th_scene" value="场景" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1565c0;align=left;" vertex="1" parent="1">
+      <mxGeometry x="150" y="180" width="100" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="th_title" value="用例标题" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1565c0;align=left;" vertex="1" parent="1">
+      <mxGeometry x="260" y="180" width="250" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="th_steps" value="步骤" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1565c0;align=left;" vertex="1" parent="1">
+      <mxGeometry x="520" y="180" width="380" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="th_action" value="操作" style="text;html=1;fontSize=11;fontStyle=1;fontColor=#1565c0;align=center;" vertex="1" parent="1">
+      <mxGeometry x="910" y="180" width="190" height="25" as="geometry" />
+    </mxCell>
+    <mxCell id="row1_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#eeeeee;" vertex="1" parent="1">
+      <mxGeometry x="20" y="210" width="1100" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_check" value="☑" style="text;html=1;fontSize=14;fontColor=#008cff;align=center;" vertex="1" parent="1">
+      <mxGeometry x="30" y="215" width="30" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_code" value="TC-001" style="text;html=1;fontSize=11;fontColor=#008cff;align=left;" vertex="1" parent="1">
+      <mxGeometry x="60" y="217" width="80" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_scene" value="商品加购" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="150" y="217" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_title" value="登录用户正常加购成功" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="260" y="217" width="250" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_steps" value="1. 登录系统  2. 点击加购..." style="text;html=1;fontSize=11;fontColor=#999999;align=left;" vertex="1" parent="1">
+      <mxGeometry x="520" y="217" width="380" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_btn_edit" value="编辑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#bdbdbd;fontColor=#616161;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="920" y="222" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="r1_btn_ai" value="AI优化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede7f6;strokeColor=#673ab7;fontColor=#673ab7;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="985" y="222" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="row2_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#eeeeee;" vertex="1" parent="1">
+      <mxGeometry x="20" y="250" width="1100" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_check" value="☑" style="text;html=1;fontSize=14;fontColor=#008cff;align=center;" vertex="1" parent="1">
+      <mxGeometry x="30" y="255" width="30" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_code" value="TC-002" style="text;html=1;fontSize=11;fontColor=#008cff;align=left;" vertex="1" parent="1">
+      <mxGeometry x="60" y="257" width="80" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_scene" value="商品加购" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="150" y="257" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_title" value="库存不足加购报错提示" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="260" y="257" width="250" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_steps" value="1. 登录系统  2. 加购 (库存=0)..." style="text;html=1;fontSize=11;fontColor=#999999;align=left;" vertex="1" parent="1">
+      <mxGeometry x="520" y="257" width="380" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_btn_edit" value="编辑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#bdbdbd;fontColor=#616161;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="920" y="262" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="r2_btn_ai" value="AI优化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede7f6;strokeColor=#673ab7;fontColor=#673ab7;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="985" y="262" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="row3_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#eeeeee;" vertex="1" parent="1">
+      <mxGeometry x="20" y="290" width="1100" height="40" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_check" value="☐" style="text;html=1;fontSize=14;fontColor=#cccccc;align=center;" vertex="1" parent="1">
+      <mxGeometry x="30" y="295" width="30" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_code" value="TC-003" style="text;html=1;fontSize=11;fontColor=#999999;align=left;" vertex="1" parent="1">
+      <mxGeometry x="60" y="297" width="80" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_scene" value="订单结算" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="150" y="297" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_title" value="优惠券失效订单无法扣减" style="text;html=1;fontSize=11;align=left;" vertex="1" parent="1">
+      <mxGeometry x="260" y="297" width="250" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_steps" value="1. 添加商品  2. 选择优惠券..." style="text;html=1;fontSize=11;fontColor=#999999;align=left;" vertex="1" parent="1">
+      <mxGeometry x="520" y="297" width="380" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_btn_edit" value="编辑" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#bdbdbd;fontColor=#616161;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="920" y="302" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="r3_btn_ai" value="AI优化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ede7f6;strokeColor=#673ab7;fontColor=#673ab7;fontSize=10;" vertex="1" parent="1">
+      <mxGeometry x="985" y="302" width="55" height="22" as="geometry" />
+    </mxCell>
+    <mxCell id="note_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fffde7;strokeColor=#fff9c4;" vertex="1" parent="1">
+      <mxGeometry x="20" y="330" width="1100" height="30" as="geometry" />
+    </mxCell>
+    <mxCell id="note_text" value="备注: 选中了 2/3 条用例。" style="text;html=1;fontSize=11;fontColor=#f9a825;fontStyle=2;align=left;spacingLeft=8;" vertex="1" parent="1">
+      <mxGeometry x="20" y="333" width="300" height="24" as="geometry" />
+    </mxCell>
+    <mxCell id="footer_bg" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e0e0e0;" vertex="1" parent="1">
+      <mxGeometry x="20" y="360" width="1100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="btn_reject" value="✕  驳回修改" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e0e0e0;fontColor=#999999;fontSize=12;" vertex="1" parent="1">
+      <mxGeometry x="820" y="372" width="110" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="btn_approve" value="✓  审核发布" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#008cff;strokeColor=#0070e0;fontColor=#ffffff;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="945" y="372" width="110" height="28" as="geometry" />
+    </mxCell>
+  </root>
+</mxGraphModel>

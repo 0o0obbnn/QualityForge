@@ -1,0 +1,14 @@
+[
+  {
+    "case_id": "TC-td-004",
+    "req_id": "Q-TD-004",
+    "title": "退款含优惠券计算（孤儿用例）",
+    "fixture_category": "Dynamic",
+    "expected_results": [
+      {
+        "state": "CANCELLED",
+        "assertion_hint": "用例状态 CANCELLED（状态机无此状态）"
+      }
+    ]
+  }
+]

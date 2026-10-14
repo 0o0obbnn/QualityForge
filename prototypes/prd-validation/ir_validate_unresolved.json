@@ -1,0 +1,49 @@
+{
+  "skill": "05",
+  "checked_at": "2026-09-06T06:46:50.184201+00:00",
+  "ir_version_seen": "1.0",
+  "verdict": "REJECT",
+  "findings_by_family": {
+    "schema": 0,
+    "provenance": 0,
+    "confidence": 0,
+    "conflict": 4,
+    "reachability": 0,
+    "entity": 0
+  },
+  "total_findings": 4,
+  "reject_findings": 4,
+  "review_findings": 0,
+  "findings": [
+    {
+      "family": "conflict",
+      "code": "UNRESOLVED_CONFLICT",
+      "severity": "REJECT",
+      "target": "business_rules:BR-002",
+      "msg": "conflict=true 但未解决"
+    },
+    {
+      "family": "conflict",
+      "code": "UNRESOLVED_CONFLICT",
+      "severity": "REJECT",
+      "target": "requirements:REQ-001",
+      "msg": "conflict=true 但未解决"
+    },
+    {
+      "family": "conflict",
+      "code": "UNRESOLVED_CONFLICT",
+      "severity": "REJECT",
+      "target": "requirements:REQ-004",
+      "msg": "conflict=true 但未解决"
+    },
+    {
+      "family": "conflict",
+      "code": "UNRESOLVED_CONFLICT",
+      "severity": "REJECT",
+      "target": "requirements:REQ-006",
+      "msg": "conflict=true 但未解决"
+    }
+  ],
+  "skill28_review_tasks": [],
+  "routing": "暂缓"
+}

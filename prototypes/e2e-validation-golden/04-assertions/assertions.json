@@ -1,0 +1,8 @@
+[
+  {"assertion_id": "A-G-101", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "contract_id": "IFC-RV-CREATE", "target": "response.status", "expression": "eq", "expected": "PENDING_REVIEW"},
+  {"assertion_id": "A-G-102", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "contract_id": "IFC-RV-CREATE", "target": "response.code", "expression": "eq", "expected": "VALIDATION_FAILED"},
+  {"assertion_id": "A-G-103", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "contract_id": "IFC-RV-DECIDE", "target": "response.status", "expression": "eq", "expected": "APPROVED"},
+  {"assertion_id": "A-G-104", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "contract_id": "IFC-RV-DECIDE", "target": "response.code", "expression": "eq", "expected": "FORBIDDEN"},
+  {"assertion_id": "A-G-105", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "state_machine_id": "SM-TCV-101", "expected_state": "PENDING_REVIEW", "target": "testCaseVersion.status", "expression": "eq", "expected": "PENDING_REVIEW"},
+  {"assertion_id": "A-G-106", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "state_machine_id": "SM-TCV-101", "expected_state": "APPROVED", "target": "testCaseVersion.status", "expression": "eq", "expected": "APPROVED"}
+]

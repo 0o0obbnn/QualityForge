@@ -1,0 +1,11 @@
+[
+  {
+    "assertion_id": "A-bad-001",
+    "rule_id": "R-014",
+    "req_id": "Q-003",
+    "contract_id": "IFC-ORD",
+    "target": "response.body.discount_percentage",
+    "expression": "eq 15",
+    "expected": "15"
+  }
+]

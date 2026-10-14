@@ -1,0 +1,25 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {"req_id": "Q-pay"},
+    {"req_id": "Q-perm"},
+    {"req_id": "Q-ship"},
+    {"req_id": "Q-refund"}
+  ],
+  "business_rules": [
+    {"rule_id": "R-pay-001"},
+    {"rule_id": "R-refund-001"},
+    {"rule_id": "R-perm-001"}
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-ORD",
+      "states": ["PENDING", "PAID", "SHIPPED", "REFUNDED"],
+      "transitions": [
+        {"from": "PENDING", "to": "PAID"},
+        {"from": "PAID", "to": "SHIPPED"},
+        {"from": "SHIPPED", "to": "REFUNDED"}
+      ]
+    }
+  ]
+}

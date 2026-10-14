@@ -1,0 +1,2198 @@
+openapi: 3.0.3
+info:
+  title: QualityForge Core API
+  version: 2.0.0-draft
+  description: >-
+    QualityForge目标API契约。Stage 4已实现planning纵向切片、本地认证和审核产物读取共22个operation；其余仍为目标设计，
+    本文件尚不是已发布线上兼容面。
+    JSON字段统一camelCase；数据库物理列使用snake_case。产品版本V0/V1/V2/V3与API代际分离。
+x-contract-status: draft
+x-product-contract: ../01-product/05-功能模块重构方案.md
+x-product-baseline: ../01-product/06-人机协作与V1业务基线.md
+x-pending-collaboration-contract: 39-人机协作目标契约.md
+servers:
+  - url: /api/v1
+    description: 首个产品交付API代际；旧设计稿未形成运行时兼容承诺
+security:
+  - BearerAuth: []
+  - CookieAuth: []
+tags:
+  - { name: WorkBoard, description: 工作项与人工审核 }
+  - { name: Knowledge, description: 来源、需求、API契约与知识 }
+  - { name: TestPlanning, description: 策略、计划、场景、用例与套件 }
+  - { name: Automation, description: 自动化代码、数据、Locator与Mock }
+  - { name: Execution, description: 执行计划、任务、结果与证据 }
+  - { name: Quality, description: 分析、Defect、报告、门禁与流水线 }
+  - { name: AIAgentCenter, description: Agent、Skill、Workflow、Trace与Eval }
+  - { name: Platform, description: Workspace、Release、环境、身份、安全与基础设施 }
+  - { name: Observability, description: 领域事件流与受控指标（D3/O3 裁决承载面） }
+  - { name: Collaboration, description: 协作对话、澄清、任务卡与AgentPlan（39 号 §3，批次五十三激活未实现） }
+  - { name: RunControl, description: 运行命令、授权、预算与检查点（39 号 §4-§5，批次五十七激活未实现） }
+
+paths:
+  # ===== WP-03 协作对话/澄清/任务卡/AgentPlan（39 号 §3 契约激活，批次五十三；全部 KNOWN_DEFERRED，未实现）=====
+  /conversations:
+    get:
+      tags: [Collaboration]
+      operationId: listConversations
+      description: >-
+        协作会话列表（Owner=协作域；能力键 conversation.read）。查询可无 Release（releaseId 过滤
+        可选）；负向：跨 Workspace 403。实现批次登记 conversation.* 事件与 36 号 stream 主题。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - { name: releaseId, in: query, schema: { $ref: '#/components/schemas/UUID' } }
+        - { $ref: '#/components/parameters/PageParam' }
+        - { $ref: '#/components/parameters/PageSizeParam' }
+      responses: { '200': { $ref: '#/components/responses/ConversationListResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+    post:
+      tags: [Collaboration]
+      operationId: createConversation
+      description: >-
+        创建当前项目/Release 协作会话（Owner=协作域；能力键 conversation.write；Idempotency-Key）。
+        负向：跨 Workspace 403；挂接的 workItemId 不存在或跨 Workspace 404/409。
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ConversationCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ConversationResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /conversations/{conversationId}/messages:
+    get:
+      tags: [Collaboration]
+      operationId: listConversationMessages
+      description: >-
+        会话消息列表（只追加日志，游标分页；能力键 conversation.read）。负向：跨 Workspace 403、会话不存在 404。
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/PageParam' }
+        - { $ref: '#/components/parameters/PageSizeParam' }
+      responses: { '200': { $ref: '#/components/responses/ConversationMessageListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [Collaboration]
+      operationId: createConversationMessage
+      description: >-
+        追加用户或 Agent 可审计消息（能力键 conversation.write；Idempotency-Key）。只追加、不可改写；
+        敏感正文按 contentRef 引用存储（dataClass 分级）；actorType=USER 由令牌决定、AGENT 须归属本会话
+        的 Session。负向：跨 Workspace 403、会话不存在 404、AGENT 冒名 403、digest 不符 422。
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ConversationMessageCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ConversationMessageResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '422': { $ref: '#/components/responses/ValidationFailed' } }
+  /ai/sessions/{agentSessionId}/clarifications:
+    get:
+      tags: [Collaboration]
+      operationId: listClarificationRequests
+      description: >-
+        Session 澄清请求列表（状态 OPEN/ANSWERED/CANCELLED/EXPIRED；能力键 conversation.read）。
+        负向：跨 Workspace 403、Session 不存在 404。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: agentSessionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/ClarificationRequestListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [Collaboration]
+      operationId: createClarificationRequest
+      description: >-
+        AI 发起澄清并阻塞会话（Owner=Agent 协作域；能力键 clarification.raise，仅 AGENT 会话链路；
+        Idempotency-Key）。提出后归属 Session 转 BLOCKED，答复前不得推进。
+        负向：跨 Workspace 403、Session 不存在 404、Session 已终态 409、人工冒用 403。
+      parameters:
+        - name: agentSessionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClarificationRequestCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ClarificationRequestResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /clarifications/{clarificationId}/responses:
+    post:
+      tags: [Collaboration]
+      operationId: respondClarification
+      description: >-
+        人工答复澄清并形成 CONFIRMED 证据（能力键 clarification.respond，仅 USER；Idempotency-Key）。
+        evidenceClass 固定 CONFIRMED，answerRef 引用存储；答复后解除 Session BLOCKED。
+        负向：不存在 404、已 ANSWERED 409、AGENT 答复 403、非 OPEN 状态 409。
+      parameters:
+        - name: clarificationId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ClarificationResponseCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ClarificationResponseResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /work-items/{workItemId}/task-cards:
+    get:
+      tags: [Collaboration]
+      operationId: listTaskCards
+      description: >-
+        工作项的任务卡版本列表（能力键 task_card.read，资源型端点取 actor 绑定工作区）。
+        版本取代语义：同工作项旧卡 SUPERSEDED 留痕。负向：工作项不存在 404、跨 Workspace 403。
+        批次六十一契约先行补充（39 号 §3.1 未列读面，前端纵向需要）。
+      parameters:
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/TaskCardListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [Collaboration]
+      operationId: createTaskCard
+      description: >-
+        固化正式任务输入（Owner=WorkBoard 协作域；能力键 task_card.create；Idempotency-Key）。
+        对话生成或人工直接填写；提交后不可静默扩展（后续变更走新版本）。
+        负向：工作项不存在 404、跨 Workspace 403、未解高风险澄清 409、无 Release 的交付任务 409。
+      parameters:
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TaskCardCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TaskCardResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /work-items/{workItemId}/agent-plans:
+    get:
+      tags: [Collaboration]
+      operationId: listAgentPlans
+      description: >-
+        工作项的 AgentPlan 版本列表（DRAFT/PENDING_APPROVAL/APPROVED/REJECTED/SUPERSEDED；能力键 agent_plan.read）。
+        负向：跨 Workspace 403、工作项不存在 404。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/AgentPlanListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [Collaboration]
+      operationId: createAgentPlan
+      description: >-
+        创建执行计划版本（Owner=Agent 协作域；能力键 agent_plan.create；Idempotency-Key）。
+        基于 TaskCard 生成，新版本使旧计划 SUPERSEDED；仅 APPROVED 计划可启动 Session。
+        负向：工作项/TaskCard 不存在 404、TaskCard 未提交 409、跨 Workspace 403。
+      parameters:
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AgentPlanCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/AgentPlanResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /agent-plans/{agentPlanId}/decisions:
+    post:
+      tags: [Collaboration]
+      operationId: decideAgentPlan
+      description: >-
+        人工批准或拒绝计划（Owner=WorkBoard 审核域；能力键 agent_plan.decide，仅 USER；Idempotency-Key）。
+        决定引用计划 contentDigest（摘要漂移 409 STALE_ARTIFACT_VERSION）；Agent 不得自批。
+        负向：计划不存在 404、非 PENDING_APPROVAL 409、AGENT 决定 403、digest 漂移 409。
+      parameters:
+        - name: agentPlanId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AgentPlanDecisionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/AgentPlanDecisionResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  # ===== WP-04 运行命令/授权/预算/检查点（39 号 §5 契约激活，批次五十七；全部 KNOWN_DEFERRED，未实现）=====
+  /ai/sessions/{agentSessionId}/commands:
+    post:
+      tags: [RunControl]
+      operationId: commandAgentSession
+      description: >-
+        对 Agent 会话下发统一运行命令（Owner=Agent 运行域；能力键 run_command.issue；仅 USER；
+        Idempotency-Key）。commandType ∈ PAUSE/RESUME/CANCEL/RETRY/AUTHORIZE/REVOKE；命令只追加、
+        不直接等于生效——生效以 CommandReceipt 为唯一回执（accepted=false 时附原因码）。
+        暂停/取消到安全点生效；RESUME 必须重新验证输入摘要、权限、预算与环境；
+        RETRY 创建新 attempt 并引用原失败记录。负向：会话不存在 404、跨 Workspace 403、
+        Agent 下发 403、终态会话非 RETRY 命令 409、命令重放同键返回原命令。
+        本切片实装 PAUSE/RESUME/CANCEL（批次五十八）；RETRY/AUTHORIZE/REVOKE 契约枚举保留、
+        运行时 422 显式拒绝，不虚报可实装面。
+      parameters:
+        - name: agentSessionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RunCommandCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/RunCommandResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /execution-tasks/{executionTaskId}/commands:
+    post:
+      tags: [RunControl]
+      operationId: commandExecutionTask
+      description: >-
+        对执行任务下发统一运行命令（Owner=执行域；能力键 run_command.issue；仅 USER；Idempotency-Key）。
+        语义与负向同 commandAgentSession；执行任务的 PAUSE/CANCEL 到安全点落 Checkpoint。
+        负向：任务不存在 404、跨 Workspace 403、已终态任务非 RETRY 409。
+        本切片实装 PAUSE/RESUME/CANCEL（批次五十八）；RETRY/AUTHORIZE/REVOKE 运行时 422 未实装。
+      parameters:
+        - name: executionTaskId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RunCommandCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/RunCommandResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /run-commands/{runCommandId}:
+    get:
+      tags: [RunControl]
+      operationId: getRunCommandReceipt
+      description: >-
+        查询命令与其实际生效回执（能力键 run_command.read）。CommandReceipt 是命令是否生效的唯一事实；
+        未到安全点时 accepted=false 并给出等待原因码。负向：命令不存在 404、跨 Workspace 403。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: runCommandId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/RunCommandReceiptResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /work-items/{workItemId}/authorizations:
+    get:
+      tags: [RunControl]
+      operationId: listRuntimeAuthorizations
+      description: >-
+        工作项的运行时授权列表（能力键 runtime_authorization.read）。授权含 permissionKeys/
+        resourceScope/secretRefs（只引用不泄露明文）/budgetDelta/有效期；决定只追加。
+        负向：工作项不存在 404、跨 Workspace 403。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/RuntimeAuthorizationListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [RunControl]
+      operationId: createRuntimeAuthorization
+      description: >-
+        创建运行时授权或撤销（Owner=治理域；能力键 runtime_authorization.manage；仅 USER；Idempotency-Key）。
+        AUTHORIZE/REVOKE 均为只追加决定；Agent 无权自授。负向：工作项不存在 404、跨 Workspace 403、
+        Agent 授权 403、有效期倒置 422。
+      parameters:
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RuntimeAuthorizationCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/RuntimeAuthorizationResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '422': { $ref: '#/components/responses/ValidationFailed' } }
+  /work-items/{workItemId}/budgets:
+    get:
+      tags: [RunControl]
+      operationId: getWorkItemBudget
+      description: >-
+        工作项预算策略与消耗快照（能力键 budget.read）。达到上限自动暂停；Agent 无权上调。
+        负向：工作项不存在 404、跨 Workspace 403。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/BudgetPolicyResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+    post:
+      tags: [RunControl]
+      operationId: updateWorkItemBudget
+      description: >-
+        更新预算策略（能力键 budget.manage；仅 USER；Idempotency-Key）。Agent 上调 403；
+        收紧可即时生效，放宽需重新预检在途执行。负向：工作项不存在 404、跨 Workspace 403、
+        非法阈值（上限<已消耗）409/422。
+      parameters:
+        - name: workItemId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/BudgetPolicyUpdate' } } } }
+      responses: { '200': { $ref: '#/components/responses/BudgetPolicyResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /runs/{targetType}/{targetId}/checkpoints:
+    get:
+      tags: [RunControl]
+      operationId: listRunCheckpoints
+      description: >-
+        运行检查点列表（能力键 checkpoint.read）。Checkpoint 不可变：inputDigest/outputRefs/
+        authorizationSnapshot/budgetSnapshot；恢复（RESUME）前必须重新预检而非直接回放。
+        targetType ∈ AGENT_SESSION/EXECUTION_TASK。负向：目标不存在 404、跨 Workspace 403、
+        非法 targetType 422。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - name: targetType
+          in: path
+          required: true
+          schema: { type: string, enum: [AGENT_SESSION, EXECUTION_TASK] }
+        - name: targetId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+      responses: { '200': { $ref: '#/components/responses/CheckpointListResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '422': { $ref: '#/components/responses/ValidationFailed' } }
+  /work-items:
+    get:
+      tags: [WorkBoard]
+      operationId: listWorkItems
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/WorkItemStatus' } }
+        - { $ref: '#/components/parameters/PageParam' }
+        - { $ref: '#/components/parameters/PageSizeParam' }
+      responses: { '200': { $ref: '#/components/responses/WorkItemListResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+    post:
+      tags: [WorkBoard]
+      operationId: createWorkItem
+      description: >-
+        WP-01A 上下文门控（裁决 QF-PD-001/002 承载面）：携带 releaseId 时，该 Release 必须存在、
+        为 ACTIVE 且属于当前 Workspace，否则 409 RELEASE_NOT_IN_WORKSPACE（跨 Workspace /
+        已归档 / 不存在同码拒绝）。缺 releaseId 的交付任务必填门控依赖 WP-03 TaskContract 语义，届时落地。
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkItemCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/WorkItemResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /work-items/sla-overview:
+    get:
+      tags: [WorkBoard]
+      operationId: listWorkItemSlaOverview
+      description: >-
+        看板 SLA 面板（M2/U3）：按优先级（P0/P1/P2）分组的 {total, met, overdue, metRate} 与整体汇总。
+        SLA 口径（简单可解释）：截止时间 = created_at + 优先级窗口（P0=24h、P1=48h、P2=72h）；
+        DONE/APPROVED 且 updatedAt（完成时间）不晚于截止 = met；未完成且当前时间已过截止 = overdue；
+        P3 或缺失创建时间（无 due）只计入 total 不算 overdue；CANCELLED 只计入 total。
+        metRate = met / total（total 为 0 时返回 0）。
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/WorkItemSlaOverviewResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /work-items/{workItemId}:
+    parameters: [ { $ref: '#/components/parameters/WorkItemId' } ]
+    get:
+      tags: [WorkBoard]
+      operationId: getWorkItem
+      responses: { '200': { $ref: '#/components/responses/WorkItemResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /work-items/{workItemId}/transitions:
+    post:
+      tags: [WorkBoard]
+      operationId: transitionWorkItem
+      parameters: [ { $ref: '#/components/parameters/WorkItemId' }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkItemTransition' } } } }
+      responses: { '200': { $ref: '#/components/responses/WorkItemResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /work-items/{workItemId}/assign:
+    post:
+      tags: [WorkBoard]
+      operationId: assignWorkItem
+      description: >-
+        工作项分派（M2/U4）：落库 work_items.assignee；工作项必须存在且属于请求 workspace（否则 404）；
+        assigneeId 必填且为合法 UUID（缺省/非法 422）；重复分派同一 assignee 幂等成功（no-op 返回当前状态）。
+        操作天然幂等，无需 Idempotency-Key。
+      parameters: [ { $ref: '#/components/parameters/WorkItemId' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkItemAssignRequest' } } } }
+      responses: { '200': { $ref: '#/components/responses/WorkItemResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /work-items/{workItemId}/runs:
+    get:
+      tags: [WorkBoard]
+      operationId: listWorkItemRuns
+      parameters: [ { $ref: '#/components/parameters/WorkItemId' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /review-tasks:
+    get:
+      tags: [WorkBoard]
+      operationId: listReviewTasks
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - { name: assigneeId, in: query, schema: { type: string, format: uuid } }
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/ReviewTaskStatus' } }
+      responses: { '200': { $ref: '#/components/responses/ReviewTaskListResponse' } }
+    post:
+      tags: [WorkBoard]
+      operationId: createReviewTask
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ReviewTaskCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ReviewTaskResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /review-tasks/{reviewTaskId}:
+    get:
+      tags: [WorkBoard]
+      operationId: getReviewTask
+      parameters: [ { $ref: '#/components/parameters/ReviewTaskId' } ]
+      responses: { '200': { $ref: '#/components/responses/ReviewTaskResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /review-tasks/{reviewTaskId}/artifact:
+    get:
+      tags: [WorkBoard]
+      operationId: getReviewArtifact
+      parameters: [ { $ref: '#/components/parameters/ReviewTaskId' } ]
+      responses: { '200': { $ref: '#/components/responses/ReviewArtifactResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /review-tasks/{reviewTaskId}/artifact/diff:
+    get:
+      tags: [WorkBoard]
+      operationId: getReviewArtifactDiff
+      description: >-
+        审核队列版本 Diff 数据面（10 号 PRD §3 审核队列：查看 Diff）：以审核任务绑定的版本为 head，
+        在同根版本集合内取版本号最大的上一版为 base（version-1 优先，缺失时取小于 head 的最大版本），
+        服务端计算顶层字段级 diff（值按 JSON 等价比较）。
+        base 不存在（首版）时 hasBaseline=false 且 fields 为空；base 版本链断裂同样 hasBaseline=false（降级不报错）。
+        只读投影，不产生事件；content 中 tenantId/workspaceId 不参与对比（与 getReviewArtifact 同口径）。
+      parameters: [ { $ref: '#/components/parameters/ReviewTaskId' } ]
+      responses: { '200': { $ref: '#/components/responses/ReviewArtifactDiffResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /review-tasks/{reviewTaskId}/decisions:
+    post:
+      tags: [WorkBoard]
+      operationId: decideReviewTask
+      parameters: [ { $ref: '#/components/parameters/ReviewTaskId' }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ReviewDecisionCreate' } } } }
+      responses: { '200': { $ref: '#/components/responses/ReviewTaskResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '409': { $ref: '#/components/responses/Conflict' } }
+
+  /knowledge/source-imports:
+    post:
+      tags: [Knowledge]
+      operationId: importKnowledgeSource
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SourceImportCreate' } } } }
+      responses: { '202': { $ref: '#/components/responses/WorkItemResponse' }, '400': { $ref: '#/components/responses/BadRequest' } }
+  /knowledge/source-snapshots/{sourceSnapshotId}:
+    get:
+      tags: [Knowledge]
+      operationId: getSourceSnapshot
+      parameters: [ { name: sourceSnapshotId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/GenericObjectResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /knowledge/requirements:
+    get:
+      tags: [Knowledge]
+      operationId: listRequirementDocuments
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/RequirementDocumentListResponse' } }
+    post:
+      tags: [Knowledge]
+      operationId: createRequirementDocument
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RequirementDocumentCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/RequirementDocumentResponse' } }
+  /knowledge/requirements/{requirementId}/versions:
+    post:
+      tags: [Knowledge]
+      operationId: createRequirementDocumentVersion
+      parameters: [ { name: requirementId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RequirementDocumentVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/RequirementDocumentVersionResponse' } }
+  /knowledge/api-contracts:
+    get:
+      tags: [Knowledge]
+      operationId: listApiContracts
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/ApiContractListResponse' } }
+    post:
+      tags: [Knowledge]
+      operationId: createApiContract
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/APIContractCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ApiContractResponse' } }
+  /knowledge/api-contracts/{apiContractId}:
+    get:
+      tags: [Knowledge]
+      operationId: getApiContract
+      parameters: [ { name: apiContractId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/ApiContractResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /knowledge/api-contracts/{apiContractId}/versions:
+    post:
+      tags: [Knowledge]
+      operationId: createApiContractVersion
+      parameters: [ { name: apiContractId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/APIContractVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' }, '422': { $ref: '#/components/responses/ValidationFailed' } }
+  /knowledge/api-contract-baselines:
+    post:
+      tags: [Knowledge]
+      operationId: createApiContractBaseline
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/APIContractBaselineCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /knowledge/entries:
+    get:
+      tags: [Knowledge]
+      operationId: listKnowledgeEntries
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Knowledge]
+      operationId: createKnowledgeEntry
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/KnowledgeEntryCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /knowledge/entries/{knowledgeEntryId}/versions:
+    post:
+      tags: [Knowledge]
+      operationId: createKnowledgeEntryVersion
+      parameters: [ { name: knowledgeEntryId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/KnowledgeEntryVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /knowledge/candidates:
+    get:
+      tags: [Knowledge]
+      operationId: listKnowledgeCandidates
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /knowledge/candidates/{candidateId}/publish:
+    post:
+      tags: [Knowledge]
+      operationId: publishKnowledgeCandidate
+      description: >-
+        发布知识候选（WP-05 资产发布链，批次六十三激活未实现；候选存储面未实现故留延期；Owner=知识 Owner；能力键 knowledge.publish（既有键复用）；
+        仅 USER；Idempotency-Key；QF-PD-014 KnowledgeCandidate 审核发布）。候选经人工审核接受：
+        PENDING_REVIEW → ACCEPTED 并生成正式 KnowledgeEntryVersion 发布版本（04 号 §4"接受后生成KnowledgeEntryVersion"）；
+        REJECTED/EXPIRED 不可发布。Agent 自批自发布 403；幂等重放同键返回原结果。
+        负向：候选不存在 404、跨 Workspace 403、Agent 调用 403、非 PENDING_REVIEW 409 INVALID_CANDIDATE_STATUS。
+      parameters:
+        - name: candidateId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/GenericObjectResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /knowledge/search:
+    post:
+      tags: [Knowledge]
+      operationId: searchKnowledge
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/KnowledgeSearchRequest' } } } }
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+
+  /test-strategies:
+    get:
+      tags: [TestPlanning]
+      operationId: listTestStrategies
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { name: releaseId, in: query, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/TestStrategyListResponse' } }
+    post:
+      tags: [TestPlanning]
+      operationId: createTestStrategy
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestStrategyCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestStrategyResponse' } }
+  /test-strategies/{testStrategyId}/versions:
+    post:
+      tags: [TestPlanning]
+      operationId: createTestStrategyVersion
+      parameters: [ { name: testStrategyId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestStrategyVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestStrategyVersionResponse' } }
+  /test-strategies/{testStrategyId}/versions/{versionId}/publish:
+    post:
+      tags: [TestPlanning]
+      operationId: publishTestStrategyVersion
+      description: >-
+        发布测试策略版本（WP-05 资产发布链，批次六十三激活、批次六十四实现；Owner=策略 Owner；能力键 artifact.test_strategy.publish；
+        仅 USER；Idempotency-Key）。仅 APPROVED 版本可发布：APPROVED → PUBLISHED，成功后回填父 TestStrategy.publishedVersionId，
+        同策略旧 PUBLISHED 版本转 STALE；人工审核复用 ReviewTask/Decision（QF-PD-007），Agent 自批自发布 403。
+        幂等重放：同键同指纹返回原发布结果。发布取代上游基线时按 39 号 §4 StageInvalidated 语义联动失效下游：
+        引用被取代版本的测试计划版本转 STALE，其未决审核任务 CANCELLED（stage.invalidated 事件逐版本登记，
+        只失效不删除历史；执行计划级联随 WP-06 冻结面落地）。负向：策略或版本不存在（含跨 Workspace 资源隐藏）404、
+        Agent 调用 403、非 APPROVED 409 ASSET_NOT_APPROVED。
+      parameters:
+        - name: testStrategyId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - name: versionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/TestStrategyVersionResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /test-plans:
+    get:
+      tags: [TestPlanning]
+      operationId: listTestPlans
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { name: releaseId, in: query, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/TestPlanListResponse' } }
+    post:
+      tags: [TestPlanning]
+      operationId: createTestPlan
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestPlanCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestPlanResponse' } }
+  /test-plans/{testPlanId}/versions:
+    post:
+      tags: [TestPlanning]
+      operationId: createTestPlanVersion
+      parameters: [ { name: testPlanId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestPlanVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestPlanVersionResponse' } }
+  /test-plans/{testPlanId}/versions/{versionId}/publish:
+    post:
+      tags: [TestPlanning]
+      operationId: publishTestPlanVersion
+      description: >-
+        发布测试计划版本（WP-05 资产发布链，批次六十三激活、批次六十四实现；Owner=计划 Owner；能力键 artifact.test_plan.publish；
+        仅 USER；Idempotency-Key）。仅 APPROVED 版本可发布：APPROVED → PUBLISHED，成功后回填父 TestPlan.publishedVersionId，
+        同计划旧 PUBLISHED 版本转 STALE；人工审核复用 ReviewTask/Decision（QF-PD-007），Agent 自批自发布 403。
+        幂等重放：同键同指纹返回原发布结果。发布不自动改写下游执行计划（其失效联动随 WP-06 ExecutionPlanVersion
+        冻结字段落地；stage.invalidated 事件已随策略发布链登记）。负向：计划或版本不存在（含跨 Workspace 资源隐藏）404、
+        Agent 调用 403、非 APPROVED 409 ASSET_NOT_APPROVED。
+      parameters:
+        - name: testPlanId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - name: versionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/TestPlanVersionResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /testing-irs/compile:
+    post:
+      tags: [TestPlanning]
+      operationId: compileTestingIr
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestingIRCompileRequest' } } } }
+      responses: { '202': { $ref: '#/components/responses/WorkItemResponse' } }
+  /testing-irs/{testingIrId}:
+    get:
+      tags: [TestPlanning]
+      operationId: getTestingIr
+      parameters: [ { name: testingIrId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/TestingIrResponse' } }
+  /test-scenarios:
+    post:
+      tags: [TestPlanning]
+      operationId: createTestScenario
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestScenarioCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestScenarioResponse' } }
+  /test-case-drafts/generate:
+    post:
+      tags: [TestPlanning]
+      operationId: generateTestCaseDrafts
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestCaseDraftGenerateRequest' } } } }
+      responses: { '202': { $ref: '#/components/responses/WorkItemResponse' } }
+  /test-cases:
+    get:
+      tags: [TestPlanning]
+      operationId: listTestCases
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/TestCaseListResponse' } }
+    post:
+      tags: [TestPlanning]
+      operationId: createTestCase
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestCaseCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestCaseResponse' } }
+  /test-cases/{testCaseId}/versions:
+    get:
+      tags: [TestPlanning]
+      operationId: listTestCaseVersions
+      parameters: [ { name: testCaseId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/TestCaseVersionListResponse' } }
+    post:
+      tags: [TestPlanning]
+      operationId: createTestCaseVersion
+      parameters: [ { name: testCaseId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestCaseVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestCaseVersionResponse' } }
+  /test-cases/{testCaseId}/versions/{versionId}/publish:
+    post:
+      tags: [TestPlanning]
+      operationId: publishTestCaseVersion
+      description: >-
+        发布测试用例版本（WP-05 资产发布链，批次六十三激活、批次六十四实现；Owner=用例 Owner；能力键 artifact.test_case.publish；
+        仅 USER；Idempotency-Key）。仅 APPROVED 版本可发布：APPROVED → PUBLISHED，成功后回填父 TestCase.publishedVersionId，
+        同用例旧 PUBLISHED 版本转 STALE；正式执行只选 PUBLISHED 版本（04 号 §9 约束）。
+        人工审核复用 ReviewTask/Decision（QF-PD-007），Agent 自批自发布 403。幂等重放：同键同指纹返回原发布结果。
+        发布不自动改写下游消费面（执行/自动化引用的失效联动随相应实现切片落地）。
+        负向：用例或版本不存在（含跨 Workspace 资源隐藏）404、Agent 调用 403、非 APPROVED 409 ASSET_NOT_APPROVED。
+      parameters:
+        - name: testCaseId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - name: versionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/TestCaseVersionResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /test-suites:
+    get:
+      tags: [TestPlanning]
+      operationId: listTestSuites
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/TestSuiteListResponse' } }
+    post:
+      tags: [TestPlanning]
+      operationId: createTestSuite
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestSuiteCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestSuiteResponse' } }
+
+  /automation/scripts:
+    get:
+      tags: [Automation]
+      operationId: listAutomationScripts
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Automation]
+      operationId: createAutomationScript
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AutomationScriptCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /automation/scripts/{automationScriptId}/versions:
+    post:
+      tags: [Automation]
+      operationId: createAutomationScriptVersion
+      parameters: [ { name: automationScriptId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AutomationScriptVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' }, '422': { $ref: '#/components/responses/ValidationFailed' } }
+  /automation/script-versions/{scriptVersionId}/publish:
+    post:
+      tags: [Automation]
+      operationId: publishAutomationScriptVersion
+      description: >-
+        发布自动化脚本版本（WP-05 资产发布链，批次六十三激活未实现；上游 createAutomationScript 延期，无运行时数据源故留延期；Owner=自动化 Owner；能力键 artifact.automation_script.publish；
+        仅 USER；Idempotency-Key）。仅 APPROVED 版本可发布：APPROVED → PUBLISHED；脚本是"API 代码"正式资产（QF-PD-039），
+        发布后方可被 ExecutionPlanVersion 冻结引用（39 号 §6 冻结字段随 WP-06 契约激活，QF-PD-016 维持 CONTRACT_PENDING）。
+        幂等重放：同键同指纹返回原发布结果；发布不自动改写下游（执行冻结引用的失效联动随 WP-06 冻结面落地）。
+        负向：脚本或版本不存在 404、跨 Workspace 403、Agent 调用 403、非 APPROVED 409 ASSET_NOT_APPROVED。
+      parameters:
+        - name: scriptVersionId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/GenericObjectResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /automation/script-versions/{scriptVersionId}/checks:
+    post:
+      tags: [Automation]
+      operationId: runAutomationChecks
+      parameters: [ { name: scriptVersionId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '202': { $ref: '#/components/responses/WorkItemResponse' } }
+  /automation/locators:
+    get:
+      tags: [Automation]
+      operationId: listLocators
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Automation]
+      operationId: createLocatorVersion
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/LocatorVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /automation/mocks:
+    post:
+      tags: [Automation]
+      operationId: createMockConfig
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/MockConfigCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /automation/data-profiles:
+    post:
+      tags: [Automation]
+      operationId: createTestDataProfile
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestDataProfileCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /automation/visual-baselines:
+    post:
+      tags: [Automation]
+      operationId: createVisualBaseline
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/VisualBaselineCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+
+  /execution-plans:
+    get:
+      tags: [Execution]
+      operationId: listExecutionPlans
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/ExecutionPlanListResponse' } }
+    post:
+      tags: [Execution]
+      operationId: createExecutionPlan
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExecutionPlanCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ExecutionPlanResponse' } }
+  /execution-plans/{executionPlanId}/versions:
+    post:
+      tags: [Execution]
+      operationId: createExecutionPlanVersion
+      parameters: [ { name: executionPlanId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExecutionPlanVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ExecutionPlanVersionResponse' } }
+  /execution-plans/{executionPlanId}/runs:
+    post:
+      tags: [Execution]
+      operationId: startExecutionPlan
+      parameters: [ { name: executionPlanId, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ExecutionStartRequest' } } } }
+      responses: { '202': { $ref: '#/components/responses/ExecutionTaskResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /execution-tasks:
+    get:
+      tags: [Execution]
+      operationId: listExecutionTasks
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/ExecutionTaskListResponse' } }
+  /execution-tasks/{executionTaskId}:
+    get:
+      tags: [Execution]
+      operationId: getExecutionTask
+      parameters: [ { name: executionTaskId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/ExecutionTaskResponse' } }
+  /execution-tasks/{executionTaskId}/cancel:
+    post:
+      tags: [Execution]
+      operationId: cancelExecutionTask
+      parameters: [ { name: executionTaskId, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      responses: { '200': { $ref: '#/components/responses/ExecutionTaskResponse' } }
+  /execution-results:
+    get:
+      tags: [Execution]
+      operationId: listExecutionResults
+      parameters:
+        - { name: executionTaskId, in: query, required: true, schema: { type: string, format: uuid } }
+      responses: { '200': { $ref: '#/components/responses/ExecutionResultListResponse' } }
+  /execution-results/{executionResultId}/artifacts:
+    get:
+      tags: [Execution]
+      operationId: listExecutionArtifacts
+      parameters: [ { name: executionResultId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/ExecutionArtifactListResponse' } }
+
+  /quality/result-analyses:
+    get:
+      tags: [Quality]
+      operationId: listResultAnalyses
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/ResultAnalysisListResponse' } }
+    post:
+      tags: [Quality]
+      operationId: createResultAnalysis
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ResultAnalysisCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/ResultAnalysisResponse' } }
+  /quality/failure-clusters:
+    get:
+      tags: [Quality]
+      operationId: listFailureClusters
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/FailureClusterListResponse' } }
+  /quality/defects:
+    get:
+      tags: [Quality]
+      operationId: listDefects
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/DefectListResponse' } }
+    post:
+      tags: [Quality]
+      operationId: createDefect
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DefectCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/DefectResponse' } }
+  /quality/defects/{defectId}/versions:
+    post:
+      tags: [Quality]
+      operationId: createDefectVersion
+      parameters: [ { name: defectId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DefectVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/DefectVersionResponse' } }
+  /quality/defects/{defectId}/transitions:
+    post:
+      tags: [Quality]
+      operationId: transitionDefect
+      parameters: [ { name: defectId, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DefectTransition' } } } }
+      responses: { '200': { $ref: '#/components/responses/DefectResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /quality/defects/{defectId}/sync-attempts:
+    post:
+      tags: [Quality]
+      operationId: createDefectSyncAttempt
+      parameters: [ { name: defectId, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DefectSyncAttemptCreate' } } } }
+      responses: { '202': { $ref: '#/components/responses/DefectSyncAttemptResponse' }, '403': { $ref: '#/components/responses/Forbidden' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /quality/reports:
+    get:
+      tags: [Quality]
+      operationId: listTestReports
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { name: releaseId, in: query, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/TestReportListResponse' } }
+    post:
+      tags: [Quality]
+      operationId: createTestReport
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestReportCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestReportResponse' } }
+  /quality/reports/{testReportId}/versions:
+    get:
+      tags: [Quality]
+      operationId: listTestReportVersions
+      parameters: [ { name: testReportId, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/TestReportVersionListResponse' } }
+    post:
+      tags: [Quality]
+      operationId: createTestReportVersion
+      parameters: [ { name: testReportId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TestReportVersionCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/TestReportVersionResponse' } }
+  /quality/gates:
+    get:
+      tags: [Quality]
+      operationId: listQualityGates
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/QualityGateListResponse' } }
+    post:
+      tags: [Quality]
+      operationId: createQualityGate
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/QualityGateCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/QualityGateResponse' } }
+  /quality/pipelines:
+    post:
+      tags: [Quality]
+      operationId: createPipelineConfig
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PipelineConfigCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/PipelineConfigResponse' } }
+  /quality/pipeline-runs:
+    get:
+      tags: [Quality]
+      operationId: listPipelineRuns
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/PipelineRunListResponse' } }
+
+  /ai/skills:
+    get:
+      tags: [AIAgentCenter]
+      operationId: listSkills
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /ai/agents:
+    get:
+      tags: [AIAgentCenter]
+      operationId: listAgents
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /ai/workflows:
+    get:
+      tags: [AIAgentCenter]
+      operationId: listAgentWorkflows
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /ai/sessions:
+    get:
+      tags: [AIAgentCenter]
+      operationId: listAgentSessions
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { name: workItemId, in: query, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/AgentSessionListResponse' } }
+    post:
+      tags: [AIAgentCenter]
+      operationId: createAgentSession
+      description: >-
+        QF-PD-003 计划先确认（批次五十七强制门）：工作项必须存在已批准（APPROVED）的 AgentPlan
+        才能启动 Session，否则 409 AGENT_PLAN_NOT_APPROVED。
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AgentSessionCreate' } } } }
+      responses: { '202': { $ref: '#/components/responses/AgentSessionResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /ai/sessions/{agentSessionId}:
+    get:
+      tags: [AIAgentCenter]
+      operationId: getAgentSession
+      parameters: [ { name: agentSessionId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/AgentSessionResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /ai/sessions/{agentSessionId}/trace:
+    get:
+      tags: [AIAgentCenter]
+      operationId: getAgentSessionTrace
+      parameters: [ { name: agentSessionId, in: path, required: true, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/AgentTraceListResponse' } }
+  /ai/provider/status:
+    get:
+      tags: [AIAgentCenter]
+      operationId: getProviderStatus
+      description: 当前 Provider 运行状态（服务端独占口径：NOMINAL=现行 provider 正常；DEGRADED=近期发生过 failover 降级到 fallback，V1 deterministic-local 下仅当硬化层记录到降级事件时出现；前端直接呈现，勿重算）
+      responses: { '200': { $ref: '#/components/responses/ProviderStatusResponse' } }
+  /ai/eval-runs:
+    post:
+      tags: [AIAgentCenter]
+      operationId: createEvalRun
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/EvalRunCreate' } } } }
+      responses: { '202': { $ref: '#/components/responses/GenericObjectResponse' } }
+
+  /ai/calibrations:
+    post:
+      tags: [AIAgentCenter]
+      summary: 注册 AI 介入点校准记录（裁决 B2-3，2026-08-14）
+      operationId: createCalibration
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CalibrationRecordCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+    get:
+      tags: [AIAgentCenter]
+      summary: 查询有效校准记录（按介入点）
+      operationId: listCalibrations
+      parameters:
+        - { name: interventionKey, in: query, schema: { type: string } }
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+
+
+  /runners/heartbeat:
+    post:
+      tags: [Platform]
+      summary: Runner 心跳上报(第0周补丁 B3,2026-08-14)
+      operationId: reportRunnerHeartbeat
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RunnerHeartbeat' } } } }
+      responses: { '200': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /ai/independent-verify:
+    post:
+      tags: [AIAgentCenter]
+      summary: 独立验证裁决（INDEPENDENT_VERIFY，M1 最小落点，裁决 2026-08-14）
+      operationId: createIndependentVerify
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/VerifyVerdictCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/VerifyVerdictResponse' } }
+  /quality/coverage-reports:
+    get:
+      tags: [Quality]
+      summary: 查询覆盖率报告列表(第0周补丁 B5,2026-08-14)
+      operationId: listCoverageReports
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { name: releaseId, in: query, schema: { type: string, format: uuid } } ]
+      responses: { '200': { $ref: '#/components/responses/CoverageReportListResponse' } }
+    post:
+      tags: [Quality]
+      summary: 创建覆盖率报告(五类分母口径,裁决 B2-1/2026-08-14)
+      operationId: createCoverageReport
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CoverageReportCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/CoverageReportResponse' } }
+
+  /workspaces:
+    get:
+      tags: [Platform]
+      operationId: listWorkspaces
+      description: >-
+        WP-01A 口径：返回当前成员关系内的工作区投影（id/name/createdAt/lastBusinessUpdatedAt），
+        按 lastBusinessUpdatedAt DESC（最近有效更新优先）；
+        WP-01 常用项目固定后行内附 pinned=true 并置顶排序（置顶组内仍按最近有效更新）。lastBusinessUpdatedAt = 该工作区 19 类
+        业务领域事件（artifact.version.generated / asset.published / stage.invalidated / review.decided / work_item.transitioned /
+        work_item.assigned / session.converged / execution.started / execution.finished /
+        evidence.appended / defect.version.created / conversation.message.appended /
+        clarification.requested / clarification.responded / task_card.created /
+        agent_plan.decided / run_command.recorded / runtime_authorization.decided /
+        budget.updated）的最大
+        occurredAt，排除 provider.switched /
+        provider.failover 运行面事件；无事件回退 createdAt。只读查询与 Agent Trace 不产生领域
+        事件，故轮询/Trace 不刷新排序（QF-PD-020/023 负向承载面）。
+      responses: { '200': { $ref: '#/components/responses/WorkspaceListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createWorkspace
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkspaceCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/WorkspaceResponse' } }
+  /workspaces/{workspaceId}:
+    get:
+      tags: [Platform]
+      operationId: getWorkspace
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      responses: { '200': { $ref: '#/components/responses/WorkspaceResponse' }, '404': { $ref: '#/components/responses/NotFound' } }
+  /workspaces/{workspaceId}/releases:
+    get:
+      tags: [Platform]
+      operationId: listReleases
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createRelease
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ReleaseCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /workspaces/{workspaceId}/context-projection:
+    get:
+      tags: [Platform]
+      operationId: getProjectContextProjection
+      description: >-
+        WP-01 项目驾驶舱上下文投影（39 号 §7.2 最小切片，QF-PD-023/024 承载面）：当前
+        Workspace/Release、常用项目（置顶）、lastBusinessUpdatedAt 与三类待办计数（待审核
+        ReviewTask=OPEN、活跃 WorkItem∈{READY,IN_PROGRESS,PENDING_REVIEW,REWORK,BLOCKED}、
+        运行中 ExecutionTask=RUNNING）。只读无写入；更新时间只来自有效业务事件。成员职责
+        与环境授权投影随 WP-04/WP-06 激活扩展，不在本切片。
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      responses: { '200': { $ref: '#/components/responses/ProjectContextProjectionResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /workspaces/{workspaceId}/pin:
+    post:
+      tags: [Platform]
+      operationId: setWorkspacePin
+      description: >-
+        WP-01 常用项目固定命令（QF-PD-026 单租户体验承载面）：用户级置顶/取消置顶，
+        天然幂等；登录默认工作区 = 最近置顶的常用项目，未置顶回退最近有效更新项目。
+        能力键 workspace.pin；不产生领域事件（用户偏好非业务事件，口径见批次五十二）。
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' }, { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkspacePin' } } } }
+      responses: { '200': { $ref: '#/components/responses/WorkspacePinResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /workspaces/{workspaceId}/releases/{releaseId}/archive:
+    post:
+      tags: [Platform]
+      operationId: archiveRelease
+      description: >-
+        WP-01 归档 Release 管理命令：ACTIVE → ARCHIVED 单向迁移（能力键 release.archive）。
+        归档后从 listReleases 与前端切换面消失；createWorkItem 携带已归档 releaseId 按
+        RELEASE_NOT_IN_WORKSPACE 同码 409 拒绝。重复归档 409 RELEASE_ALREADY_ARCHIVED。
+        配置域命令不产生领域事件（同批次四十六 environment.create 口径）。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceId' }
+        - name: releaseId
+          in: path
+          required: true
+          schema: { $ref: '#/components/schemas/UUID' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses: { '200': { $ref: '#/components/responses/ReleaseArchiveResponse' }, '404': { $ref: '#/components/responses/NotFound' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /platform/workspaces/{workspaceId}/environments:
+    get:
+      tags: [Platform]
+      operationId: listEnvironments
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createEnvironment
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/EnvironmentCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /platform/workspaces/{workspaceId}/secrets:
+    get:
+      tags: [Platform]
+      operationId: listSecretMetadata
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createSecret
+      parameters: [ { $ref: '#/components/parameters/WorkspaceId' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/SecretCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /platform/runners:
+    get:
+      tags: [Platform]
+      operationId: listRunnerNodes
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: registerRunnerNode
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RunnerNodeCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /platform/integrations:
+    get:
+      tags: [Platform]
+      operationId: listIntegrations
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createIntegration
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/IntegrationCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' } }
+  /platform/role-bindings:
+    get:
+      tags: [Platform]
+      operationId: listRoleBindings
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+    post:
+      tags: [Platform]
+      operationId: createRoleBinding
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RoleBindingCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /platform/audit-logs:
+    get:
+      tags: [Platform]
+      operationId: listAuditLogs
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' }, { $ref: '#/components/parameters/PageParam' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' } }
+  /observability/events:
+    get:
+      tags: [Observability]
+      operationId: listEvents
+      description: >-
+        领域事件流只读面：append-only、服务端独占生成、无客户端写入面（AC-04 防伪基线）；
+        支持 subjectType/eventType 过滤，承载 D3 效率指标计算与试点追溯。
+      parameters:
+        - { $ref: '#/components/parameters/WorkspaceIdQuery' }
+        - { name: subjectType, in: query, schema: { type: string } }
+        - { name: eventType, in: query, schema: { type: string } }
+        - { $ref: '#/components/parameters/PageParam' }
+        - { $ref: '#/components/parameters/PageSizeParam' }
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /observability/metrics:
+    get:
+      tags: [Observability]
+      operationId: listMetrics
+      description: >-
+        受控 metricKey 计算面（20 号 §1.1 O3 裁决 ✅ 可计算项）：纯服务端计算零手工录入，
+        每项返回 metricKey/value/denominator/window/computedAt 并显式声明分母口径；不含目标值（AC-04）。
+      parameters: [ { $ref: '#/components/parameters/WorkspaceIdQuery' } ]
+      responses: { '200': { $ref: '#/components/responses/GenericListResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+
+  /auth/status:
+    get:
+      tags: [Platform]
+      operationId: getLocalAuthStatus
+      security: []
+      responses: { '200': { $ref: '#/components/responses/LocalAuthStatusResponse' } }
+  /auth/setup:
+    post:
+      tags: [Platform]
+      operationId: setupLocalAdmin
+      security: []
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/LocalSetupCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/LocalAuthProfileResponse' }, '409': { $ref: '#/components/responses/Conflict' } }
+  /auth/login:
+    post:
+      tags: [Platform]
+      operationId: loginLocalUser
+      security: []
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/LoginCreate' } } } }
+      responses: { '200': { $ref: '#/components/responses/LocalAuthProfileResponse' }, '401': { $ref: '#/components/responses/Unauthorized' }, '429': { $ref: '#/components/responses/TooManyRequests' } }
+  /auth/switch-workspace:
+    post:
+      tags: [Platform]
+      operationId: switchLocalWorkspace
+      description: >-
+        WP-01A 专用切换命令（QF-PD-001/002/009 承载面）：目标 workspaceId 必须属于当前身份的
+        生效成员关系，否则 403；校验通过后服务端重签 JWT 并刷新会话 cookie（工作区绑定进
+        token claim，资源型端点的 actor 工作区随切换生效）。不落库、不用通用 PATCH 代替命令。
+      parameters: [ { $ref: '#/components/parameters/CsrfToken' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WorkspaceSwitch' } } } }
+      responses: { '200': { $ref: '#/components/responses/LocalAuthProfileResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /auth/me:
+    get:
+      tags: [Platform]
+      operationId: getCurrentLocalUser
+      responses: { '200': { $ref: '#/components/responses/LocalAuthProfileResponse' }, '401': { $ref: '#/components/responses/Unauthorized' } }
+  /auth/logout:
+    post:
+      tags: [Platform]
+      operationId: logoutLocalUser
+      parameters: [ { $ref: '#/components/parameters/CsrfToken' } ]
+      responses: { '200': { $ref: '#/components/responses/LoggedOutResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+  /auth/ws-tickets:
+    post:
+      tags: [Platform]
+      operationId: createWebSocketTicket
+      description: >-
+        为已通过REST鉴权的调用方签发一次性、短时有效且绑定具体资源的WebSocket票据；
+        票据不得复用，也不得扩大调用方已有权限。
+      parameters: [ { $ref: '#/components/parameters/IdempotencyKey' } ]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/WebSocketTicketCreate' } } } }
+      responses: { '201': { $ref: '#/components/responses/GenericObjectResponse' }, '403': { $ref: '#/components/responses/Forbidden' } }
+
+components:
+  securitySchemes:
+    BearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+    CookieAuth: { type: apiKey, in: cookie, name: qf_access }
+  parameters:
+    WorkspaceIdQuery: { name: workspaceId, in: query, required: true, schema: { type: string, format: uuid } }
+    WorkspaceId: { name: workspaceId, in: path, required: true, schema: { type: string, format: uuid } }
+    WorkItemId: { name: workItemId, in: path, required: true, schema: { type: string, format: uuid } }
+    ReviewTaskId: { name: reviewTaskId, in: path, required: true, schema: { type: string, format: uuid } }
+    PageParam: { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+    PageSizeParam: { name: pageSize, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 20 } }
+    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, minLength: 16, maxLength: 128 } }
+    CsrfToken: { name: X-CSRF-Token, in: header, required: true, schema: { type: string, minLength: 16, maxLength: 128 } }
+  responses:
+    RunCommandResponse: { description: RunCommand accepted, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/RunCommand' } } } ] } } } }
+    RunCommandReceiptResponse: { description: RunCommand with receipt, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, required: [command], properties: { command: { $ref: '#/components/schemas/RunCommand' }, receipt: { $ref: '#/components/schemas/CommandReceipt' } } } } } ] } } } }
+    RuntimeAuthorizationResponse: { description: RuntimeAuthorization, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/RuntimeAuthorization' } } } ] } } } }
+    RuntimeAuthorizationListResponse: { description: RuntimeAuthorizations, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/RuntimeAuthorization' } } } } ] } } } }
+    BudgetPolicyResponse: { description: BudgetPolicy, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/BudgetPolicy' } } } ] } } } }
+    CheckpointListResponse: { description: Checkpoints, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Checkpoint' } } } } ] } } } }
+    ConversationResponse: { description: Conversation, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/Conversation' } } } ] } } } }
+    ConversationListResponse: { description: Conversations, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Conversation' } } } } ] } } } }
+    ConversationMessageResponse: { description: ConversationMessage, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ConversationMessage' } } } ] } } } }
+    ConversationMessageListResponse: { description: ConversationMessages, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ConversationMessage' } } } } ] } } } }
+    ClarificationRequestResponse: { description: ClarificationRequest, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ClarificationRequest' } } } ] } } } }
+    ClarificationRequestListResponse: { description: ClarificationRequests, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ClarificationRequest' } } } } ] } } } }
+    ClarificationResponseResponse: { description: ClarificationResponse, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ClarificationResponse' } } } ] } } } }
+    TaskCardListResponse: { description: TaskCards, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TaskCard' } } } } ] } } } }
+    TaskCardResponse: { description: TaskCard, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TaskCard' } } } ] } } } }
+    AgentPlanResponse: { description: AgentPlan, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/AgentPlan' } } } ] } } } }
+    AgentPlanListResponse: { description: AgentPlans, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/AgentPlan' } } } } ] } } } }
+    AgentPlanDecisionResponse: { description: AgentPlanDecision result, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, required: [agentPlanId, decision, decidedAt], properties: { agentPlanId: { $ref: '#/components/schemas/UUID' }, decision: { type: string, enum: [APPROVE, REJECT] }, decidedAt: { type: string, format: date-time }, planStatus: { type: string } } } } } ] } } } }
+    GenericObjectResponse: { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/GenericObjectEnvelope' } } } }
+    GenericListResponse: { description: OK, content: { application/json: { schema: { $ref: '#/components/schemas/GenericListEnvelope' } } } }
+    WorkItemResponse: { description: WorkItem, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/WorkItem' } } } ] } } } }
+    WorkItemListResponse: { description: WorkItems, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/WorkItem' } } } } ] } } } }
+    WorkItemSlaOverviewResponse: { description: WorkItemSlaOverview, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/WorkItemSlaOverview' } } } ] } } } }
+    ReviewTaskResponse: { description: ReviewTask, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ReviewTask' } } } ] } } } }
+    ReviewTaskListResponse: { description: ReviewTasks, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ReviewTask' } } } } ] } } } }
+    ReviewArtifactResponse: { description: ReviewArtifact, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ReviewArtifact' } } } ] } } } }
+    ReviewArtifactDiffResponse: { description: ReviewArtifactDiff, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ReviewArtifactDiff' } } } ] } } } }
+    LocalAuthStatusResponse: { description: LocalAuthStatus, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/LocalAuthStatus' } } } ] } } } }
+    LocalAuthProfileResponse: { description: LocalAuthProfile, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/LocalAuthProfile' } } } ] } } } }
+    LoggedOutResponse: { description: LoggedOut, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, required: [loggedOut], properties: { loggedOut: { type: boolean } } } } } ] } } } }
+    ApiContractResponse: { description: APIContract, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/APIContract' } } } ] } } } }
+    ApiContractListResponse: { description: APIContracts, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/APIContract' } } } } ] } } } }
+    DefectResponse: { description: Defect, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/Defect' } } } ] } } } }
+    DefectListResponse: { description: Defects, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Defect' } } } } ] } } } }
+    ResultAnalysisListResponse: { description: ResultAnalyses, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ResultAnalysis' } } } } ] } } } }
+    ProviderStatusResponse: { description: ProviderStatus, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ProviderStatus' } } } ] } } } }
+    WorkspaceResponse: { description: Workspace, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/Workspace' } } } ] } } } }
+    ReleaseArchiveResponse: { description: Release archived, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, required: [id, status, archivedAt], properties: { id: { $ref: '#/components/schemas/UUID' }, status: { type: string, enum: [ARCHIVED] }, archivedAt: { type: string, format: date-time } } } } } ] } } } }
+    ProjectContextProjectionResponse: { description: ProjectContextProjection, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ProjectContextProjection' } } } ] } } } }
+    WorkspacePinResponse: { description: WorkspacePin result, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, required: [workspaceId, pinned], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, pinned: { type: boolean } } } } } ] } } } }
+    WorkspaceListResponse: { description: Workspaces, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/Workspace' } } } } ] } } } }
+    RequirementDocumentResponse: { description: RequirementDocument, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/RequirementDocument' } } } ] } } } }
+    RequirementDocumentListResponse: { description: RequirementDocuments, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/RequirementDocument' } } } } ] } } } }
+    RequirementDocumentVersionResponse: { description: RequirementDocumentVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/RequirementDocumentVersion' } } } ] } } } }
+    TestStrategyResponse: { description: TestStrategy, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestStrategy' } } } ] } } } }
+    TestStrategyListResponse: { description: TestStrategies, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestStrategy' } } } } ] } } } }
+    TestStrategyVersionResponse: { description: TestStrategyVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestStrategyVersion' } } } ] } } } }
+    TestPlanResponse: { description: TestPlan, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestPlan' } } } ] } } } }
+    TestPlanListResponse: { description: TestPlans, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestPlan' } } } } ] } } } }
+    TestPlanVersionResponse: { description: TestPlanVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestPlanVersion' } } } ] } } } }
+    TestCaseResponse: { description: TestCase, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestCase' } } } ] } } } }
+    TestCaseListResponse: { description: TestCases, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestCase' } } } } ] } } } }
+    TestCaseVersionResponse: { description: TestCaseVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestCaseVersion' } } } ] } } } }
+    TestCaseVersionListResponse: { description: TestCaseVersions, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestCaseVersion' } } } } ] } } } }
+    AgentSessionResponse: { description: AgentSession, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/AgentSession' } } } ] } } } }
+    AgentSessionListResponse: { description: AgentSessions, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/AgentSession' } } } } ] } } } }
+    AgentTraceListResponse: { description: AgentTraceEvents, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/AgentTraceEvent' } } } } ] } } } }
+    CoverageReportResponse: { description: CoverageReport, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/CoverageReport' } } } ] } } } }
+    CoverageReportListResponse: { description: CoverageReportList, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/CoverageReport' } } } } ] } } } }
+    VerifyVerdictResponse: { description: VerifyVerdict, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/VerifyVerdict' } } } ] } } } }
+    TestingIrResponse: { description: TestingIr, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestingIr' } } } ] } } } }
+    TestScenarioResponse: { description: TestScenario, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestScenario' } } } ] } } } }
+    TestSuiteResponse: { description: TestSuite, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestSuite' } } } ] } } } }
+    TestSuiteListResponse: { description: TestSuites, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestSuite' } } } } ] } } } }
+    ExecutionPlanResponse: { description: ExecutionPlan, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ExecutionPlan' } } } ] } } } }
+    ExecutionPlanListResponse: { description: ExecutionPlans, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ExecutionPlan' } } } } ] } } } }
+    ExecutionPlanVersionResponse: { description: ExecutionPlanVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ExecutionPlanVersion' } } } ] } } } }
+    ExecutionTaskResponse: { description: ExecutionTask, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ExecutionTask' } } } ] } } } }
+    ExecutionTaskListResponse: { description: ExecutionTasks, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ExecutionTask' } } } } ] } } } }
+    ExecutionResultListResponse: { description: ExecutionResults, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ExecutionResult' } } } } ] } } } }
+    ExecutionArtifactListResponse: { description: ExecutionArtifacts, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/ExecutionArtifact' } } } } ] } } } }
+    ResultAnalysisResponse: { description: ResultAnalysis, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/ResultAnalysis' } } } ] } } } }
+    FailureClusterListResponse: { description: FailureClusters, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/FailureCluster' } } } } ] } } } }
+    DefectVersionResponse: { description: DefectVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/DefectVersion' } } } ] } } } }
+    DefectSyncAttemptResponse: { description: DefectSyncAttempt, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/DefectSyncAttempt' } } } ] } } } }
+    TestReportResponse: { description: TestReport, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestReport' } } } ] } } } }
+    TestReportListResponse: { description: TestReports, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestReport' } } } } ] } } } }
+    TestReportVersionResponse: { description: TestReportVersion, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/TestReportVersion' } } } ] } } } }
+    TestReportVersionListResponse: { description: TestReportVersions, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/TestReportVersion' } } } } ] } } } }
+    QualityGateResponse: { description: QualityGate, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/QualityGate' } } } ] } } } }
+    QualityGateListResponse: { description: QualityGates, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/QualityGate' } } } } ] } } } }
+    PipelineConfigResponse: { description: PipelineConfig, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { $ref: '#/components/schemas/PipelineConfig' } } } ] } } } }
+    PipelineRunListResponse: { description: PipelineRuns, content: { application/json: { schema: { allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { $ref: '#/components/schemas/PipelineRun' } } } } ] } } } }
+
+    BadRequest: { description: Bad request, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    ValidationFailed: { description: Validation failed, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    Forbidden: { description: Forbidden, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    NotFound: { description: Not found, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    Conflict: { description: State or idempotency conflict, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    Unauthorized: { description: Authentication required or invalid, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+    TooManyRequests: { description: Rate limited, content: { application/json: { schema: { $ref: '#/components/schemas/ErrorEnvelope' } } } }
+  schemas:
+    ResponseEnvelope:
+      type: object
+      required: [code, message, traceId]
+      properties:
+        code: { type: string, enum: [OK] }
+        message: { type: string }
+        traceId: { type: string }
+    ErrorEnvelope:
+      type: object
+      required: [code, message, traceId]
+      properties:
+        code:
+          type: string
+          enum: [VALIDATION_FAILED, UNAUTHORIZED, INVALID_CREDENTIALS, CSRF_VALIDATION_FAILED, RATE_LIMITED, SETUP_ALREADY_COMPLETED, FORBIDDEN, NOT_FOUND, CONFLICT, IDEMPOTENCY_CONFLICT, INVALID_STATE_TRANSITION, REVIEW_REQUIRED, SEPARATION_OF_DUTIES_VIOLATION, STALE_ARTIFACT_VERSION, EGRESS_DENIED, SECRET_ACCESS_DENIED, DATA_SOURCE_MISSING, RUNNER_CAPABILITY_MISSING, EXTERNAL_SYNC_CONFLICT, DEPENDENCY_UNAVAILABLE, INTERNAL_ERROR]
+        message: { type: string }
+        details: { type: object, additionalProperties: true }
+        traceId: { type: string }
+    GenericObjectEnvelope:
+      allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: object, additionalProperties: true } } } ]
+    GenericListEnvelope:
+      allOf: [ { $ref: '#/components/schemas/ResponseEnvelope' }, { type: object, properties: { data: { type: array, items: { type: object, additionalProperties: true } }, page: { type: integer }, pageSize: { type: integer }, total: { type: integer } } } ]
+    UUID: { type: string, format: uuid }
+    ReviewStatus: { type: string, enum: [DRAFT, GENERATING, PENDING_REVIEW, CHANGES_REQUESTED, APPROVED, PUBLISHED, REJECTED, STALE, ARCHIVED] }
+    RequirementParseStatus: { type: string, enum: [DRAFT, PARSING, COMPLETED, FAILED] }
+    RiskLevel: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }
+    WorkItemStatus: { type: string, enum: [BACKLOG, READY, IN_PROGRESS, PENDING_REVIEW, REWORK, APPROVED, BLOCKED, DONE, CANCELLED] }
+    ReviewTaskStatus: { type: string, enum: [OPEN, IN_PROGRESS, APPROVED, CHANGES_REQUESTED, REJECTED, EXPIRED, CANCELLED] }
+    WorkItem:
+      type: object
+      required: [id, tenantId, workspaceId, workItemType, title, objective, acceptanceCriteria, requiresReview, lockVersion, status, currentActorType, priority, riskLevel, createdAt, updatedAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        tenantId: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID', description: "可空:探索性缺陷无 Release 归属(裁决 2026-08-15 B6)" }
+        testPlanId: { $ref: '#/components/schemas/UUID' }
+        parentWorkItemId: { $ref: '#/components/schemas/UUID' }
+        workItemType: { type: string, enum: [STRATEGY, PLAN, TEST_DESIGN, AUTOMATION_WEB, AUTOMATION_API, EXECUTION, RESULT_ANALYSIS, DEFECT, REPORT, KNOWLEDGE, GENERAL] }
+        title: { type: string, maxLength: 256 }
+        description: { type: string }
+        objective: { type: string, description: 测试目标而非操作步骤 }
+        acceptanceCriteria: { type: string, description: 完成判据，由测试人员创建或确认 }
+        constraints: { type: string, description: 约束与限制条件 }
+        agentId: { type: string, format: uuid, description: 当前处理 Agent 引用 }
+        requiresReview: { type: boolean, description: 是否必须创建审核工单，正式产出默认 true }
+        lockVersion: { type: integer, description: 乐观锁版本，防止并发审核覆盖 }
+        status: { $ref: '#/components/schemas/WorkItemStatus' }
+        currentActorType: { type: string, enum: [HUMAN, AGENT, SERVICE, SYSTEM, NONE], description: "与 33 四值对齐补 SERVICE(裁决 2026-08-15 B14)" }
+        currentActorId: { type: string, format: uuid }
+        priority: { type: string, enum: [P0, P1, P2, P3] }
+        riskLevel: { $ref: '#/components/schemas/RiskLevel' }
+        ownerId: { type: string, format: uuid }
+        assigneeId: { type: string, format: uuid }
+        blockedReasonCode: { type: string }
+        blockedDetails: { type: object, additionalProperties: true }
+        dueAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+    WorkItemCreate:
+      type: object
+      required: [workspaceId, workItemType, title, objective, acceptanceCriteria, requiresReview, priority, riskLevel]
+      properties:
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        testPlanId: { $ref: '#/components/schemas/UUID' }
+        parentWorkItemId: { $ref: '#/components/schemas/UUID' }
+        workItemType: { type: string, enum: [STRATEGY, PLAN, TEST_DESIGN, AUTOMATION_WEB, AUTOMATION_API, EXECUTION, RESULT_ANALYSIS, DEFECT, REPORT, KNOWLEDGE, GENERAL] }
+        title: { type: string }
+        description: { type: string }
+        objective: { type: string, description: 测试目标而非操作步骤 }
+        acceptanceCriteria: { type: string, description: 完成判据，由测试人员创建或确认 }
+        constraints: { type: string, description: 约束与限制条件 }
+        agentId: { type: string, format: uuid, description: 当前处理 Agent 引用 }
+        requiresReview: { type: boolean, default: true, description: 是否必须创建审核工单 }
+        priority: { type: string, enum: [P0, P1, P2, P3] }
+        riskLevel: { $ref: '#/components/schemas/RiskLevel' }
+        reviewPolicyId: { $ref: '#/components/schemas/UUID' }
+    WorkItemTransition:
+      type: object
+      required: [targetStatus, reason, lockVersion]
+      properties:
+        targetStatus: { $ref: '#/components/schemas/WorkItemStatus' }
+        reason: { type: string }
+        expectedCurrentStatus: { $ref: '#/components/schemas/WorkItemStatus' }
+        lockVersion: { type: integer, minimum: 0, description: "乐观锁版本(M1-B1 契约先行,墙 M-120 双确认)；与服务端当前值不一致时 409" }
+    WorkItemAssignRequest:
+      type: object
+      required: [workspaceId, assigneeId]
+      description: "工作项分派请求（M2/U4）：assigneeId 必填；重复分派同一 assignee 幂等成功"
+      properties:
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        assigneeId: { $ref: '#/components/schemas/UUID' }
+    WorkItemSlaGroup:
+      type: object
+      required: [priority, total, met, overdue, metRate]
+      properties:
+        priority: { type: string, enum: [P0, P1, P2] }
+        total: { type: integer, description: 该优先级工作项总数 }
+        met: { type: integer, description: 截止前完成数（DONE/APPROVED 且 updatedAt <= 截止） }
+        overdue: { type: integer, description: 未完成且当前时间已过截止数 }
+        metRate: { type: number, description: "met / total，total 为 0 时为 0" }
+    WorkItemSlaOverview:
+      type: object
+      required: [overall, groups]
+      properties:
+        overall:
+          type: object
+          required: [total, met, overdue, metRate]
+          properties:
+            total: { type: integer, description: 工作区内全部工作项（含 P3 与 CANCELLED） }
+            met: { type: integer }
+            overdue: { type: integer }
+            metRate: { type: number }
+        groups:
+          type: array
+          items: { $ref: '#/components/schemas/WorkItemSlaGroup' }
+          description: 按优先级 P0/P1/P2 分组；P3 无 SLA 承诺不占组
+    ReviewTask:
+      type: object
+      required: [id, workItemId, artifactType, artifactId, artifactVersionId, contentDigest, policyType, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        agentSessionId: { $ref: '#/components/schemas/UUID', description: 可选：AI 生成场景记录 AgentSession；人工直接修改提交审核时为空（裁决 2026-08-14 批次二） }
+        artifactType: { type: string }
+        artifactId: { $ref: '#/components/schemas/UUID' }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        policyType: { type: string, enum: [SINGLE_REVIEW, FOUR_EYES, CODE_REVIEW, EXTERNAL_WRITE, REPORT_SIGNOFF, KNOWLEDGE_PUBLISH], description: "风险分级审核政策（QF-PD-007，WP-05 切片二实现）：自动创建的任务按 WorkItem riskLevel 服务端派生——CRITICAL → FOUR_EYES，其余 → SINGLE_REVIEW；04 号 ReviewPolicy 配置面 CRUD 后置，平台最低基线只能调严" }
+        minApprovers: { type: integer, minimum: 1, description: "最少不同审批人数：SINGLE_REVIEW=1、FOUR_EYES=2（WP-05 切片二）" }
+        approvals: { type: array, items: { type: object, additionalProperties: true }, description: "已记录的批准决定（actorId/comments/decidedAt），FOUR_EYES 逐人追加：达标才置任务 APPROVED 与版本 reviewStatus=APPROVED，部分批准任务 IN_PROGRESS；同一审批人二次批准 409 FOUR_EYES_SAME_APPROVER（单人绕过双审被拒）；退回（REQUEST_CHANGES/REJECT）不要求双人（06 号 §9 阻断项直接退回）。AI 自批由 AGENT 角色门拒绝（AI 无审核权）；人侧 separationRules 属 ReviewPolicy 配置面（V1 单人可兼任，QF-PD-001）" }
+        status: { $ref: '#/components/schemas/ReviewTaskStatus' }
+        approveDisabledReason: { type: string, nullable: true, enum: [TASK_CLOSED, STALE_VERSION, PERMISSION_DENIED, PRECONDITION_PENDING], description: "服务端计算的批准禁用原因(M1-B1 契约先行,墙 M-120 双确认)；null 表示可批准。TASK_CLOSED=任务已结束；STALE_VERSION=任务摘要落后于产出物当前版本；PERMISSION_DENIED/PRECONDITION_PENDING 预留后续能力与前置条件校验" }
+        assignments: { type: array, items: { type: object, additionalProperties: true } }
+        createdAt: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+    ReviewArtifact:
+      type: object
+      required: [artifactType, artifactId, artifactVersionId, contentDigest, content]
+      properties:
+        artifactType: { type: string, enum: [TEST_STRATEGY, TEST_PLAN, TEST_CASE] }
+        artifactId: { $ref: '#/components/schemas/UUID' }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        content: { type: object, additionalProperties: true }
+    ReviewArtifactDiffField:
+      type: object
+      required: [field, changeType]
+      properties:
+        field: { type: string, description: content 顶层字段名 }
+        changeType: { type: string, enum: [ADDED, REMOVED, CHANGED] }
+        oldValue: { description: base 版本字段值（ADDED 时省略） }
+        newValue: { description: head 版本字段值（REMOVED 时省略） }
+    ReviewArtifactDiff:
+      type: object
+      required: [artifactType, artifactId, artifactVersionId, hasBaseline, changedCount, fields]
+      properties:
+        artifactType: { type: string, enum: [TEST_STRATEGY, TEST_PLAN, TEST_CASE, DEFECT_VERSION, TEST_REPORT_VERSION] }
+        artifactId: { $ref: '#/components/schemas/UUID' }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        baseVersionId: { nullable: true, allOf: [ { $ref: '#/components/schemas/UUID' } ], description: 同根上一版版本 id；无上一版时 null }
+        headDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        baseDigest: { nullable: true, type: string, pattern: '^[a-f0-9]{64}$', description: hasBaseline=false 时 null }
+        hasBaseline: { type: boolean, description: 首版或 base 链断裂时为 false（降级不报错） }
+        changedCount: { type: integer, description: fields 条目数 }
+        fields: { type: array, items: { $ref: '#/components/schemas/ReviewArtifactDiffField' }, description: 顶层字段级 diff，按字段名字典序 }
+    LocalAuthStatus:
+      type: object
+      required: [setupRequired, authenticated, profile]
+      properties:
+        setupRequired: { type: boolean }
+        authenticated: { type: boolean }
+        profile:
+          nullable: true
+          allOf: [ { $ref: '#/components/schemas/LocalAuthProfile' } ]
+    LocalAuthProfile:
+      type: object
+      required: [userId, tenantId, workspaceId, email, actorType, capabilities]
+      properties:
+        userId: { $ref: '#/components/schemas/UUID' }
+        tenantId: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        email: { type: string, format: email }
+        actorType: { type: string, enum: [HUMAN, AGENT, SERVICE, SYSTEM], description: "与 33 actor_type 四值对齐,USER→HUMAN(裁决 2026-08-15 B14)" }
+        capabilities: { type: array, items: { type: string } }
+    LocalSetupCreate:
+      type: object
+      required: [email, password, tenantName, workspaceName]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 12, maxLength: 256, writeOnly: true }
+        tenantName: { type: string, minLength: 1, maxLength: 120 }
+        workspaceName: { type: string, minLength: 1, maxLength: 120 }
+    LoginCreate:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 1, maxLength: 256, writeOnly: true }
+    WorkspaceSwitch: { type: object, required: [workspaceId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' } } }
+    WorkspacePin: { type: object, required: [pinned], properties: { pinned: { type: boolean } } }
+    WorkspaceRef: { type: object, required: [id, name, lastBusinessUpdatedAt], properties: { id: { $ref: '#/components/schemas/UUID' }, name: { type: string }, lastBusinessUpdatedAt: { type: string, format: date-time } } }
+    ProjectContextProjection:
+      type: object
+      required: [workspace, currentRelease, pinnedWorkspaces, openReviewCount, activeWorkItemCount, runningExecutionCount]
+      properties:
+        workspace: { $ref: '#/components/schemas/WorkspaceRef' }
+        currentRelease: { type: object, nullable: true, required: [id, name, status], properties: { id: { $ref: '#/components/schemas/UUID' }, name: { type: string }, status: { type: string } } }
+        pinnedWorkspaces: { type: array, items: { $ref: '#/components/schemas/WorkspaceRef' } }
+        openReviewCount: { type: integer, minimum: 0 }
+        activeWorkItemCount: { type: integer, minimum: 0 }
+        runningExecutionCount: { type: integer, minimum: 0 }
+    ReviewTaskCreate:
+      type: object
+      required: [workItemId, artifactType, artifactId, artifactVersionId, contentDigest, policyType]
+      properties:
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        artifactType: { type: string }
+        artifactId: { $ref: '#/components/schemas/UUID' }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        contentDigest: { type: string }
+        policyType: { type: string }
+        assignees: { type: array, items: { type: object, required: [userId, reviewRole, requiredCapability], properties: { userId: { $ref: '#/components/schemas/UUID' }, reviewRole: { type: string, enum: [REVIEWER, APPROVER] }, requiredCapability: { type: string } } } }
+    ReviewDecisionCreate:
+      type: object
+      required: [decision, contentDigest]
+      properties:
+        decision: { type: string, enum: [APPROVE, REQUEST_CHANGES, REJECT] }
+        contentDigest: { type: string }
+        comments: { type: string }
+        signature: { type: string, writeOnly: true }
+    SourceImportCreate:
+      type: object
+      required: [workspaceId, sourceType]
+      properties:
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        sourceType: { type: string, enum: [OPENAPI_FILE, OPENAPI_URL, REPOSITORY, MANUAL, TRAFFIC, OTHER] }
+        sourceIntegrationId: { $ref: '#/components/schemas/UUID' }
+        sourceLocator: { type: string }
+        rawContent: { type: string, writeOnly: true }
+        expectedDigest: { type: string }
+    RequirementDocument:
+      type: object
+      required: [id, tenantId, workspaceId, name, documentType, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        tenantId: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        name: { type: string }
+        documentType: { type: string }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        publishedVersionId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [ACTIVE, ARCHIVED] }
+        createdAt: { type: string, format: date-time }
+    RequirementDocumentVersion:
+      type: object
+      required: [id, requirementDocumentId, version, sourceSnapshotId, parseStatus, reviewStatus, contentDigest, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        requirementDocumentId: { $ref: '#/components/schemas/UUID' }
+        version: { type: integer, minimum: 1 }
+        sourceSnapshotId: { $ref: '#/components/schemas/UUID' }
+        parseStatus: { $ref: '#/components/schemas/RequirementParseStatus' }
+        reviewStatus: { $ref: '#/components/schemas/ReviewStatus' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        changeSummary: { type: string }
+        createdAt: { type: string, format: date-time }
+    RequirementDocumentCreate: { type: object, required: [workspaceId, name, documentType], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, name: { type: string, minLength: 1, maxLength: 256 }, documentType: { type: string, minLength: 1, maxLength: 50 } } }
+    RequirementDocumentVersionCreate: { type: object, required: [sourceSnapshotId, contentDigest, content], properties: { sourceSnapshotId: { $ref: '#/components/schemas/UUID' }, contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, content: { type: string, minLength: 1, writeOnly: true }, changeSummary: { type: string } } }
+    APIContract:
+      type: object
+      required: [id, workspaceId, name, serviceKey, protocol, status]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        name: { type: string }
+        serviceKey: { type: string }
+        protocol: { type: string, enum: [HTTP_REST, GRAPHQL, GRPC, ASYNC_API, OTHER] }
+        description: { type: string }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        publishedVersionId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [ACTIVE, DEPRECATED, ARCHIVED] }
+    APIContractCreate: { type: object, required: [workspaceId, name, serviceKey, protocol], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, serviceKey: { type: string }, protocol: { type: string }, description: { type: string } } }
+    APIContractVersionCreate:
+      type: object
+      required: [sourceSnapshotIds, sourceKind]
+      properties:
+        sourceSnapshotIds: { type: array, minItems: 1, items: { $ref: '#/components/schemas/UUID' } }
+        sourceKind: { type: string, enum: [DECLARED, OBSERVED, MANUAL, MERGED] }
+        normalizedSpec: { type: object, writeOnly: true, additionalProperties: true }
+        changeSummary: { type: string }
+    APIContractBaselineCreate: { type: object, required: [workspaceId, releaseId, purpose, entries], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, purpose: { type: string, enum: [TEST_DESIGN, MOCK, CONTRACT_ANALYSIS] }, entries: { type: array, items: { type: object, required: [apiContractId, apiContractVersionId, normalizedDigest], properties: { apiContractId: { $ref: '#/components/schemas/UUID' }, apiContractVersionId: { $ref: '#/components/schemas/UUID' }, normalizedDigest: { type: string } } } } } }
+    KnowledgeEntryCreate: { type: object, required: [workspaceId, knowledgeKey, category], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, knowledgeKey: { type: string }, category: { type: string } } }
+    KnowledgeEntryVersionCreate: { type: object, required: [title, content, applicableScope, invalidConditions, contentDigest], properties: { title: { type: string }, content: { type: string, writeOnly: true }, applicableScope: { type: object, additionalProperties: true }, invalidConditions: { type: array, items: { type: string } }, contentDigest: { type: string }, changeSummary: { type: string } } }
+    KnowledgeSearchRequest: { type: object, required: [workspaceId, query], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, query: { type: string }, topK: { type: integer, minimum: 1, maximum: 50, default: 10 }, filters: { type: object, additionalProperties: true } } }
+    TestStrategy:
+      type: object
+      required: [id, workspaceId, releaseId, strategyKey, name, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        strategyKey: { type: string }
+        name: { type: string }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        publishedVersionId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [ACTIVE, ARCHIVED] }
+        createdAt: { type: string, format: date-time }
+    TestStrategyVersion:
+      type: object
+      required: [id, testStrategyId, version, reviewStatus, contentDigest, objective, inScope, outOfScope, testTypes, approach, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        testStrategyId: { $ref: '#/components/schemas/UUID' }
+        version: { type: integer, minimum: 1 }
+        reviewStatus: { $ref: '#/components/schemas/ReviewStatus' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        objective: { type: string }
+        inScope: { type: array, items: { type: string } }
+        outOfScope: { type: array, items: { type: string } }
+        testTypes: { type: array, items: { type: string } }
+        approach: { type: string }
+        changeSummary: { type: string }
+        generatedByAgentId: { $ref: '#/components/schemas/UUID' }
+        agentRunId: { $ref: '#/components/schemas/UUID' }
+        createdAt: { type: string, format: date-time }
+    TestStrategyCreate: { type: object, required: [workspaceId, releaseId, strategyKey, name], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, strategyKey: { type: string }, name: { type: string } } }
+    TestStrategyVersionCreate: { type: object, required: [objective, inScope, outOfScope, riskAssessment, testTypes, approach, entryCriteria, exitCriteria, environmentStrategy, dataStrategy, automationStrategy, defectStrategy], properties: { objective: { type: string }, inScope: { type: array, items: { type: string } }, outOfScope: { type: array, items: { type: string } }, riskAssessment: { type: array, items: { type: object, additionalProperties: true } }, testTypes: { type: array, items: { type: string } }, approach: { type: string }, entryCriteria: { type: array, items: { type: string } }, exitCriteria: { type: array, items: { type: string } }, environmentStrategy: { type: string }, dataStrategy: { type: string }, automationStrategy: { type: string }, defectStrategy: { type: string }, changeSummary: { type: string } } }
+    TestPlan:
+      type: object
+      required: [id, workspaceId, releaseId, planKey, name, lifecycleStatus, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        requirementDocumentId: { $ref: '#/components/schemas/UUID', description: 关联需求文档，支撑RTM正向追踪 }
+        planKey: { type: string }
+        name: { type: string }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        publishedVersionId: { $ref: '#/components/schemas/UUID' }
+        lifecycleStatus: { type: string, enum: [NOT_STARTED, ACTIVE, COMPLETED, CANCELLED, ARCHIVED] }
+        createdAt: { type: string, format: date-time }
+    TestPlanVersion:
+      type: object
+      required: [id, testPlanId, version, strategyVersionId, reviewStatus, contentDigest, objective, planType, scope, acceptanceCriteria, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        testPlanId: { $ref: '#/components/schemas/UUID' }
+        version: { type: integer, minimum: 1 }
+        strategyVersionId: { $ref: '#/components/schemas/UUID' }
+        reviewStatus: { $ref: '#/components/schemas/ReviewStatus' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        objective: { type: string }
+        planType: { type: string }
+        scope: { type: object, additionalProperties: true }
+        acceptanceCriteria: { type: array, items: { type: string } }
+        changeSummary: { type: string }
+        generatedByAgentId: { $ref: '#/components/schemas/UUID' }
+        agentRunId: { $ref: '#/components/schemas/UUID' }
+        createdAt: { type: string, format: date-time }
+    TestPlanCreate: { type: object, required: [workspaceId, releaseId, planKey, name], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, planKey: { type: string }, name: { type: string } } }
+    TestPlanVersionCreate: { type: object, required: [strategyVersionId, objective, planType, scope, ownerId, startDate, endDate, milestones, resourceRequirements, acceptanceCriteria], properties: { strategyVersionId: { $ref: '#/components/schemas/UUID' }, objective: { type: string }, planType: { type: string }, scope: { type: object, additionalProperties: true }, ownerId: { $ref: '#/components/schemas/UUID' }, startDate: { type: string, format: date }, endDate: { type: string, format: date }, milestones: { type: array, items: { type: object, additionalProperties: true } }, resourceRequirements: { type: object, additionalProperties: true }, acceptanceCriteria: { type: array, items: { type: string } }, changeSummary: { type: string } } }
+    TestingIRCompileRequest: { type: object, required: [workspaceId, requirementVersionRefs], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, requirementVersionRefs: { type: array, minItems: 1, items: { $ref: '#/components/schemas/UUID' } }, apiContractVersionRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } } } }
+    TestScenarioCreate: { type: object, required: [testPlanVersionId, scenarioKey, name, flowSteps, riskLevel], properties: { testPlanVersionId: { $ref: '#/components/schemas/UUID' }, scenarioKey: { type: string }, name: { type: string }, description: { type: string }, flowSteps: { type: array, items: { type: object, additionalProperties: true } }, riskLevel: { $ref: '#/components/schemas/RiskLevel' } } }
+    TestCaseDraftGenerateRequest: { type: object, required: [workItemId, testScenarioIds], properties: { workItemId: { $ref: '#/components/schemas/UUID' }, testScenarioIds: { type: array, minItems: 1, items: { $ref: '#/components/schemas/UUID' } } } }
+    TestCase:
+      type: object
+      required: [id, workspaceId, caseKey, title, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        caseKey: { type: string }
+        title: { type: string }
+        fromDesignTestCaseId: { $ref: '#/components/schemas/UUID' }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        publishedVersionId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [ACTIVE, DEPRECATED, ARCHIVED] }
+        createdAt: { type: string, format: date-time }
+    TestCaseVersion:
+      type: object
+      required: [id, testCaseId, version, reviewStatus, contentDigest, title, preconditions, steps, expectedResults, priority, testType, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        testCaseId: { $ref: '#/components/schemas/UUID' }
+        version: { type: integer, minimum: 1 }
+        reviewStatus: { $ref: '#/components/schemas/ReviewStatus' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        title: { type: string }
+        preconditions: { type: array, items: { type: string } }
+        steps: { type: array, minItems: 1, items: { type: object, additionalProperties: true } }
+        expectedResults: { type: array, minItems: 1, items: { type: string } }
+        priority: { type: string, enum: [P0, P1, P2, P3] }
+        testType: { type: string }
+        assertions: { type: array, items: { type: object, additionalProperties: true } }
+        changeSummary: { type: string }
+        generatedByAgentId: { $ref: '#/components/schemas/UUID' }
+        agentRunId: { $ref: '#/components/schemas/UUID' }
+        createdAt: { type: string, format: date-time }
+    TestCaseCreate: { type: object, required: [workspaceId, caseKey, title], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, caseKey: { type: string }, title: { type: string }, fromDesignTestCaseId: { $ref: '#/components/schemas/UUID' } } }
+    TestCaseVersionCreate: { type: object, required: [title, preconditions, steps, expectedResults, priority, testType], properties: { title: { type: string }, preconditions: { type: array, items: { type: string } }, steps: { type: array, minItems: 1, items: { type: object, additionalProperties: true } }, testDataRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, expectedResults: { type: array, minItems: 1, items: { type: string } }, priority: { type: string, enum: [P0, P1, P2, P3] }, testType: { type: string }, assertions: { type: array, items: { type: object, additionalProperties: true } }, changeSummary: { type: string } } }
+    TestSuiteCreate: { type: object, required: [workspaceId, suiteKey, name], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, suiteKey: { type: string }, name: { type: string } } }
+    AutomationScriptCreate: { type: object, required: [workspaceId, scriptKey, name, automationType], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, scriptKey: { type: string }, name: { type: string }, automationType: { type: string, enum: [WEB, API, MOBILE, PERFORMANCE, SECURITY] } } }
+    AutomationScriptVersionCreate: { type: object, required: [language, framework, frameworkVersion, runtimeVersion, sourceMode, contentDigest, bindings], properties: { language: { type: string }, framework: { type: string }, frameworkVersion: { type: string }, runtimeVersion: { type: string }, sourceMode: { type: string, enum: [MANAGED, GIT] }, codeContent: { type: string, writeOnly: true }, repositoryIntegrationId: { $ref: '#/components/schemas/UUID' }, fullCommitSha: { type: string }, filePath: { type: string }, blobSha: { type: string }, contentDigest: { type: string }, dependencyLockRef: { type: string }, dependencyDigest: { type: string }, typeConfig: { type: object, additionalProperties: true }, sourceTrace: { type: object, additionalProperties: true, description: '来源追溯快照，MANAGED 模式必填(GIT 模式可由 repositoryIntegrationId+fullCommitSha 承载，2026-08-15 契约修复批次 C-8 补全)' }, bindings: { type: array, minItems: 1, items: { type: object, required: [testCaseVersionId, coverageType], properties: { testCaseVersionId: { $ref: '#/components/schemas/UUID' }, coverageType: { type: string }, coverageNotes: { type: string } } } }, changeSummary: { type: string } } }
+    LocatorVersionCreate: { type: object, required: [workspaceId, locatorKey, pageKey, elementName, primarySelector], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, locatorKey: { type: string }, pageKey: { type: string }, elementName: { type: string }, primarySelector: { type: string }, backupSelectors: { type: array, items: { type: string } }, supersedesLocatorId: { $ref: '#/components/schemas/UUID' } } }
+    MockConfigCreate: { type: object, required: [workspaceId, mockKey, apiContractVersionId, matchRules, responseRules], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, mockKey: { type: string }, apiContractVersionId: { $ref: '#/components/schemas/UUID' }, operationVersionId: { $ref: '#/components/schemas/UUID' }, matchRules: { type: object, additionalProperties: true }, responseRules: { type: object, additionalProperties: true } } }
+    TestDataProfileCreate: { type: object, required: [workspaceId, profileKey, schema, generationRules, maskingRules, cleanupRules], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, profileKey: { type: string }, schema: { type: object, additionalProperties: true }, generationRules: { type: object, additionalProperties: true }, maskingRules: { type: object, additionalProperties: true }, cleanupRules: { type: object, additionalProperties: true } } }
+    VisualBaselineCreate: { type: object, required: [workspaceId, baselineKey, artifactRef, viewportConfig, contentDigest], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, baselineKey: { type: string }, artifactRef: { type: string }, maskRegions: { type: array, items: { type: object, additionalProperties: true } }, viewportConfig: { type: object, additionalProperties: true }, contentDigest: { type: string } } }
+    ExecutionPlanCreate: { type: object, required: [workspaceId, planKey, name, testPlanId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, planKey: { type: string }, name: { type: string }, testPlanId: { $ref: '#/components/schemas/UUID' } } }
+    ExecutionPlanVersionCreate: { type: object, required: [testPlanVersionId, releaseId, environmentId, scopeConfigs, triggerType, parallelism, runnerPolicy, assetVersionRefs], properties: { testPlanVersionId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, environmentId: { $ref: '#/components/schemas/UUID' }, scopeConfigs: { type: object, additionalProperties: true }, triggerType: { type: string, enum: [MANUAL, SCHEDULE, WEBHOOK, PIPELINE] }, cronExpression: { type: string }, parallelism: { type: integer, minimum: 1 }, runnerPolicy: { type: object, additionalProperties: true }, assetVersionRefs: { type: array, minItems: 1, items: { type: object, additionalProperties: true } } } }
+    ExecutionStartRequest: { type: object, required: [executionPlanVersionId], properties: { executionPlanVersionId: { $ref: '#/components/schemas/UUID' }, authorizationContext: { type: object, writeOnly: true, additionalProperties: true } } }
+    ResultAnalysisCreate: { type: object, required: [workspaceId, releaseId, analysisKey, executionResultRefs], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, analysisKey: { type: string }, executionResultRefs: { type: array, minItems: 1, items: { $ref: '#/components/schemas/UUID' } } } }
+    Defect:
+      type: object
+      required: [id, workspaceId, releaseId, defectKey, lifecycleStatus]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        defectKey: { type: string }
+        lifecycleStatus: { type: string, enum: [NEW, OPEN, IN_PROGRESS, RESOLVED, VERIFIED, CLOSED, REJECTED, DUPLICATE, ARCHIVED] }
+        currentVersionId: { $ref: '#/components/schemas/UUID' }
+        approvedVersionId: { $ref: '#/components/schemas/UUID' }
+        assigneeId: { $ref: '#/components/schemas/UUID' }
+        duplicateOfDefectId: { $ref: '#/components/schemas/UUID' }
+    DefectCreate: { type: object, required: [workspaceId, releaseId, defectKey, createdFromWorkItemId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, defectKey: { type: string }, createdFromWorkItemId: { $ref: '#/components/schemas/UUID' } } }
+    DefectVersionCreate: { type: object, required: [title, description, expectedResult, actualResult, severity, priority, defectType, environmentSnapshotRef, affectedReleaseIds, evidence], properties: { title: { type: string }, description: { type: string }, preconditions: { type: array, items: { type: string } }, reproductionSteps: { type: array, items: { type: object, additionalProperties: true } }, expectedResult: { type: string }, actualResult: { type: string }, severity: { type: string, enum: [LOW, MEDIUM, HIGH, CRITICAL] }, priority: { type: string, enum: [P0, P1, P2, P3] }, defectType: { type: string, enum: [PRODUCT, SCRIPT, ENVIRONMENT, DATA, SECURITY, PERFORMANCE, USABILITY, OTHER] }, environmentSnapshotRef: { type: string }, affectedReleaseIds: { type: array, minItems: 1, items: { $ref: '#/components/schemas/UUID' } }, evidence: { type: array, minItems: 1, items: { type: object, additionalProperties: true } }, changeSummary: { type: string } } }
+    DefectTransition: { type: object, required: [targetStatus, reason], properties: { targetStatus: { type: string, enum: [NEW, OPEN, IN_PROGRESS, RESOLVED, VERIFIED, CLOSED, REJECTED, DUPLICATE, ARCHIVED] }, reason: { type: string }, regressionExecutionResultId: { $ref: '#/components/schemas/UUID' }, duplicateOfDefectId: { $ref: '#/components/schemas/UUID' } } }
+    DefectSyncAttemptCreate: { type: object, required: [defectVersionId, integrationId, operation, payloadDigest, approvalId], properties: { defectVersionId: { $ref: '#/components/schemas/UUID' }, integrationId: { $ref: '#/components/schemas/UUID' }, externalDefectLinkId: { $ref: '#/components/schemas/UUID' }, operation: { type: string, enum: [CREATE, UPDATE, COMMENT, TRANSITION, ATTACH, LINK] }, payload: { type: object, writeOnly: true, additionalProperties: true }, payloadDigest: { type: string }, approvalId: { $ref: '#/components/schemas/UUID' } } }
+    TestReportCreate: { type: object, required: [workspaceId, releaseId, reportKey], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, reportKey: { type: string } }, description: '根层仅承载身份与状态指针；scopeSnapshotRef/executionSnapshotRef 已下沉版本层（P0-1 裁决，2026-08-18 批次四十三消矛盾）' }
+    TestReportVersionCreate: { type: object, required: [scopeSnapshotRef, executionSnapshotRef, qualityConclusion, changeSummary], properties: { scopeSnapshotRef: { type: string }, executionSnapshotRef: { type: string }, coverageReportRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, defectVersionRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, riskSummary: { type: object, additionalProperties: true }, residualRisks: { type: array, items: { type: object, additionalProperties: true } }, qualityConclusion: { type: string }, changeSummary: { type: string } }, description: 'version/contentDigest/dataSnapshotDigest/reviewStatus/supersedesVersionId 服务端产出，不在请求体' }
+    QualityGateCreate: { type: object, required: [workspaceId, gateKey, name, rules], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, gateKey: { type: string }, name: { type: string }, rules: { type: array, minItems: 1, items: { type: object, additionalProperties: true } } } }
+    PipelineConfigCreate: { type: object, required: [workspaceId, pipelineKey, integrationId, externalPipelineRef, triggerRules, executionPlanRefs, qualityGateVersionId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, pipelineKey: { type: string }, integrationId: { $ref: '#/components/schemas/UUID' }, externalPipelineRef: { type: string }, triggerRules: { type: object, additionalProperties: true }, executionPlanRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, qualityGateVersionId: { $ref: '#/components/schemas/UUID' } } }
+    AgentSession:
+      type: object
+      description: '字段与枚举以 33 t_agent_session 为权威基线对齐(2026-08-15 契约修复批次，VERDICT D-1)；workItemId/workflowKey/requirementVersionId/releaseId/ownerId/reviewTaskIds/traceCount 为 Stage 4 本地验证切片过渡字段，待 WorkItemRun/Agent 模型迁移后移除'
+      required: [id, workspaceId, workItemRunId, agentId, promptVersionId, status, inputDigest]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        workItemRunId: { $ref: '#/components/schemas/UUID' }
+        agentId: { $ref: '#/components/schemas/UUID' }
+        workflowVersionId: { $ref: '#/components/schemas/UUID' }
+        promptVersionId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [PENDING, RUNNING, SUCCEEDED, FAILED, CANCELLED, BLOCKED], description: '与 33 t_agent_session CHECK 对齐；SUCCEEDED 表成功完成，BLOCKED 表等待人工/外部依赖(原 COMPLETED/PAUSED_FOR_HUMAN 废弃，见 03 §13.13)' }
+        inputDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        outputDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        tokenUsage: { type: object, additionalProperties: true }
+        cost: { type: object, additionalProperties: true }
+        errorCode: { type: string }
+        startedAt: { type: string, format: date-time }
+        completedAt: { type: string, format: date-time }
+        workItemId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        workflowKey: { type: string, description: 'Stage 4 过渡字段' }
+        requirementVersionId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        releaseId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        ownerId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        reviewTaskIds: { type: array, items: { $ref: '#/components/schemas/UUID' }, description: 'Stage 4 过渡字段' }
+        traceCount: { type: integer, minimum: 0, description: 'Stage 4 过渡字段' }
+    AgentSessionCreate:
+      type: object
+      description: '目标态必填以 33 t_agent_session NOT NULL 列为准；Stage 4 本地验证切片过渡字段随 WorkItemRun 迁移移除'
+      required: [workspaceId, workItemRunId, agentId, promptVersionId, inputDigest]
+      properties:
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        workItemRunId: { $ref: '#/components/schemas/UUID' }
+        agentId: { $ref: '#/components/schemas/UUID' }
+        workflowVersionId: { $ref: '#/components/schemas/UUID' }
+        promptVersionId: { $ref: '#/components/schemas/UUID' }
+        inputDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        workItemId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        workflowKey: { type: string, enum: [gate0-planning-slice], description: 'Stage 4 过渡字段' }
+        requirementVersionId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        releaseId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+        ownerId: { $ref: '#/components/schemas/UUID', description: 'Stage 4 过渡字段' }
+    AgentTraceEvent:
+      type: object
+      required: [sequence, nodeId, agentId, skillId, status, occurredAt]
+      properties:
+        sequence: { type: integer, minimum: 1 }
+        nodeId: { type: string }
+        agentId: { type: string }
+        skillId: { type: string }
+        status: { type: string, enum: [STARTED, SUCCEEDED, BLOCK_HUMAN, FAILED] }
+        artifactType: { type: string }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        occurredAt: { type: string, format: date-time }
+    EvalRunCreate: { type: object, required: [workspaceId, targetType, targetVersionId, datasetVersionId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, targetType: { type: string, enum: [AGENT, SKILL, PROMPT, WORKFLOW] }, targetVersionId: { $ref: '#/components/schemas/UUID' }, datasetVersionId: { $ref: '#/components/schemas/UUID' }, environmentRef: { type: string } } }
+    ContractCheckResult:
+      type: object
+      required: [id, executionResultId, checkStatus]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        executionResultId: { $ref: '#/components/schemas/UUID' }
+        baselineDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        checkStatus: { type: string, enum: [MATCH, DEVIATION, NOT_CHECKED, INCONCLUSIVE] }
+        expectedRef: { type: string }
+        actualRef: { type: string }
+        severity: { type: string }
+        reason: { type: string }
+    APIObservation:
+      type: object
+      required: [id, executionResultId, operationVersionId]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        executionResultId: { $ref: '#/components/schemas/UUID' }
+        operationVersionId: { $ref: '#/components/schemas/UUID' }
+        statusCode: { type: integer }
+        latencyMs: { type: integer }
+        contentDigest: { type: string }
+        environmentSnapshotId: { $ref: '#/components/schemas/UUID' }
+    CalibrationRecord:
+      type: object
+      required: [id, interventionKey, threshold, sampleSize, validFrom, expiresAt, fallbackLevel]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        interventionKey: { type: string }
+        subjectVersion: { type: string }
+        datasetVersion: { type: string }
+        metricDefinition: { type: string }
+        threshold: { type: number }
+        sampleSize: { type: integer }
+        baseline: { type: string }
+        subjectOperation: { type: string, description: "JSON 数组字符串,绑定 operation 列表(可选,批3收口 2026-08-14)" }
+        subjectTable: { type: string, description: "JSON 数组字符串,绑定表列表(可选;无单一归属可空)" }
+        validFrom: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        fallbackLevel: { type: string }
+    CalibrationRecordCreate:
+      type: object
+      required: [interventionKey, metricDefinition, threshold, sampleSize, validFrom, expiresAt, fallbackLevel]
+      properties:
+        interventionKey: { type: string }
+        subjectVersion: { type: string }
+        datasetVersion: { type: string }
+        metricDefinition: { type: string }
+        threshold: { type: number }
+        sampleSize: { type: integer }
+        baseline: { type: string }
+        subjectOperation: { type: string, description: "JSON 数组字符串,绑定 operation 列表(可选)" }
+        subjectTable: { type: string, description: "JSON 数组字符串,绑定表列表(可选)" }
+        validFrom: { type: string, format: date-time }
+        expiresAt: { type: string, format: date-time }
+        fallbackLevel: { type: string }
+    Workspace:
+      type: object
+      required: [id, tenantId, name, status, createdAt]
+      properties: { id: { $ref: '#/components/schemas/UUID' }, tenantId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, description: { type: string }, ownerId: { $ref: '#/components/schemas/UUID' }, status: { type: string, enum: [ACTIVE, ARCHIVED] }, createdAt: { type: string, format: date-time }, lastBusinessUpdatedAt: { type: string, format: date-time, description: '最近有效业务更新（9 类业务事件最大 occurredAt，排除 provider 运行面事件；无事件回退 createdAt）。轮询与 Agent Trace 不刷新该值。' } }
+    WorkspaceCreate: { type: object, required: [name, ownerId], properties: { name: { type: string }, description: { type: string }, ownerId: { $ref: '#/components/schemas/UUID' } } }
+    ReleaseCreate: { type: object, required: [releaseKey, name], properties: { releaseKey: { type: string }, name: { type: string }, scopeSummary: { type: string }, plannedAt: { type: string, format: date-time } } }
+    EnvironmentCreate: { type: object, required: [name, environmentType, endpointMappings], properties: { name: { type: string }, environmentType: { type: string }, endpointMappings: { type: object, additionalProperties: true }, capabilities: { type: object, additionalProperties: true }, secretRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } } } }
+    SecretCreate: { type: object, required: [secretKey, secretValue, scope], properties: { secretKey: { type: string }, secretValue: { type: string, writeOnly: true }, scope: { type: object, additionalProperties: true }, targetEnvironmentId: { $ref: '#/components/schemas/UUID' }, expiresAt: { type: string, format: date-time } } }
+    RunnerNodeCreate: { type: object, required: [name, capabilities, runtimeVersions], properties: { name: { type: string }, workspaceScope: { type: array, items: { $ref: '#/components/schemas/UUID' } }, capabilities: { type: array, items: { type: string } }, runtimeVersions: { type: object, additionalProperties: true }, resourcePoolId: { $ref: '#/components/schemas/UUID' } } }
+    IntegrationCreate: { type: object, required: [provider, name, endpointRef, credentialSecretId, scopeConfig], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, provider: { type: string }, name: { type: string }, endpointRef: { type: string }, credentialSecretId: { $ref: '#/components/schemas/UUID' }, scopeConfig: { type: object, additionalProperties: true } } }
+    WebSocketTicketCreate:
+      type: object
+      required: [resourceType, resourceId]
+      properties:
+        resourceType: { type: string, enum: [EXECUTION_TASK, WORK_ITEM, AGENT_SESSION, WORKSPACE] }
+        resourceId: { $ref: '#/components/schemas/UUID' }
+        requestedEventTypes: { type: array, uniqueItems: true, items: { type: string } }
+    RoleBindingCreate: { type: object, required: [subjectType, subjectId, roleDefinitionId, scopeType, scopeId, reason], properties: { subjectType: { type: string, enum: [USER, SERVICE] }, subjectId: { $ref: '#/components/schemas/UUID' }, roleDefinitionId: { $ref: '#/components/schemas/UUID' }, scopeType: { type: string, enum: [PLATFORM, TENANT, WORKSPACE, RESOURCE] }, scopeId: { $ref: '#/components/schemas/UUID' }, conditions: { type: object, additionalProperties: true }, validFrom: { type: string, format: date-time }, validUntil: { type: string, format: date-time }, reason: { type: string } } }
+
+    TestingIr: { type: object, required: ['id', 'workspaceId', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, requirementDocumentId: { $ref: '#/components/schemas/UUID' }, status: {"type": "string", "enum": ["DRAFT", "COMPILING", "VALIDATED", "FAILED"]}, irContent: { type: object, additionalProperties: true }, createdAt: { type: string, format: date-time } } }
+    TestScenario: { type: object, required: ['id', 'workspaceId', 'name'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, testPlanId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, description: { type: string }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    TestSuite: { type: object, required: ['id', 'workspaceId', 'name'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, caseSelectionRule: { type: object, additionalProperties: true }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    ExecutionPlan: { type: object, required: ['id', 'workspaceId', 'name'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, testPlanVersionId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    ExecutionPlanVersion: { type: object, required: ['id', 'executionPlanId', 'version'], properties: { id: { $ref: '#/components/schemas/UUID' }, executionPlanId: { $ref: '#/components/schemas/UUID' }, version: { type: integer }, contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, frozenBaselineRef: { type: string }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    ExecutionTask: { type: object, required: ['id', 'executionPlanVersionId', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, executionPlanVersionId: { $ref: '#/components/schemas/UUID' }, runnerId: { $ref: '#/components/schemas/UUID' }, status: {"type": "string", "enum": ["PENDING", "QUEUED", "RUNNING", "COMPLETED", "FAILED", "CANCELLED", "TIMED_OUT", "BLOCKED"], "description": "与 33 t_execution_task CHECK 对齐(第0周补丁 B3,2026-08-14)"}, startedAt: { type: string, format: date-time }, completedAt: { type: string, format: date-time } } }
+    ExecutionResult: { type: object, required: ['id', 'executionTaskId', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, executionTaskId: { $ref: '#/components/schemas/UUID' }, testCaseVersionId: { $ref: '#/components/schemas/UUID' }, status: {"type": "string", "enum": ["PASSED", "FAILED", "SKIPPED", "ERROR", "INCONCLUSIVE"], "description": "与 33 t_execution_result CHECK 五值全大写对齐(2026-08-15 全量精读修复)"}, durationMs: { type: integer }, logRef: { type: string }, resultDigest: { type: string, pattern: '^[a-f0-9]{64}$', description: '服务端计算的结果摘要哈希(基于断言统计与结果状态/结果文本,客户端不可注入)' }, assertionResultsRef: { type: string, description: '断言结果明细的不可变引用(指向证据存储里的断言结果 JSON 条目)' }, createdAt: { type: string, format: date-time } } }
+    ExecutionArtifact: { type: object, required: ['id', 'executionResultId', 'artifactType'], properties: { id: { $ref: '#/components/schemas/UUID' }, executionResultId: { $ref: '#/components/schemas/UUID' }, artifactType: { type: string, enum: ['LOG', 'SCREENSHOT', 'VIDEO', 'TRACE'] }, ref: { type: string }, digest: { type: string, pattern: '^[a-f0-9]{64}$' }, createdAt: { type: string, format: date-time } } }
+    ProviderStatus: { type: object, required: ['status', 'providerId', 'providerVersion'], properties: { status: { type: string, enum: [NOMINAL, DEGRADED] }, providerId: { type: string, description: 当前生效 provider（V1 恒为 deterministic-local 或硬化层 failover 后的现行值） }, providerVersion: { type: string }, fallbackProviderId: { type: string, description: DEGRADED 时实际承接生成的降级 provider }, reason: { type: string, description: DEGRADED 原因摘要 }, since: { type: string, format: date-time, description: 当前状态起始时间 } } }
+    ResultAnalysis: { type: object, required: ['id', 'workspaceId', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, status: { type: string }, reviewStatus: { type: string }, contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, conclusionRef: { type: string }, createdAt: { type: string, format: date-time } } }
+    FailureCluster: { type: object, required: ['id', 'workspaceId'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, executionTaskId: { $ref: '#/components/schemas/UUID' }, clusterKey: { type: string }, memberCount: { type: integer }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    DefectVersion: { type: object, required: ['id', 'defectId', 'version'], properties: { id: { $ref: '#/components/schemas/UUID' }, defectId: { $ref: '#/components/schemas/UUID' }, version: { type: integer }, title: { type: string }, severity: { type: string }, status: { type: string }, contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, createdAt: { type: string, format: date-time } } }
+    DefectSyncAttempt: { type: object, required: ['id', 'defectVersionId', 'operation'], properties: { id: { $ref: '#/components/schemas/UUID' }, defectVersionId: { $ref: '#/components/schemas/UUID' }, integrationId: { $ref: '#/components/schemas/UUID' }, operation: { type: string }, payloadDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, approvalId: { $ref: '#/components/schemas/UUID' }, idempotencyKey: { type: string }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    TestReport: { type: object, required: ['id', 'workspaceId', 'releaseId', 'reportKey', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, reportKey: { type: string }, currentVersionId: { $ref: '#/components/schemas/UUID', description: '当前工作版本指针，与 33 t_test_report.current_version_id 对齐' }, publishedVersionId: { $ref: '#/components/schemas/UUID', description: '已签署发布版本指针，与 33 t_test_report.published_version_id 对齐；REPORT_SIGNOFF 签署对象' }, status: { type: string, enum: ['ACTIVE', 'ARCHIVED'], description: '与 33 t_test_report CHECK 对齐(2026-08-15 契约修复批次)' }, createdAt: { type: string, format: date-time }, updatedAt: { type: string, format: date-time } } }
+    TestReportVersion: { type: object, required: ['id', 'testReportId', 'version', 'reviewStatus', 'contentDigest'], properties: { id: { $ref: '#/components/schemas/UUID' }, testReportId: { $ref: '#/components/schemas/UUID' }, version: { type: integer, minimum: 1 }, scopeSnapshotRef: { type: string }, executionSnapshotRef: { type: string }, coverageReportRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, defectVersionRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }, riskSummary: { type: object, additionalProperties: true }, residualRisks: { type: array, items: { type: object, additionalProperties: true } }, qualityConclusion: { type: string }, dataSnapshotDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, reviewStatus: { type: string, enum: ['DRAFT', 'GENERATING', 'PENDING_REVIEW', 'CHANGES_REQUESTED', 'APPROVED', 'PUBLISHED', 'REJECTED', 'STALE', 'ARCHIVED'], description: '与 33 t_test_report_version CHECK 及 03 §13.1 通用审核状态对齐' }, contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }, changeSummary: { type: string }, supersedesVersionId: { $ref: '#/components/schemas/UUID' }, generatedByAgentId: { $ref: '#/components/schemas/UUID' }, agentRunId: { $ref: '#/components/schemas/UUID' }, createdBy: { $ref: '#/components/schemas/UUID' }, createdAt: { type: string, format: date-time } } }
+    QualityGate: { type: object, required: ['id', 'workspaceId', 'name'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, version: { type: integer }, rulesRef: { type: string }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    PipelineConfig: { type: object, required: ['id', 'workspaceId', 'name'], properties: { id: { $ref: '#/components/schemas/UUID' }, workspaceId: { $ref: '#/components/schemas/UUID' }, name: { type: string }, triggerRef: { type: string }, qualityGateId: { $ref: '#/components/schemas/UUID' }, status: { type: string }, createdAt: { type: string, format: date-time } } }
+    PipelineRun: { type: object, required: ['id', 'pipelineConfigId', 'status'], properties: { id: { $ref: '#/components/schemas/UUID' }, pipelineConfigId: { $ref: '#/components/schemas/UUID' }, status: {"type": "string", "enum": ["PENDING", "RUNNING", "COMPLETED", "FAILED", "CANCELLED"], "description": "运行状态维度，与 33 t_pipeline_run.status CHECK 对齐(2026-08-15 契约修复批次，拆分原单枚举)"}, gateDecision: {"type": "string", "enum": ["PASSED", "WARNED", "BLOCKED", "QUARANTINED", "INCONCLUSIVE"], "description": "质量门禁结论维度，与 33 t_pipeline_run.gate_decision CHECK 对齐；运行未完成时为空"}, triggeredBy: { type: string }, createdAt: { type: string, format: date-time }, completedAt: { type: string, format: date-time } } }
+    VerifyVerdict:
+      type: object
+      required: [id, artifactType, artifactVersionId, verdict, inputDigest, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        artifactType: { type: string }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        verifierAgentId: { $ref: '#/components/schemas/UUID' }
+        verdict: { type: string, enum: [PASS, FAIL, REVIEW_REQUIRED, ERROR] }
+        evidenceRef: { type: string }
+        inputDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        createdAt: { type: string, format: date-time }
+    VerifyVerdictCreate:
+      type: object
+      required: [artifactType, artifactVersionId, verdict, inputDigest]
+      properties:
+        artifactType: { type: string }
+        artifactVersionId: { $ref: '#/components/schemas/UUID' }
+        verdict: { type: string, enum: [PASS, FAIL, REVIEW_REQUIRED, ERROR] }
+        evidenceRef: { type: string }
+        inputDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+    RunnerHeartbeat:
+      type: object
+      required: [runnerId, status, taskId]
+      properties:
+        runnerId: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [IDLE, BUSY, DEGRADED, STOPPED] }
+        taskId: { $ref: '#/components/schemas/UUID' }
+        resourceSnapshot: { type: object, additionalProperties: true }
+    CoverageReportCreate:
+      type: object
+      required: [workspaceId, releaseId, denominatorDefinitionRef, scopeSnapshotRef]
+      properties:
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        denominatorDefinitionRef: { type: string, enum: [INSTANCE, DESIGN, EXECUTABLE, EFFECTIVE, HUMAN_ACCEPTANCE] }
+        scopeSnapshotRef: { type: string }
+        ruleDimension: { type: object, additionalProperties: true }
+        scenarioDimension: { type: object, additionalProperties: true }
+        stateDimension: { type: object, additionalProperties: true }
+        assertionDimension: { type: object, additionalProperties: true }
+        apiDimension: { type: object, additionalProperties: true }
+    CoverageReport:
+      type: object
+      required: [id, releaseId, denominatorDefinitionRef, scopeSnapshotRef, verdict, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        scopeSnapshotRef: { type: string }
+        denominatorDefinitionRef: { type: string, enum: [INSTANCE, DESIGN, EXECUTABLE, EFFECTIVE, HUMAN_ACCEPTANCE] }
+        ruleDimension: { type: object, additionalProperties: true }
+        scenarioDimension: { type: object, additionalProperties: true }
+        stateDimension: { type: object, additionalProperties: true }
+        assertionDimension: { type: object, additionalProperties: true }
+        apiDimension: { type: object, additionalProperties: true }
+        verdict: { type: string }
+        contentDigest: { type: string, pattern: '^[a-f0-9]{64}$' }
+        createdAt: { type: string, format: date-time }
+    # ===== WP-03 协作实体（39 号 §3，CONTRACT_ACTIVE 未实现）=====
+    Conversation:
+      type: object
+      required: [id, workspaceId, status, createdBy, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        title: { type: string }
+        status: { type: string, enum: [ACTIVE, ARCHIVED] }
+        createdBy: { $ref: '#/components/schemas/UUID' }
+        lastActivityAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+    ConversationCreate: { type: object, required: [workspaceId], properties: { workspaceId: { $ref: '#/components/schemas/UUID' }, releaseId: { $ref: '#/components/schemas/UUID' }, workItemId: { $ref: '#/components/schemas/UUID' }, title: { type: string, maxLength: 200 } } }
+    ConversationMessage:
+      type: object
+      required: [id, conversationId, actorType, actorId, messageType, contentRef, contentDigest, dataClass, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        conversationId: { $ref: '#/components/schemas/UUID' }
+        actorType: { type: string, enum: [USER, AGENT, SYSTEM] }
+        actorId: { $ref: '#/components/schemas/UUID' }
+        messageType: { type: string }
+        contentRef: { type: string, description: 正文引用（敏感内容按引用存储，不落明文） }
+        contentDigest: { type: string }
+        dataClass: { type: string, enum: [PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED] }
+        createdAt: { type: string, format: date-time }
+    ConversationMessageCreate: { type: object, required: [messageType, contentRef, contentDigest, dataClass], properties: { messageType: { type: string }, contentRef: { type: string }, contentDigest: { type: string, minLength: 64, maxLength: 64 }, dataClass: { type: string, enum: [PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED] } } }
+    ClarificationRequest:
+      type: object
+      required: [id, conversationId, agentSessionId, workItemId, question, reason, impact, requiredBy, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        conversationId: { $ref: '#/components/schemas/UUID' }
+        agentSessionId: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        question: { type: string }
+        reason: { type: string }
+        impact: { type: string }
+        requiredBy: { type: string, format: date-time }
+        status: { type: string, enum: [OPEN, ANSWERED, CANCELLED, EXPIRED] }
+        createdAt: { type: string, format: date-time }
+    ClarificationRequestCreate: { type: object, required: [question, reason, impact, requiredBy], properties: { question: { type: string, minLength: 1, maxLength: 2000 }, reason: { type: string, minLength: 1 }, impact: { type: string, minLength: 1 }, requiredBy: { type: string, format: date-time } } }
+    ClarificationResponse:
+      type: object
+      required: [id, requestId, answerRef, answerDigest, respondedBy, respondedAt, evidenceClass]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        requestId: { $ref: '#/components/schemas/UUID' }
+        answerRef: { type: string }
+        answerDigest: { type: string }
+        respondedBy: { $ref: '#/components/schemas/UUID' }
+        respondedAt: { type: string, format: date-time }
+        evidenceClass: { type: string, enum: [CONFIRMED] }
+    ClarificationResponseCreate: { type: object, required: [answerRef, answerDigest], properties: { answerRef: { type: string }, answerDigest: { type: string, minLength: 64, maxLength: 64 } } }
+    TaskCard:
+      type: object
+      required: [id, workspaceId, objective, scope, acceptanceCriteria, constraints, requestedPermissions, budget, status, contentDigest, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        conversationId: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        releaseId: { $ref: '#/components/schemas/UUID' }
+        objective: { type: string }
+        scope: { type: string }
+        inputRefs: { type: array, items: { type: string } }
+        deliverables: { type: array, items: { type: string } }
+        acceptanceCriteria: { type: string }
+        constraints: { type: string }
+        riskClass: { type: string }
+        requestedPermissions: { type: array, items: { type: string } }
+        budget: { type: object, additionalProperties: true }
+        status: { type: string, enum: [DRAFT, SUBMITTED, ACTIVE, SUPERSEDED] }
+        contentDigest: { type: string }
+        createdAt: { type: string, format: date-time }
+    TaskCardCreate: { type: object, required: [objective, scope, acceptanceCriteria, constraints, requestedPermissions, budget], properties: { conversationId: { $ref: '#/components/schemas/UUID' }, objective: { type: string, minLength: 1 }, scope: { type: string, minLength: 1 }, inputRefs: { type: array, items: { type: string } }, deliverables: { type: array, items: { type: string } }, acceptanceCriteria: { type: string, minLength: 1 }, constraints: { type: string }, riskClass: { type: string }, requestedPermissions: { type: array, items: { type: string } }, budget: { type: object, additionalProperties: true } } }
+    AgentPlan:
+      type: object
+      required: [id, workItemId, taskCardId, planVersion, steps, permissions, budget, risks, status, contentDigest, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        taskCardId: { $ref: '#/components/schemas/UUID' }
+        planVersion: { type: integer, minimum: 1 }
+        steps: { type: array, items: { $ref: '#/components/schemas/AgentPlanStep' } }
+        outputs: { type: array, items: { type: string } }
+        permissions: { type: array, items: { type: string } }
+        budget: { type: object, additionalProperties: true }
+        risks: { type: array, items: { type: string } }
+        status: { type: string, enum: [DRAFT, PENDING_APPROVAL, APPROVED, REJECTED, SUPERSEDED] }
+        contentDigest: { type: string }
+        createdAt: { type: string, format: date-time }
+    AgentPlanStep: { type: object, required: [stepKey, agentRole, description], properties: { stepKey: { type: string }, agentRole: { type: string }, description: { type: string }, skillRefs: { type: array, items: { type: string } }, checkpoint: { type: string } } }
+    AgentPlanCreate: { type: object, required: [taskCardId, steps], properties: { taskCardId: { $ref: '#/components/schemas/UUID' }, steps: { type: array, minItems: 1, items: { $ref: '#/components/schemas/AgentPlanStep' } }, outputs: { type: array, items: { type: string } }, permissions: { type: array, items: { type: string } }, budget: { type: object, additionalProperties: true }, risks: { type: array, items: { type: string } } } }
+    AgentPlanDecisionCreate: { type: object, required: [decision, expectedContentDigest, reason], properties: { decision: { type: string, enum: [APPROVE, REJECT] }, expectedContentDigest: { type: string, minLength: 64, maxLength: 64 }, reason: { type: string, minLength: 1, maxLength: 2000 } } }
+    # ===== WP-04 运行命令实体（39 号 §5，CONTRACT_ACTIVE 未实现）=====
+    RunCommandCreate: { type: object, required: [commandType, reason], properties: { commandType: { type: string, enum: [PAUSE, RESUME, CANCEL, RETRY, AUTHORIZE, REVOKE] }, reason: { type: string, minLength: 1, maxLength: 2000 }, scope: { type: string } } }
+    RunCommand:
+      type: object
+      required: [id, targetType, targetId, commandType, requestedBy, reason, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        targetType: { type: string, enum: [AGENT_SESSION, EXECUTION_TASK] }
+        targetId: { $ref: '#/components/schemas/UUID' }
+        commandType: { type: string, enum: [PAUSE, RESUME, CANCEL, RETRY, AUTHORIZE, REVOKE] }
+        requestedBy: { $ref: '#/components/schemas/UUID' }
+        reason: { type: string }
+        scope: { type: string }
+        idempotencyKey: { type: string }
+        status: { type: string, enum: [ACCEPTED, EFFECTIVE, REJECTED] }
+        createdAt: { type: string, format: date-time }
+    CommandReceipt:
+      type: object
+      required: [commandId, accepted, effectiveStatus, reasonCode, completedAt]
+      properties:
+        commandId: { $ref: '#/components/schemas/UUID' }
+        accepted: { type: boolean }
+        effectiveStatus: { type: string }
+        safePointRef: { type: string }
+        attemptId: { $ref: '#/components/schemas/UUID' }
+        reasonCode: { type: string }
+        completedAt: { type: string, format: date-time }
+    RuntimeAuthorizationCreate:
+      type: object
+      required: [action, permissionKeys]
+      properties:
+        action: { type: string, enum: [AUTHORIZE, REVOKE] }
+        permissionKeys: { type: array, minItems: 1, items: { type: string } }
+        resourceScope: { type: object, additionalProperties: true }
+        secretRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }
+        budgetDelta: { type: object, additionalProperties: true }
+        validFrom: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+    RuntimeAuthorization:
+      type: object
+      required: [id, workItemId, action, permissionKeys, decidedBy, status, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        action: { type: string, enum: [AUTHORIZE, REVOKE] }
+        permissionKeys: { type: array, items: { type: string } }
+        resourceScope: { type: object, additionalProperties: true }
+        secretRefs: { type: array, items: { $ref: '#/components/schemas/UUID' } }
+        budgetDelta: { type: object, additionalProperties: true }
+        validFrom: { type: string, format: date-time }
+        validUntil: { type: string, format: date-time }
+        decidedBy: { $ref: '#/components/schemas/UUID' }
+        status: { type: string, enum: [ACTIVE, REVOKED, EXPIRED] }
+        createdAt: { type: string, format: date-time }
+    BudgetPolicyUpdate:
+      type: object
+      properties:
+        tokenLimit: { type: integer, minimum: 0 }
+        costLimit: { type: number, minimum: 0 }
+        timeLimitMinutes: { type: integer, minimum: 1 }
+        concurrencyLimit: { type: integer, minimum: 1 }
+        retryLimit: { type: integer, minimum: 0 }
+        warningThresholds: { type: object, additionalProperties: { type: number } }
+    BudgetPolicy:
+      type: object
+      required: [id, workspaceId, limits, status]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        workspaceId: { $ref: '#/components/schemas/UUID' }
+        workItemId: { $ref: '#/components/schemas/UUID' }
+        limits:
+          type: object
+          required: [tokenLimit, costLimit, timeLimitMinutes, concurrencyLimit, retryLimit]
+          properties:
+            tokenLimit: { type: integer, minimum: 0 }
+            costLimit: { type: number, minimum: 0 }
+            timeLimitMinutes: { type: integer, minimum: 1 }
+            concurrencyLimit: { type: integer, minimum: 1 }
+            retryLimit: { type: integer, minimum: 0 }
+        warningThresholds: { type: object, additionalProperties: { type: number } }
+        consumed: { type: object, additionalProperties: true }
+        status: { type: string, enum: [NORMAL, WARNING, EXCEEDED_PAUSED] }
+    Checkpoint:
+      type: object
+      required: [id, targetType, targetId, stage, inputDigest, createdAt]
+      properties:
+        id: { $ref: '#/components/schemas/UUID' }
+        targetType: { type: string, enum: [AGENT_SESSION, EXECUTION_TASK] }
+        targetId: { $ref: '#/components/schemas/UUID' }
+        stage: { type: string }
+        inputDigest: { type: string, minLength: 64, maxLength: 64 }
+        outputRefs: { type: array, items: { type: string } }
+        authorizationSnapshot: { type: object, additionalProperties: true }
+        budgetSnapshot: { type: object, additionalProperties: true }
+        createdAt: { type: string, format: date-time }

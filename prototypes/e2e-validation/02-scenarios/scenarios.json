@@ -1,0 +1,69 @@
+[
+  {
+    "scenario_id": "S-td-001",
+    "req_id": "Q-TD-001",
+    "rule_id": "R-TD-001",
+    "facet": "normal",
+    "title": "上传 PRD 后成功解析为结构化要素"
+  },
+  {
+    "scenario_id": "S-td-002",
+    "req_id": "Q-TD-001",
+    "rule_id": "R-TD-001",
+    "facet": "abnormal",
+    "title": "上传损坏的 PDF，解析失败 status=FAILED"
+  },
+  {
+    "scenario_id": "S-td-003",
+    "req_id": "Q-TD-001",
+    "rule_id": "R-TD-001",
+    "facet": "boundary",
+    "title": "上传空内容 Markdown，parsed_elements 为空但 status=PARSED"
+  },
+  {
+    "scenario_id": "S-td-004",
+    "req_id": "Q-TD-002",
+    "rule_id": "R-TD-002",
+    "facet": "state_transition",
+    "transition_ref": "SM-DTC:DRAFT->GENERATING",
+    "title": "用例草稿开始生成"
+  },
+  {
+    "scenario_id": "S-td-005",
+    "req_id": "Q-TD-002",
+    "rule_id": "R-TD-002",
+    "facet": "state_transition",
+    "transition_ref": "SM-DTC:GENERATING->PENDING_REVIEW",
+    "title": "生成完毕进入评审"
+  },
+  {
+    "scenario_id": "S-td-006",
+    "req_id": "Q-TD-002",
+    "rule_id": "R-TD-002",
+    "facet": "state_transition",
+    "transition_ref": "SM-DTC:PENDING_REVIEW->APPROVED",
+    "title": "工程师确认批量归档"
+  },
+  {
+    "scenario_id": "S-td-007",
+    "req_id": "Q-TD-003",
+    "rule_id": "R-TD-003",
+    "facet": "boundary",
+    "title": "confidence=0.99仍必须进入ReviewTask，禁止自动入库"
+  },
+  {
+    "scenario_id": "S-td-008",
+    "req_id": "Q-TD-003",
+    "rule_id": "R-TD-003",
+    "facet": "permission",
+    "title": "Agent/Service身份无权提交ReviewDecision"
+  },
+  {
+    "scenario_id": "S-td-009",
+    "req_id": "Q-TD-002",
+    "rule_id": "R-TD-002",
+    "facet": "state_transition",
+    "transition_ref": "SM-DTC:PENDING_REVIEW->DRAFT",
+    "title": "工程师退回修改，用例回到 DRAFT"
+  }
+]

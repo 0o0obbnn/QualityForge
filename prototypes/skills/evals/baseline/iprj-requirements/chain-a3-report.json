@@ -1,0 +1,22 @@
+{
+  "skill": "03",
+  "checked_at": "2026-09-06T05:44:33.592049+00:00",
+  "total_entities": 2,
+  "total_findings": 2,
+  "findings": [
+    {
+      "code": "DANGLING_ENTITY_REF",
+      "severity": "REJECT",
+      "target": "ENT-INSTITUTION-001.billing_org_id",
+      "msg": "references 'ENT-BILLING-999' 未声明"
+    },
+    {
+      "code": "MALFORMED_ENTITY_ID",
+      "severity": "REJECT",
+      "target": "ENT-REPORTING-TASK",
+      "msg": "entity_id 必须形如 ENT-XXX-NNN"
+    }
+  ],
+  "verdict": "REJECT",
+  "routing": "PASS -> 实体可进入融合；REJECT -> 重新抽取被标记的实体"
+}

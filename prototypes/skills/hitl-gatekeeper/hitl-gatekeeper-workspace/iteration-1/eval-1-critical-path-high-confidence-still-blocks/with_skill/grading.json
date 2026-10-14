@@ -1,0 +1,26 @@
+{
+  "eval_id": 1,
+  "eval_name": "critical-path-high-confidence-still-blocks",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "decision_is_BLOCK_HUMAN",
+      "passed": true
+    },
+    {
+      "text": "high_confidence_does_not_override",
+      "passed": true
+    },
+    {
+      "text": "cites_critical_path_or_forced_checkpoint",
+      "passed": true
+    },
+    {
+      "text": "produces_or_describes_review_task",
+      "passed": true
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 4,
+  "total": 4
+}

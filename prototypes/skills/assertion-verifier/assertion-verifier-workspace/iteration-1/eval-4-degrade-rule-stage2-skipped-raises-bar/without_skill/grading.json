@@ -1,0 +1,26 @@
+{
+  "eval_id": 4,
+  "eval_name": "eval-4-degrade-rule-stage2-skipped-raises-bar",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "verdict_is_REJECT_despite_0.88",
+      "passed": true
+    },
+    {
+      "text": "explains_threshold_raised_to_0.90",
+      "passed": true
+    },
+    {
+      "text": "cites_degrade_rule",
+      "passed": true
+    },
+    {
+      "text": "explains_missing_evidence_raises_bar",
+      "passed": true
+    }
+  ],
+  "passed": 4,
+  "total": 4,
+  "pass_rate": 1.0
+}

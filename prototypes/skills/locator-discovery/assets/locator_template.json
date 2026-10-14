@@ -1,0 +1,9 @@
+{
+  "$comment": "Locator 库条目。由 scripts/locator_check.py 校验。",
+  "locator_id": "",
+  "strategies": ["data-testid", "id", "css"],
+  "primary_strategy": "data-testid",
+  "primary_value": "",
+  "stability_score": 0.0,
+  "$codes": ["SINGLE_STRATEGY_LOCATOR", "INDEX_XPATH_PRIMARY", "MISSING_STABILITY_SCORE", "INVALID_STABILITY_SCORE", "LOW_STABILITY"]
+}

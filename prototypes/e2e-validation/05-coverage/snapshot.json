@@ -1,0 +1,40 @@
+{
+  "ir_business_rules": [
+    {"rule_id": "R-TD-001"},
+    {"rule_id": "R-TD-002"},
+    {"rule_id": "R-TD-003"},
+    {"rule_id": "R-TD-004"}
+  ],
+  "cases": [
+    {"rule_id": "R-TD-001", "scenario_id": "S-td-001"},
+    {"rule_id": "R-TD-002", "scenario_id": "S-td-004"},
+    {"rule_id": "R-TD-003", "scenario_id": "S-td-007"}
+  ],
+  "scenarios": [
+    {"scenario_id": "S-td-001"},
+    {"scenario_id": "S-td-002"},
+    {"scenario_id": "S-td-003"},
+    {"scenario_id": "S-td-004"},
+    {"scenario_id": "S-td-005"},
+    {"scenario_id": "S-td-006"},
+    {"scenario_id": "S-td-007"},
+    {"scenario_id": "S-td-008"},
+    {"scenario_id": "S-td-009"}
+  ],
+  "ir_state_machines": [
+    {"sm_id": "SM-DTC", "transitions": [
+      {"from": "DRAFT", "to": "GENERATING"},
+      {"from": "GENERATING", "to": "PENDING_REVIEW"},
+      {"from": "PENDING_REVIEW", "to": "APPROVED"},
+      {"from": "PENDING_REVIEW", "to": "DRAFT"}
+    ]}
+  ],
+  "exercised_transitions": [
+    "SM-DTC:DRAFT->GENERATING"
+  ],
+  "assertion_verdicts": [
+    {"assertion_id": "A-001", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-002", "skill11_verdict": "PASS"},
+    {"assertion_id": "A-003", "skill11_verdict": "REJECT"}
+  ]
+}

@@ -1,0 +1,3 @@
+{"run_id":"run-002","target_environment":"prod","entity_id":"ENT-RD","case_ref":"TC-td-002","fields":[
+  {"name":"raw_content","value":"真实客户需求文本含 PII","masking_policy":null,"masked":false,"logged":true,"ir_bound":true}
+]}

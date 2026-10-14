@@ -1,0 +1,64 @@
+{
+ "$comment": "验证报告契约。由断言验证器针对每个断言批次产出。PASS 计入已验证覆盖；REPAIR 和 REJECT 分子计零但仍计入分母；任何 REJECT 都会阻断断言覆盖门禁。",
+ "verification_id": "VER-<10hex>",
+ "checked_at": "<ISO-8601 UTC>",
+ "skill": "11",
+ "batch": {
+ "source_trace": "<Skill10/Skill09 的批次 id>",
+ "total_assertions": 0,
+ "ir_version": "1.0.0"
+ },
+ "stages": {
+ "static_check": {
+ "status": "ran | skipped",
+ "verdict": "PASS | REJECT",
+ "clean_assertions": 0,
+ "violations": [
+ {
+ "assertion_id": "",
+ "severity": "REJECT",
+ "code": "ORPHAN_NO_RULE | RULE_NOT_IN_IR | ORPHAN_NO_REQ | FIELD_NOT_IN_CONTRACT | SM_NOT_IN_IR | INVALID_STATE",
+ "msg": ""
+ }
+ ]
+ },
+ "dry_run": {
+ "status": "ran | skipped",
+ "mode": "fixture_snapshot | contract_stub",
+ "findings": []
+ },
+ "mutation_gate": {
+ "status": "ran | skipped",
+ "per_assertion": [
+ {
+ "assertion_id": "",
+ "risk_class": "low | medium | high",
+ "killed": 0,
+ "total": 0,
+ "mutation_score": 0.0,
+ "threshold": 0.0,
+ "stage2_status": "ran | skipped",
+ "verdict": "PASS | REJECT"
+ }
+ ],
+ "batch_effective_coverage": {
+  "$comment": "下游覆盖核算唯一可计入的覆盖数值。按设计，原始行覆盖率明确不可接受。",
+ "verified_assertions": 0,
+ "rejected_assertions": 0,
+ "unconfirmed_assertions": 0
+ }
+ }
+ },
+ "overall_verdict": "PASS | REPAIR | REJECT",
+ "failure_class_breakdown": {
+  "$comment": "供评审人与断言生成步骤的修复指引使用。参见 references/pipeline.md#the-three-failure-classes。",
+ "hallucinated": 0,
+ "weak": 0,
+ "tautological": 0
+ },
+ "routing": {
+  "to": "下游覆盖核算（PASS）| 断言生成步骤（REPAIR）| 用例生成步骤/断言生成步骤（REJECT）",
+  "repair_guidance": "仅在 verdict=REPAIR 时存在；按 failure_class 给出的分类修复指引",
+  "hitl_gate": "自动路由至人工评审；关键路径 REJECT 为强制检查点"
+ }
+}

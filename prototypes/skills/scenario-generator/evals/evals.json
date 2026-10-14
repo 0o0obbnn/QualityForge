@@ -1,0 +1,26 @@
+{
+  "skill_name": "scenario-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-unknown-requirement",
+      "prompt": "对照 ir.json 校验 scenarios_broken.json,其中包含一个 req_id 在 IR 中不存在的 scenario。",
+      "expected_output": "REJECT 并给出 REQUIREMENT_NOT_IN_IR 及其他结构性 findings。",
+      "files": ["evals/files/scenarios_broken.json", "evals/files/ir.json"]
+    },
+    {
+      "id": 2,
+      "name": "reject-uncovered-transition",
+      "prompt": "校验一个遗漏了至少一个已声明 IR transition 的图。",
+      "expected_output": "REJECT 并给出 TRANSITION_UNCOVERED。",
+      "files": ["evals/files/scenarios_broken.json", "evals/files/ir.json"]
+    },
+    {
+      "id": 3,
+      "name": "accept-complete-five-facet-graph",
+      "prompt": "对照 ir.json 校验 scenarios_complete.json。",
+      "expected_output": "PASS,五个 facet 全部存在且每个 IR transition 均被覆盖。",
+      "files": ["evals/files/scenarios_complete.json", "evals/files/ir.json"]
+    }
+  ]
+}

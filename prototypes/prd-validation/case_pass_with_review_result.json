@@ -1,0 +1,21 @@
+{
+  "skill": "requirement-quality-gate",
+  "checked_at": "2026-09-06T06:41:38.707453+00:00",
+  "review_id": "CTRL-PASS-WITH-REVIEW",
+  "verdict": "PASS_WITH_REVIEW",
+  "reject_findings": 0,
+  "review_findings": 1,
+  "findings": [
+    {
+      "finding_id": "F-001",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": [
+        "SRC-A§1.1"
+      ],
+      "evidence": "对照用例证据：\"系统应尽快返回结果\"",
+      "question": "请量化\"尽快\"的响应时间上限"
+    }
+  ],
+  "routing": "挂起等待澄清评审"
+}

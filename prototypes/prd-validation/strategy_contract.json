@@ -1,0 +1,130 @@
+{
+  "strategy_id": "STRAT-PRD-V2-20260811",
+  "source_ids": ["PRD-V2-20260811"],
+  "ir_ref": "testing_ir.json",
+  "In_Scope": [
+    {
+      "feature_id": "F-REPORT-UPLOAD",
+      "name": "enc上报包上传与校验（27位包名11项规则、50M限制、处理状态机）",
+      "req_refs": ["REQ-001", "REQ-003"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-TASK-GEN",
+      "name": "每月1号上报任务自动生成",
+      "req_refs": ["REQ-002"],
+      "risk_level": "medium"
+    },
+    {
+      "feature_id": "F-DELETE-APPROVAL",
+      "name": "删除审批与次日定时删除",
+      "req_refs": ["REQ-004", "REQ-005"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-QUERY-SERVICE",
+      "name": "查询服务、检索次数记录与启停（含超额自动停用）",
+      "req_refs": ["REQ-006", "REQ-007", "REQ-008"],
+      "risk_level": "critical"
+    },
+    {
+      "feature_id": "F-COEFF-BILLING",
+      "name": "系数XYZ汇总、调节系数积与费用单生成（先删后建）",
+      "req_refs": ["REQ-009", "REQ-010", "REQ-011", "REQ-012"],
+      "risk_level": "critical"
+    }
+  ],
+  "Out_Of_Scope": [
+    {
+      "item": "角色权限矩阵验收（REQ-013）",
+      "exclusion_reason": "《角色权限表》未随文档提供，权限模型不可验收；待产品补表后纳入（评审报告Q-002）"
+    },
+    {
+      "item": "接口端产品查询契约测试（REQ-014）",
+      "exclusion_reason": "接口文档与国密调用设计未提供，接口契约不可确认；待补文档后纳入"
+    },
+    {
+      "item": "性能/压测执行（CON-004）",
+      "exclusion_reason": "本轮仅覆盖功能与验收门禁；性能指标已记录于IR约束，需另立性能测试计划"
+    }
+  ],
+  "Critical_Paths": [
+    {
+      "path_id": "CP-01-ENC-UPLOAD",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-REPORT-UPLOAD"],
+      "description": "enc包上传→包名11项校验→解密/解压/校验→状态机流转与反馈文件"
+    },
+    {
+      "path_id": "CP-02-MONTH-TASK",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-TASK-GEN", "F-REPORT-UPLOAD"],
+      "description": "每月1号上报任务生成→启用机构上报→包处理"
+    },
+    {
+      "path_id": "CP-03-DELETE-APPROVAL",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-DELETE-APPROVAL"],
+      "description": "删除类包（裁决口径：成功数量≠0）→删除审批→次日定时删除"
+    },
+    {
+      "path_id": "CP-04-QUERY-LIFECYCLE",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-QUERY-SERVICE"],
+      "description": "查询调用→检索次数扣减→超额次日12:00停用→手动启用恢复"
+    },
+    {
+      "path_id": "CP-05-BILLING",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-COEFF-BILLING"],
+      "description": "系数每日汇总→月度调节系数积→先删后建生成费用单"
+    },
+    {
+      "path_id": "CP-06-ROLE-PERM",
+      "disposition": "OUT_OF_SCOPE",
+      "exclusion_reason": "权限表未提供（REQ-013，confidence 0.55），无法枚举权限路径"
+    },
+    {
+      "path_id": "CP-07-API-PRODUCT",
+      "disposition": "OUT_OF_SCOPE",
+      "exclusion_reason": "接口文档未提供（REQ-014，confidence 0.65），无法枚举接口端路径"
+    }
+  ],
+  "Quality_Gates": [
+    {
+      "gate_name": "requirement_coverage",
+      "threshold": 1.0,
+      "definition": "In-Scope 的每个 req_id 至少有一条可追溯测试用例"
+    },
+    {
+      "gate_name": "transition_coverage",
+      "threshold": 1.0,
+      "definition": "IR 全部状态机迁移被 state_transition 场景覆盖"
+    },
+    {
+      "gate_name": "conflict_resolution_rate",
+      "threshold": 1.0,
+      "definition": "全部 PRD 冲突在用例执行前完成 HITL 裁决"
+    },
+    {
+      "gate_name": "case_pass_rate",
+      "threshold": 0.95,
+      "definition": "用例执行通过率"
+    },
+    {
+      "gate_name": "blocking_defects_open",
+      "threshold": 0.0,
+      "definition": "未关闭阻塞级缺陷数为零"
+    }
+  ],
+  "Pyramid_Distribution": {
+    "unit": 0.5,
+    "integration": 0.3,
+    "e2e": 0.2
+  },
+  "Mock_Policy": {
+    "mock_targets": ["third_party_credit_data_source", "national_crypto_encryption_service"],
+    "no_mock_targets": ["database", "billing_batch_job", "query_quota_ledger"],
+    "rationale": "外部数据源与国密服务可mock；核心数据层、结算批处理与配额台账必须真实执行"
+  }
+}

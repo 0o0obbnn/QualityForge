@@ -1,0 +1,7 @@
+{
+  "skill_name": "regression-planner",
+  "evals": [
+    {"id": 1, "name": "accept-evidence-based-subset", "prompt": "从一次 minor-change 的 impact report 中选择 regression 子集,并记录纳入与排除项。", "expected_output": "PASS,子集与证据关联且残余风险显式说明。", "files": []},
+    {"id": 2, "name": "reject-default-full-regression", "prompt": "在没有 impact 证据的情况下默认全选所有 test case。", "expected_output": "REJECT 并给出 FULL_REGRESSION_DEFAULT;全量 regression 必须有显式的风险理由。", "files": []}
+  ]
+}

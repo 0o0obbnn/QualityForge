@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>场景与用例 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="planning">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item active" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <button class="btn btn-sm btn-ghost" title="24 条用例草稿待审核(审核包 6 个)" onclick="location.href='11-reviews.html'">用例待审 24</button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>场景与用例</h1><div class="sub">TestingIR → 场景树 → DesignTestCase 草稿 → 人工审核迁移为 TestCaseVersion · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-ir')">TestingIR</button>
+      <button class="btn btn-primary" onclick="qf.openModal('m-gen-cases')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>生成用例草稿</button>
+    </div>
+
+    <div class="stage">
+      <div class="stage-item done"><div class="no">01</div><div class="nm">TestingIR</div><div class="st"><span class="d"></span>已验证 V4</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item done"><div class="no">02</div><div class="nm">策略</div><div class="st"><span class="d"></span>已批准 V2</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item done"><div class="no">03</div><div class="nm">计划</div><div class="st"><span class="d"></span>已批准 V1</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item active-now"><div class="no">04</div><div class="nm">场景与用例</div><div class="st"><span class="d"></span>24 条待审核</div></div>
+      <div class="stage-arrow">→</div>
+      <div class="stage-item wait"><div class="no">05</div><div class="nm">覆盖分析</div><div class="st"><span class="d"></span>等待批准</div></div>
+    </div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="phead"><h2>DesignTestCase 草稿</h2><span class="hint">批准后迁移为正式 TestCaseVersion</span></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>用例</th><th>优先级</th><th>状态</th><th>覆盖</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1021</div><div class="t-title"><span class="ai-tag">AI</span>支付成功·正常扣款回调</div><div class="t-sub">正向 · 步骤 6 · 断言 4</div></td><td><span class="pri p1">P1</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><span class="badge b-ok">Req-8.1</span></td></tr>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1022</div><div class="t-title"><span class="ai-tag">AI</span>余额不足·拒绝并返回错误码</div><div class="t-sub">反向 · 步骤 4 · 断言 3</div></td><td><span class="pri p1">P1</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><span class="badge b-ok">BR-12</span></td></tr>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1023</div><div class="t-title"><span class="ai-tag">AI</span>并发扣款·幂等校验</div><div class="t-sub">边界 · 步骤 5 · 断言 5</div></td><td><span class="pri p2">P2</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><span class="badge b-ok">BR-14</span></td></tr>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1024</div><div class="t-title"><span class="ai-tag">AI</span>网关超时·故障注入</div><div class="t-sub">异常 · 步骤 7 · 断言 6</div></td><td><span class="pri p1">P1</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td><span class="badge b-err">缺口</span></td></tr>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1025</div><div class="t-title"><span class="ai-tag">AI</span>重复回调·去重后仅一次入账</div><div class="t-sub">状态机 · 步骤 5 · 断言 4</div></td><td><span class="pri p2">P2</span></td><td><span class="status st-done"><span class="d"></span>已批准</span></td><td><span class="badge b-ok">SM-3</span></td></tr>
+            <tr onclick="qf.openModal('m-case')"><td><div class="tid">DC-1026</div><div class="t-title">引用契约 V6 的旧用例</div><div class="t-sub">已批准 · 契约升级 V7 后待重评</div></td><td><span class="pri p2">P2</span></td><td><span class="status st-blocked"><span class="d"></span>待重评</span></td><td><span class="badge b-err">STALE</span></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="pagination"><span class="pg-info">共 66 条 · 第 1/11 页</span><button disabled>‹</button><button class="on">1</button><button>2</button><button>3</button><button>›</button></div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="panel">
+          <div class="phead"><h2>覆盖分析</h2><span class="hint">分子 / 分母透明</span></div>
+          <div class="pbody">
+            <div class="cov-row"><div class="top"><span class="name">需求覆盖</span><span class="val">29 / 32 (90.6%)</span></div><div class="bar ok"><i style="width:90.6%"></i></div></div>
+            <div class="cov-row"><div class="top"><span class="name">规则覆盖</span><span class="val">10 / 12 (83.3%)</span></div><div class="bar"><i style="width:83.3%"></i></div></div>
+            <div class="cov-row"><div class="top"><span class="name">状态机覆盖</span><span class="val">6 / 7 (85.7%)</span></div><div class="bar warn"><i style="width:85.7%"></i></div></div>
+            <div class="cov-row" style="margin-bottom:0"><div class="top"><span class="name">API 操作覆盖</span><span class="val">18 / 22 (81.8%)</span></div><div class="bar sec"><i style="width:81.8%"></i></div></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="phead"><h2>用例类型分布</h2><span class="hint">SVG 图表 · 无蓝紫</span></div>
+          <div class="pbody">
+            <svg viewBox="0 0 320 150" width="100%" role="img" aria-label="用例类型分布">
+              <line x1="30" y1="10" x2="30" y2="120" stroke="var(--qf-border)"/><line x1="30" y1="120" x2="310" y2="120" stroke="var(--qf-border)"/>
+              <rect x="48" y="30" width="34" height="90" rx="4" class="c1"/><rect x="104" y="18" width="34" height="102" rx="4" class="c2"/><rect x="160" y="52" width="34" height="68" rx="4" class="c3"/><rect x="216" y="70" width="34" height="50" rx="4" class="c4"/><rect x="272" y="86" width="34" height="34" rx="4" class="c5"/>
+              <text x="65" y="140" font-size="10" fill="var(--qf-muted-foreground)" text-anchor="middle">正向 18</text><text x="121" y="140" font-size="10" fill="var(--qf-muted-foreground)" text-anchor="middle">反向 22</text><text x="177" y="140" font-size="10" fill="var(--qf-muted-foreground)" text-anchor="middle">边界 12</text><text x="233" y="140" font-size="10" fill="var(--qf-muted-foreground)" text-anchor="middle">异常 9</text><text x="289" y="140" font-size="10" fill="var(--qf-muted-foreground)" text-anchor="middle">状态 5</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- TestingIR 弹窗 -->
+<div class="modal" id="m-ir" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>TestingIR · V4</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「TestingIR」按钮 · 设计链中间产物</div>
+      <div class="kv-grid">
+        <span class="muted">编译裁决</span><span class="badge b-ok">PASS</span>
+        <span class="muted">规则</span><span>12 条 (10 CONFIRMED · 2 INFERRED)</span>
+        <span class="muted">领域模型</span><span>5 个实体 · 3 个状态机</span>
+        <span class="muted">来源</span><span>Req V3 · APIContract V7 · K-104</span>
+      </div>
+      <div class="src-trace mt-4"><span class="src-node confirmed">Req V3</span><span class="arrow">→</span><span class="src-node confirmed">TestingIR V4</span><span class="arrow">→</span><span class="src-node confirmed">ir-validator</span><span class="badge b-ok" style="margin-left:8px">VALIDATED</span></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-ir')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 用例详情弹窗 -->
+<div class="modal" id="m-case" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>DC-1022 · 余额不足·拒绝并返回错误码</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击用例行 · 用例详情/批改弹窗</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">前置</span><span>已登录 · 余额 50.00</span>
+        <span class="muted">步骤</span><span>1) 发起 100.00 扣款 → 2) 断言 402 返回</span>
+        <span class="muted">预期</span><span>返回 <span class="mono">INSUFFICIENT_BALANCE</span>,不产生扣款流水</span>
+        <span class="muted">断言</span><span>4 条 (3 VERIFIED · 1 UNVERIFIED)</span>
+        <span class="muted">来源</span><span>BR-12 · Req-8.3</span>
+      </div>
+      <div class="flex mt-4" style="flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="qf.closeModal('m-case');location.href='11-reviews.html'">进入审核包</button>
+        <button class="btn btn-ghost btn-sm" onclick="qf.toast('批改模式(演示)','info')">直接批改</button>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-case')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 生成用例弹窗 -->
+<div class="modal" id="m-gen-cases" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>生成用例草稿</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="genCaseForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「生成用例草稿」按钮</div>
+        <div class="field"><label>目标范围</label><select class="input"><option>补齐覆盖缺口 (3 处)</option><option>按来源生成全部</option><option>指定场景</option></select></div>
+        <div class="field"><label>测试类型</label><select class="input"><option>正向 + 反向 + 边界</option><option>仅异常</option><option>全类型</option></select></div>
+        <label class="check"><input type="checkbox" checked> 生成断言与来源追踪</label>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-gen-cases')">取消</button>
+        <button type="submit" class="btn btn-primary">开始生成</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('genCaseForm', function () { qf.closeModal('m-gen-cases'); qf.toast('用例生成任务已创建(演示)','ok'); });
+  document.querySelectorAll('.pagination button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.pagination button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+  }); });
+</script>
+</body>
+</html>

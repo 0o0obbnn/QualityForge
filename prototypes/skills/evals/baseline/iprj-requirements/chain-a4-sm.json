@@ -1,0 +1,16 @@
+{
+  "known_entity_ids": ["ENT-REPORTING-TASK"],
+  "state_machines": [
+    {
+      "sm_id": "SM-DEL-001",
+      "entity_id": "ENT-REPORTING-TASK",
+      "initial_state": "PENDING_APPROVAL",
+      "states": ["PENDING_APPROVAL", "APPROVED", "REJECTED", "PENDING_DELETE"],
+      "transitions": [
+        {"from": "PENDING_APPROVAL", "to": "APPROVED", "guard": "approval_passed"},
+        {"from": "PENDING_APPROVAL", "to": "REJECTED", "guard": "approval_failed"},
+        {"from": "REJECTED", "to": "PENDING_APPROVAL", "guard": null, "missing_note": "文档未定义重新提交"}
+      ]
+    }
+  ]
+}

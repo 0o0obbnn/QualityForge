@@ -1,0 +1,6 @@
+[{"case_id":"TC-td-001","fixture_category":"Dynamic","entities_needed":[
+  {"entity_id":"ENT-RD","instance_id":"rd-001"},
+  {"entity_id":"ENT-DTC","instance_id":"dtc-001","target_state":"REVIEWING"}],
+ "state_preconditions":[{"entity_id":"ENT-DTC","state":"REVIEWING"}],
+ "sensitive_fields":["raw_content"],
+ "construction_steps":["create RD rd-001","create DTC dtc-001 in REVIEWING"]}]

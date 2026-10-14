@@ -1,0 +1,7 @@
+{
+  "skill_name": "plan-orchestrator",
+  "evals": [
+    {"id": 1, "name": "accept-gated-plan", "prompt": "校验一个无环的 plan,phase 入口和出口 gate 显式声明且至少包含一个 task。", "expected_output": "PASS;该 plan 结构上可执行,但在人工批准前仍是草稿。", "files": []},
+    {"id": 2, "name": "reject-missing-phase-gates", "prompt": "校验一个既没有 entry gate、exit gate 也没有 task 的 plan phase。", "expected_output": "REJECT 并给出 missing-gate findings。", "files": []}
+  ]
+}

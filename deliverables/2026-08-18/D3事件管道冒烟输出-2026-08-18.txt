@@ -1,0 +1,42 @@
+1) 身份初始化（首跑 setup，重跑 login）
+  ✓ auth/setup 201
+2) 需求源 + 工作项 + 会话
+  ✓ requirement 201
+  ✓ requirement version 201
+  ✓ work item 201
+  ✓ ai/sessions 202
+  ✓ 三类产出物齐备（共 4 条任务）
+3) TEST_STRATEGY 闭环：退回→新版本→批准
+  ✓ strategy REQUEST_CHANGES 200
+  ✓ strategy 产出物回 DRAFT
+  ✓ strategy v2 201
+  ✓ strategy 版本递增=2
+  ✓ strategy 新任务 OPEN 且可批准
+  ✓ strategy 旧任务 STALE_VERSION
+4) TEST_PLAN 闭环：退回→新版本（绑策略 v2）→批准
+  ✓ plan REQUEST_CHANGES 200
+  ✓ plan v2 201
+  ✓ plan 版本递增=2 且绑策略新版本
+  ✓ plan 新任务 OPEN 且可批准
+5) 批准新任务（strategy/plan）+ TEST_CASE 批准链路
+  ✓ 陈旧 strategy 任务决策被 409 拦截
+  ✓ APPROVE TEST_STRATEGY 200
+  ✓ APPROVE TEST_PLAN 200
+  ✓ APPROVE TEST_CASE 200
+  ✓ APPROVE TEST_CASE 200
+6) 收敛断言
+  ✓ 会话收敛 SUCCEEDED
+  ✓ 工作项 APPROVED
+  ✓ 终态任务全部 TASK_CLOSED
+7) Journey C 执行链：执行计划→启动→结果→证据
+  ✓ execution plan 201
+  ✓ execution run 202
+  ✓ 执行任务 COMPLETED
+  ✓ 执行结果非空且带证据摘要
+8) D3 事件管道：事件流非空 + 事件流型 metricKey 全部有值
+  ✓ 事件流非空
+  ✓ 核心生命周期事件齐备
+  ✓ 25 项 ✅ metricKey 全量存在
+  ✓ 事件流型 metricKey 全部有值（无手工录入）
+
+I-1 后端侧冒烟全绿：32/32 项断言通过

@@ -1,0 +1,26 @@
+{
+  "skill_name": "state-machine-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-empty-state-bypass",
+      "prompt": "一个状态机的 states=[] 却存在带守卫的 transition INVENTED_A->INVENTED_B。校验它。",
+      "expected_output": "REJECT 并给出 EMPTY_STATE_SET,且两个端点均给出 STATE_NOT_IN_DECLARED_SET。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-missing-initial-state",
+      "prompt": "一个状态机声明了 states 和 transitions 却没有 initial_state。",
+      "expected_output": "REJECT 并给出 MISSING_INITIAL_STATE。validator 不得自行推断。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "reject-unreachable-state",
+      "prompt": "初始状态 NEW 可达 ACTIVE,而 ORPHAN 已声明却无任何连接。",
+      "expected_output": "REJECT 并在 ORPHAN 上给出 UNREACHABLE_STATE。",
+      "files": []
+    }
+  ]
+}

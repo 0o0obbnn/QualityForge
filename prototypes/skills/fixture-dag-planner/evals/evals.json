@@ -1,0 +1,8 @@
+{
+  "skill_name": "fixture-dag-planner",
+  "evals": [
+    {"id": 1, "name": "accept-acyclic-dag", "prompt": "校验一个两节点 fixture DAG,依赖显式声明且每个创建的资源都有 teardown。", "expected_output": "PASS;图无环且清理已定义。", "files": []},
+    {"id": 2, "name": "reject-cycle", "prompt": "校验两个相互依赖的 fixture 节点。", "expected_output": "REJECT 并给出 CYCLE_DETECTED。", "files": []},
+    {"id": 3, "name": "reject-missing-teardown", "prompt": "校验一个创建了资源但没有 teardown 的动态 fixture。", "expected_output": "REJECT 并给出 MISSING_TEARDOWN。", "files": []}
+  ]
+}

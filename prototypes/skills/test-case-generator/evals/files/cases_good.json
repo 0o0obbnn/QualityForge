@@ -1,0 +1,22 @@
+[
+  {
+    "case_id": "TC-orders-001",
+    "req_id": "Q-pay",
+    "rule_id": "R-pay-001",
+    "scenario_id": "S-pay-normal",
+    "fixture_category": "Dynamic",
+    "entity_id": "ENT-ORD",
+    "steps": [{"action": "create order", "endpoint": "/orders", "input": {}}],
+    "expected_results": [{"state": "PAID", "endpoint": "/orders"}]
+  },
+  {
+    "case_id": "TC-orders-002",
+    "req_id": "Q-refund",
+    "rule_id": "R-refund-001",
+    "scenario_id": "S-refund-after-ship",
+    "fixture_category": "Hybrid",
+    "entity_id": "ENT-ORD",
+    "steps": [{"action": "refund shipped order", "endpoint": "/refunds", "input": {}}],
+    "expected_results": [{"state": "REFUNDED", "endpoint": "/refunds"}]
+  }
+]

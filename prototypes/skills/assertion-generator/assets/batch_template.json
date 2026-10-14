@@ -1,0 +1,13 @@
+{
+  "$comment": "断言批次。在逐条断言验证之前由 scripts/batch_check.py 校验。weak-ratio 检查是批次级质量过滤；单条断言的正确性另行验证。",
+  "assertions": [
+    {
+      "assertion_id": "",
+      "target": "response.body.total",
+      "expression": "eq",
+      "expected": "100"
+    }
+  ],
+  "$weak_patterns": ["status_code_only", "presence_only", "type_only", "constant_true", "no_field_reference"],
+  "$codes": ["WEAK_RATIO_EXCEEDED", "EMPTY_BATCH"]
+}

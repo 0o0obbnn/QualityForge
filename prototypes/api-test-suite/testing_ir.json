@@ -1,0 +1,1616 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {
+      "req_id": "Q-AUTH-001",
+      "title": "本地管理员初始化",
+      "description": "首次部署通过 POST /auth/setup 创建本地管理员与默认租户/工作区，重复初始化被拒绝，密码与名称有长度约束。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /auth/setup + LocalSetupCreate",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-AUTH-002",
+      "title": "本地登录与限流",
+      "description": "POST /auth/login 校验邮箱密码签发会话；错误凭据返回 401，60 秒窗口 5 次失败触发 429 限流。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /auth/login + auth_service.py login",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-AUTH-003",
+      "title": "会话身份与登出",
+      "description": "GET /auth/me 返回当前会话档案，未认证返回 401；POST /auth/logout 使会话失效；GET /auth/status 报告 setup 状态。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /auth/me /auth/logout /auth/status",
+      "confidence": 0.84
+    },
+    {
+      "req_id": "Q-WI-001",
+      "title": "工作项创建与查询",
+      "description": "POST /work-items 按必填字段创建工作项（缺省 422，title 超 256 拒绝）；GET 列表支持分页与状态过滤；GET 单个不存在或跨 workspace 返回 404。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /work-items + WorkItemCreate",
+      "confidence": 0.87
+    },
+    {
+      "req_id": "Q-WI-002",
+      "title": "工作项状态流转与乐观锁",
+      "description": "POST /work-items/{id}/transitions 受 lockVersion 乐观锁与 expectedCurrentStatus 保护，M1 切片仅支持迁往 REWORK，成功后 lockVersion+1 并发事件。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml WorkItemTransition + planning_workflow.py transition_work_item",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-WI-003",
+      "title": "工作项分派",
+      "description": "POST /work-items/{id}/assign 落库 assignee；assigneeId 必填合法 UUID，重复分派同一 assignee 幂等 no-op。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /work-items/{workItemId}/assign description",
+      "confidence": 0.84
+    },
+    {
+      "req_id": "Q-WI-004",
+      "title": "看板 SLA 汇总",
+      "description": "GET /work-items/sla-overview 按优先级窗口（P0=24h/P1=48h/P2=72h）输出 met/overdue/metRate；P3 与 CANCELLED 只计 total，total=0 时 metRate=0。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /work-items/sla-overview description",
+      "confidence": 0.85
+    },
+    {
+      "req_id": "Q-RT-001",
+      "title": "审核任务与产物读取",
+      "description": "POST /review-tasks 创建绑定精确产出物版本的审核任务；GET 读取任务、不可变产物与版本 Diff；首版 Diff 无基线时降级返回。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /review-tasks*",
+      "confidence": 0.85
+    },
+    {
+      "req_id": "Q-RT-002",
+      "title": "审核决策",
+      "description": "POST /review-tasks/{id}/decisions 仅限人类主体，按决策迁移任务状态（APPROVED/CHANGES_REQUESTED/REJECTED），退回使版本回 DRAFT；任务终态与陈旧摘要均 409。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml ReviewDecisionCreate + planning_workflow.py decide_review",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-RT-003",
+      "title": "审核版本 Diff",
+      "description": "GET /review-tasks/{id}/artifact/diff 以任务绑定版本为 head，同根取最大上一版为 base 做顶层字段级 diff；无 base 时 hasBaseline=false 且 fields 空。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /review-tasks/{reviewTaskId}/artifact/diff description",
+      "confidence": 0.85
+    },
+    {
+      "req_id": "Q-EX-001",
+      "title": "执行计划管理",
+      "description": "POST /execution-plans 按 workspaceId/planKey/name/testPlanId 创建执行计划并支持版本与启动。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml ExecutionPlanCreate + /execution-plans*",
+      "confidence": 0.84
+    },
+    {
+      "req_id": "Q-QA-001",
+      "title": "质量分析与报告",
+      "description": "POST /quality/result-analyses、/quality/reports、/quality/coverage-reports 创建分析与报告产物，executionResultRefs 至少一项。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml ResultAnalysisCreate + /quality/*",
+      "confidence": 0.85
+    },
+    {
+      "req_id": "Q-QA-002",
+      "title": "缺陷管理",
+      "description": "POST /quality/defects 创建缺陷并支持版本与外部同步尝试；同步尝试绑定批准记录与幂等键。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /quality/defects*",
+      "confidence": 0.83
+    },
+    {
+      "req_id": "Q-OBS-001",
+      "title": "领域事件与指标",
+      "description": "GET /observability/events 与 /observability/metrics 暴露领域事件流与受控指标，写操作产生的领域事件可被检索。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /observability/* + D3 事件管道",
+      "confidence": 0.82
+    },
+    {
+      "req_id": "Q-ENV-001",
+      "title": "统一响应信封与幂等",
+      "description": "全部 JSON 响应为 code/message/traceId/data 信封且字段 camelCase；关键写操作要求 16..128 字符 Idempotency-Key；列表分页 page>=1、pageSize 1..200。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml ResponseEnvelope + IdempotencyKey + PageParam",
+      "confidence": 0.87
+    },
+    {
+      "req_id": "Q-CTX-001",
+      "title": "项目/Release 上下文与驾驶舱投影",
+      "description": "成员域内工作区投影与最近有效更新排序（QF-PD-023/024）、专用切换命令（WP-01A）、常用项目置顶与 Release 归档（WP-01）、驾驶舱上下文投影只读。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml /workspaces 面 + 39 §7 ProjectContextProjection",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-COL-001",
+      "title": "协作对话、澄清、任务卡与 AgentPlan",
+      "description": "会话消息只追加、澄清答复形成 CONFIRMED 证据并联动 Session 阻塞/解除、对话意图经任务卡固化为结构化任务、AgentPlan 人工裁决后启动会话（39 §3，QF-PD-003/011/022/052）。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml Collaboration tag + 39 §3",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-RC-001",
+      "title": "运行命令、授权、预算与检查点",
+      "description": "六类统一命令只追加且以 CommandReceipt 为生效唯一事实、暂停/取消到安全点、授权与预算面 Agent 无权上调、检查点不可变且恢复前重新预检（39 §5，QF-PD-004/005/035/036）。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml RunControl tag + 39 §5",
+      "confidence": 0.86
+    },
+    {
+      "req_id": "Q-PUB-001",
+      "title": "正式资产发布链与风险分级双人复核",
+      "description": "各 Owner APPROVED→PUBLISHED 发布命令、发布取代使旧版本与下游计划版本 STALE、CRITICAL 工作项 FOUR_EYES 双人复核（39 §4/§10，QF-PD-007/014/016/039）。",
+      "validation_status": "VALIDATED",
+      "source_trace": "32-API规范.yaml publish 三 op + ReviewTask.minApprovers/approvals",
+      "confidence": 0.86
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "R-AUTH-001",
+      "condition": "本地管理员 setup 已完成时再次调用 POST /auth/setup",
+      "action": "返回 409 SETUP_ALREADY_COMPLETED，不创建新管理员",
+      "source": "backend/src/qf/services/auth_service.py",
+      "source_trace": "auth_service.py:156-158",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-AUTH-002",
+      "condition": "POST /auth/setup 的 password 长度不在 12..256 区间，或 tenantName/workspaceName 长度不在 1..120 区间",
+      "action": "返回 422 校验失败，不创建任何身份",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml LocalSetupCreate",
+      "confidence": 0.88
+    },
+    {
+      "rule_id": "R-AUTH-003",
+      "condition": "POST /auth/login 时邮箱不存在、用户被禁用或密码不匹配",
+      "action": "返回 401 INVALID_CREDENTIALS，不签发会话",
+      "source": "backend/src/qf/services/auth_service.py",
+      "source_trace": "auth_service.py:163-166",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-AUTH-004",
+      "condition": "同一 client_key+email 在 60 秒滑动窗口内登录失败尝试达到 5 次",
+      "action": "第 5 次之后的尝试返回 429 RATE_LIMITED",
+      "source": "backend/src/qf/services/auth_service.py",
+      "source_trace": "auth_service.py:52-53,171-178",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-AUTH-005",
+      "condition": "登录成功",
+      "action": "清除该 client_key+email 的失败计数并签发会话",
+      "source": "backend/src/qf/services/auth_service.py",
+      "source_trace": "auth_service.py:168,171",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-AUTH-006",
+      "condition": "请求未携带有效会话凭据访问受保护接口",
+      "action": "返回 401 UNAUTHORIZED，响应体仍为统一信封结构",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml security",
+      "confidence": 0.82
+    },
+    {
+      "rule_id": "R-WI-001",
+      "condition": "POST /work-items 缺少必填字段（workspaceId/workItemType/title/objective/acceptanceCriteria/requiresReview/priority/riskLevel 任一）",
+      "action": "返回 422 校验失败，不创建工作项",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml WorkItemCreate required",
+      "confidence": 0.88
+    },
+    {
+      "rule_id": "R-WI-002",
+      "condition": "WorkItem title 长度超过 256 字符",
+      "action": "返回 422 校验失败",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml WorkItem.title maxLength",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-WI-003",
+      "condition": "访问不存在的工作项 ID，或工作项存在但不属于请求 workspace",
+      "action": "返回 404 NOT_FOUND",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml /work-items/{workItemId} 404",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-WI-004",
+      "condition": "POST /work-items/{id}/transitions 的 lockVersion 与服务端当前值不一致",
+      "action": "返回 409 STALE_LOCK_VERSION，状态不变",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1180-1181",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-WI-005",
+      "condition": "transitions 请求携带 expectedCurrentStatus 且与服务端当前状态不符",
+      "action": "返回 409 INVALID_STATE_TRANSITION，状态不变",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1182-1184",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-WI-006",
+      "condition": "transitions 的 targetStatus 不是 REWORK",
+      "action": "返回 422 VALIDATION_FAILED（M1 切片仅支持 REWORK 迁移）",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1185-1186",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-WI-007",
+      "condition": "transitions 成功执行",
+      "action": "状态置为 REWORK，lockVersion 加 1，发出 work_item.transitioned 事件",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1187-1205",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-WI-008",
+      "condition": "同一 Idempotency-Key 重复提交同一写操作请求",
+      "action": "返回首次执行结果，不产生第二次副作用",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1172-1176",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-WI-009",
+      "condition": "POST /work-items/{id}/assign 的 assigneeId 缺失或非法 UUID",
+      "action": "返回 422 校验失败",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml /work-items/{workItemId}/assign description",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-WI-010",
+      "condition": "对同一工作项重复分派同一 assignee",
+      "action": "幂等成功，no-op 返回当前工作项状态",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml assign description",
+      "confidence": 0.82
+    },
+    {
+      "rule_id": "R-WI-011",
+      "condition": "SLA 截止 = createdAt + 优先级窗口（P0=24h、P1=48h、P2=72h），DONE/APPROVED 且 updatedAt 不晚于截止",
+      "action": "计入 met；未完成且已过截止计入 overdue",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml sla-overview description",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-WI-012",
+      "condition": "工作项为 P3 或 CANCELLED，或分组 total 为 0",
+      "action": "P3/CANCELLED 只计 total 不算 overdue；metRate=met/total 且 total=0 时返回 0",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml sla-overview description + WorkItemSlaGroup",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-RT-001",
+      "condition": "POST /review-tasks/{id}/decisions 的会话主体不是人类（actor_type != USER）",
+      "action": "返回 403 FORBIDDEN",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:885-886",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RT-002",
+      "condition": "审核任务状态不在 OPEN/IN_PROGRESS 时提交决策",
+      "action": "返回 409 INVALID_STATE_TRANSITION 审核任务已结束",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:904-905",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RT-003",
+      "condition": "决策请求的 contentDigest 与审核任务绑定的当前版本摘要不一致",
+      "action": "返回 409 STALE_ARTIFACT_VERSION",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:906-907",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RT-004",
+      "condition": "决策为 APPROVE / REQUEST_CHANGES / REJECT",
+      "action": "任务状态分别迁移为 APPROVED / CHANGES_REQUESTED / REJECTED",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:909-914",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RT-005",
+      "condition": "决策为 REQUEST_CHANGES 或 REJECT",
+      "action": "产出物版本 reviewStatus 回退为 DRAFT",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:922-925",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-RT-006",
+      "condition": "会话缺少审核产出物类型对应的审批能力",
+      "action": "返回 403，决策不生效",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:900-903",
+      "confidence": 0.8
+    },
+    {
+      "rule_id": "R-RT-007",
+      "condition": "审核版本是首版（无同根上一版）或 base 版本链断裂",
+      "action": "diff 返回 hasBaseline=false 且 fields 为空（降级不报错）",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml artifact/diff description",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-ENV-001",
+      "condition": "任意接口返回 JSON 响应",
+      "action": "响应体为统一信封，包含 code、message、traceId 必填字段",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml ResponseEnvelope",
+      "confidence": 0.88
+    },
+    {
+      "rule_id": "R-ENV-002",
+      "condition": "响应体序列化领域对象",
+      "action": "JSON 字段 camelCase，snake_case 列名不外泄",
+      "source": "docs/04-architecture/37-API接口总览.md",
+      "source_trace": "37-API接口总览.md §1",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-IDM-001",
+      "condition": "调用标注幂等的关键写操作",
+      "action": "必须携带 16..128 字符 Idempotency-Key 请求头，否则 422",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml IdempotencyKey",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-PAGE-001",
+      "condition": "列表接口携带 page/pageSize 查询参数",
+      "action": "page 最小 1 默认 1，pageSize 1..200 默认 20，越界 422",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml PageParam/PageSizeParam",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-EX-001",
+      "condition": "POST /execution-plans 缺少 workspaceId/planKey/name/testPlanId 任一",
+      "action": "返回 422 校验失败",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml ExecutionPlanCreate required",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-QA-001",
+      "condition": "POST /quality/result-analyses 的 executionResultRefs 为空或缺失",
+      "action": "返回 422 校验失败（minItems 1）",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml ResultAnalysisCreate",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-VAL-001",
+      "condition": "POST 创建类接口请求体缺失任一契约必填字段",
+      "action": "返回 422 校验失败，不创建资源",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml 各 *Create schema required",
+      "confidence": 0.87
+    },
+    {
+      "rule_id": "R-VAL-002",
+      "condition": "以合法格式但未占用的资源 ID 访问路径参数化端点",
+      "action": "返回 404 NOT_FOUND，响应体为统一信封",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml 各端点 404 response",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "R-VAL-003",
+      "condition": "POST 请求体为空对象、不可解析 JSON 或 Content-Type 非 application/json",
+      "action": "返回 4xx 校验拒绝，不进入业务逻辑",
+      "source": "docs/04-architecture/32-API规范.yaml",
+      "source_trace": "32-API规范.yaml 各 POST 422 响应定义 + 框架请求体解析行为",
+      "confidence": 0.78
+    },
+    {
+      "rule_id": "R-RT-008",
+      "condition": "审核任务所属会话已终态，或会话非终态但任务绑定版本落后于产出物当前版本",
+      "action": "approveDisabledReason 分别为 TASK_CLOSED 或 STALE_VERSION；正常可批准时为 null",
+      "source": "backend/src/qf/services/planning_workflow.py",
+      "source_trace": "planning_workflow.py:1216-1229 _approve_disabled_reason",
+      "confidence": 0.82
+    },
+    {
+      "rule_id": "R-CTX-001",
+      "condition": "用户调用 POST /auth/switch-workspace 切换到非其成员关系的 Workspace",
+      "action": "返回 403，绑定 Workspace 不变；切换成功后重置 Release 上下文并刷新驾驶舱投影",
+      "source": "backend/src/qf/services/planning_workflow.py switch_local_workspace",
+      "source_trace": "批次五十四 WP-01A 切换语义",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-CTX-002",
+      "condition": "createWorkItem 引用不属于当前 Workspace、已归档或不存在的 releaseId",
+      "action": "返回 409 RELEASE_NOT_IN_WORKSPACE，不创建工作项",
+      "source": "backend/src/qf/services/planning_workflow.py create_work_item",
+      "source_trace": "批次五十 WP-01A Release 归属门控",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-CTX-003",
+      "condition": "POST /workspaces/{id}/pin 对当前身份有成员关系的 Workspace 置顶或取消置顶",
+      "action": "写入 workspace_pin 并按 pinned DESC、lastBusinessUpdatedAt DESC 重排 listWorkspaces；用户偏好不产生领域事件",
+      "source": "backend/src/qf/services/planning_workflow.py set_workspace_pin",
+      "source_trace": "批次五十二 WP-01 常用项目固定",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-COL-001",
+      "condition": "向会话追加消息时 actorType 为 AGENT 或会话不存在",
+      "action": "AGENT fail-closed 403（会话归属 Session 证明未建，本切片不开放）；消息只追加并登记 conversation.message.appended",
+      "source": "backend/src/qf/services/planning_workflow.py append_conversation_message",
+      "source_trace": "批次五十四 WP-03 切片一",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-COL-002",
+      "condition": "respondClarification 非 USER、澄清已答复或非 OPEN 状态",
+      "action": "分别返回 403/409 CLARIFICATION_ALREADY_ANSWERED/409 CLARIFICATION_NOT_OPEN；答复 evidenceClass 服务端钉死 CONFIRMED，答复后 Session 无其他 OPEN 澄清则回 RUNNING",
+      "source": "backend/src/qf/services/planning_workflow.py respond_clarification",
+      "source_trace": "批次五十五 WP-03 切片二",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-COL-003",
+      "condition": "createTaskCard 提交时工作项存在未解澄清，或工作项与卡均无 Release",
+      "action": "分别返回 409 CLARIFICATION_OPEN / 409 TASK_CARD_REQUIRES_RELEASE；提交即 SUBMITTED，同工作项旧卡（SUBMITTED/ACTIVE）被新版本取代",
+      "source": "backend/src/qf/services/planning_workflow.py create_task_card",
+      "source_trace": "批次五十六 WP-03 切片三",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-COL-004",
+      "condition": "decideAgentPlan 携带的 expectedContentDigest 与计划当前 contentDigest 漂移，或计划非 PENDING_APPROVAL",
+      "action": "分别返回 409 STALE_ARTIFACT_VERSION / 409 INVALID_STATE_TRANSITION；批准联动任务卡 SUBMITTED→ACTIVE，幂等重放先于状态校验",
+      "source": "backend/src/qf/services/planning_workflow.py decide_agent_plan",
+      "source_trace": "批次五十六/五十七 WP-03",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-COL-005",
+      "condition": "createAgentSession 时工作项不存在 APPROVED 状态 AgentPlan",
+      "action": "返回 409 AGENT_PLAN_NOT_APPROVED（QF-PD-003 计划先确认强制门）",
+      "source": "backend/src/qf/services/planning_workflow.py create_agent_session",
+      "source_trace": "批次五十七 批准门",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RC-001",
+      "condition": "对 Agent 会话或执行任务下发运行命令",
+      "action": "命令只追加，内嵌 CommandReceipt 是生效唯一事实（safePointRef 形如 target:{id}@FROM>TO）；幂等重放同键返回原命令；RETRY/AUTHORIZE/REVOKE 契约枚举保留、运行时 422 显式拒绝",
+      "source": "backend/src/qf/api/v1/run_control.py + planning_workflow.py issue_run_command",
+      "source_trace": "批次五十八 WP-04 切片一",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RC-002",
+      "condition": "对已终态（SUCCEEDED/FAILED/CANCELLED）目标下发非 RETRY 命令",
+      "action": "返回 409 INVALID_STATE_TRANSITION",
+      "source": "backend/src/qf/services/planning_workflow.py 命令状态迁移矩阵",
+      "source_trace": "批次五十八 WP-04 切片一",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RC-003",
+      "condition": "创建运行时授权（AUTHORIZE）或读取授权/预算面",
+      "action": "授权只追加决定不泄露 Secret 明文；预算达到上限自动暂停，Agent 无权上调",
+      "source": "backend/src/qf/services/planning_workflow.py 授权/预算面",
+      "source_trace": "批次五十九 WP-04 切片二",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RC-004",
+      "condition": "读取运行检查点（GET /runs/{targetType}/{targetId}/checkpoints）",
+      "action": "返回不可变检查点列表（inputDigest/outputRefs/authorizationSnapshot/budgetSnapshot）；恢复（RESUME）前必须重新预检而非直接回放",
+      "source": "backend/src/qf/services/planning_workflow.py 检查点面",
+      "source_trace": "批次五十九 WP-04 切片二",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-RT-009",
+      "condition": "ReviewTask 创建时工作项 riskLevel=CRITICAL，或对 FOUR_EYES 任务同一审批人二次批准",
+      "action": "政策服务端派生 FOUR_EYES/minApprovers=2（其余 SINGLE_REVIEW/1）；同一审批人二次批准返回 409 FOUR_EYES_SAME_APPROVER；达到 minApprovers 才置任务 APPROVED 与版本 APPROVED，部分批准任务 IN_PROGRESS；退回不要求双人",
+      "source": "backend/src/qf/services/planning_workflow.py decide_review/_create_review_task",
+      "source_trace": "批次六十五 WP-05 切片二",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-PUB-001",
+      "condition": "对 reviewStatus 非 APPROVED 的资产版本调用发布命令，或发布成功后",
+      "action": "非 APPROVED 返回 409 ASSET_NOT_APPROVED；发布置 PUBLISHED 并回填根 publishedVersionId，同资产旧 PUBLISHED 版本转 STALE；幂等重放同键同指纹返回原发布结果",
+      "source": "backend/src/qf/services/planning_workflow.py _publish_artifact_version",
+      "source_trace": "批次六十四 WP-05 切片一",
+      "confidence": 0.86
+    },
+    {
+      "rule_id": "R-PUB-002",
+      "condition": "策略发布新版本取代旧 PUBLISHED 版本时存在引用旧版本的测试计划版本",
+      "action": "下游计划版本转 STALE、其未决审核任务 CANCELLED，并逐版本登记 stage.invalidated 事件（只失效不删除历史）",
+      "source": "backend/src/qf/services/planning_workflow.py _invalidate_downstream_plans",
+      "source_trace": "批次六十六 WP-05 切片三",
+      "confidence": 0.86
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-WORKITEM",
+      "name": "WorkItem",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统生成的 UUID，不含个人信息"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "lockVersion",
+          "type": "integer",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "assigneeId",
+          "type": "uuid",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "priority",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "workspaceId",
+          "type": "uuid",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-REVIEWTASK",
+      "name": "ReviewTask",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统生成的 UUID，不含个人信息"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "contentDigest",
+          "type": "string",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "SHA-256 内容摘要，单向哈希不含原始内容"
+        },
+        {
+          "name": "policyType",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "artifactVersionId",
+          "type": "uuid",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-LOCALAUTH",
+      "name": "LocalAuthProfile",
+      "fields": [
+        {
+          "name": "userId",
+          "type": "uuid",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "email",
+          "type": "string",
+          "sensitivity_level": "SENSITIVE"
+        },
+        {
+          "name": "passwordHash",
+          "type": "string",
+          "sensitivity_level": "SENSITIVE"
+        },
+        {
+          "name": "actorType",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "capabilities",
+          "type": "array",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-ASSETVERSION",
+      "name": "AssetVersion",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统 UUID"
+        },
+        {
+          "name": "reviewStatus",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "contentDigest",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "version",
+          "type": "integer",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-TASKCARD",
+      "name": "TaskCard",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统 UUID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "contentDigest",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-AGENTPLAN",
+      "name": "AgentPlan",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统 UUID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "contentDigest",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-CLARIFICATION",
+      "name": "ClarificationRequest",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统 UUID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "question",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    },
+    {
+      "entity_id": "ENT-AGENTSESSION",
+      "name": "AgentSession",
+      "fields": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "sensitivity_level": "PUBLIC",
+          "sensitivity_rationale": "系统 UUID"
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "sensitivity_level": "INTERNAL"
+        },
+        {
+          "name": "workItemId",
+          "type": "uuid",
+          "sensitivity_level": "INTERNAL"
+        }
+      ]
+    }
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-WORKITEM",
+      "entity_id": "ENT-WORKITEM",
+      "initial_state": "BACKLOG",
+      "states": [
+        "BACKLOG",
+        "REWORK"
+      ],
+      "transitions": [
+        {
+          "from": "BACKLOG",
+          "to": "REWORK",
+          "trigger": "transitionWorkItem(targetStatus=REWORK)",
+          "guard": "lockVersion匹配且具备work_item.transition能力"
+        }
+      ],
+      "terminal_states": {
+        "REWORK": true
+      },
+      "note": "M1 切片可测子集：实现仅支持迁往 REWORK；完整 WorkItemStatus 状态机待后续切片收敛后扩展"
+    },
+    {
+      "sm_id": "SM-REVIEWTASK",
+      "entity_id": "ENT-REVIEWTASK",
+      "initial_state": "OPEN",
+      "states": [
+        "OPEN",
+        "IN_PROGRESS",
+        "APPROVED",
+        "CHANGES_REQUESTED",
+        "REJECTED",
+        "CANCELLED"
+      ],
+      "transitions": [
+        {
+          "from": "OPEN",
+          "to": "APPROVED",
+          "trigger": "decideReviewTask(APPROVE)",
+          "guard": "人类主体且contentDigest一致"
+        },
+        {
+          "from": "OPEN",
+          "to": "CHANGES_REQUESTED",
+          "trigger": "decideReviewTask(REQUEST_CHANGES)",
+          "guard": "人类主体且contentDigest一致"
+        },
+        {
+          "from": "OPEN",
+          "to": "REJECTED",
+          "trigger": "decideReviewTask(REJECT)",
+          "guard": "人类主体且contentDigest一致"
+        },
+        {
+          "from": "OPEN",
+          "to": "IN_PROGRESS",
+          "trigger": "decideReviewTask(APPROVE)",
+          "guard": "FOUR_EYES 部分批准：approvals 未达 minApprovers"
+        },
+        {
+          "from": "IN_PROGRESS",
+          "to": "APPROVED",
+          "trigger": "decideReviewTask(APPROVE)",
+          "guard": "不同审批人批准使 approvals 达 minApprovers；同一审批人二次批准 409 FOUR_EYES_SAME_APPROVER"
+        },
+        {
+          "from": "OPEN",
+          "to": "CANCELLED",
+          "trigger": "上游发布取代下游失效",
+          "guard": "引用版本级联 STALE，任务未决则 CANCELLED"
+        }
+      ],
+      "terminal_states": {
+        "APPROVED": true,
+        "CHANGES_REQUESTED": true,
+        "REJECTED": true,
+        "CANCELLED": true
+      },
+      "note": "批次六十五扩展：FOUR_EYES 部分批准与级联取消；EXPIRED 未实现不声明"
+    },
+    {
+      "sm_id": "SM-ASSETVERSION",
+      "entity_id": "ENT-ASSETVERSION",
+      "initial_state": "PENDING_REVIEW",
+      "states": [
+        "DRAFT",
+        "PENDING_REVIEW",
+        "APPROVED",
+        "PUBLISHED",
+        "STALE"
+      ],
+      "transitions": [
+        {
+          "from": "PENDING_REVIEW",
+          "to": "APPROVED",
+          "trigger": "decideReviewTask(APPROVE)",
+          "guard": "人工主体且 contentDigest 一致；FOUR_EYES 需达 minApprovers"
+        },
+        {
+          "from": "PENDING_REVIEW",
+          "to": "DRAFT",
+          "trigger": "decideReviewTask(REQUEST_CHANGES|REJECT)",
+          "guard": "退回不要求双人"
+        },
+        {
+          "from": "APPROVED",
+          "to": "PUBLISHED",
+          "trigger": "publish{Strategy|Plan|TestCase}Version",
+          "guard": "仅 APPROVED 可发布（否则 409 ASSET_NOT_APPROVED）；幂等重放先于状态校验"
+        },
+        {
+          "from": "PUBLISHED",
+          "to": "STALE",
+          "trigger": "同资产新版本发布取代 / 上游发布取代",
+          "guard": "旧 PUBLISHED 版本转 STALE；下游计划版本级联失效"
+        },
+        {
+          "from": "DRAFT",
+          "to": "PENDING_REVIEW",
+          "trigger": "createXxxVersion 提交新版本",
+          "guard": "版本不可变，新版本自动建审核任务"
+        }
+      ],
+      "terminal_states": {
+        "STALE": true
+      },
+      "note": "WP-05 切片一/三实现口径：发布仅 APPROVED 可用；正式执行只选 PUBLISHED 版本"
+    },
+    {
+      "sm_id": "SM-TASKCARD",
+      "entity_id": "ENT-TASKCARD",
+      "initial_state": "SUBMITTED",
+      "states": [
+        "SUBMITTED",
+        "ACTIVE",
+        "SUPERSEDED"
+      ],
+      "transitions": [
+        {
+          "from": "SUBMITTED",
+          "to": "ACTIVE",
+          "trigger": "decideAgentPlan(APPROVE)",
+          "guard": "计划批准联动"
+        },
+        {
+          "from": "SUBMITTED",
+          "to": "SUPERSEDED",
+          "trigger": "同工作项新任务卡提交",
+          "guard": "不可静默扩展，变更走新版本"
+        },
+        {
+          "from": "ACTIVE",
+          "to": "SUPERSEDED",
+          "trigger": "同工作项新任务卡提交（旧卡 ACTIVE 亦被取代）",
+          "guard": "不可静默扩展，变更走新版本"
+        }
+      ],
+      "terminal_states": {
+        "SUPERSEDED": true
+      },
+      "note": "WP-03 切片三实现口径：提交即 SUBMITTED"
+    },
+    {
+      "sm_id": "SM-AGENTPLAN",
+      "entity_id": "ENT-AGENTPLAN",
+      "initial_state": "PENDING_APPROVAL",
+      "states": [
+        "PENDING_APPROVAL",
+        "APPROVED",
+        "REJECTED",
+        "SUPERSEDED"
+      ],
+      "transitions": [
+        {
+          "from": "PENDING_APPROVAL",
+          "to": "APPROVED",
+          "trigger": "decideAgentPlan(APPROVE)",
+          "guard": "expectedContentDigest 对账，漂移 409 STALE_ARTIFACT_VERSION"
+        },
+        {
+          "from": "PENDING_APPROVAL",
+          "to": "REJECTED",
+          "trigger": "decideAgentPlan(REJECT)",
+          "guard": "人工裁决只追加"
+        },
+        {
+          "from": "PENDING_APPROVAL",
+          "to": "SUPERSEDED",
+          "trigger": "同工作项新版本计划提交",
+          "guard": "APPROVED/REJECTED 保留审计"
+        }
+      ],
+      "terminal_states": {
+        "APPROVED": true,
+        "REJECTED": true,
+        "SUPERSEDED": true
+      },
+      "note": "WP-03 切片三实现口径"
+    },
+    {
+      "sm_id": "SM-CLARIFICATION",
+      "entity_id": "ENT-CLARIFICATION",
+      "initial_state": "OPEN",
+      "states": [
+        "OPEN",
+        "ANSWERED"
+      ],
+      "transitions": [
+        {
+          "from": "OPEN",
+          "to": "ANSWERED",
+          "trigger": "respondClarification",
+          "guard": "仅 USER；重复答复 409 CLARIFICATION_ALREADY_ANSWERED；evidenceClass 钉死 CONFIRMED"
+        }
+      ],
+      "terminal_states": {
+        "ANSWERED": true
+      },
+      "note": "WP-03 切片二实现口径：提出后 Session RUNNING→BLOCKED，全部答复后回 RUNNING"
+    },
+    {
+      "sm_id": "SM-AGENTSESSION",
+      "entity_id": "ENT-AGENTSESSION",
+      "initial_state": "RUNNING",
+      "states": [
+        "RUNNING",
+        "BLOCKED",
+        "PAUSED",
+        "SUCCEEDED",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "transitions": [
+        {
+          "from": "RUNNING",
+          "to": "BLOCKED",
+          "trigger": "澄清提出 / 审核未决",
+          "guard": "无其他 OPEN 澄清并全部答复后回 RUNNING"
+        },
+        {
+          "from": "RUNNING",
+          "to": "PAUSED",
+          "trigger": "commandAgentSession(PAUSE)",
+          "guard": "仅 USER；到安全点生效"
+        },
+        {
+          "from": "PAUSED",
+          "to": "RUNNING",
+          "trigger": "commandAgentSession(RESUME)",
+          "guard": "恢复前重新预检"
+        },
+        {
+          "from": "RUNNING",
+          "to": "SUCCEEDED",
+          "trigger": "审核全部通过收敛",
+          "guard": "human gate 完成"
+        },
+        {
+          "from": "RUNNING",
+          "to": "FAILED",
+          "trigger": "审核 REJECT 收敛",
+          "guard": "产出物回草稿态"
+        },
+        {
+          "from": "RUNNING",
+          "to": "CANCELLED",
+          "trigger": "commandAgentSession(CANCEL)",
+          "guard": "仅 USER；终态后非 RETRY 命令 409"
+        },
+        {
+          "from": "BLOCKED",
+          "to": "RUNNING",
+          "trigger": "澄清全部答复（无其他 OPEN 澄清）",
+          "guard": "respondClarification 解除阻塞"
+        },
+        {
+          "from": "BLOCKED",
+          "to": "SUCCEEDED",
+          "trigger": "审核全部通过收敛",
+          "guard": "human gate 完成"
+        }
+      ],
+      "terminal_states": {
+        "SUCCEEDED": true,
+        "FAILED": true,
+        "CANCELLED": true
+      },
+      "note": "WP-04 切片一实现口径：PAUSE/RESUME/CANCEL 已实装，RETRY/AUTHORIZE/REVOKE 运行时 422"
+    }
+  ],
+  "interface_contracts": [
+    {
+      "contract_id": "IFC-AUTH-001",
+      "endpoint": "/auth/status",
+      "method": "GET",
+      "operationId": "getLocalAuthStatus"
+    },
+    {
+      "contract_id": "IFC-AUTH-002",
+      "endpoint": "/auth/setup",
+      "method": "POST",
+      "operationId": "setupLocalAdmin"
+    },
+    {
+      "contract_id": "IFC-AUTH-003",
+      "endpoint": "/auth/login",
+      "method": "POST",
+      "operationId": "loginLocalUser"
+    },
+    {
+      "contract_id": "IFC-AUTH-004",
+      "endpoint": "/auth/me",
+      "method": "GET",
+      "operationId": "getCurrentLocalUser"
+    },
+    {
+      "contract_id": "IFC-AUTH-005",
+      "endpoint": "/auth/logout",
+      "method": "POST",
+      "operationId": "logoutLocalUser"
+    },
+    {
+      "contract_id": "IFC-WI-001",
+      "endpoint": "/work-items",
+      "method": "GET",
+      "operationId": "listWorkItems"
+    },
+    {
+      "contract_id": "IFC-WI-002",
+      "endpoint": "/work-items",
+      "method": "POST",
+      "operationId": "createWorkItem"
+    },
+    {
+      "contract_id": "IFC-WI-003",
+      "endpoint": "/work-items/sla-overview",
+      "method": "GET",
+      "operationId": "listWorkItemSlaOverview"
+    },
+    {
+      "contract_id": "IFC-WI-004",
+      "endpoint": "/work-items/{workItemId}",
+      "method": "GET",
+      "operationId": "getWorkItem"
+    },
+    {
+      "contract_id": "IFC-WI-005",
+      "endpoint": "/work-items/{workItemId}/assign",
+      "method": "POST",
+      "operationId": "assignWorkItem"
+    },
+    {
+      "contract_id": "IFC-WI-006",
+      "endpoint": "/work-items/{workItemId}/runs",
+      "method": "GET",
+      "operationId": "listWorkItemRuns"
+    },
+    {
+      "contract_id": "IFC-WI-007",
+      "endpoint": "/work-items/{workItemId}/transitions",
+      "method": "POST",
+      "operationId": "transitionWorkItem"
+    },
+    {
+      "contract_id": "IFC-RT-001",
+      "endpoint": "/review-tasks",
+      "method": "GET",
+      "operationId": "listReviewTasks"
+    },
+    {
+      "contract_id": "IFC-RT-002",
+      "endpoint": "/review-tasks",
+      "method": "POST",
+      "operationId": "createReviewTask"
+    },
+    {
+      "contract_id": "IFC-RT-003",
+      "endpoint": "/review-tasks/{reviewTaskId}",
+      "method": "GET",
+      "operationId": "getReviewTask"
+    },
+    {
+      "contract_id": "IFC-RT-004",
+      "endpoint": "/review-tasks/{reviewTaskId}/artifact",
+      "method": "GET",
+      "operationId": "getReviewArtifact"
+    },
+    {
+      "contract_id": "IFC-RT-005",
+      "endpoint": "/review-tasks/{reviewTaskId}/artifact/diff",
+      "method": "GET",
+      "operationId": "getReviewArtifactDiff"
+    },
+    {
+      "contract_id": "IFC-RT-006",
+      "endpoint": "/review-tasks/{reviewTaskId}/decisions",
+      "method": "POST",
+      "operationId": "decideReviewTask"
+    },
+    {
+      "contract_id": "IFC-KN-001",
+      "endpoint": "/knowledge/entries",
+      "method": "GET",
+      "operationId": "listKnowledgeEntries"
+    },
+    {
+      "contract_id": "IFC-KN-002",
+      "endpoint": "/knowledge/entries",
+      "method": "POST",
+      "operationId": "createKnowledgeEntry"
+    },
+    {
+      "contract_id": "IFC-KN-003",
+      "endpoint": "/knowledge/requirements",
+      "method": "GET",
+      "operationId": "listRequirementDocuments"
+    },
+    {
+      "contract_id": "IFC-KN-004",
+      "endpoint": "/knowledge/requirements",
+      "method": "POST",
+      "operationId": "createRequirementDocument"
+    },
+    {
+      "contract_id": "IFC-KN-005",
+      "endpoint": "/knowledge/requirements/{requirementId}/versions",
+      "method": "POST",
+      "operationId": "createRequirementDocumentVersion"
+    },
+    {
+      "contract_id": "IFC-TP-001",
+      "endpoint": "/test-strategies",
+      "method": "GET",
+      "operationId": "listTestStrategies"
+    },
+    {
+      "contract_id": "IFC-TP-002",
+      "endpoint": "/test-strategies/{testStrategyId}/versions",
+      "method": "POST",
+      "operationId": "createTestStrategyVersion"
+    },
+    {
+      "contract_id": "IFC-TP-003",
+      "endpoint": "/test-plans",
+      "method": "GET",
+      "operationId": "listTestPlans"
+    },
+    {
+      "contract_id": "IFC-TP-004",
+      "endpoint": "/test-plans/{testPlanId}/versions",
+      "method": "POST",
+      "operationId": "createTestPlanVersion"
+    },
+    {
+      "contract_id": "IFC-TP-005",
+      "endpoint": "/test-cases",
+      "method": "GET",
+      "operationId": "listTestCases"
+    },
+    {
+      "contract_id": "IFC-TP-006",
+      "endpoint": "/test-cases/{testCaseId}/versions",
+      "method": "GET",
+      "operationId": "listTestCaseVersions"
+    },
+    {
+      "contract_id": "IFC-EX-001",
+      "endpoint": "/execution-plans",
+      "method": "GET",
+      "operationId": "listExecutionPlans"
+    },
+    {
+      "contract_id": "IFC-EX-002",
+      "endpoint": "/execution-plans",
+      "method": "POST",
+      "operationId": "createExecutionPlan"
+    },
+    {
+      "contract_id": "IFC-EX-003",
+      "endpoint": "/execution-plans/{executionPlanId}/runs",
+      "method": "POST",
+      "operationId": "startExecutionPlan"
+    },
+    {
+      "contract_id": "IFC-EX-004",
+      "endpoint": "/execution-tasks",
+      "method": "GET",
+      "operationId": "listExecutionTasks"
+    },
+    {
+      "contract_id": "IFC-EX-005",
+      "endpoint": "/execution-results",
+      "method": "GET",
+      "operationId": "listExecutionResults"
+    },
+    {
+      "contract_id": "IFC-QA-001",
+      "endpoint": "/quality/reports",
+      "method": "GET",
+      "operationId": "listTestReports"
+    },
+    {
+      "contract_id": "IFC-QA-002",
+      "endpoint": "/quality/reports",
+      "method": "POST",
+      "operationId": "createTestReport"
+    },
+    {
+      "contract_id": "IFC-QA-003",
+      "endpoint": "/quality/reports/{testReportId}/versions",
+      "method": "GET",
+      "operationId": "listTestReportVersions"
+    },
+    {
+      "contract_id": "IFC-QA-004",
+      "endpoint": "/quality/reports/{testReportId}/versions",
+      "method": "POST",
+      "operationId": "createTestReportVersion"
+    },
+    {
+      "contract_id": "IFC-QA-005",
+      "endpoint": "/quality/defects",
+      "method": "GET",
+      "operationId": "listDefects"
+    },
+    {
+      "contract_id": "IFC-QA-006",
+      "endpoint": "/quality/defects",
+      "method": "POST",
+      "operationId": "createDefect"
+    },
+    {
+      "contract_id": "IFC-QA-007",
+      "endpoint": "/quality/defects/{defectId}/versions",
+      "method": "POST",
+      "operationId": "createDefectVersion"
+    },
+    {
+      "contract_id": "IFC-QA-008",
+      "endpoint": "/quality/defects/{defectId}/sync-attempts",
+      "method": "POST",
+      "operationId": "createDefectSyncAttempt"
+    },
+    {
+      "contract_id": "IFC-QA-009",
+      "endpoint": "/quality/failure-clusters",
+      "method": "GET",
+      "operationId": "listFailureClusters"
+    },
+    {
+      "contract_id": "IFC-QA-010",
+      "endpoint": "/quality/coverage-reports",
+      "method": "GET",
+      "operationId": "listCoverageReports"
+    },
+    {
+      "contract_id": "IFC-QA-011",
+      "endpoint": "/quality/coverage-reports",
+      "method": "POST",
+      "operationId": "createCoverageReport"
+    },
+    {
+      "contract_id": "IFC-QA-012",
+      "endpoint": "/quality/result-analyses",
+      "method": "GET",
+      "operationId": "listResultAnalyses"
+    },
+    {
+      "contract_id": "IFC-QA-013",
+      "endpoint": "/quality/result-analyses",
+      "method": "POST",
+      "operationId": "createResultAnalysis"
+    },
+    {
+      "contract_id": "IFC-AI-001",
+      "endpoint": "/ai/provider/status",
+      "method": "GET",
+      "operationId": "getProviderStatus"
+    },
+    {
+      "contract_id": "IFC-AI-002",
+      "endpoint": "/ai/sessions",
+      "method": "GET",
+      "operationId": "listAgentSessions"
+    },
+    {
+      "contract_id": "IFC-AI-003",
+      "endpoint": "/ai/sessions",
+      "method": "POST",
+      "operationId": "createAgentSession"
+    },
+    {
+      "contract_id": "IFC-AI-004",
+      "endpoint": "/ai/sessions/{agentSessionId}",
+      "method": "GET",
+      "operationId": "getAgentSession"
+    },
+    {
+      "contract_id": "IFC-AI-005",
+      "endpoint": "/ai/sessions/{agentSessionId}/trace",
+      "method": "GET",
+      "operationId": "getAgentSessionTrace"
+    },
+    {
+      "contract_id": "IFC-PL-001",
+      "endpoint": "/platform/workspaces/{workspaceId}/environments",
+      "method": "GET",
+      "operationId": "listEnvironments"
+    },
+    {
+      "contract_id": "IFC-PL-002",
+      "endpoint": "/platform/workspaces/{workspaceId}/environments",
+      "method": "POST",
+      "operationId": "createEnvironment"
+    },
+    {
+      "contract_id": "IFC-OB-001",
+      "endpoint": "/observability/events",
+      "method": "GET",
+      "operationId": "listEvents"
+    },
+    {
+      "contract_id": "IFC-OB-002",
+      "endpoint": "/observability/metrics",
+      "method": "GET",
+      "operationId": "listMetrics"
+    },
+    {
+      "contract_id": "IFC-PL-003",
+      "endpoint": "/workspaces",
+      "method": "GET",
+      "operationId": "listWorkspaces"
+    },
+    {
+      "contract_id": "IFC-PL-004",
+      "endpoint": "/workspaces/{workspaceId}/releases",
+      "method": "GET",
+      "operationId": "listReleases"
+    },
+    {
+      "contract_id": "IFC-PL-005",
+      "endpoint": "/auth/switch-workspace",
+      "method": "POST",
+      "operationId": "switchLocalWorkspace"
+    },
+    {
+      "contract_id": "IFC-PL-006",
+      "endpoint": "/workspaces/{workspaceId}/context-projection",
+      "method": "GET",
+      "operationId": "getProjectContextProjection"
+    },
+    {
+      "contract_id": "IFC-PL-007",
+      "endpoint": "/workspaces/{workspaceId}/pin",
+      "method": "POST",
+      "operationId": "setWorkspacePin"
+    },
+    {
+      "contract_id": "IFC-PL-008",
+      "endpoint": "/workspaces/{workspaceId}/releases/{releaseId}/archive",
+      "method": "POST",
+      "operationId": "archiveRelease"
+    },
+    {
+      "contract_id": "IFC-COL-001",
+      "endpoint": "/conversations",
+      "method": "GET",
+      "operationId": "listConversations"
+    },
+    {
+      "contract_id": "IFC-COL-002",
+      "endpoint": "/conversations",
+      "method": "POST",
+      "operationId": "createConversation"
+    },
+    {
+      "contract_id": "IFC-COL-003",
+      "endpoint": "/conversations/{conversationId}/messages",
+      "method": "GET",
+      "operationId": "listConversationMessages"
+    },
+    {
+      "contract_id": "IFC-COL-004",
+      "endpoint": "/conversations/{conversationId}/messages",
+      "method": "POST",
+      "operationId": "createConversationMessage"
+    },
+    {
+      "contract_id": "IFC-COL-005",
+      "endpoint": "/ai/sessions/{agentSessionId}/clarifications",
+      "method": "GET",
+      "operationId": "listClarificationRequests"
+    },
+    {
+      "contract_id": "IFC-COL-006",
+      "endpoint": "/clarifications/{clarificationId}/responses",
+      "method": "POST",
+      "operationId": "respondClarification"
+    },
+    {
+      "contract_id": "IFC-COL-007",
+      "endpoint": "/work-items/{workItemId}/task-cards",
+      "method": "POST",
+      "operationId": "createTaskCard"
+    },
+    {
+      "contract_id": "IFC-COL-008",
+      "endpoint": "/work-items/{workItemId}/task-cards",
+      "method": "GET",
+      "operationId": "listTaskCards"
+    },
+    {
+      "contract_id": "IFC-COL-009",
+      "endpoint": "/work-items/{workItemId}/agent-plans",
+      "method": "POST",
+      "operationId": "createAgentPlan"
+    },
+    {
+      "contract_id": "IFC-COL-010",
+      "endpoint": "/work-items/{workItemId}/agent-plans",
+      "method": "GET",
+      "operationId": "listAgentPlans"
+    },
+    {
+      "contract_id": "IFC-COL-011",
+      "endpoint": "/agent-plans/{agentPlanId}/decisions",
+      "method": "POST",
+      "operationId": "decideAgentPlan"
+    },
+    {
+      "contract_id": "IFC-RC-001",
+      "endpoint": "/ai/sessions/{agentSessionId}/commands",
+      "method": "POST",
+      "operationId": "commandAgentSession"
+    },
+    {
+      "contract_id": "IFC-RC-002",
+      "endpoint": "/execution-tasks/{executionTaskId}/commands",
+      "method": "POST",
+      "operationId": "commandExecutionTask"
+    },
+    {
+      "contract_id": "IFC-RC-003",
+      "endpoint": "/run-commands/{runCommandId}",
+      "method": "GET",
+      "operationId": "getRunCommandReceipt"
+    },
+    {
+      "contract_id": "IFC-RC-004",
+      "endpoint": "/work-items/{workItemId}/authorizations",
+      "method": "GET",
+      "operationId": "listRuntimeAuthorizations"
+    },
+    {
+      "contract_id": "IFC-RC-005",
+      "endpoint": "/work-items/{workItemId}/authorizations",
+      "method": "POST",
+      "operationId": "createRuntimeAuthorization"
+    },
+    {
+      "contract_id": "IFC-RC-006",
+      "endpoint": "/work-items/{workItemId}/budgets",
+      "method": "GET",
+      "operationId": "getWorkItemBudget"
+    },
+    {
+      "contract_id": "IFC-RC-007",
+      "endpoint": "/work-items/{workItemId}/budgets",
+      "method": "POST",
+      "operationId": "updateWorkItemBudget"
+    },
+    {
+      "contract_id": "IFC-RC-008",
+      "endpoint": "/runs/{targetType}/{targetId}/checkpoints",
+      "method": "GET",
+      "operationId": "listRunCheckpoints"
+    },
+    {
+      "contract_id": "IFC-PUB-001",
+      "endpoint": "/test-strategies/{testStrategyId}/versions/{versionId}/publish",
+      "method": "POST",
+      "operationId": "publishTestStrategyVersion"
+    },
+    {
+      "contract_id": "IFC-PUB-002",
+      "endpoint": "/test-plans/{testPlanId}/versions/{versionId}/publish",
+      "method": "POST",
+      "operationId": "publishTestPlanVersion"
+    },
+    {
+      "contract_id": "IFC-PUB-003",
+      "endpoint": "/test-cases/{testCaseId}/versions/{versionId}/publish",
+      "method": "POST",
+      "operationId": "publishTestCaseVersion"
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "C-001",
+      "target": "ENT-WORKITEM.title",
+      "expression": "length <= 256",
+      "source_trace": "32-API规范.yaml WorkItem.title maxLength"
+    },
+    {
+      "constraint_id": "C-002",
+      "target": "LocalSetupCreate.password",
+      "expression": "12 <= length <= 256",
+      "source_trace": "32-API规范.yaml LocalSetupCreate minLength"
+    },
+    {
+      "constraint_id": "C-003",
+      "target": "ListRequest.pageSize",
+      "expression": "1 <= value <= 200",
+      "source_trace": "32-API规范.yaml PageSizeParam"
+    },
+    {
+      "constraint_id": "C-004",
+      "target": "WorkItemSla.dueAt",
+      "expression": "createdAt + (P0=24h, P1=48h, P2=72h)",
+      "source_trace": "32-API规范.yaml sla-overview description"
+    },
+    {
+      "constraint_id": "C-005",
+      "target": "Idempotency-Key",
+      "expression": "16 <= length <= 128",
+      "source_trace": "32-API规范.yaml IdempotencyKey"
+    },
+    {
+      "constraint_id": "C-006",
+      "target": "AuthLogin.attempts",
+      "expression": "max 5 failures per 60s sliding window",
+      "source_trace": "auth_service.py LOGIN_MAX_ATTEMPTS/LOGIN_WINDOW_SECONDS"
+    }
+  ]
+}

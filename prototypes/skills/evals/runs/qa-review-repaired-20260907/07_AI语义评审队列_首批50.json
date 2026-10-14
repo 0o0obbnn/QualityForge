@@ -1,0 +1,1127 @@
+{
+  "meta": {
+    "artifact_kind": "requirement_review_resolution_queue",
+    "schema_version": "1.0"
+  },
+  "review_id": "RQR-C8D1A744E3",
+  "resolutions": [
+    {
+      "finding_id": "RQF-673770EB65A8",
+      "code": "MISSING_REFERENCED_ARTIFACT",
+      "severity": "REJECT",
+      "question": "请提供或明确「角色权限表」的权威来源。",
+      "recommendation": "补充来源后重新执行资料依赖评审，再将结果交给功能图谱。",
+      "current_evidence": "需求引用了「角色权限表」，但在本次评审来源中未完成定位。",
+      "current_source_refs": [
+        "SRC-89CCC3739EA4:L4260"
+      ],
+      "decision": null,
+      "resolution": null,
+      "source_refs": [],
+      "assessment_updates": []
+    },
+    {
+      "finding_id": "RQF-C45AAE87305C",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "question": "L4399 定性词「定期」分别如何量化，适用于哪些对象与环境？",
+      "recommendation": "补充可判定的术语定义、适用范围和阈值并将其纳入验收测试。",
+      "current_evidence": "定期安全审计，支持等保三级测评",
+      "current_source_refs": [
+        "SRC-89CCC3739EA4:L4399"
+      ],
+      "decision": null,
+      "resolution": null,
+      "source_refs": [],
+      "assessment_updates": [
+        {
+          "requirement_id": "REQ-01722CD821",
+          "dimension": "ambiguity",
+          "current_status": "FINDING",
+          "status": null,
+          "rationale": null
+        }
+      ]
+    },
+    {
+      "finding_id": "RQF-EFF56F1DC75D",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "question": "L4411 定性词「可移植性、平滑、开放性、未来、良好」分别如何量化，适用于哪些对象与环境？",
+      "recommendation": "补充可判定的术语定义、适用范围和阈值并将其纳入验收测试。",
+      "current_evidence": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "current_source_refs": [
+        "SRC-89CCC3739EA4:L4411"
+      ],
+      "decision": null,
+      "resolution": null,
+      "source_refs": [],
+      "assessment_updates": [
+        {
+          "requirement_id": "REQ-026E0E4066",
+          "dimension": "ambiguity",
+          "current_status": "FINDING",
+          "status": null,
+          "rationale": null
+        }
+      ]
+    },
+    {
+      "finding_id": "RQF-381FD91BE167",
+      "code": "MISSING_REQUIRED_ACTOR",
+      "severity": "REVIEW",
+      "question": "查询（L3016）：哪个角色可以执行该行为，哪些角色必须被拒绝？",
+      "recommendation": "在需求中补充执行角色及其权限边界并给出可验证示例。",
+      "current_evidence": "已检查该最小功能的来源证据及结构化属性，未找到执行角色及其权限边界",
+      "current_source_refs": [
+        "SRC-89CCC3739EA4:L3016"
+      ],
+      "decision": null,
+      "resolution": null,
+      "source_refs": [],
+      "assessment_updates": [
+        {
+          "requirement_id": "REQ-0782200B33",
+          "dimension": "role_permission",
+          "current_status": "FINDING",
+          "status": null,
+          "rationale": null
+        }
+      ]
+    },
+    {
+      "finding_id": "RQF-3E35F643A7A7",
+      "code": "INTRA_DOCUMENT_CONFLICT",
+      "severity": "REJECT",
+      "question": "指标「RTO」在文中存在多个不同数值口径，哪一侧是正式验收口径？",
+      "recommendation": "由需求负责人裁定唯一口径并同步全部出现位置。",
+      "current_evidence": "L4333：≤15分钟；L4339：≤30分钟；L4339：≤10分钟",
+      "current_source_refs": [
+        "SRC-89CCC3739EA4:L4333",
+        "SRC-89CCC3739EA4:L4339",
+        "SRC-89CCC3739EA4:L4339"
+      ],
+      "decision": null,
+      "resolution": null,
+      "source_refs": [],
+      "assessment_updates": [
+        {
+          "requirement_id": "REQ-0A79839B27",
+          "dimension": "consistency",
+          "current_status": "FINDING",
+          "status": null,
+          "rationale": null
+        },
+        {
+          "requirement_id": "REQ-4B445E3FF6",
+          "dimension": "consistency",
+          "current_status": "FINDING",
+          "status": null,
+          "rationale": null
+        }
+      ]
+    }
+  ],
+  "assessment_reviews": [
+    {
+      "assessment_id": "ASM-8CECD70F75",
+      "requirement_id": "REQ-01722CD821",
+      "requirement_title": "安全需求 / 日志管理与审计 / 定期安全审计，支持等保三级测评",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4399",
+          "quote": "定期安全审计，支持等保三级测评"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-E7CA3C848E",
+      "requirement_id": "REQ-01722CD821",
+      "requirement_title": "安全需求 / 日志管理与审计 / 定期安全审计，支持等保三级测评",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4399",
+          "quote": "定期安全审计，支持等保三级测评"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-11C841B4CB",
+      "requirement_id": "REQ-01722CD821",
+      "requirement_title": "安全需求 / 日志管理与审计 / 定期安全审计，支持等保三级测评",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4399",
+          "quote": "定期安全审计，支持等保三级测评"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-80A05E2376",
+      "requirement_id": "REQ-01722CD821",
+      "requirement_title": "安全需求 / 日志管理与审计 / 定期安全审计，支持等保三级测评",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4399",
+          "quote": "定期安全审计，支持等保三级测评"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-1910CDE73E",
+      "requirement_id": "REQ-01722CD821",
+      "requirement_title": "安全需求 / 日志管理与审计 / 定期安全审计，支持等保三级测评",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4399",
+          "quote": "定期安全审计，支持等保三级测评"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-76380C3103",
+      "requirement_id": "REQ-026E0E4066",
+      "requirement_title": "兼容性 / 系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4411",
+          "quote": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-F0B982A505",
+      "requirement_id": "REQ-026E0E4066",
+      "requirement_title": "兼容性 / 系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4411",
+          "quote": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C14530CDCA",
+      "requirement_id": "REQ-026E0E4066",
+      "requirement_title": "兼容性 / 系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4411",
+          "quote": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-5773F7A812",
+      "requirement_id": "REQ-026E0E4066",
+      "requirement_title": "兼容性 / 系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4411",
+          "quote": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-51B7762B45",
+      "requirement_id": "REQ-026E0E4066",
+      "requirement_title": "兼容性 / 系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4411",
+          "quote": "系统应具备良好的开放性与可移植性，支持与现有及未来业务系统平滑对接，满足国产化替代要求。"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-586C97AD31",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-0CD52D3706",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-48B2754715",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C56245E67B",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C34FB2123E",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-EF9D109D80",
+      "requirement_id": "REQ-043A734BEB",
+      "requirement_title": "安全需求 / 日志管理与审计 / 日志数据加密存储，分级存储策略",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4395",
+          "quote": "日志数据加密存储，分级存储策略"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-19E1EBB2AF",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C981F2F1D9",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-B0D0E94DDC",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-CEA1242D50",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-9D626D6903",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-181C172F39",
+      "requirement_id": "REQ-044BAA3BC1",
+      "requirement_title": "停用",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2015",
+          "quote": "停用"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-5D93FF5432",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-CB3EA4F70F",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-4ADADD8B82",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-2BBC37F5B7",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-7DB297BBBC",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-4E0C96DFB9",
+      "requirement_id": "REQ-060F8DB2C9",
+      "requirement_title": "兼容性 / 接口兼容性 / 提供标准RESTful API，支持JSON格式",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4427",
+          "quote": "提供标准RESTful API，支持JSON格式"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C61B999055",
+      "requirement_id": "REQ-0782200B33",
+      "requirement_title": "查询",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "查询"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "月份"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "机构名称"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "法人标识代码"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "会员职务"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "有效调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "基础产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "升级产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "数据调用量系数"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "创建时间"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "更新时间"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-BA3A7B5559",
+      "requirement_id": "REQ-0782200B33",
+      "requirement_title": "查询",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "查询"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "月份"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "机构名称"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "法人标识代码"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "会员职务"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "有效调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "基础产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "升级产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "数据调用量系数"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "创建时间"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "更新时间"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C0E86B2AC2",
+      "requirement_id": "REQ-0782200B33",
+      "requirement_title": "查询",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "查询"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "月份"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "机构名称"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "法人标识代码"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "会员职务"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "有效调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "基础产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "升级产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "数据调用量系数"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "创建时间"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "更新时间"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-8087087F30",
+      "requirement_id": "REQ-0782200B33",
+      "requirement_title": "查询",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "查询"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "月份"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "机构名称"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "法人标识代码"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "会员职务"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "有效调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "基础产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "升级产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "数据调用量系数"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "创建时间"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "更新时间"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-77A8C1AB95",
+      "requirement_id": "REQ-0782200B33",
+      "requirement_title": "查询",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "查询"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "月份"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "机构名称"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "法人标识代码"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "会员职务"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "有效调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "基础产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "升级产品调用量"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "数据调用量系数"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "创建时间"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L3016",
+          "quote": "更新时间"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-81DB6FA01B",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-E080C402A9",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-E36E3EE26E",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "consistency",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-299D501FF2",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-2C3F778D24",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-0E5B7E5A46",
+      "requirement_id": "REQ-087A0F8DA0",
+      "requirement_title": "性能需求 / 查询性能 / 查询成功率：≥99.9%",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4315",
+          "quote": "查询成功率：≥99.9%"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-DAE1591699",
+      "requirement_id": "REQ-0A79839B27",
+      "requirement_title": "性能需求 / 系统稳定性 / 故障恢复时间（RTO）：≤15分钟",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4333",
+          "quote": "故障恢复时间（RTO）：≤15分钟"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-EC9CE0448E",
+      "requirement_id": "REQ-0A79839B27",
+      "requirement_title": "性能需求 / 系统稳定性 / 故障恢复时间（RTO）：≤15分钟",
+      "dimension": "completeness",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4333",
+          "quote": "故障恢复时间（RTO）：≤15分钟"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-B9761308C9",
+      "requirement_id": "REQ-0A79839B27",
+      "requirement_title": "性能需求 / 系统稳定性 / 故障恢复时间（RTO）：≤15分钟",
+      "dimension": "nfr_measurability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4333",
+          "quote": "故障恢复时间（RTO）：≤15分钟"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-25F048F68C",
+      "requirement_id": "REQ-0A79839B27",
+      "requirement_title": "性能需求 / 系统稳定性 / 故障恢复时间（RTO）：≤15分钟",
+      "dimension": "role_permission",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4333",
+          "quote": "故障恢复时间（RTO）：≤15分钟"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-1CFDAFEBFA",
+      "requirement_id": "REQ-0A79839B27",
+      "requirement_title": "性能需求 / 系统稳定性 / 故障恢复时间（RTO）：≤15分钟",
+      "dimension": "testability",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L4333",
+          "quote": "故障恢复时间（RTO）：≤15分钟"
+        }
+      ]
+    },
+    {
+      "assessment_id": "ASM-C075E222F7",
+      "requirement_id": "REQ-0C7799E6ED",
+      "requirement_title": "编辑",
+      "dimension": "ambiguity",
+      "status": null,
+      "rationale": null,
+      "finding_ids": [],
+      "source_refs": [
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2630",
+          "quote": "编辑"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2407",
+          "quote": "编辑"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2637",
+          "quote": "编辑"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2639",
+          "quote": "编辑"
+        },
+        {
+          "source_id": "SRC-89CCC3739EA4",
+          "locator": "L2641",
+          "quote": "编辑"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "open_finding_count": 5,
+    "not_reviewed_assessment_count": 45,
+    "reject_count": 2,
+    "review_count": 3,
+    "selected_job_count": 50,
+    "matching_job_count": 1063,
+    "offset": 0,
+    "limit": 50
+  }
+}

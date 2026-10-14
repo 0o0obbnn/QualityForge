@@ -1,0 +1,23 @@
+{
+  "review_id": "qg-iprj-20260811-neg1",
+  "source_ids": [
+    "iprj-prd.md"
+  ],
+  "assessments": [
+    {
+      "dimension": "testability",
+      "status": "CLEAR",
+      "rationale": "需求全部可测。"
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-NEG-1",
+      "code": "NOT_A_REAL_CODE",
+      "severity": "REJECT",
+      "source_refs": ["some-undeclared-source.md"],
+      "evidence": "用非法 code 和未声明来源，应被门禁拦截。",
+      "question": ""
+    }
+  ]
+}

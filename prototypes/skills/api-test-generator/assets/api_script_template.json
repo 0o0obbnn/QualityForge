@@ -1,0 +1,9 @@
+{
+  "$comment": "API 测试脚本契约。由 scripts/api_check.py 校验。",
+  "case_refs": ["已绑定的 case id"],
+  "expected_results": [{"expected_result_id": "", "description": ""}],
+  "fixture_deps": ["本脚本依赖的 DAG node id"],
+  "asserts": [{"expected_result_id": "", "assertion": ""}],
+  "code": "生成的 pytest/httpx 代码",
+  "$codes": ["HARDCODED_ENV", "HARDCODED_SECRET", "MISSING_FIXTURE_DECL", "UNCOVERED_EXPECTED_RESULT"]
+}

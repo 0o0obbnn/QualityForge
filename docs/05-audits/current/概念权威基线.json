@@ -1,0 +1,70 @@
+{
+  "_meta": {
+    "描述": "QualityForge 需求审计 L1 机器扫描的概念权威基线",
+    "权威来源": ["03-术语表Glossary.md", "04-核心领域模型.md", "21-AI介入点降级矩阵.md"],
+    "生成日期": "2026-07-30",
+    "用途": "作为术语/状态机/字段一致性的对照基准。扫描时若被审文档与此基线冲突，记为缺陷。"
+  },
+  "modules": [
+    {"规范名": "Workspace", "废弃名": ["Workbench", "项目空间", "Project Container"]},
+    {"规范名": "Test Design", "废弃名": []},
+    {"规范名": "Test Asset", "废弃名": ["Asset Center", "资产库"]},
+    {"规范名": "Execution", "废弃名": ["Test Execution"]},
+    {"规范名": "Quality Intelligence", "废弃名": ["测试分析", "Quality Analytics"]},
+    {"规范名": "Skill Center", "废弃名": ["Test Capability Center", "Capability Center", "能力中心"]},
+    {"规范名": "Agent Center", "废弃名": ["AI Agent Center"]},
+    {"规范名": "Knowledge Center", "废弃名": ["Knowledge"]},
+    {"规范名": "CI/CD Center", "废弃名": ["流水线集成"]},
+    {"规范名": "Platform Settings", "废弃名": ["Settings"]}
+  ],
+  "entities_38": [
+    "Workspace", "Environment", "AIContext", "TestPlan", "TestScenario", "TestCase",
+    "TestSuite", "AutomationScript", "TestData", "MockConfig", "Locator", "APIContract",
+    "ExecutionPlan", "ExecutionTask", "Runner", "ExecutionResult", "TestReport",
+    "FailureCluster", "FailureAnalysis", "Skill", "Agent", "AgentWorkflow",
+    "KnowledgeEntry", "PipelineConfig", "PipelineRun", "QualityGate", "SkillInvocation",
+    "AgentPromptVersion", "AgentSession", "AgentTraceNode", "TestDataProfile",
+    "BaselineItem", "Tenant", "User", "WorkspaceSecret", "RequirementDocument",
+    "TestSuiteCaseMapping", "KnowledgeVector"
+  ],
+  "state_enums_authoritative": {
+    "Workspace": ["Active", "Archived"],
+    "Environment": ["Online", "Offline"],
+    "TestPlan": ["Draft", "Reviewed", "Deprecated"],
+    "TestCase": ["Draft", "Reviewed", "Deprecated"],
+    "RequirementDocument": ["Draft", "Parsing", "Completed", "Failed"],
+    "ExecutionTask": ["Pending", "Running", "Completed", "Failed", "Cancelled"],
+    "ExecutionResult": ["Passed", "Failed", "Skipped", "Error"],
+    "TestReport": ["Pending", "Analyzing", "Completed", "Failed"],
+    "Runner": ["OnlineIdle", "OnlineBusy", "Offline", "HeartbeatLost"],
+    "Skill": ["Installing", "Inactive", "Active", "Disabled", "Error"],
+    "Agent": ["Draft", "Inactive", "Active", "Running", "Degraded", "Retired"],
+    "AgentWorkflow": ["Active", "Inactive"],
+    "KnowledgeEntry": ["Draft", "PendingReview", "Published", "Archived"],
+    "PipelineRun_gateStatus": ["Running", "Passed", "Warned", "Blocked", "Quarantined"],
+    "Locator": ["Verified", "Decaying", "Failed", "Healed"],
+    "WorkspaceAIContext_scan_status": ["Pending", "Scanning", "Ready", "Error"]
+  },
+  "autonomy_levels_authoritative": {
+    "来源": "21-AI介入点降级矩阵.md",
+    "默认原则": "Safe-by-default, opt-in autonomy（默认安全、可选激进）",
+    "L1_默认条件": ["只读/可观测", 或 "可逆且带置信度阈值兜底与自动回退", 且 "影响范围限于单个资产"],
+    "L2_默认条件": ["写外部系统", "控制发布闸门", "部署可执行代码", "批量改写既有资产"],
+    "L3": "恒为 LLM 不可用/连续低置信度时的兜底",
+    "TestDesign_用例生成_权威等级": "L2（入库前须人工终审）",
+    "TestAsset_Locator自愈_权威等级": "L1（可逆 + 阈值0.92 + 失败回退）"
+  },
+  "skills_used_concepts_not_in_domain": {
+    "_说明": "这些概念在29个Skill原型中高频使用，但在正式契约(术语表/领域模型/API/DB)中零命中——可信链证据完整性缺口",
+    "Testing_IR": {"skill命中文件数": 14, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0},
+    "Business_Rule": {"skill命中文件数": 11, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0},
+    "Source_Trace": {"skill命中文件数": 39, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0},
+    "Assertion": {"skill命中文件数": 76, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0},
+    "Coverage_Report": {"skill命中文件数": 7, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0},
+    "Review_Task": {"skill命中文件数": 27, "术语表": 0, "领域模型": 0, "API": 0, "DB": 0}
+  },
+  "ai_thresholds_observed": {
+    "_说明": "扫描发现置信度阈值散落分布，多数无校准集依据",
+    "分布": {"0.80": 18, "0.85": 10, "0.90": 8, "0.92": 6, "0.88": 4, "0.50": 4, "0.60": 4, "0.95": 3, "0.70": 3, "其他": 14}
+  }
+}

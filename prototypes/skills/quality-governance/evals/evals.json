@@ -1,0 +1,7 @@
+{
+  "skill_name": "quality-governance",
+  "evals": [
+    {"id": 1, "name": "accept-effective-coverage", "prompt": "校验一份 governance report,其 coverage 分子只包含经过独立验证的 assertion。", "expected_output": "PASS,并保留分母、排除项和验证证据。", "files": []},
+    {"id": 2, "name": "reject-raw-line-coverage", "prompt": "一份 governance report 用原始行覆盖率作为质量结论。校验它。", "expected_output": "REJECT;没有有效 assertion 的执行不能证明缺陷发现能力。", "files": []}
+  ]
+}

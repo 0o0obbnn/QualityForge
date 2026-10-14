@@ -1,0 +1,17 @@
+{
+  "meta": {"document":"<主需求文档名>","generated_at":"<ISO-8601时间>","artifact_kind":"full_discovery_draft","schema_version":"1.1","scope":"representative"},
+  "sources": [{"source_id":"SRC-001","file":"<需求文档.md>","type":"requirement","version":"<版本或unknown>","priority":1}],
+  "source_units": [],
+  "modules": [],
+  "functions": [],
+  "atomic_functions": [],
+  "business_fields": [],
+  "field_occurrences": [],
+  "field_contexts": [],
+  "field_bindings": [],
+  "field_relations": [],
+  "relations": [],
+  "gaps": {"unbound_fields":[],"fieldless_atomic_functions":[],"unresolved_references":[],"conflicts":[]},
+  "coverage": {"function_count":0,"atomic_function_count":0,"business_field_count":0,"bound_field_count":0,"orphan_count":0,"evidence_coverage_percent":0,"source_coverage":{"claim":"representative","relevant_units":0,"processed_units":0,"skipped_units":0,"unavailable_units":0,"uncovered_ranges":[]}},
+  "audit": {"verdict":"NOT_RUN","downstream_eligible":false,"semantic_review":{"status":"REVIEW_REQUIRED","cross_context_candidates":[]},"errors":[],"warnings":[]}
+}

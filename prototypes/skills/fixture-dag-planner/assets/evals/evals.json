@@ -1,0 +1,70 @@
+{
+  "test_cases": [
+    {
+      "name": "valid_dag",
+      "input": {
+        "dag_id": "dag-001",
+        "nodes": [
+          {
+            "node_id": "node_A",
+            "scope": "session",
+            "type": "Static",
+            "creates": "db_conn",
+            "teardown": "db_conn.close()"
+          },
+          {
+            "node_id": "node_B",
+            "scope": "function",
+            "type": "Dynamic",
+            "creates": "user_row",
+            "teardown": "delete user_row",
+            "depends_on": ["node_A"]
+          }
+        ]
+      },
+      "expected_verdict": "PASS"
+    },
+    {
+      "name": "cyclic_dag",
+      "input": {
+        "dag_id": "dag-002",
+        "nodes": [
+          {
+            "node_id": "node_A",
+            "scope": "function",
+            "type": "Dynamic",
+            "creates": "A",
+            "teardown": "del A",
+            "depends_on": ["node_B"]
+          },
+          {
+            "node_id": "node_B",
+            "scope": "function",
+            "type": "Dynamic",
+            "creates": "B",
+            "teardown": "del B",
+            "depends_on": ["node_A"]
+          }
+        ]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["CYCLE_DETECTED"]
+    },
+    {
+      "name": "missing_teardown",
+      "input": {
+        "dag_id": "dag-003",
+        "nodes": [
+          {
+            "node_id": "node_A",
+            "scope": "function",
+            "type": "Dynamic",
+            "creates": "A"
+          }
+        ]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["MISSING_TEARDOWN"]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "skill_name": "failure-analyzer",
+  "evals": [
+    {"id": 1, "name": "classify-connection-refused", "prompt": "在环境健康检查为 false 时对 conn_refused 分类。", "expected_output": "归类为 ENVIRONMENT,置信度高,并保留证据。", "files": []},
+    {"id": 2, "name": "classify-fixture-build-failure", "prompt": "在环境健康但数据校验失败时对 fixture_build_fail 分类。", "expected_output": "归类为 DATA;不得提交产品 defect。", "files": []},
+    {"id": 3, "name": "classify-confirmed-assertion-mismatch", "prompt": "在环境和数据证据均健康时对 assertion_mismatch 分类。", "expected_output": "归类为 PRODUCT_BUG 候选;该结果仍是分析结论,不是已批准的 Defect。", "files": []},
+    {"id": 4, "name": "degrade-ambiguous-mismatch", "prompt": "在环境和数据健康状况未知时对 assertion_mismatch 分类。", "expected_output": "返回低置信度的 TEST_ASSET_DEFECT 假设并要求人工评审;不得声称已确认产品 bug。", "files": []}
+  ]
+}

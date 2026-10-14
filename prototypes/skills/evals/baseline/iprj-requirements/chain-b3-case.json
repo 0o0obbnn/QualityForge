@@ -1,0 +1,57 @@
+{
+  "cases": [
+    {
+      "case_id": "TC-DEL-001",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "scenario_id": "S-DEL-001",
+      "fixture_category": "Static",
+      "steps": [
+        {"action": "提交删除审批", "endpoint": "/api/approval/delete"},
+        {"action": "审批通过"}
+      ],
+      "expected_results": [
+        {"result": "删除数据包状态变为待删除", "assertion": "状态等于待删除"}
+      ]
+    },
+    {
+      "case_id": "TC-DEL-002",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "scenario_id": "S-DEL-006",
+      "fixture_category": "Dynamic",
+      "steps": [
+        {"action": "业务侧角色访问删除审批列表", "endpoint": "/api/approval/list"}
+      ],
+      "expected_results": [
+        {"result": "返回无权限错误", "assertion": "接口正常处理"}
+      ]
+    },
+    {
+      "case_id": "TC-QUOTA-001",
+      "req_id": "REQ-001",
+      "rule_id": "RULE-002",
+      "scenario_id": "S-QUOTA-001",
+      "fixture_category": "Hybrid",
+      "steps": [
+        {"action": "设置检索次数恰好等于配额", "endpoint": "/api/approval/list"}
+      ],
+      "expected_results": [
+        {"result": "不触发停用", "assertion": "状态保持不变"}
+      ]
+    },
+    {
+      "case_id": "TC-REPORT-001",
+      "req_id": "REQ-001",
+      "rule_id": "RULE-001",
+      "scenario_id": "S-REPORT-001",
+      "fixture_category": "Static",
+      "steps": [
+        {"action": "每月1号触发上报任务生成", "endpoint": "/api/reporting/generate"}
+      ],
+      "expected_results": [
+        {"result": "生成当日上报任务", "assertion": "任务创建成功"}
+      ]
+    }
+  ]
+}

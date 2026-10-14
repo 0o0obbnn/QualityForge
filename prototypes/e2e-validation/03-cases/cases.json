@@ -1,0 +1,93 @@
+[
+  {
+    "case_id": "TC-td-001",
+    "req_id": "Q-TD-001",
+    "rule_id": "R-TD-001",
+    "scenario_id": "S-td-001",
+    "title": "上传合法 Markdown PRD，解析成功",
+    "fixture_category": "Dynamic",
+    "entity_id": "ENT-RD",
+    "preconditions": [
+      "workspace 已存在",
+      "用户有 upload 权限"
+    ],
+    "steps": [
+      {
+        "action": "POST upload",
+        "endpoint": "/api/v1/knowledge/source-imports",
+        "input": {
+          "file": "valid.md"
+        }
+      },
+      {
+        "action": "POST parse",
+        "endpoint": "/api/v1/testing-irs/compile",
+        "input": {}
+      }
+    ],
+    "expected_results": [
+      {
+        "state": null,
+        "endpoint": "/api/v1/testing-irs/compile",
+        "assertion_hint": "response.status == 'PARSED'"
+      }
+    ]
+  },
+  {
+    "case_id": "TC-td-002",
+    "req_id": "Q-TD-002",
+    "rule_id": "R-TD-002",
+    "scenario_id": "S-td-004",
+    "title": "用例草稿从 DRAFT 进入 GENERATING",
+    "fixture_category": "Dynamic",
+    "entity_id": "ENT-DTC",
+    "preconditions": [
+      "存在 status=DRAFT 的 DesignTestCase"
+    ],
+    "steps": [
+      {
+        "action": "点击开始生成",
+        "endpoint": "/api/v1/test-case-drafts/generate",
+        "input": {
+          "scenarioId": "sc_001"
+        }
+      }
+    ],
+    "expected_results": [
+      {
+        "state": "GENERATING",
+        "assertion_hint": "用例状态变为 GENERATING"
+      }
+    ]
+  },
+  {
+    "case_id": "TC-td-003",
+    "req_id": "Q-TD-003",
+    "rule_id": "R-TD-003",
+    "scenario_id": "S-td-007",
+    "title": "confidence=0.99 的用例仍被人工审核门阻断",
+    "fixture_category": "Static",
+    "entity_id": "ENT-DTC",
+    "preconditions": [
+      "用例 confidence_score = 0.99（仅展示分数）",
+      "用例 status = PENDING_REVIEW"
+    ],
+    "steps": [
+      {
+        "action": "Agent尝试提交批准决定",
+        "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions",
+        "input": {
+          "decision": "APPROVE",
+          "contentDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "actorType": "AGENT"
+        }
+      }
+    ],
+    "expected_results": [
+      {
+        "state": "PENDING_REVIEW",
+        "assertion_hint": "返回FORBIDDEN，ReviewTask保持OPEN且TestCaseVersion未批准"
+      }
+    ]
+  }
+]

@@ -1,0 +1,204 @@
+{
+  "pipeline_version": "1.3",
+  "created_at": "2026-09-07T14:06:53+08:00",
+  "stages": {
+    "extract": {
+      "status": "COMPLETED",
+      "fingerprint": "885e6e1b50d0ff54c4704dac5712ff1030e859febeda909425a6a34b2c61212d",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/extract_markdown_full_draft.py",
+        "--source",
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_full_discovery_draft.json",
+        "--source-review",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/资料依赖评审.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:06:54+08:00",
+      "last_action": "REUSED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_full_discovery_draft.json": "200b6076eec92852dd6d0c131a74d8fb5377917d3ffe3f4d68abecf002126676"
+      },
+      "checked_at": "2026-09-07T14:08:08+08:00"
+    },
+    "finalize": {
+      "status": "COMPLETED",
+      "fingerprint": "7d1cacef6ee6664a423bcc74970785d8281fa9919b11a7497439d75f10bbec0f",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/finalize_mapping.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_full_discovery_draft.json",
+        "--source",
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_mapping.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:06:54+08:00",
+      "last_action": "REUSED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_mapping.json": "253983d26e1db74e930824ce8632e1d6df9078b459040d9ddea26adcf903d318"
+      },
+      "checked_at": "2026-09-07T14:08:08+08:00"
+    },
+    "enrich": {
+      "status": "COMPLETED",
+      "fingerprint": "cc15020fe360997b5dcec9365a66e64a7834701faf54b407ec31379a09edd8f4",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/enrich_graph_model.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_mapping.json",
+        "--source",
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:06:54+08:00",
+      "last_action": "REUSED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.json": "e416b737195fbeab40a0bed4d5f914f47bbfc55e4983c0389d95d55d819a964c"
+      },
+      "checked_at": "2026-09-07T14:08:08+08:00"
+    },
+    "validate_graph": {
+      "status": "COMPLETED",
+      "fingerprint": "dcaaee12f04b9a05f3d3f54017f2724544ed79baa1e53821c03fd22ab646f6b0",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/validate_mapping.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.json",
+        "--source",
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:06:54+08:00",
+      "last_action": "REUSED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph_validation.json": "abbeb7994f30a22e49d1e4534a3a4213fa1a186c54f3b5960bb60c9694f1fbbe"
+      },
+      "checked_at": "2026-09-07T14:08:08+08:00"
+    },
+    "render_graph": {
+      "status": "COMPLETED",
+      "fingerprint": "5535f74b9ab247960be888930286afbc90fd8ad894fc377cb08ff1f5d721dc33",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/render_mapping_html.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.json",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.html"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:06:54+08:00",
+      "last_action": "REUSED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.html": "8c3e99cd2e56f9870fc8e8e23640db8407750df18b26190d58e122c581fca2f9"
+      },
+      "checked_at": "2026-09-07T14:08:08+08:00"
+    },
+    "project_review": {
+      "status": "COMPLETED",
+      "fingerprint": "e7b1cfbc6c773da77d7ef95af51beced26fcc28a23d61643cbefbcfe4cbd42bb",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/apply_review_to_mapping.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_typed_graph.json",
+        "--review",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/六维语义评审.json",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:08:08+08:00",
+      "last_action": "EXECUTED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.json": "320e8e3047bd75a6c732d261c87eaa7d96e83f9f844e3946a5a66a6dff30c3dc"
+      }
+    },
+    "validate_reviewed": {
+      "status": "COMPLETED",
+      "fingerprint": "0182ae9d198bf07399a8c4ef2565956b5dfbc3bdbff7884d6b070a4f398c0ddf",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/validate_mapping.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.json",
+        "--source",
+        "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:08:08+08:00",
+      "last_action": "EXECUTED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph_validation.json": "abbeb7994f30a22e49d1e4534a3a4213fa1a186c54f3b5960bb60c9694f1fbbe"
+      }
+    },
+    "render_reviewed": {
+      "status": "COMPLETED",
+      "fingerprint": "1a381055fc08be575a0f957ec3c7bfc91f2dc4d70e06d4f3bb262431d910e3b0",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/render_mapping_html.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.json",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.html"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:08:08+08:00",
+      "last_action": "EXECUTED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.html": "d8ba63eec52872ad422850f1f693a89d2645881b7c269a433046e687f9cd4d43"
+      }
+    },
+    "compile_test_input": {
+      "status": "COMPLETED",
+      "fingerprint": "fac240d2682e39038600cd445f9458b3dade93e722bc11570502578cb8ee4637",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/build_test_design_input.py",
+        "--mapping",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_reviewed_graph.json",
+        "--ready-only",
+        "--out",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_test_design_input.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:08:09+08:00",
+      "last_action": "EXECUTED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_test_design_input.json": "b9ce5717760e9f53d542823bc200000cf65ad2a83664b935c12c6106a16ebbcf"
+      }
+    },
+    "validate_test_input": {
+      "status": "COMPLETED",
+      "fingerprint": "794c32ab06443019a84ab92427016951125dd281c0bd3cf85af973131070e558",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/requirement-function-mapping/scripts/validate_test_design_input.py",
+        "--input",
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_test_design_input.json"
+      ],
+      "exit_code": 0,
+      "completed_at": "2026-09-07T14:08:09+08:00",
+      "last_action": "EXECUTED",
+      "output_sha256": {
+        "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/pipeline/国家在线业务管理平台V2_Beta_PRD_20260811_test_design_input_validation.json": "c585a5c94d70d58c323504c03d94e26c28a0dfb1ad494750b5d9a0e11527684a"
+      }
+    }
+  },
+  "updated_at": "2026-09-07T14:08:09+08:00",
+  "inputs": {
+    "source": "/Users/liuyibin/Desktop/NPRJ/docs/V2_Beta_PRD_20260811_markdown/国家在线业务管理平台V2_Beta_PRD_20260811.md",
+    "source_review": "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/资料依赖评审.json",
+    "review": "/Users/liuyibin/project/QualityForge/prototypes/skills/evals/runs/nprj-rfm-20260907/六维语义评审.json"
+  }
+}

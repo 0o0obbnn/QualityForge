@@ -1,0 +1,26 @@
+{
+  "$comment": "旧版 Testing IR + Scenario Graph 兼容模板；新产物使用 test_case_ir_template.json。",
+  "case_id": "TC-{module}-{NNN}",
+  "req_id": "<已存在的 IR requirement id>",
+  "rule_id": "<已存在的 IR business-rule id>",
+  "scenario_id": "<已存在且 req_id/rule_id 匹配的 scenario id>",
+  "fixture_category": "Static | Dynamic | Hybrid",
+  "entity_id": "<可选的状态机解析 key>",
+  "steps": [
+    {"action": "非空 action", "endpoint": "<可选的 IR endpoint>", "input": {}}
+  ],
+  "expected_results": [
+    {"state": "<可选的 IR state>", "endpoint": "<可选的 IR endpoint>"}
+  ],
+  "$checker_codes": [
+    "REQUIREMENT_NOT_IN_IR",
+    "RULE_NOT_IN_IR",
+    "SCENARIO_NOT_IN_GRAPH",
+    "CASE_SCENARIO_BINDING_MISMATCH",
+    "EMPTY_CASE_STEPS",
+    "STEP_ENDPOINT_NOT_IN_IR",
+    "EMPTY_EXPECTED_RESULTS",
+    "INVALID_EXPECTED_RESULT",
+    "EXPECTED_STATE_INVALID"
+  ]
+}

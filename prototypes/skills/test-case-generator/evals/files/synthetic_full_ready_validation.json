@@ -1,0 +1,10 @@
+{
+  "validator": "test-case-generator/validate_case_ir.py",
+  "checked_at": "2026-09-27T15:29:11.620634+00:00",
+  "artifact_sha256": "7e3be5e90c4d10cdc570ff565ff2936f16735e38bb63b3c8520713b5ae689f63",
+  "case_count": 4,
+  "finding_count": 0,
+  "findings": [],
+  "verdict": "PASS",
+  "routing": "可投影 CSV 并交付下游"
+}

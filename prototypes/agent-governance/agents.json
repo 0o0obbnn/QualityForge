@@ -1,0 +1,197 @@
+{
+  "schemaVersion": "2.0",
+  "status": "prototype",
+  "scope": "gate0-requirement-to-reviewed-test-assets",
+  "description": "Gate 0 的1个监督者与3个受限Subagent。AI负责形成需求分析、策略、计划、用例和断言草稿，正式产出物必须由人类审核。",
+  "governanceDocument": "../../docs/03-governance/55-Agent与Skill运行治理SOP.md",
+  "policyDefaults": {
+    "filesystem": {
+      "read": [
+        "docs/**",
+        "prototypes/skills/**",
+        "prototypes/e2e-validation*/**",
+        "prototypes/agent-governance/*.json"
+      ],
+      "write": [
+        "prototypes/agent-governance/runs/{runId}/**"
+      ],
+      "denyWrite": [
+        "docs/**",
+        "prototypes/skills/**",
+        "prototypes/e2e-validation*/**"
+      ]
+    },
+    "network": {
+      "mode": "deny_all",
+      "allowedTargets": []
+    },
+    "secrets": {
+      "allowedKeys": [],
+      "persist": false,
+      "logValues": false
+    },
+    "externalWrites": "deny",
+    "canonicalAssetWrites": "deny",
+    "canonicalAssetPromotion": "human_and_application_service_only",
+    "defaultAutonomyLevel": "L2",
+    "authorizationComposition": "initiator_rbac_intersection_agent_permissions_intersection_workflow_node_permissions_minus_denies_and_human_only",
+    "humanOnlyActions": [
+      "approve_formal_artifact",
+      "sign_test_report",
+      "approve_external_write",
+      "override_quality_gate",
+      "publish_executable_capability",
+      "manage_role_binding",
+      "manage_review_policy"
+    ],
+    "maxDelegationDepth": 1,
+    "maxSameInputRetries": 1,
+    "timeoutSeconds": 600,
+    "maxSteps": 12
+  },
+  "agents": [
+    {
+      "id": "qf-supervisor",
+      "kind": "supervisor",
+      "displayName": "Gate 0 工作流监督者",
+      "objective": "分类任务、验证工作流结构、派发受限 Subagent、停止异常运行并汇总证据。",
+      "allowedSkills": [],
+      "allowedActions": [
+        "read_context",
+        "validate_workflow",
+        "dispatch_agent",
+        "stop_run",
+        "aggregate_artifacts"
+      ],
+      "deniedActions": [
+        "generate_business_asset",
+        "modify_canonical_asset",
+        "approve_human_checkpoint",
+        "publish_skill",
+        "write_external_system"
+      ],
+      "mayDelegateTo": [
+        "qf-requirement-ir",
+        "qf-test-design",
+        "qf-independent-verifier"
+      ],
+      "humanApprovalAuthority": false
+    },
+    {
+      "id": "qf-requirement-ir",
+      "kind": "subagent",
+      "displayName": "需求与 IR Subagent",
+      "objective": "形成可追溯的需求评审包和 Testing IR 草稿，不发布正式资产。",
+      "allowedSkills": [
+        "requirement-quality-gate",
+        "business-rule-extractor",
+        "domain-model-extractor",
+        "state-machine-builder",
+        "requirement-compiler"
+      ],
+      "allowedActions": [
+        "read_source",
+        "produce_draft",
+        "invoke_allowed_skill",
+        "request_human_review"
+      ],
+      "deniedActions": [
+        "approve_own_output",
+        "modify_source_requirement",
+        "modify_canonical_asset",
+        "publish_asset",
+        "delegate_agent",
+        "write_external_system"
+      ],
+      "mayDelegateTo": [],
+      "humanApprovalAuthority": false
+    },
+    {
+      "id": "qf-test-design",
+      "kind": "subagent",
+      "displayName": "测试设计 Subagent",
+      "objective": "基于已验证IR形成策略、测试计划、场景、用例和候选断言草稿。",
+      "allowedSkills": [
+        "plan-orchestrator",
+        "strategy-planner",
+        "scenario-generator",
+        "test-case-generator",
+        "assertion-generator"
+      ],
+      "allowedActions": [
+        "read_verified_ir",
+        "produce_draft",
+        "invoke_allowed_skill",
+        "request_human_review"
+      ],
+      "deniedActions": [
+        "approve_own_output",
+        "modify_verified_ir",
+        "modify_canonical_asset",
+        "execute_test",
+        "publish_asset",
+        "delegate_agent",
+        "write_external_system"
+      ],
+      "mayDelegateTo": [],
+      "humanApprovalAuthority": false
+    },
+    {
+      "id": "qf-independent-verifier",
+      "kind": "subagent",
+      "displayName": "独立验证 Subagent",
+      "objective": "独立验证 IR、断言和覆盖率，只给出机器裁决与人工路由，不修复被审资产。",
+      "allowedSkills": [
+        "ir-validator",
+        "assertion-verifier",
+        "coverage-analyzer",
+        "hitl-gatekeeper"
+      ],
+      "allowedActions": [
+        "read_draft",
+        "invoke_allowed_skill",
+        "emit_verdict",
+        "create_review_request"
+      ],
+      "deniedActions": [
+        "repair_reviewed_asset",
+        "modify_canonical_asset",
+        "approve_human_checkpoint",
+        "publish_asset",
+        "delegate_agent",
+        "write_external_system"
+      ],
+      "mayDelegateTo": [],
+      "humanApprovalAuthority": false
+    },
+    {
+      "id": "qf-execution",
+      "kind": "subagent",
+      "displayName": "测试执行 Subagent",
+      "objective": "按冻结的执行计划版本编排执行，采集不可变运行证据并交人工批准。",
+      "allowedSkills": [
+        "fixture-dag-planner",
+        "test-data-generator",
+        "self-healing-orchestrator",
+        "hitl-gatekeeper"
+      ],
+      "allowedActions": [
+        "read_frozen_plan_version",
+        "execute_test",
+        "append_immutable_evidence",
+        "invoke_allowed_skill",
+        "request_human_review"
+      ],
+      "deniedActions": [
+        "approve_own_output",
+        "modify_test_or_evidence",
+        "modify_canonical_asset",
+        "publish_asset",
+        "delegate_agent",
+        "write_external_system"
+      ],
+      "mayDelegateTo": [],
+      "humanApprovalAuthority": false
+    }
+  ]
+}

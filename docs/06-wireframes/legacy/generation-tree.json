@@ -1,0 +1,152 @@
+{
+  "nodeId": "root",
+  "kind": "project-shell",
+  "pageIds": [],
+  "output": "partials/project-shell.html",
+  "sharedRegions": ["header", "sidebar", "app-frame", "brand-css"],
+  "privateRegions": [],
+  "mutableSlots": ["pageTitle", "activeNavItem", "mainContent"],
+  "status": "planned",
+  "children": [
+    {
+      "nodeId": "gen-page-workbench",
+      "kind": "page-leaf",
+      "pageIds": ["page-workbench"],
+      "output": "pages/workbench.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-workspace-list",
+      "kind": "page-leaf",
+      "pageIds": ["page-workspace-list"],
+      "output": "pages/workspace-list.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-workspace-create",
+      "kind": "page-leaf",
+      "pageIds": ["page-workspace-create"],
+      "output": "pages/workspace-create.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-workspace-settings",
+      "kind": "page-leaf",
+      "pageIds": ["page-workspace-settings"],
+      "output": "pages/workspace-settings.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-requirements",
+      "kind": "page-leaf",
+      "pageIds": ["page-requirements"],
+      "output": "pages/requirements.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-test-design-console",
+      "kind": "page-leaf",
+      "pageIds": ["page-test-design-console"],
+      "output": "pages/test-design-console.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-testcase-review",
+      "kind": "page-leaf",
+      "pageIds": ["page-testcase-review"],
+      "output": "pages/testcase-review.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-asset-portal",
+      "kind": "page-leaf",
+      "pageIds": ["page-asset-portal"],
+      "output": "pages/asset-portal.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-asset-cases",
+      "kind": "page-leaf",
+      "pageIds": ["page-asset-cases"],
+      "output": "pages/asset-cases.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-execution-plans",
+      "kind": "page-leaf",
+      "pageIds": ["page-execution-plans"],
+      "output": "pages/execution-plans.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-run-console",
+      "kind": "page-leaf",
+      "pageIds": ["page-run-console"],
+      "output": "pages/run-console.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-qi-dashboard",
+      "kind": "page-leaf",
+      "pageIds": ["page-qi-dashboard"],
+      "output": "pages/qi-dashboard.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-rca-detail",
+      "kind": "page-leaf",
+      "pageIds": ["page-rca-detail"],
+      "output": "pages/rca-detail.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    },
+    {
+      "nodeId": "gen-page-agent-trace",
+      "kind": "page-leaf",
+      "pageIds": ["page-agent-trace"],
+      "output": "pages/agent-trace.html",
+      "sharedRegions": ["header", "sidebar", "app-frame"],
+      "privateRegions": ["mainContent"],
+      "mutableSlots": ["pageTitle", "activeNavItem"],
+      "status": "planned"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "S-DEL-001",
+      "facet": "normal",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "description": "删除审批通过后进入待删除待删状态"
+    },
+    {
+      "scenario_id": "S-DEL-002",
+      "facet": "state_transition",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "transition_ref": "SM-DEL-001:PENDING_APPROVAL->APPROVED",
+      "description": "待审批经审批通过转移至已通过"
+    },
+    {
+      "scenario_id": "S-DEL-003",
+      "facet": "state_transition",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "transition_ref": "SM-DEL-001:APPROVED->PENDING_DELETE",
+      "description": "已通过次日转移至待删除"
+    },
+    {
+      "scenario_id": "S-DEL-004",
+      "facet": "state_transition",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "transition_ref": "SM-DEL-001:PENDING_APPROVAL->REJECTED",
+      "description": "审批不通过转移至已拒绝，数据保留"
+    },
+    {
+      "scenario_id": "S-DEL-005",
+      "facet": "abnormal",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "description": "删除审批提交时机构已停用时仍可提交"
+    },
+    {
+      "scenario_id": "S-DEL-006",
+      "facet": "permission",
+      "req_id": "REQ-002",
+      "rule_id": "RULE-001",
+      "description": "业务侧角色无权查看删除审批列表"
+    },
+    {
+      "scenario_id": "S-QUOTA-001",
+      "facet": "boundary",
+      "req_id": "REQ-001",
+      "rule_id": "RULE-002",
+      "description": "检索次数恰好等于配额边界不触发停用"
+    },
+    {
+      "scenario_id": "S-REPORT-001",
+      "facet": "normal",
+      "req_id": "REQ-001",
+      "rule_id": "RULE-001",
+      "description": "每月1号正常生成上报任务"
+    }
+  ]
+}

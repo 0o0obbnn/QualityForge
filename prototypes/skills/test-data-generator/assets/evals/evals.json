@@ -1,0 +1,94 @@
+{
+  "name": "test-data-generator",
+  "description": "Evaluations for test-data-generator compliance rules.",
+  "evaluations": [
+    {
+      "id": "eval-1-pass",
+      "description": "Valid data packet with seed, safe target, and masked sensitive fields.",
+      "inputs": {
+        "packet": {
+          "run_id": "r1",
+          "seed": 12345,
+          "target_environment": "test",
+          "fields": [
+            {
+              "name": "phone_number",
+              "value": "XXX-XXX-XXXX",
+              "masking_policy": "pseudonymize",
+              "masked": true,
+              "logged": false,
+              "ir_bound": false
+            }
+          ]
+        },
+        "ir": {
+          "entities": [
+            {
+              "fields": [
+                {
+                  "name": "phone_number",
+                  "sensitivity_level": "SENSITIVE"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "verdict": "PASS"
+      }
+    },
+    {
+      "id": "eval-2-reject-missing-seed",
+      "description": "Reject because missing seed.",
+      "inputs": {
+        "packet": {
+          "run_id": "r2",
+          "target_environment": "test",
+          "fields": []
+        },
+        "ir": {}
+      },
+      "expected": {
+        "verdict": "REJECT",
+        "finding_code": "MISSING_SEED"
+      }
+    },
+    {
+      "id": "eval-3-reject-unmasked-sensitive",
+      "description": "Reject because sensitive field is unmasked and logged.",
+      "inputs": {
+        "packet": {
+          "run_id": "r3",
+          "seed": 999,
+          "target_environment": "test",
+          "fields": [
+            {
+              "name": "credit_card",
+              "value": "4111",
+              "masking_policy": "pseudonymize",
+              "masked": false,
+              "logged": true
+            }
+          ]
+        },
+        "ir": {
+          "entities": [
+            {
+              "fields": [
+                {
+                  "name": "credit_card",
+                  "sensitivity_level": "SENSITIVE"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "expected": {
+        "verdict": "REJECT",
+        "finding_code": "PLAINTEXT_IN_LOG"
+      }
+    }
+  ]
+}

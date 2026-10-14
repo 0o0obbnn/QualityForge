@@ -1,0 +1,54 @@
+{
+ "skill_name": "ir-validator",
+ "evals": [
+ {
+ "id": 1,
+ "name": "reject-missing-source-trace",
+ "prompt": "requirement compiler 产出了这份 IR 草稿(evals/files/ir_missing_source_trace.json)。Rule R-001 没有 source_trace 字段——模型提取了 'total > 0' 规则,却没有记录来源。运行 validator 并告诉我:这个 IR 能发布吗?verdict 是什么、具体 finding 是什么?",
+ "expected_output": "Verdict REJECT。必须在 business_rules:R-001 上引用具体 code MISSING_SOURCE_TRACE。必须解释:没有溯源的 IR 元素等于固化进语义契约的不可验证断言——所有下游 skill 都会继承一条无来源的规则。必须路由回 requirement compiler,不得发布。",
+ "files": ["evals/files/ir_missing_source_trace.json"]
+ },
+ {
+ "id": 2,
+ "name": "reject-unreachable-state",
+ "prompt": "这份 IR 草稿(evals/files/ir_unreachable_state.json)的状态机 SM-1 含状态 NEW、ACTIVE、ARCHIVED、ORPHAN。transition 只连接 NEW→ACTIVE→ARCHIVED。ORPHAN 被标记为 terminal,却没有任何 transition 到达它。运行 validator 并告诉我它发现什么。",
+ "expected_output": "Verdict REJECT,在 state_machines:SM-1:ORPHAN 上给出 finding UNREACHABLE_STATE。必须解释:ORPHAN 无法从显式 initial_state NEW 到达——它是死规格,只会产生死测试场景。必须说明这属于 Family 5(可达性),不允许存在不可达状态。",
+ "files": ["evals/files/ir_unreachable_state.json"]
+ },
+ {
+ "id": 3,
+ "name": "reject-unresolved-conflict",
+ "prompt": "这份 IR(evals/files/ir_unresolved_conflict.json)中的 Rule R-001 有 conflict:true,conflict_refs 指向两处相互矛盾的 PRD 章节(PRD-A§5 与 PRD-B§7),但 resolution_status 未设置。两个来源在是否允许退款上不一致。这个 IR 能发布吗?运行 validator。",
+ "expected_output": "Verdict REJECT,给出 finding UNRESOLVED_CONFLICT。必须明确引用 V3 的禁令:「禁止放行含未解决 conflict 标记的 IR」。必须解释:语义契约中的冲突是整条流水线将继承的矛盾——下游 skill 无法消费一个同时表达两种矛盾说法的 IR。必须路由回 requirement compiler / HITL gate(由人裁决 PRD 矛盾)。",
+ "files": ["evals/files/ir_unresolved_conflict.json"]
+ },
+ {
+ "id": 4,
+ "name": "reject-bare-public-no-rationale",
+ "prompt": "这份 IR(evals/files/ir_bare_public.json)的 User 实体有 user_id 和 email 两个字段,均标记 sensitivity_level=PUBLIC 且没有 rationale。email 字段标为 PUBLIC 尤其可疑。运行 validator 并告诉我它捕获什么——以及不捕获什么(为什么)。",
+ "expected_output": "Verdict REJECT,在 user_id 和 email 上均给出 finding BARE_PUBLIC_NO_RATIONALE。必须解释 domain model extractor 的规则:「不得默认为 PUBLIC」——PUBLIC 必须是有 rationale 支撑的审慎选择,而不是静默默认。答案必须呈现的关键细节:validator 捕获的是程序性失败(未做判定/没有 rationale),但无法捕获语义错误(email 本应是 SENSITIVE 却被错标为 PUBLIC)——那需要领域知识,是下游 test-data generator 的职责。validator 不是隐私判官。",
+ "files": ["evals/files/ir_bare_public.json"]
+ },
+ {
+ "id": 5,
+ "name": "pass-with-review-suspicious-distribution",
+ "prompt": "这份 IR(evals/files/ir_suspicious_dist.json)结构完整——每个字段都在,每条 rule 都有 source_trace,无冲突,状态均可达。但全部 7 个元素(5 条 requirement + 2 条 rule)的 confidence 恰好都是 0.95。运行 validator 并告诉我 verdict——它通过吗?",
+ "expected_output": "Verdict PASS_WITH_REVIEW(不是 REJECT,也不是干净的 PASS)。必须引用 finding SUSPICIOUS_DISTRIBUTION。必须解释:均匀的高 confidence(>90% 的元素 ≥0.9)是幻觉信号——模型不加区分地给一切打 0.95,正是虚构而非真实不确定的模式。该 IR 可以发布,但会附上 HITL gate 的 review-task 清单用于抽查。必须区分这种 SOFT finding(发布 + 标记)与 REJECT finding(阻断)。",
+ "files": ["evals/files/ir_suspicious_dist.json"]
+ },
+ {
+ "id": 6,
+ "name": "clean-ir-passes",
+ "prompt": "这份 IR(evals/files/ir_clean.json)看起来完整:version 1.0.0,requirement 均有 source_trace 和 confidence,rule 有溯源,entity 有一个带 rationale 的 PUBLIC 字段和一个 INTERNAL 字段,状态机可达且有 terminal 状态。运行 validator 并确认 verdict。",
+ "expected_output": "Verdict PASS——全部六个 family 均无 finding。必须解释每个 family 通过的原因:schema 完整(v1.0,所有必需字段齐全)、溯源存在(rule/req/constraint 均有 source_trace)、confidence 合理(0.9 与 0.85,有区分度而非均匀)、无冲突、状态全部可达且 SHIPPED 标记为 terminal、entity 字段有敏感性判定(PUBLIC 带 rationale,INTERNAL 显式)。这就是基线——可发布 IR 的样子。",
+ "files": ["evals/files/ir_clean.json"]
+ },
+ {
+ "id": 7,
+ "name": "reject-empty-model-and-malformed-version",
+ "prompt": "校验一个 version 为 1.0evil 的 IR,或只有 ir_version 而缺少六个冻结 model 数组的 IR。",
+ "expected_output": "REJECT。畸形 version 产生 UNKNOWN_IR_VERSION;缺失冻结 model 数组产生 MISSING_REQUIRED_MODEL_CLASS。空语义契约不能发布。",
+ "files": []
+ }
+ ]
+}

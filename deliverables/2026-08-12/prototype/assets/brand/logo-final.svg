@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <!-- QualityForge 品牌标志 · 几何堆叠塔(矢量版)
+       意象: 质量层级向上生长(菱形×2 + 六边形) + 深炭底座(稳健锻造基底)
+       配色: 锻炉琥珀铜 #D96C1F × 深炭 #1D1B18(禁蓝紫) -->
+  <g stroke="#1D1B18" stroke-width="6" stroke-linejoin="round">
+    <!-- 上菱形 -->
+    <polygon points="512,60 612,160 512,260 412,160" fill="#D96C1F"/>
+    <!-- 中菱形 -->
+    <polygon points="512,260 632,380 512,500 392,380" fill="#D96C1F"/>
+    <!-- 正六边形(尖顶) -->
+    <polygon points="512,480 624.5,555 624.5,665 512,740 399.5,665 399.5,555" fill="#D96C1F"/>
+    <!-- 深炭底座(梯形) -->
+    <polygon points="402,760 622,760 682,940 342,940" fill="#1D1B18" stroke="#1D1B18"/>
+  </g>
+</svg>

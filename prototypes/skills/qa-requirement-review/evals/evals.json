@@ -1,0 +1,26 @@
+{
+  "skill_name": "qa-requirement-review",
+  "evals": [
+    {
+      "id": 0,
+      "name": "six-dimension-review-vague-quantifiers",
+      "prompt": "按 references/review-protocol.md 的六维清单评审以下合成需求陈述，逐维给出 CLEAR/FINDING/NOT_APPLICABLE/NOT_REVIEWED 状态与依据，finding 使用协议中的 finding code 和证据类型：「图书管理员查询当月借阅统计，系统应快速返回结果，并在数据异常时及时告警。」",
+      "expected_output": "ambiguity=FINDING（“快速”“及时”无量化标准与判定条件，记 QUOTE/ABSENCE 证据）；testability=FINDING（无验收边界与可判定 oracle，“数据异常”未定义）；nfr_measurability=FINDING（响应时间无指标、负载模型和阈值，告警无观察窗口）；completeness=FINDING（异常路径、告警渠道与恢复方式缺失）；role_permission 按已检查范围如实给出 FINDING 或 NOT_APPLICABLE（仅提及图书管理员，未定义数据范围与允许/拒绝行为）；consistency 在未完成跨来源阅读时保留 NOT_REVIEWED，不得以扫描零命中充当 CLEAR。",
+      "files": ["references/review-protocol.md"]
+    },
+    {
+      "id": 1,
+      "name": "source-dependency-classification",
+      "prompt": "合成需求文档主文写「借阅规则详见附件 B」，附件 B 未随本次输入提供；另一段写「逾期处理与现有系统保持一致」。按 references/source-dependency-review-contract.md 登记每个引用依赖的分类、定位、状态与去重键，并判定相关来源单元的处置状态。",
+      "expected_output": "附件 B 按 external_artifact 登记且 status=missing，记录 reference_key 去重键与定位，不虚构附件内容，也不为补齐资料扩大输入范围；「与现有系统保持一致」按 existing_baseline 登记且基线未提供、状态为 missing；受影响来源单元标记 review_required 并保留原因，非 processed 单元不得计入已完成评审。",
+      "files": ["references/source-dependency-review-contract.md"]
+    },
+    {
+      "id": 2,
+      "name": "test-point-readiness-and-finding-lifecycle",
+      "prompt": "合成需求一：「读者可取消未支付的罚金订单，取消后订单状态变为已取消。」合成需求二：「系统对大额赔款执行人工审核。」判断两个需求能否生成 ready 测试点；随后按 references/review-resolution-contract.md 给出「大额阈值待澄清」finding 的解决流程。",
+      "expected_output": "需求一有明确触发、动作与可判定预期，生成 ready 测试点并保留来源引用，无特殊前置条件时显式写明而非留空；需求二缺少大额阈值与审核通过/拒绝的 oracle，测试点只能为 review_required 或 blocked，不得伪造成 ready；finding 生命周期为 OPEN/RESOLVED/WITHDRAWN/ACCEPTED_RISK，解决时按解决契约使用 RESOLVE 并附解决说明与来源引用，同步更新对应 requirement_assessments，仅修改 finding 状态不构成评审闭环。",
+      "files": ["references/review-resolution-contract.md"]
+    }
+  ]
+}

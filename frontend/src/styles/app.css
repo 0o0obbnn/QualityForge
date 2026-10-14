@@ -1,0 +1,82 @@
+/* QualityForge 应用补充样式（qf-tokens + qf-components 之外的页面级样式） */
+
+/* 登录页布局（对齐 01-login.html：左品牌栏 + 右表单区） */
+.auth-shell {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(360px, 0.8fr);
+  background: var(--qf-card);
+}
+
+.auth-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(40px, 8vw, 120px);
+  color: var(--qf-neutral-50);
+  background: var(--qf-neutral-950);
+}
+
+.auth-intro h1 {
+  max-width: 10ch;
+  margin: 0 0 20px;
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: 1.03;
+  letter-spacing: -0.055em;
+}
+
+.auth-intro > p:last-of-type {
+  max-width: 42ch;
+  margin: 0;
+  color: var(--qf-neutral-400);
+  font-size: 17px;
+  line-height: 1.65;
+}
+
+.auth-form {
+  width: min(440px, calc(100% - 48px));
+  margin: auto;
+  display: grid;
+  gap: 20px;
+}
+
+.auth-form h2 {
+  margin: 0 0 6px;
+  font-size: 28px;
+  letter-spacing: -0.03em;
+}
+
+.auth-form p {
+  margin: 0;
+  color: var(--qf-muted-foreground);
+}
+
+.loading-text {
+  opacity: 0.75;
+}
+
+.boot-state {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 760px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-intro {
+    min-height: 40dvh;
+    padding: 36px 24px;
+  }
+
+  .auth-intro h1 {
+    margin-top: 70px;
+    font-size: 42px;
+  }
+
+  .auth-form {
+    margin: 40px auto;
+  }
+}

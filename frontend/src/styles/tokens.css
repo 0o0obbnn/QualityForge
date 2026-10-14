@@ -1,0 +1,83 @@
+/* ============================================================
+   QualityForge · Design Tokens（移植自 27 页原型 qf-tokens.css）
+   版本: V1 · 2026-08-12 原型定稿 ｜ 2026-08-17 前端对齐
+   禁色声明: 全 token 色相避开蓝紫禁带 (hue 190-320°),
+   含带蓝紫倾向的中性色 (原 slate 系全部替换为暖石墨系)。
+   权威源: deliverables/2026-08-12/prototype/assets/qf-tokens.css
+   ============================================================ */
+
+:root {
+  /* ---------- 主强调色 · 锻炉琥珀铜 (Forge Amber) ----------
+     单一强调色战略使用: 主按钮 / 当前导航 / 关键 CTA / 进行中状态。 */
+  --qf-accent-50:  #FDF4EA;
+  --qf-accent-100: #F9E5CD;
+  --qf-accent-200: #F2CD9E;
+  --qf-accent-300: #E9AC66;
+  --qf-accent-400: #E08E3C;
+  --qf-accent-500: #D96C1F;
+  --qf-accent-600: #B8551A;
+  --qf-accent-700: #934214;
+  --qf-accent-800: #6C3110;
+  --qf-accent-900: #47200A;
+
+  /* ---------- 辅助色 · 墨茶绿 (Ink Tea) ---------- */
+  --qf-secondary-100: #E6E9DF;
+  --qf-secondary-300: #A9B39B;
+  --qf-secondary-500: #6B7A5E;
+  --qf-secondary-700: #4C5743;
+
+  /* ---------- 中性色 · 暖石墨 (Warm Graphite) ---------- */
+  --qf-neutral-0:   #FFFFFF;
+  --qf-neutral-50:  #FAFAF7;
+  --qf-neutral-100: #F4F2ED;
+  --qf-neutral-200: #E9E6DE;
+  --qf-neutral-300: #D8D4C8;
+  --qf-neutral-400: #A9A395;
+  --qf-neutral-500: #817B6E;
+  --qf-neutral-600: #625D52;
+  --qf-neutral-700: #47433B;
+  --qf-neutral-800: #2F2C27;
+  --qf-neutral-900: #1D1B18;
+  --qf-neutral-950: #141210;
+
+  /* ---------- 语义色 ---------- */
+  --qf-success-500: #47875A;
+  --qf-success-600: #356B45;
+  --qf-success-100: #E4EFE6;
+  --qf-warning-500: #B98E2A;
+  --qf-warning-600: #96701E;
+  --qf-warning-100: #F5EDD8;
+  --qf-error-500:   #C0442F;
+  --qf-error-600:   #9C3624;
+  --qf-error-100:   #F7E3DE;
+  --qf-info-500: var(--qf-accent-500);
+  --qf-info-100: var(--qf-accent-50);
+
+  /* ---------- 数据可视化色板 ---------- */
+  --qf-chart-1: #D96C1F;
+  --qf-chart-2: #4E7A5A;
+  --qf-chart-3: #C0442F;
+  --qf-chart-4: #B98E2A;
+  --qf-chart-5: #8A8378;
+  --qf-chart-6: #9C6B3F;
+
+  /* ---------- 主题映射（与原型 qf-tokens 对齐） ---------- */
+  --qf-background:       var(--qf-neutral-50);
+  --qf-foreground:       var(--qf-neutral-900);
+  --qf-card:             var(--qf-neutral-0);
+  --qf-card-foreground:  var(--qf-neutral-900);
+  --qf-primary:          var(--qf-accent-600);
+  --qf-primary-hover:    var(--qf-accent-700);
+  --qf-primary-foreground: var(--qf-neutral-0);
+
+  /* ---------- 兼容别名（现有 styles.css 语义 → qf token） ---------- */
+  --accent: var(--qf-accent-600);
+  --accent-strong: var(--qf-accent-700);
+  --surface: var(--qf-neutral-0);
+  --surface-muted: var(--qf-neutral-100);
+  --line: var(--qf-neutral-200);
+  --text: var(--qf-neutral-900);
+  --text-muted: var(--qf-neutral-500);
+  --danger: var(--qf-error-500);
+  --radius: 10px;
+}

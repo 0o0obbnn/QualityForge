@@ -1,0 +1,75 @@
+{
+  "test_cases": [
+    {
+      "name": "Accept multi-strategy stable locator",
+      "input": {
+        "locator_id": "l1",
+        "strategies": [
+          {"type": "id", "value": "submit"},
+          {"type": "css", "value": "button.submit"}
+        ],
+        "stability_score": 0.9
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Reject index-based XPath primary with no fallback",
+      "input": {
+        "locator_id": "l2",
+        "strategies": [{"type": "xpath", "value": "//button[1]", "index_based": true}]
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": [
+        "SINGLE_STRATEGY_LOCATOR",
+        "INDEX_XPATH_PRIMARY",
+        "MISSING_STABILITY_SCORE"
+      ]
+    },
+    {
+      "name": "Detect index-based XPath from value when flag absent",
+      "input": {
+        "locator_id": "l3",
+        "strategies": [
+          {"type": "xpath", "value": "//table/tbody[2]/tr"},
+          {"type": "css", "value": "table tbody tr"}
+        ],
+        "stability_score": 0.8
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["INDEX_XPATH_PRIMARY"]
+    },
+    {
+      "name": "Review low stability score",
+      "input": {
+        "locator_id": "l4",
+        "strategies": [
+          {"type": "css", "value": ".btn"},
+          {"type": "aria-label", "value": "Submit"}
+        ],
+        "stability_score": 0.4
+      },
+      "expected_verdict": "REVIEW",
+      "expected_findings": ["LOW_STABILITY"]
+    },
+    {
+      "name": "Reject out-of-range stability score",
+      "input": {
+        "locator_id": "l5",
+        "strategies": [
+          {"type": "id", "value": "ok"},
+          {"type": "css", "value": "#ok"}
+        ],
+        "stability_score": 1.4
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["INVALID_STABILITY_SCORE"]
+    },
+    {
+      "name": "Empty packet is not a clean pass",
+      "input": {},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["SINGLE_STRATEGY_LOCATOR", "MISSING_STABILITY_SCORE"]
+    }
+  ]
+}

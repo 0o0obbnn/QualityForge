@@ -1,0 +1,14 @@
+{
+  "$comment": "编译数据包，由 scripts/compile_check.py 审计。该校验器不执行源解析或融合。",
+  "declared_sources": [
+    {"source_id": "prd.md", "availability": "AVAILABLE"},
+    {"source_id": "api.yaml", "availability": "NOT_PROVIDED"}
+  ],
+  "ir_draft": {
+    "requirements": [
+      {"req_id": "REQ-001", "source_trace": "prd.md§1", "confidence": 0.73}
+    ]
+  },
+  "$availability": ["AVAILABLE", "NOT_PROVIDED", "NOT_APPLICABLE", "UNREADABLE", "EXPECTED_MISSING"],
+  "$verdicts": ["PASS", "PASS_WITH_REVIEW", "REJECT"]
+}

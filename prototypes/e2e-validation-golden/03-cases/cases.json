@@ -1,0 +1,32 @@
+[
+  {
+    "case_id": "TC-rv-101", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "scenario_id": "S-rv-101", "fixture_category": "Dynamic", "entity_id": "ENT-TCV-101",
+    "steps": [{"action": "submit immutable version", "endpoint": "/api/v1/review-tasks", "input": {"artifactType": "TEST_CASE", "artifactVersionId": "version-1", "contentDigest": "sha256"}}],
+    "expected_results": [{"state": "PENDING_REVIEW", "endpoint": "/api/v1/review-tasks"}]
+  },
+  {
+    "case_id": "TC-rv-102", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "scenario_id": "S-rv-102", "fixture_category": "Dynamic",
+    "steps": [{"action": "submit without version id", "endpoint": "/api/v1/review-tasks", "input": {"artifactType": "TEST_CASE", "contentDigest": "sha256"}}],
+    "expected_results": [{"endpoint": "/api/v1/review-tasks", "error": "VALIDATION_FAILED"}]
+  },
+  {
+    "case_id": "TC-rv-103", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "scenario_id": "S-rv-103", "fixture_category": "Static", "entity_id": "ENT-TCV-101",
+    "steps": [{"action": "approve matching version", "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions", "input": {"decision": "APPROVE", "contentDigest": "sha256", "actorType": "USER"}}],
+    "expected_results": [{"state": "APPROVED", "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions"}]
+  },
+  {
+    "case_id": "TC-rv-104", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "scenario_id": "S-rv-104", "fixture_category": "Static",
+    "steps": [{"action": "agent attempts approval", "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions", "input": {"decision": "APPROVE", "contentDigest": "sha256", "actorType": "AGENT"}}],
+    "expected_results": [{"endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions", "error": "FORBIDDEN"}]
+  },
+  {
+    "case_id": "TC-rv-105", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "scenario_id": "S-rv-105", "fixture_category": "Hybrid", "entity_id": "ENT-TCV-101",
+    "steps": [{"action": "create review task", "endpoint": "/api/v1/review-tasks", "input": {}}],
+    "expected_results": [{"state": "PENDING_REVIEW", "endpoint": "/api/v1/review-tasks"}]
+  },
+  {
+    "case_id": "TC-rv-106", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "scenario_id": "S-rv-106", "fixture_category": "Hybrid", "entity_id": "ENT-TCV-101",
+    "steps": [{"action": "authorized human approves", "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions", "input": {"decision": "APPROVE", "contentDigest": "sha256"}}],
+    "expected_results": [{"state": "APPROVED", "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions"}]
+  }
+]

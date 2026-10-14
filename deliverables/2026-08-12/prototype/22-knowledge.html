@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>知识库 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="knowledge">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item active" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>知识库</h1><div class="sub">已审核经验 · 检索必须带来源与版本 · 命中不等于可信 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-candidates')">知识候选 (3)</button>
+      <button class="btn btn-primary" onclick="qf.openModal('m-new-entry')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>新建条目</button>
+    </div>
+
+    <div class="search" style="width:100%;margin-bottom:18px"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><input type="search" aria-label="知识库检索" placeholder="关键词 / 向量 / 图谱混合检索…" id="kbSearch"></div>
+
+    <div class="two-col">
+      <div class="panel">
+        <div class="phead"><h2>已发布条目</h2><span class="hint">4 条 · 点击查看详情</span></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>条目</th><th>分类</th><th>版本</th><th>状态</th><th>失效条件</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-entry')"><td><div class="t-title">支付幂等模式</div><div class="t-sub">knowledgeKey: pay-idempotency · 来源: Defect D-0142 + 复盘</div></td><td><span class="type-tag">模式</span></td><td class="mono">V2</td><td><span class="status st-done"><span class="d"></span>已发布</span></td><td class="small muted">网关升级后失效</td></tr>
+            <tr onclick="qf.openModal('m-entry')"><td><div class="t-title">对账差异排查路径</div><div class="t-sub">knowledgeKey: recon-troubleshoot</div></td><td><span class="type-tag">经验</span></td><td class="mono">V1</td><td><span class="status st-done"><span class="d"></span>已发布</span></td><td class="small muted">—</td></tr>
+            <tr onclick="qf.openModal('m-entry')"><td><div class="t-title">网关限流阈值速查</div><div class="t-sub">knowledgeKey: gw-throttle-limits</div></td><td><span class="type-tag">参考</span></td><td class="mono">V3</td><td><span class="status st-review"><span class="d"></span>待重评</span></td><td class="small muted">版本变更</td></tr>
+            <tr onclick="qf.openModal('m-entry')"><td><div class="t-title">退款幂等键规范</div><div class="t-sub">knowledgeKey: refund-idempotency-key</div></td><td><span class="type-tag">规范</span></td><td class="mono">V1</td><td><span class="status st-done"><span class="d"></span>已发布</span></td><td class="small muted">—</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="empty-note" hidden id="kbEmpty"><div class="en-title">没有匹配的条目</div>尝试更换关键词,或提交新知识候选</div>
+      </div>
+      <div class="aside-stack">
+        <div class="mini-card">
+          <h3>检索说明</h3>
+          <div class="row"><span class="k">结果带来源</span><span class="v">✅ 是</span></div>
+          <div class="row"><span class="k">版本+摘要</span><span class="v">✅ 是</span></div>
+          <div class="row"><span class="k">高相似≠事实</span><span class="v" style="color:var(--qf-warning-500)">AI 须遵守</span></div>
+        </div>
+        <div class="mini-card">
+          <h3>候选治理</h3>
+          <div class="row"><span class="k">待处理</span><span class="v" style="color:var(--qf-warning-500)">3</span></div>
+          <div class="row"><span class="k">其中重复</span><span class="v">2</span></div>
+          <div class="row"><span class="k">最近生成</span><span class="v muted">08-11 22:10</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 知识候选弹窗 -->
+<div class="modal" id="m-candidates" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>知识候选</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「知识候选」按钮 · 候选治理列表</div>
+      <div class="check review" style="margin-bottom:10px"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>候选 · 批量退款限流模式</b><div class="small muted">来源: FailureCluster FC-08 · AI 提炼草稿,需人工确认适用范围</div></div><span style="margin-left:auto"><button class="btn btn-sm btn-ghost" onclick="qf.closeModal('m-candidates');qf.openModal('m-entry')">审核</button></span></div>
+      <div class="check review" style="margin-bottom:10px"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>候选 · 对账超时重试策略</b><div class="small muted">与已有条目 recon-troubleshoot 高度重复,建议合并</div></div><span style="margin-left:auto"><button class="btn btn-sm btn-ghost" onclick="qf.closeModal('m-candidates');qf.toast('已标记为重复候选(演示)','info')">标记重复</button></span></div>
+      <div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>候选 · 敏感: 支付凭证字段说明</b><div class="small muted">检测到敏感字段,默认拒绝,转人工判断</div></div><span style="margin-left:auto"><button class="btn btn-sm btn-danger" onclick="qf.closeModal('m-candidates');qf.toast('已拒绝敏感候选(演示)','err')">拒绝</button></span></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-candidates')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 条目详情弹窗 -->
+<div class="modal" id="m-entry" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>支付幂等模式 · V2</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击条目行 / 审核候选 · 正式产出物详情</div>
+      <p class="body-text">幂等键由 <span class="mono">tenantId + orderNo + scene</span> 组成;重复回调必须返回首次结果,不得二次入账。适用: 支付/退款/对账。失效条件: 网关升级后需复核。</p>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">适用范围</span><span>支付域 · API 自动化</span>
+        <span class="muted">来源</span><span>Defect D-0142 · ResultAnalysis RA-031</span>
+        <span class="muted">敏感度</span><span class="badge b-warn">内部</span>
+        <span class="muted">审核</span><span>李测试 · APPROVED @ 08-10</span>
+      </div>
+      <div class="src-trace mt-4"><span class="src-node confirmed">D-0142 V1</span><span class="arrow">→</span><span class="src-node confirmed">RA-031</span><span class="arrow">→</span><span class="src-node confirmed">K-104 V2</span></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="qf.closeModal('m-entry')">关闭</button>
+      <button class="btn btn-primary" onclick="qf.closeModal('m-entry');qf.toast('知识条目已发布(演示)','ok')">发布</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新建条目弹窗 -->
+<div class="modal" id="m-new-entry" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>新建知识条目</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="entryForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「新建条目」按钮</div>
+        <div class="field"><label>知识键 <span class="req">*</span></label><input class="input" required placeholder="例如: refund-idempotency-key"><div class="err">请输入知识键</div></div>
+        <div class="field"><label>标题 <span class="req">*</span></label><input class="input" required placeholder="条目标题"><div class="err">请输入标题</div></div>
+        <div class="field"><label>内容</label><textarea class="input" placeholder="条目正文与适用条件"></textarea></div>
+        <div class="field"><label>敏感度</label><select class="input"><option>公开</option><option>内部</option><option>敏感</option></select></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-entry')">取消</button>
+        <button type="submit" class="btn btn-primary">创建草稿</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('entryForm', function () { qf.closeModal('m-new-entry'); qf.toast('知识草稿已创建,待人工审核发布(演示)','ok'); });
+  document.getElementById('kbSearch').addEventListener('input', function (e) {
+    var q = e.target.value.trim().toLowerCase();
+    var rows = document.querySelectorAll('#tab-entries tbody tr, tbody tr');
+    var shown = 0;
+    document.querySelectorAll('tbody tr').forEach(function (r) {
+      var ok = !q || r.textContent.toLowerCase().indexOf(q) > -1;
+      r.hidden = !ok; if (ok) shown++;
+    });
+    document.getElementById('kbEmpty').hidden = shown > 0;
+  });
+</script>
+</body>
+</html>

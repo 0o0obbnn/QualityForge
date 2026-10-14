@@ -1,0 +1,106 @@
+{
+  "review_id": "qg-iprj-20260811-p1",
+  "source_ids": [
+    "iprj-prd-v2-beta-20260811.md"
+  ],
+  "assessments": [
+    {
+      "dimension": "ambiguity",
+      "status": "FINDING",
+      "rationale": "发现多处需澄清的表述（如结算系数XYZ语义、次日12:00自动停用与配额提前调整的竞态），见 F-01、F-04。",
+      "finding_ids": ["F-01", "F-04"]
+    },
+    {
+      "dimension": "consistency",
+      "status": "FINDING",
+      "rationale": "任务记录列表与检索次数管理对'查询状态'、'用量状态'的判定口径需要交叉核对，见 F-02。",
+      "finding_ids": ["F-02"]
+    },
+    {
+      "dimension": "testability",
+      "status": "FINDING",
+      "rationale": "部分业务规则的验收判定缺乏可验证的原子断言（如'未签约机构'分类逻辑），见 F-03。",
+      "finding_ids": ["F-03"]
+    },
+    {
+      "dimension": "completeness",
+      "status": "FINDING",
+      "rationale": "非功能需求中兼容性边界、不同角色对结算详情的可见范围表述不全，见 F-05。",
+      "finding_ids": ["F-05"]
+    },
+    {
+      "dimension": "nfr_measurability",
+      "status": "FINDING",
+      "rationale": "性能需求给出了量化指标（6000万笔/天、6000笔/秒、500ms、99.9%），但'成功率'的统计口径与采样窗口未定义，见 F-06。",
+      "finding_ids": ["F-06"]
+    },
+    {
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "管理侧/业务侧的检索次数管理与结算详情存在同名但不全相同的功能，权限边界需要明确，见 F-07。",
+      "finding_ids": ["F-07"]
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "F-01",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:结算管理",
+                      "iprj-prd-v2-beta-20260811.md:调节系数积"],
+      "evidence": "文档目录与章节将结算规则命名为'系数XYZ'与'调节系数积'，'XYZ'、'积'的语义未见明确公式定义。",
+      "question": "请明确系数的命名含义、计算公式与取值范围。"
+    },
+    {
+      "finding_id": "F-02",
+      "code": "CROSS_SOURCE_CONFLICT",
+      "severity": "REJECT",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:数据上报（管理侧）",
+                      "iprj-prd-v2-beta-20260811.md:检索次数管理（管理侧）"],
+      "evidence": "上报任务记录以'上报月份'汇总机构能力；检索次数管理以'查询月份'判定签约机构并控制启停，两个模块对'月份归属'的批跑时点（每月1号 vs 每月25号）口径不同，存在交叉时间边界。",
+      "question": "请确认上报任务与检索次数配额在同一日历月内的时间边界与上游数据依赖是否冲突。"
+    },
+    {
+      "finding_id": "F-03",
+      "code": "UNTESTABLE_ACCEPTANCE_CRITERIA",
+      "severity": "REJECT",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:检索次数管理（管理侧）"],
+      "evidence": "签约机构的判定依赖结算协议起始时间落在查询月份周期内，但'计入周期'的边界（首月含/不含、最小周期）未给出可验证的判定式。",
+      "question": "请给出可被自动化断言校验的签约机构判定公式与月份边界算法。"
+    },
+    {
+      "finding_id": "F-04",
+      "code": "MISSING_EXCEPTION_BEHAVIOR",
+      "severity": "REVIEW",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:检索次数管理（管理侧）"],
+      "evidence": "规则'调用量超限将于次日中午12:00自动停用，如在自动停用前提升配额则次日不再停用'未定义停用时刻的竞态与幂等处理。",
+      "question": "请明确'次日中午12:00'的停用判定是单点还是持续扫描，及提升配额与停用任务的先后一致语义。"
+    },
+    {
+      "finding_id": "F-05",
+      "code": "MISSING_REQUIRED_ACTOR",
+      "severity": "REJECT",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:结算详情（业务侧）",
+                      "iprj-prd-v2-beta-20260811.md:系统管理"],
+      "evidence": "系统管理仅有角色管理描述，结算详情（业务侧）与管理侧检索次数管理存在同名功能，但业务侧各角色对结算明细的可见/操作范围未逐角色定义。",
+      "question": "请逐角色明确结算详情与检索次数管理的可见字段与可执行操作。"
+    },
+    {
+      "finding_id": "F-06",
+      "code": "UNMEASURABLE_NFR",
+      "severity": "REJECT",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:非功能需求"],
+      "evidence": "性能需求给出日均6000万笔/天、峰值6000笔/秒、平均响应≤500ms、成功率≥99.9%，但'成功率=成功数/请求数'的统计窗口与采样口径未定义。",
+      "question": "请定义成功率与响应时间的统计窗口、采样方式与判定阈值。"
+    },
+    {
+      "finding_id": "F-07",
+      "code": "ROLE_PERMISSION_CONFLICT",
+      "severity": "REJECT",
+      "source_refs": ["iprj-prd-v2-beta-20260811.md:检索次数管理（业务侧）",
+                      "iprj-prd-v2-beta-20260811.md:检索次数管理（管理侧）"],
+      "evidence": "管理侧可停用/启用机构查询状态并对超额机构自动停用；业务侧存在同名'检索次数管理'。同名功能在不同端口下是否允许业务侧自行调整配额，文档未做权限差异声明。",
+      "question": "请明确业务侧检索次数管理与管理侧在配额调整、启停操作上的权限边界。"
+    }
+  ]
+}

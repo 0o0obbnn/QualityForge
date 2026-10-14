@@ -1,0 +1,80 @@
+{
+ "$comment": "覆盖报告契约。由下游覆盖核算在每个 Phase 出口门禁产出。overall_verdict 驱动规划步骤（Phase 是否可以关闭？）。gate_failures 驱动人工评审（缺失覆盖分诊）。覆盖矩阵供下游治理报告的治理仪表盘使用。",
+ "skill": "12",
+ "checked_at": "<ISO-8601 UTC>",
+ "overall_verdict": "GATE_PASS | GATE_FAILURE",
+ "dimensions": {
+ "rule": {
+ "dimension": "rule",
+ "numerator": 0,
+ "denominator": 0,
+ "coverage": 0.0,
+ "threshold": 1.0,
+ "verdict": "PASS | FAIL | NOT_APPLICABLE",
+ "missing": [],
+ "note": "未通过 rule_id 绑定用例的 IR 规则"
+ },
+ "scenario": {
+ "dimension": "scenario",
+ "numerator": 0,
+ "denominator": 0,
+ "coverage": 0.0,
+ "threshold": 0.9,
+ "verdict": "PASS | FAIL | NOT_APPLICABLE",
+ "missing": []
+ },
+ "state": {
+ "dimension": "state",
+ "numerator": 0,
+ "denominator": 0,
+ "coverage": 0.0,
+ "threshold": 0.9,
+ "verdict": "PASS | FAIL | NOT_APPLICABLE",
+ "missing": []
+ },
+ "assertion": {
+ "dimension": "assertion",
+ "numerator": 0,
+ "denominator": 0,
+ "coverage": 0.0,
+ "threshold": 0.85,
+ "verdict": "PASS | FAIL | NOT_APPLICABLE",
+ "passed": 0,
+ "repair": 0,
+ "reject": 0,
+ "unverified": 0,
+ "missing_verdict_ids": [],
+ "duplicate_verdict_ids": [],
+ "duplicate_required_ids": [],
+ "unexpected_verdict_ids": [],
+ "malformed_verdict_count": 0,
+ "malformed_assertion_count": 0,
+ "evidence_errors": 0,
+ "note": "effective 口径：required 的 assertion ID 与 verdict 一对一关联；PASS/(PASS+REPAIR+REJECT+UNVERIFIED)；任何 REJECT 或 evidence 错误强制 FAIL"
+ }
+ },
+ "thresholds_used": {
+ "rule": 1.0,
+ "scenario": 0.9,
+ "state": 0.9,
+ "assertion": 0.85
+ },
+ "gate_failures": {
+  "$comment": "GATE_PASS 时为空；GATE_FAILURE 时每个失败维度一条记录",
+ "$present_only_when_overall_verdict_is_GATE_FAILURE": true,
+ "items": [
+ {
+ "dimension": "rule | scenario | state | assertion",
+ "coverage": 0.0,
+ "threshold": 0.0,
+ "gap": 0.0,
+ "missing_count": 0,
+ "missing_sample": [],
+ "blocking_rejections": 0,
+ "evidence_errors": 0,
+ "empty_denominator": false
+ }
+ ]
+ },
+ "routing": "人类可读：verdict 将流水线送往何处"
+}

@@ -1,0 +1,7 @@
+{
+  "skill_name": "data-requirement-analyzer",
+  "evals": [
+    {"id": 1, "name": "accept-hybrid-sensitive-requirement", "prompt": "对照提供的 IR 和 cases,校验符合规范的 hybrid requirement packet。", "expected_output": "PASS;entity 状态、fixture 类别与敏感字段声明一致。", "files": ["evals/files/reqs_good.json", "evals/files/ir.json", "evals/files/cases.json"]},
+    {"id": 2, "name": "reject-omitted-sensitive-field", "prompt": "校验遗漏了 IR 已声明敏感字段的不合规 requirement packet。", "expected_output": "REJECT;敏感字段要求必须在数据生成前显式声明。", "files": ["evals/files/reqs_bad.json", "evals/files/ir.json", "evals/files/cases.json"]}
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "strategy_id": "STRAT-IPRJ-001",
+  "product": "国家在线业务管理平台",
+  "In_Scope": [
+    {"feature_id": "SC-DELETE-APPROVAL", "description": "删除审批流程", "risk_level": "high"},
+    {"feature_id": "SC-REPORTING-TASK", "description": "每月上报任务生成", "risk_level": "high"},
+    {"feature_id": "SC-QUERY-QUOTA", "description": "检索次数配额管理", "risk_level": "medium"}
+  ],
+  "Out_Of_Scope": [
+    {"item": "OSS-UI-DESIGN", "exclusion_reason": "样式细节非功能性验证范围"},
+    {"item": "OSS-PERF", "exclusion_reason": "性能压测为独立专项，不在主链"}
+  ],
+  "Quality_Gates": [
+    {"gate_name": "coverage_min", "description": "IR四维覆盖", "threshold": 0.85},
+    {"gate_name": "assertion_pass", "description": "断言通过", "threshold": 1.0}
+  ],
+  "Critical_Paths": [
+    {"path_id": "CP-DEL-001", "description": "删除审批通过后次日自动删除主链路", "disposition": "IN_SCOPE", "feature_ids": ["SC-DELETE-APPROVAL"]}
+  ],
+  "Pyramid_Distribution": {
+    "unit": 0.6,
+    "integration": 0.3,
+    "e2e": 0.1
+  },
+  "Mock_Policy": {
+    "never_mock_domain": true,
+    "mock_targets": ["external_gateway"],
+    "reasoning": "领域层不可mock，仅mock外部网关"
+  }
+}

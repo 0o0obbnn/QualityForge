@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《QualityForge 需求设计第一性原理诊断》评审报告</title>
+<style>
+  :root{
+    --bg:#0b1020; --panel:#111831; --card:#151d3a; --line:#243056;
+    --text:#e8ecf8; --muted:#93a0c4; --accent:#7c8cf8; --green:#4ade80;
+    --amber:#fbbf24; --red:#fb7185; --cyan:#22d3ee;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei",-apple-system,sans-serif;line-height:1.75;padding:2rem 1rem}
+  .wrap{max-width:980px;margin:0 auto}
+  header{border-bottom:1px solid var(--line);padding-bottom:1.5rem;margin-bottom:2rem}
+  h1{font-size:1.6rem;letter-spacing:-0.02em}
+  .sub{color:var(--muted);margin-top:.5rem;font-size:.9rem}
+  .badge{display:inline-block;padding:.15rem .6rem;border-radius:999px;font-size:.75rem;border:1px solid var(--line);color:var(--muted);margin-right:.4rem}
+  .badge.green{color:var(--green);border-color:rgba(74,222,128,.35)}
+  .badge.red{color:var(--red);border-color:rgba(251,113,133,.35)}
+  .badge.amber{color:var(--amber);border-color:rgba(251,191,36,.35)}
+  h2{font-size:1.15rem;margin:2.2rem 0 1rem;padding-left:.7rem;border-left:3px solid var(--accent)}
+  .verdict{background:linear-gradient(135deg,rgba(124,140,248,.12),rgba(34,211,238,.08));border:1px solid rgba(124,140,248,.35);border-radius:12px;padding:1.4rem 1.6rem;margin-bottom:1rem}
+  .verdict .big{font-size:1.05rem;font-weight:600}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.8rem;margin:1.2rem 0}
+  .metric{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:.9rem 1rem}
+  .metric .num{font-size:1.5rem;font-weight:700;color:var(--accent)}
+  .metric .label{color:var(--muted);font-size:.8rem;margin-top:.2rem}
+  table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.88rem}
+  th{background:var(--panel);color:var(--muted);text-align:left;padding:.6rem .8rem;border-bottom:1px solid var(--line);font-weight:600}
+  td{padding:.6rem .8rem;border-bottom:1px solid rgba(36,48,86,.6);vertical-align:top}
+  tr:hover td{background:rgba(124,140,248,.04)}
+  .ok{color:var(--green);font-weight:600}
+  .warn{color:var(--amber);font-weight:600}
+  .bad{color:var(--red);font-weight:600}
+  .pill{display:inline-block;padding:.05rem .5rem;border-radius:6px;font-size:.75rem;font-weight:600}
+  .pill.p0{background:rgba(251,113,133,.15);color:var(--red)}
+  .pill.p1{background:rgba(251,191,36,.15);color:var(--amber)}
+  .pill.p2{background:rgba(34,211,238,.12);color:var(--cyan)}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.4rem;margin:1rem 0}
+  .panel h3{font-size:.95rem;margin-bottom:.6rem;color:var(--accent)}
+  ul{margin:.4rem 0 .4rem 1.2rem}
+  li{margin:.3rem 0}
+  code{background:rgba(255,255,255,.07);padding:.1rem .4rem;border-radius:4px;font-size:.82rem;font-family:"SF Mono",Menlo,monospace;color:var(--cyan)}
+  .muted{color:var(--muted);font-size:.85rem}
+  .flow{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.8rem 0}
+  .flow span{background:var(--card);border:1px solid var(--line);padding:.3rem .8rem;border-radius:8px;font-size:.82rem}
+  .flow .arrow{color:var(--muted);border:none;background:none;padding:0}
+  footer{border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1rem;color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>《QualityForge 需求设计第一性原理诊断》评审报告</h1>
+  <div class="sub">
+    <span class="badge">评审对象：deliverables/2026-08-27/QualityForge-需求设计第一性原理诊断.md</span>
+    <span class="badge green">评审方式：逐条核验引用证据（约 32 处）</span>
+    <span class="badge">日期：2026-08-27</span>
+  </div>
+</header>
+
+<div class="verdict">
+  <div class="big">总体结论：诊断方向正确、论证扎实，核心结论全部成立，可采信为重构输入。</div>
+  <p class="muted" style="margin-top:.5rem">报告的核心命题——「QualityForge 系统性欠建了『人—AI 协作』，三个直觉（无人机交互 / 流程不清 / 关联发虚）同源于『只选了装配线范式（A）』」——经逐条核验，证据链完整、因果推理成立。发现 10 处引用细节瑕疵（1 处文件编号错误、9 处计数/表述不精确），均不影响核心结论。</p>
+</div>
+
+<div class="metrics">
+  <div class="metric"><div class="num">22/32</div><div class="label">引用核验准确</div></div>
+  <div class="metric"><div class="num">10</div><div class="label">细节瑕疵（P1×1 / P2×9）</div></div>
+  <div class="metric"><div class="num">0</div><div class="label">致命错误（P0）</div></div>
+  <div class="metric"><div class="num">3/3</div><div class="label">核心论点成立</div></div>
+</div>
+
+<h2>一、核心结论核验（全部成立）</h2>
+<div class="panel">
+  <h3>① 「只选了范式 A（装配线 + 检验门）」—— 有据可查，属实</h3>
+  <ul>
+    <li><code>UIUX-Design-Plan:12</code>「审核即主流程」、<code>PRD总纲:7</code> 人审「批改/例外裁决/最终质量责任」✅</li>
+    <li>人对 AI 的唯一回话通道 = <code>POST /review-tasks/{id}/decisions</code>；<code>/ai</code> 组 11 个操作中 10 个为只读观测，唯一 POST 是 <code>/ai/eval-runs</code>（评测面，非回话）✅ 实质成立</li>
+    <li><code>WebSocket契约:3,77,148</code>「只推送状态/日志/Trace」「不接受 Abort/Pause/Approve 业务命令」✅</li>
+    <li><code>21矩阵:11,32</code> 缺输入 fail-closed；自治等级变更须版本化审批，无运行期实时调整机制 ✅</li>
+    <li>「AI 不是聊天窗口」出处 <code>历史13:26</code>，且报告正确标注其为历史非权威稿 ✅</li>
+  </ul>
+  <h3>② 「领域模型没有协作实体」—— 属实，且『提出澄清项』确实只出现一次</h3>
+  <ul>
+    <li>领域模型 §9 仅 Skill/Agent/Workflow/Session/TraceNode/SkillInvocation 等，无 Conversation/ClarificationRequest ✅</li>
+    <li>全文档集检索「澄清」：产品描述仅 <code>05:97</code>「识别信息缺口、提出澄清项」一处，无实体/流程/API/UI 支撑 —— 报告的「团队直觉到了但没落地」判断准确 ✅</li>
+    <li><code>产品评估报告:91</code>「单人 HITL 悖论」、<code>:101</code>「自审 + 延迟生效」补救 —— 报告「削弱门缓解瓶颈」的解读成立 ✅</li>
+  </ul>
+  <h3>③ 「模块关联发虚」的根因 —— 拆分基准与数量断言全部核实</h3>
+  <ul>
+    <li>8 模块 = 产出物 6 + 管理控制 2（<code>05 §2.1</code>）；任务看板归产出物模块却不拥有产出物（<code>§5.2 规则1</code>）✅</li>
+    <li>自动化按「Code Review 基准」升格（<code>§2.3</code>）、CI/CD「先挂质量域、以后再说」（<code>§2.3 L63</code>）✅</li>
+    <li>Owner 矩阵 8 张子表（<code>§5.12.2-9</code>）、9 条命令接口面（<code>§5.10.9</code>，逐条数过）、8 条边界规则（<code>§5.2</code>）✅</li>
+    <li>CoverageReport 归属靠裁决 B2-1 打补丁（<code>§5.12.7</code>）、手工测试 O2 裁决 2026-08-17 纳入 V1 且未进任何 Journey（<code>§4.5</code> + 02 §6 三条 Journey 均无手工测试）✅</li>
+    <li>跨模块盘点 INV-00 精确 57 条、总 408 条 ✅；姊妹文档 §6.1 四分法（工作面 5 / 流程与人工控制 / AI 控制面 / 平台控制面）、任务看板被移出工作面 ✅</li>
+  </ul>
+</div>
+
+<h2>二、发现的问题清单</h2>
+<table>
+  <tr><th style="width:70px">级别</th><th style="width:180px">问题</th><th>证据与影响</th></tr>
+  <tr>
+    <td><span class="pill p1">P1</span></td>
+    <td>测试执行 PRD 文件编号引用错误</td>
+    <td>报告写「14-PRD §主流程」，测试执行模块实为 <code>docs/02-prd/13-PRD-Execution.md</code>（14 号是 QualityIntelligence）。所描述内容（主流程引用已批准 TestCaseVersion、可被 ExecutionPlanVersion 冻结）在 13 号中属实，仅编号错。影响：读者按编号查证会查错文件。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「8 步闭环」实为 9 步</td>
+    <td><code>01 §3</code> 闭环含「已审核经验回流知识库」共 9 节点，报告计 8。不影响「五种叙述不一致」论点。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「6 阶段（deliverable）」实为 5 阶段</td>
+    <td><code>deliverables/2026-08-14/qualityforge-user-flow.html</code> 为 Phase 1–5 + 3 条 Journey 卡片。若指另一文件需注明。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「/ai/* 其余接口全是 GET」字面不精确</td>
+    <td><code>37-API总览</code> AI Agent 中心组为 5 GET + 1 POST（<code>POST /ai/eval-runs</code> 评测创建）。属评测配置面、非运行回话，核心结论不受影响，但应表述为「除评测创建外均为只读观测」。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>55-SOP:115 作为「而非发问」证据有张力</td>
+    <td>SOP 原文为「缺少输入…<code>停止并请求补充</code>」——受理建档阶段存在「请求补充」动作。fail-closed 论断由 21:11 支撑充分，此条引用冗余且字面与结论相抵，建议删除或改述。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「§7.3」编号不严谨</td>
+    <td>姊妹文档 §7 为无编号清单，「Agent 对话定位：支持查询和命令、命令须生成可审查 AgentPlan」是其第 3 条，内容属实，建议写「§7 第 3 条」。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「只有 1 个模块点名下游」断言过强</td>
+    <td><code>11-PRD §4 主流程</code> 亦有「被 TestingIR、Mock、执行和分析按精确版本引用」点名消费方。核心论点（无交接规则、靠共享产出物隐式相连）仍成立，但计数应改为「至少 2 个、且均为『被引用』而非『交接规则』」。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>AI 不确定时「阻塞或猜」二选一不全</td>
+    <td><code>21矩阵</code> 还存在第三条路径：触发降级（如任务看板「目标歧义」降级触发）。降级本质上仍偏保守、支持报告论点方向，但严格说路径不止两条。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「~110 条 GWT」来源不清</td>
+    <td>05 内 Given 开头 58 行、全文档集「Given」字样 200 次，110 介于其间，未能在标注位置精确复现；量级合理，建议补充统计口径。</td>
+  </tr>
+  <tr>
+    <td><span class="pill p2">P2</span></td>
+    <td>「延迟生效 / 批量审批」并列混淆</td>
+    <td>batch-approve 是产品既有功能（11-PRD L272），审计补救实为「自审 + 延迟生效」（产品评估报告:101）。二者不宜并列归为「审计给出的补救」。</td>
+  </tr>
+</table>
+
+<h2>三、论证质量评估</h2>
+<div class="panel">
+  <h3>做得好的地方</h3>
+  <ul>
+    <li><b>因果链完整</b>：从公理 A/B → 中心设计问题 → 范式 A 的结构性代价 → 三个直觉归一，推理环环相扣，且每一步都有文档证据落点。</li>
+    <li><b>平衡与克制</b>：明确承认「范式 A 本身正当」「数据契约层是强项要保住」「8 类产出物分类需同步」，没有为立论而全盘否定；自标「待人工评审、非权威」，符合项目「AI 不得作为最终审批人」的治理原则。</li>
+    <li><b>方案自洽</b>：R0 将人类澄清答复落成 <code>evidenceClass=CONFIRMED</code> 溯源节点喂进 SourceTraceEdge——与既有诚实不变量（缺证据不成 PASS、冲突留全版本）兼容，正面回应了「AI 不是聊天窗口」的旧顾虑，不是简单加个聊天框。</li>
+    <li><b>决策权归位</b>：第 6 节把「V1 是否纳入协作层 / 主 persona / 范式取向」三问留给用户拍板，符合「先问再做」的设计纪律。</li>
+  </ul>
+</div>
+<div class="panel">
+  <h3>报告自身的缺口（评审补充）</h3>
+  <ul>
+    <li><b>R0 的副作用未讨论</b>：澄清回环会引入新的治理成本——AI 频繁发问打断连续生产（L2 代理的价值恰在连续）、澄清挂起的超时处理、用户被「追问疲劳」反噬。报告未给出 ClarificationRequest 的频率控制 / 预算 / 超时策略，重构前应补。</li>
+    <li><b>范式 B 的收益未量化</b>：「过程中发现缺陷最便宜」是软件工程铁律，但「人在回环中」的吞吐成本 vs「终点门批量审核」的人均成本没有对比设计。建议在重构验证阶段设度量（澄清次数 / 终点门退回率 / 单审核耗时）。</li>
+    <li><b>悖论与 persona 的关系可再推进</b>：单人 HITL 悖论在「小团队协作」persona（姊妹文档 §7 推荐）下会自然缓解（生成者 ≠ 审批者）。报告将 persona 列为待裁决项是正确的，但可点明：若定小团队，R0 的紧迫性会下降、R1 的优先级上升。</li>
+  </ul>
+</div>
+
+<h2>四、结论与使用建议</h2>
+<div class="panel">
+  <ul>
+    <li><b>结论</b>：本报告可采信为重构输入，核心判断（缺人机协作层 = 根因、范式 A-only 的结构性代价未被补偿）证据充分、推理严谨，与姊妹文档（业务流程与功能关联分析）互补成立。</li>
+    <li><b>使用前</b>：修正 P1 文件编号（13-PRD）、按上表订正 9 处 P2 表述，再进入裁决流程。</li>
+    <li><b>使用顺序</b>：先裁决第 6 节三问 → 落 R0/R1/R2 需求修订 → 按姊妹文档实施顺序建设，报告建议的顺序合理。</li>
+  </ul>
+</div>
+
+<footer>
+  评审方法：对报告全部引用点做文件存在性 + 行号/内容 + 数量 + 交叉引用四重核验；共核验约 32 处，其中 22 处准确、10 处存在细节瑕疵。生成时间 2026-08-27。
+</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "1.0",
+  "status": "engineering_spike",
+  "id": "gate0-planning-slice",
+  "description": "Stage 3 provider-neutral reference workflow: frozen requirement version to strategy, plan, test cases and exact-version human review tasks.",
+  "parentWorkflow": "gate0-requirement-to-coverage",
+  "defaultAutonomyLevel": "L2",
+  "providerMode": "deterministic_reference_generator",
+  "artifactPolicy": {
+    "immutableOutputs": true,
+    "draftStatus": "PENDING_REVIEW",
+    "formalArtifactTypes": ["TEST_STRATEGY", "TEST_PLAN", "TEST_CASE"],
+    "requiredReviewBinding": ["artifactType", "artifactId", "artifactVersionId", "contentDigest"],
+    "approvalActorType": "USER"
+  },
+  "nodes": [
+    {"id": "requirement_source_check", "agentId": "qf-requirement-ir", "skillId": "requirement-quality-gate", "dependsOn": []},
+    {"id": "strategy", "agentId": "qf-test-design", "skillId": "strategy-planner", "dependsOn": ["requirement_source_check"]},
+    {"id": "test_plan", "agentId": "qf-test-design", "skillId": "plan-orchestrator", "dependsOn": ["strategy"]},
+    {"id": "test_cases", "agentId": "qf-test-design", "skillId": "test-case-generator", "dependsOn": ["test_plan"]},
+    {"id": "human_gate", "agentId": "qf-independent-verifier", "skillId": "hitl-gatekeeper", "dependsOn": ["test_cases"], "requiredVerdict": "BLOCK_HUMAN"}
+  ],
+  "terminalStates": ["PAUSED_FOR_HUMAN", "COMPLETED", "FAILED"]
+}

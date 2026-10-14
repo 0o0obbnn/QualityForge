@@ -1,0 +1,348 @@
+{
+  "declared_sources": [
+    {
+      "source_id": "PRD-V2-20260811",
+      "availability": "AVAILABLE"
+    },
+    {
+      "source_id": "ROLE-PERMISSION-TABLE",
+      "availability": "EXPECTED_MISSING"
+    },
+    {
+      "source_id": "HIST-INTERFACE-CONTRACT",
+      "availability": "NOT_PROVIDED"
+    },
+    {
+      "source_id": "V2-INTERFACE-DOC",
+      "availability": "NOT_PROVIDED"
+    }
+  ],
+  "ir_draft": {
+    "requirements": [
+      {
+        "requirement_id": "REQ-001",
+        "title": "enc包名校验（27位结构11项规则）",
+        "statement": "上传enc包时按11项规则校验27位包名与50M大小；实时校验与toast提示两套口径存在矛盾，保留双版本待人工裁决",
+        "source_trace": "PRD-V2-20260811§1.2.1:L323-L359",
+        "confidence": 0.85,
+        "confidence_rationale": "规则逐条有原文，但两套口径冲突未裁决，置信度受损",
+        "conflict": true,
+        "conflict_refs": [
+          "PRD-V2-20260811§1.2.1:实时校验规则⑤⑦（L323,L327）",
+          "PRD-V2-20260811§1.2.1:toast错误提示⑤⑦（L347,L351）"
+        ]
+      },
+      {
+        "requirement_id": "REQ-002",
+        "title": "每月1号自动生成上报任务",
+        "statement": "每月1号凌晨系统自动生成本月上报任务，机构范围为启用状态的接入机构；接口上报月份只能是当前月",
+        "source_trace": "PRD-V2-20260811§1.2.1:L135-L141",
+        "confidence": 0.88,
+        "confidence_rationale": "生成规则与机构范围有原文直引；凌晨具体时刻未定义（评审Q-016）"
+      },
+      {
+        "requirement_id": "REQ-003",
+        "title": "上报包处理状态机",
+        "statement": "上报包处理状态：等待处理/正在处理/处理完毕无反馈/处理完毕有反馈/处理异常；解密→解压→校验各节点记录毫秒级时间戳",
+        "source_trace": "PRD-V2-20260811§1.2.2:L432,L624-L627",
+        "confidence": 0.86,
+        "confidence_rationale": "状态枚举与流转有原文；删除类包审批后状态回写未定义（评审Q-009）"
+      },
+      {
+        "requirement_id": "REQ-004",
+        "title": "删除审批触发条件",
+        "statement": "删除类数据包需删除审批；触发条件存在两种口径（列表：类型为删除即审批；查看弹窗：删除且成功数量不为0），保留双版本待裁决",
+        "source_trace": "PRD-V2-20260811§1.2.2:L520,L654",
+        "confidence": 0.8,
+        "confidence_rationale": "两种口径均有原文直引，但互斥未裁决",
+        "conflict": true,
+        "conflict_refs": [
+          "PRD-V2-20260811§1.2.2:上报详情列表（L520）",
+          "PRD-V2-20260811§1.2.2:查看弹窗（L654）"
+        ]
+      },
+      {
+        "requirement_id": "REQ-005",
+        "title": "删除定时任务",
+        "statement": "审批通过后系统于次日定时任务自动删除数据；未审批或审批不通过数据保留",
+        "source_trace": "PRD-V2-20260811§1.5.1:L1511",
+        "confidence": 0.92,
+        "confidence_rationale": "规则完整直引；删除任务失败处理未定义（评审Q-009延伸）"
+      },
+      {
+        "requirement_id": "REQ-006",
+        "title": "查询状态启停规则",
+        "statement": "查询状态启停存在矛盾口径：业务规则称仅当前月份可停用/启用；字段描述称只能手动启用不可手工停用，保留双版本待裁决",
+        "source_trace": "PRD-V2-20260811§1.6:L1775,L1873",
+        "confidence": 0.8,
+        "confidence_rationale": "两种口径均有原文直引，互斥未裁决",
+        "conflict": true,
+        "conflict_refs": [
+          "PRD-V2-20260811§1.6:业务规则（L1775,L2015）",
+          "PRD-V2-20260811§1.6:查询状态字段描述（L1873）"
+        ]
+      },
+      {
+        "requirement_id": "REQ-007",
+        "title": "查询超额自动停用",
+        "statement": "签约/未签约/试用机构调用量超额后，系统于次日中午12:00自动停止查询服务；停用前提升配额则不停用",
+        "source_trace": "PRD-V2-20260811§1.6:L1771,L2011,L2264",
+        "confidence": 0.9,
+        "confidence_rationale": "三类机构规则均有原文直引；停用在途请求处理未定义（评审Q-011）"
+      },
+      {
+        "requirement_id": "REQ-008",
+        "title": "查询与检索次数记录",
+        "statement": "机构用户查询记录查询记录与检索次数，检索次数耗完停用时提示；协会用户仅记录查询记录不记录检索次数",
+        "source_trace": "PRD-V2-20260811§1.4.1:L1087-L1089",
+        "confidence": 0.91,
+        "confidence_rationale": "规则完整直引"
+      },
+      {
+        "requirement_id": "REQ-009",
+        "title": "系数XYZ计算",
+        "statement": "数据贡献量系数X/调用量系数Y/质量系数Z按系数说明表映射并每日汇总更新；系数映射规则仅有原型图无文字定义，计算不可实现",
+        "source_trace": "PRD-V2-20260811§1.9.1:L2967,L3103,L3230",
+        "confidence": 0.6,
+        "confidence_rationale": "展示规则有原文，但核心映射规则缺失（评审Q-001阻断项）"
+      },
+      {
+        "requirement_id": "REQ-010",
+        "title": "调节系数积生成",
+        "statement": "每月1日凌晨按结算协议机构数量生成上月月度调节系数；按笔结算=XYZ三系数相乘，包月结算=XZ相乘",
+        "source_trace": "PRD-V2-20260811§1.9.2:L3392,L3501",
+        "confidence": 0.82,
+        "confidence_rationale": "公式有原文直引；依赖的系数值映射缺失（见REQ-009）"
+      },
+      {
+        "requirement_id": "REQ-011",
+        "title": "费用单费用公式",
+        "statement": "结算调用量=有效调用量-会员免费调用量；包月套餐外调用量=有效调用量-包月调用量-会员免费调用量",
+        "source_trace": "PRD-V2-20260811§1.9.4:L4078,L4107",
+        "confidence": 0.87,
+        "confidence_rationale": "公式直引；抵扣顺序与负值处理待澄清（评审C-002）"
+      },
+      {
+        "requirement_id": "REQ-012",
+        "title": "生成费用单（先删后建）",
+        "statement": "生成费用单先删除调节系数积与费用单明细表中M-1月数据，再用M-1月现有数据重新生成；权限/确认/回滚未定义",
+        "source_trace": "PRD-V2-20260811§1.9.4:L4181",
+        "confidence": 0.78,
+        "confidence_rationale": "生成逻辑直引；防护机制缺失（评审Q-010）"
+      },
+      {
+        "requirement_id": "REQ-013",
+        "title": "角色权限控制",
+        "statement": "按《角色权限表》增加对应功能的角色权限；权限表未随文档提供，权限模型不可验收",
+        "source_trace": "PRD-V2-20260811§1.11.1:L4260",
+        "confidence": 0.55,
+        "confidence_rationale": "仅一句指引性原文，权限定义整体缺失（评审Q-002阻断项）"
+      },
+      {
+        "requirement_id": "REQ-014",
+        "title": "接口端产品查询",
+        "statement": "基础/升级产品接口端响应参数与字段值计算逻辑同网页端一致；接口文档未提供",
+        "source_trace": "PRD-V2-20260811§1.4:L1182,L1501",
+        "confidence": 0.65,
+        "confidence_rationale": "一致性声明有原文；接口契约缺失（评审Q-007/Q-008）"
+      }
+    ],
+    "business_rules": [
+      {
+        "rule_id": "BR-001",
+        "condition": "每月1号凌晨",
+        "action": "为启用状态的接入机构生成本月上报任务",
+        "source_trace": "PRD-V2-20260811§1.2.1:L135,L137",
+        "confidence": 0.88,
+        "confidence_rationale": "规则直引；时刻未量化"
+      },
+      {
+        "rule_id": "BR-002",
+        "condition": "上报数据包类型为删除（口径A）/类型为删除且成功数量不为0（口径B）",
+        "action": "生成删除审批记录",
+        "source_trace": "PRD-V2-20260811§1.2.2:L520,L654",
+        "confidence": 0.8,
+        "confidence_rationale": "双口径原文直引，未裁决",
+        "conflict": true,
+        "conflict_refs": [
+          "PRD-V2-20260811§1.2.2:列表口径（L520）",
+          "PRD-V2-20260811§1.2.2:弹窗口径（L654）"
+        ]
+      },
+      {
+        "rule_id": "BR-003",
+        "condition": "调用量超过最大调用量（签约/未签约/试用各自判定）",
+        "action": "次日中午12:00自动停止查询服务；停用前提升配额则不停用",
+        "source_trace": "PRD-V2-20260811§1.6:L1771,L2011,L2264",
+        "confidence": 0.9,
+        "confidence_rationale": "三类机构规则直引"
+      },
+      {
+        "rule_id": "BR-004",
+        "condition": "机构用户发起查询",
+        "action": "记录查询记录与检索次数；协会用户仅记录查询记录",
+        "source_trace": "PRD-V2-20260811§1.4.1:L1087,L1089",
+        "confidence": 0.91,
+        "confidence_rationale": "规则直引"
+      },
+      {
+        "rule_id": "BR-005",
+        "condition": "每月1日凌晨",
+        "action": "按结算协议机构数量生成上月月度调节系数",
+        "source_trace": "PRD-V2-20260811§1.9.2:L3392",
+        "confidence": 0.85,
+        "confidence_rationale": "规则直引；与上报任务定时任务先后顺序未定义"
+      },
+      {
+        "rule_id": "BR-006",
+        "condition": "结算模式=按笔结算",
+        "action": "调节系数积=数据贡献量系数x数据调用量系数x数据质量系数",
+        "source_trace": "PRD-V2-20260811§1.9.2:L3501",
+        "confidence": 0.85,
+        "confidence_rationale": "公式直引；系数映射缺失"
+      },
+      {
+        "rule_id": "BR-007",
+        "condition": "费用单生成",
+        "action": "结算调用量=有效调用量-会员免费调用量",
+        "source_trace": "PRD-V2-20260811§1.9.4:L4078",
+        "confidence": 0.87,
+        "confidence_rationale": "公式直引"
+      },
+      {
+        "rule_id": "BR-008",
+        "condition": "结算模式=包月结算",
+        "action": "包月套餐外调用量=有效调用量-包月调用量-会员免费调用量",
+        "source_trace": "PRD-V2-20260811§1.9.4:L4107",
+        "confidence": 0.87,
+        "confidence_rationale": "公式直引"
+      },
+      {
+        "rule_id": "BR-009",
+        "condition": "点击生成费用单",
+        "action": "先删除M-1月调节系数积与费用单明细数据，再重新生成",
+        "source_trace": "PRD-V2-20260811§1.9.4:L4181",
+        "confidence": 0.8,
+        "confidence_rationale": "逻辑直引；防护缺失"
+      },
+      {
+        "rule_id": "BR-010",
+        "condition": "机构无结算协议且有试用机构标签",
+        "action": "判定为试用机构；列表行手动新增",
+        "source_trace": "PRD-V2-20260811§1.6:L2264,L2266",
+        "confidence": 0.89,
+        "confidence_rationale": "判定条件直引；用量口径存在冲突见REQ-006相关"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "ENT-001",
+        "name": "上报数据包",
+        "states": [
+          "等待处理",
+          "正在处理",
+          "处理完毕无反馈",
+          "处理完毕有反馈",
+          "处理异常"
+        ],
+        "source_trace": "PRD-V2-20260811§1.2.2:L432",
+        "confidence": 0.86,
+        "confidence_rationale": "状态枚举直引；审批后回写未定义"
+      },
+      {
+        "entity_id": "ENT-002",
+        "name": "删除审批记录",
+        "states": [
+          "待审批",
+          "审批通过",
+          "审批不通过"
+        ],
+        "source_trace": "PRD-V2-20260811§1.5.1:L1569",
+        "confidence": 0.9,
+        "confidence_rationale": "状态枚举直引"
+      },
+      {
+        "entity_id": "ENT-003",
+        "name": "检索次数记录",
+        "states": [
+          "启用",
+          "停用"
+        ],
+        "source_trace": "PRD-V2-20260811§1.6:L1771,L1873",
+        "confidence": 0.82,
+        "confidence_rationale": "两态有原文；手工停用权限存在冲突（REQ-006）"
+      },
+      {
+        "entity_id": "ENT-004",
+        "name": "结算协议",
+        "states": [
+          "已签约未生效",
+          "已签约",
+          "未签约"
+        ],
+        "source_trace": "PRD-V2-20260811§1.8.1:L2676-L2678",
+        "confidence": 0.88,
+        "confidence_rationale": "三值判定直引；判定流程图仅图片（评审C-004）"
+      },
+      {
+        "entity_id": "ENT-005",
+        "name": "机构",
+        "states": [
+          "启用",
+          "停用"
+        ],
+        "source_trace": "PRD-V2-20260811§1.8.1:L2729",
+        "confidence": 0.87,
+        "confidence_rationale": "停用级联规则直引"
+      },
+      {
+        "entity_id": "ENT-006",
+        "name": "费用单",
+        "states": [
+          "生成（每月1日）",
+          "重新生成（先删后建）"
+        ],
+        "source_trace": "PRD-V2-20260811§1.9.4:L4181",
+        "confidence": 0.8,
+        "confidence_rationale": "生成逻辑直引"
+      }
+    ],
+    "constraints": [
+      {
+        "constraint_id": "CON-001",
+        "statement": "列表导出每次最多5万条",
+        "source_trace": "PRD-V2-20260811§1.2.1:L283",
+        "confidence": 0.91,
+        "confidence_rationale": "原文直引；超限行为未定义（评审Q-021）"
+      },
+      {
+        "constraint_id": "CON-002",
+        "statement": "enc文件包大小不超过50M",
+        "source_trace": "PRD-V2-20260811§1.2.1:L335",
+        "confidence": 0.93,
+        "confidence_rationale": "原文直引"
+      },
+      {
+        "constraint_id": "CON-003",
+        "statement": "查询明细展示最近1年查询记录，上限200条",
+        "source_trace": "PRD-V2-20260811§1.4.1:L1165",
+        "confidence": 0.92,
+        "confidence_rationale": "原文直引"
+      },
+      {
+        "constraint_id": "CON-004",
+        "statement": "峰值查询≥6000笔/秒，平均响应≤500ms，成功率≥99.9%",
+        "source_trace": "PRD-V2-20260811§2.1:L4311-L4315",
+        "confidence": 0.84,
+        "confidence_rationale": "指标直引；指标间口径关系未说明（评审Q-024）"
+      },
+      {
+        "constraint_id": "CON-005",
+        "statement": "数据一致性：100%（最终一致性）——两表述语义互斥，待澄清",
+        "source_trace": "PRD-V2-20260811§2.1:L4337",
+        "confidence": 0.6,
+        "confidence_rationale": "原文直引但自相矛盾（评审Q-017），不可直接作为验收约束"
+      }
+    ]
+  }
+}

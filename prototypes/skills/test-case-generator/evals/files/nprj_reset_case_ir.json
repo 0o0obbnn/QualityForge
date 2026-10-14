@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "artifact_kind": "test_case_ir",
+    "artifact_id": "TCIR-AFBFB669ACE883",
+    "generated_at": "2026-09-07T00:30:00+08:00",
+    "lifecycle_status": "ACCEPTED"
+  },
+  "source_artifacts": {
+    "test_design_input": "AF-BFB669ACE883_test_design_slice.json",
+    "test_design_input_sha256": "12d95601076be09db01c42b4624439ebf4af70db9526916acf95a8582054d40a",
+    "graph_snapshot_id": "GRAPH-1BDF14613A91"
+  },
+  "generation_scope": {
+    "mode": "SELECTED_SLICE",
+    "policy": "READY_DIMENSIONS_ONLY",
+    "selected_test_design_item_ids": ["TDI-AD4F52DE95EC"],
+    "excluded_dimensions": [
+      {"test_design_item_id": "TDI-AD4F52DE95EC", "dimension": "sorting", "status": "NOT_APPLICABLE", "reasons": []},
+      {"test_design_item_id": "TDI-AD4F52DE95EC", "dimension": "state_transition", "status": "NOT_APPLICABLE", "reasons": []},
+      {"test_design_item_id": "TDI-AD4F52DE95EC", "dimension": "permission", "status": "BLOCKED", "reasons": ["执行角色或权限边界未确认"]},
+      {"test_design_item_id": "TDI-AD4F52DE95EC", "dimension": "integration", "status": "NOT_APPLICABLE", "reasons": []},
+      {"test_design_item_id": "TDI-AD4F52DE95EC", "dimension": "nfr", "status": "NOT_APPLICABLE", "reasons": []}
+    ]
+  },
+  "data_requirements": [
+    {"data_requirement_id": "DR-CREDIT-CODE-001", "test_design_item_id": "TDI-AD4F52DE95EC", "business_name": "法人标识代码", "field_usage_id": "FUSE-2E5BF2B4B4FB", "value_class": "REPRESENTATIVE", "purpose": "验证重置可清除已输入的法人标识代码筛选值", "constraint_rule_ids": [], "provenance_type": "TEST_DERIVATION"},
+    {"data_requirement_id": "DR-USAGE-STATUS-001", "test_design_item_id": "TDI-AD4F52DE95EC", "business_name": "用量状态", "field_usage_id": "FUSE-974F92EC8236", "value_class": "VALID", "purpose": "从需求声明的选项中选择一个非默认值", "constraint_rule_ids": ["RULE-065C8818BF59"], "provenance_type": "REQUIREMENT_FACT"},
+    {"data_requirement_id": "DR-QUERY-STATUS-001", "test_design_item_id": "TDI-AD4F52DE95EC", "business_name": "查询状态", "field_usage_id": "FUSE-9AE7662EDF50", "value_class": "VALID", "purpose": "从需求声明的选项中选择一个非默认值", "constraint_rule_ids": ["RULE-1F669E1EF8A2"], "provenance_type": "REQUIREMENT_FACT"},
+    {"data_requirement_id": "DR-ORG-NAME-001", "test_design_item_id": "TDI-AD4F52DE95EC", "business_name": "机构名称", "field_usage_id": "FUSE-ADC6B5CE72D4", "value_class": "REPRESENTATIVE", "purpose": "验证重置可清除已输入的机构名称筛选值", "constraint_rule_ids": [], "provenance_type": "TEST_DERIVATION"},
+    {"data_requirement_id": "DR-QUERY-MONTH-001", "test_design_item_id": "TDI-AD4F52DE95EC", "business_name": "查询月份", "field_usage_id": "FUSE-C74D89E596D9", "value_class": "REPRESENTATIVE", "purpose": "验证重置可清除已选择的查询月份", "constraint_rule_ids": [], "provenance_type": "TEST_DERIVATION"}
+  ],
+  "cases": [
+    {
+      "case_id": "TC-AFBFB669ACE883-001",
+      "title": "重置全部查询条件",
+      "module": "检索次数管理（管理侧）",
+      "function_name": "签约机构",
+      "minimum_function": "重置",
+      "objective": "验证存在多个非默认筛选值时，执行重置会清空全部筛选条件",
+      "priority": "P1",
+      "test_level": "SYSTEM",
+      "test_techniques": ["REQUIREMENT_BASED", "REPRESENTATIVE_VALUE"],
+      "covered_dimensions": ["functional", "field_validation"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-1BDF14613A91",
+        "test_design_item_id": "TDI-AD4F52DE95EC",
+        "atomic_id": "AF-BFB669ACE883",
+        "requirement_ids": ["REQ-0EAEDB9B55"],
+        "rule_ids": ["RULE-9CD6F3823432", "RULE-065C8818BF59", "RULE-1F669E1EF8A2"],
+        "field_usage_ids": ["FUSE-2E5BF2B4B4FB", "FUSE-974F92EC8236", "FUSE-9AE7662EDF50", "FUSE-ADC6B5CE72D4", "FUSE-C74D89E596D9"],
+        "evidence_ids": ["EVD-422B34667943", "EVD-563176EBFDA9", "EVD-2AF0A8E2B8C8", "EVD-2780D8135A36", "EVD-FD7BF497DEE1", "EVD-E80B9EC89A4E"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "UI_AUTOMATION"],
+        "fixture_category": "Static"
+      },
+      "preconditions": [
+        {"precondition_id": "PRE-001", "description": "已进入签约机构查询区域，且五个筛选条件均已设置为非默认值", "provenance_type": "TEST_DERIVATION", "source_refs": ["FUSE-2E5BF2B4B4FB", "FUSE-974F92EC8236", "FUSE-9AE7662EDF50", "FUSE-ADC6B5CE72D4", "FUSE-C74D89E596D9"]}
+      ],
+      "data_requirement_refs": ["DR-CREDIT-CODE-001", "DR-USAGE-STATUS-001", "DR-QUERY-STATUS-001", "DR-ORG-NAME-001", "DR-QUERY-MONTH-001"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "点击重置",
+          "target": "重置操作",
+          "data_requirement_refs": [],
+          "expected_results": [
+            {"oracle_id": "ORC-001", "description": "法人标识代码、机构名称和查询月份已清空；用量状态与查询状态恢复为未选择", "oracle_type": "BUSINESS_RULE", "oracle_rule_ids": ["RULE-9CD6F3823432", "RULE-065C8818BF59", "RULE-1F669E1EF8A2"], "oracle_evidence_ids": ["EVD-422B34667943"], "machine_checkable": true}
+          ]
+        }
+      ]
+    }
+  ],
+  "coverage": {"input_item_count": 1, "selected_item_count": 1, "no_ready_item_count": 0, "ready_dimension_count": 2, "covered_ready_dimension_count": 2, "case_count": 1},
+  "acceptance": {"verdict": "PASS", "publishable": true, "scope": "READY_DIMENSIONS_ONLY", "reasons": []}
+}

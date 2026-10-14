@@ -1,0 +1,24 @@
+{
+ "$comment": "生成的数据包契约。由数据生成步骤的采样部分产出，在下游 fixture 执行注入任何内容之前，供合规门禁（scripts/compliance_check.py）消费。四条硬规则对应：seed（R4）、target_environment（R3）、SENSITIVE 字段的 fields[].masking_policy（R1）、fields[].masked 与 logged/ir_bound（R2）。",
+ "run_id": "<唯一运行标识符>",
+ "seed": 42,
+ "target_environment": "staging | staging-masked-view | test-isolation（绝不可为 production/prod/live）",
+ "entity_id": "<这些字段所属的 IR entity>",
+ "case_ref": "<该数据包为之生成的 case_id>",
+ "fields": [
+ {
+  "name": "<字段名，与 IR entity 字段一致>",
+  "value": "<生成的值；被抑制时为 null>",
+ "masking_policy": "pseudonymize | tokenize | synthesize | suppress | null",
+ "masked": true,
+ "logged": false,
+ "ir_bound": false,
+  "$comment": "对 SENSITIVE 字段（以 IR 为准）：masking_policy 必须设置且非 null（R1）；若 logged 或 ir_bound 为 true，则 masked 必须为 true（R2）"
+ }
+ ],
+ "$checker_codes": [
+ "MISSING_SEED", "PRODUCTION_TARGET",
+ "SENSITIVE_NO_POLICY", "INVALID_MASKING_POLICY",
+ "PLAINTEXT_IN_LOG", "PLAINTEXT_IN_IR"
+ ]
+}

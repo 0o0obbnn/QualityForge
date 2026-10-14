@@ -1,0 +1,33 @@
+{
+  "skill_name": "domain-model-extractor",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-empty-entity-fields",
+      "prompt": "校验一个具有合法 ID 和 name 但 fields 数组为空的 entity。",
+      "expected_output": "REJECT 并给出 EMPTY_ENTITY_FIELDS;空壳 entity 不能进入 IR fusion。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-duplicate-field-name",
+      "prompt": "校验一个包含两个同名 id 字段的 entity。",
+      "expected_output": "REJECT 并给出 DUPLICATE_FIELD_NAME。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "reject-nonscalar-reference",
+      "prompt": "校验一个 references 值为数组的字段。",
+      "expected_output": "REJECT 并给出 INVALID_ENTITY_REF,且不崩溃。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "accept-consistent-model",
+      "prompt": "校验两个非空 entity,其中一个字符串引用指向另一个已声明的 entity。",
+      "expected_output": "PASS 且 findings 为零。",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"$comment":"影响报告。由 scripts/impact_check.py 校验。","max_depth_reached":2,"graph_available":true,"used_static_fallback":false,"degraded_confidence_flagged":false,"impacted_assets":[{"asset_id":"","impact_class":"direct|indirect","hop_count":1,"path":[]}],"$codes":["SHALLOW_PROPAGATION","UNCLASSIFIED_IMPACT","SILENT_STATIC_FALLBACK"]}

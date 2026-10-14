@@ -1,0 +1,84 @@
+{
+  "scope": "P0 Gate 0 skill hardening",
+  "record_type": "historical point-in-time attestation",
+  "verified_at": "2026-08-02T17:46:40Z",
+  "superseded_by": "make test-skills (live suite); this file is history, not a gate",
+  "note": "Counts below describe the repository as of verified_at and are NOT updated. The live suite is larger; do not cite these numbers as current coverage.",
+  "python_version": "3.14.2",
+  "results": {
+    "unittest": {
+      "command": "PYTHONHASHSEED=<0|1|42> python3 -m unittest discover -s prototypes/skills/tests -p 'test_*.py' -v",
+      "tests_per_seed": 31,
+      "seeds": [
+        0,
+        1,
+        42
+      ],
+      "failures": 0,
+      "errors": 0
+    },
+    "ast_parse": {
+      "files": 31,
+      "verdict": "PASS"
+    },
+    "json_parse": {
+      "files": 145,
+      "verdict": "PASS"
+    },
+    "openapi_yaml_parse": {
+      "paths": 91,
+      "verdict": "PASS"
+    },
+    "cli_help": {
+      "scripts": 30,
+      "verdict": "PASS"
+    },
+    "ruff": {
+      "files": 8,
+      "check": "PASS",
+      "format_check": "PASS"
+    },
+    "local_link_check": {
+      "documents": 4,
+      "verdict": "PASS"
+    },
+    "skill_inventory": {
+      "skills": 30,
+      "standard_eval_manifests": 9
+    },
+    "independent_python_review": {
+      "verdict": "PASS",
+      "open_critical_high_medium_findings": 0
+    },
+    "e2e": {
+      "ir": "PASS",
+      "scenario": "PASS",
+      "case": "PASS",
+      "assertion_batch": "PASS",
+      "assertion_static": "PASS",
+      "coverage": "GATE_FAILURE_EXPECTED",
+      "coverage_reason": "sample contains 2 PASS and 1 REJECT assertions; assertion coverage is 2/3 and REJECT independently blocks the gate"
+    }
+  },
+  "sha256": {
+    "_note": "Digests as of verified_at. Keys are repo-relative paths. Re-verified by test_attestations.py, which records drift below rather than rewriting these values — rewriting them would backdate today's content into a 2026-08-02 attestation.",
+    "_known_drift_since_attestation": [
+      "prototypes/skills/business-rule-extractor/scripts/rule_check.py",
+      "prototypes/skills/tests/test_p0_gate0.py",
+      "prototypes/skills/assertion-generator/scripts/batch_check.py",
+      "prototypes/skills/coverage-analyzer/scripts/coverage.py",
+      "prototypes/skills/ir-validator/scripts/validate.py",
+      "prototypes/skills/requirement-compiler/scripts/compile_check.py",
+      "prototypes/skills/requirement-quality-gate/scripts/gate_check.py",
+      "prototypes/skills/state-machine-builder/scripts/sm_check.py"
+    ],
+    "prototypes/skills/coverage-analyzer/scripts/coverage.py": "1480efc73223c6fe6cd37b037bbb39fbf33afbaac0570b761aec64d6281a5106",
+    "prototypes/skills/requirement-compiler/scripts/compile_check.py": "c9cdc8972ccfc2c76eaeea94b555f8ad6fc3cd8ba5de0bd6c233f5d506190777",
+    "prototypes/skills/ir-validator/scripts/validate.py": "343370100546a25b351b8d84884bb82a1d8f334b6a96407bc2951bf51f146c4a",
+    "prototypes/skills/state-machine-builder/scripts/sm_check.py": "b3e62c06be7c3d9840b7604c4b7f4bf22d1d3731ac54c54b11ddff9ffe250d93",
+    "prototypes/skills/business-rule-extractor/scripts/rule_check.py": "63fdf214dfa87f3b53b66615292683d6a47c96d45cc4bc18e60518ceebcf11c0",
+    "prototypes/skills/requirement-quality-gate/scripts/gate_check.py": "645e131f69eed6ac87c05e1e5680e6979343ca06ddd6da1529e611e9f1c5b2ca",
+    "prototypes/skills/assertion-generator/scripts/batch_check.py": "06d68bbc3958b7d8b054c37ceb2abe6cb60bd6550b2ccc422e7a84c7401ff149",
+    "prototypes/skills/tests/test_p0_gate0.py": "eb80f9a71709e3c8ef933cd7cda3cbfe3e79dd158682fdd11a8db5f895c0366d"
+  }
+}

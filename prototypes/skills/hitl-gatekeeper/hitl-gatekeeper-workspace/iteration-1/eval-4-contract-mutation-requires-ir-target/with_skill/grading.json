@@ -1,0 +1,26 @@
+{
+  "eval_id": 4,
+  "eval_name": "contract-mutation-requires-ir-target",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "decision_is_BLOCK_HUMAN",
+      "passed": true
+    },
+    {
+      "text": "identifies_as_compatible_not_breaking",
+      "passed": true
+    },
+    {
+      "text": "explains_contract_mutation_forced_regardless",
+      "passed": true
+    },
+    {
+      "text": "mentions_ir_is_shared_contract",
+      "passed": true
+    }
+  ],
+  "pass_rate": 1.0,
+  "passed": 4,
+  "total": 4
+}

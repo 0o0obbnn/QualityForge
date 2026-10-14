@@ -1,0 +1,23 @@
+{
+ "$comment": "数据需求契约。每个用例一份。由数据需求步骤产出，供下游 fixture 规划（Fixture DAG Planner）和数据生成步骤（合规门禁）消费。sensitive_fields 列表是合规挂钩——必须包含 entities_needed 上所有 IR 标记为 SENSITIVE 的字段。",
+ "case_id": "<已绑定的测试用例 id>",
+ "fixture_category": "Static | Dynamic | Hybrid",
+ "entities_needed": [
+ {
+   "entity_id": "<IR 实体 id>",
+   "instance_id": "<标识符；Static 时必须是 baseline id>",
+   "target_state": "<可选：必需状态，必须在 IR 中可达>"
+ }
+ ],
+ "state_preconditions": [
+ {"entity_id": "", "state": ""}
+ ],
+ "volume": 1,
+ "sensitive_fields": ["SENSITIVE 的字段名；必须 ⊇ entities_needed 的 IR 声明 SENSITIVE 字段"],
+ "construction_steps": ["仅适用于 Dynamic/Hybrid：下游 fixture 规划需要构建的内容"],
+ "$checker_codes": [
+ "CATEGORY_MISMATCH", "ORPHAN_REQUIREMENT",
+ "INVALID_PRECONDITION_STATE", "UNREACHABLE_TARGET_STATE",
+ "MISSING_SENSITIVE_FIELD", "STATIC_NOT_IN_BASELINE", "DYNAMIC_NO_STEPS"
+ ]
+}

@@ -1,0 +1,229 @@
+{
+  "strategy_id": "STRAT-PRD-V2-20260811-FULL",
+  "source_ids": ["PRD-V2-20260811"],
+  "ir_ref": "testing_ir_full.json",
+  "In_Scope": [
+    {
+      "feature_id": "F-TASK-RECORD",
+      "name": "任务记录列表与筛选、每月1号任务自动生成（管理侧）",
+      "req_refs": ["REQ-015", "REQ-002"],
+      "risk_level": "medium"
+    },
+    {
+      "feature_id": "F-REPORT-UPLOAD",
+      "name": "enc包上传与11项实时校验、数据上报弹窗（下载模板/上传/替换/删除）",
+      "req_refs": ["REQ-001", "REQ-016"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-PKG-PROCESS",
+      "name": "上报包处理状态机、上报详情列表、查看弹窗时间线、下载原包、文件明细",
+      "req_refs": ["REQ-003", "REQ-017", "REQ-018", "REQ-019", "REQ-020"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-ORG-REPORT",
+      "name": "业务侧数据上报差异（仅本机构数据、隐藏筛选、不可下载原包、简化时间线）",
+      "req_refs": ["REQ-021"],
+      "risk_level": "medium"
+    },
+    {
+      "feature_id": "F-QUERY-BASE",
+      "name": "基础产品查询（四字段表单校验、掩码、结果展示、检索次数记录与耗完提示）",
+      "req_refs": ["REQ-022", "REQ-008"],
+      "risk_level": "critical"
+    },
+    {
+      "feature_id": "F-QUERY-UPGRADE",
+      "name": "升级产品查询（借款/承保汇总、时间切片、接口端4字段加密）",
+      "req_refs": ["REQ-023"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-DELETE-APPROVAL",
+      "name": "删除审批列表与审批操作、删除数量统计、次日定时删除",
+      "req_refs": ["REQ-024", "REQ-004", "REQ-005"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-QUOTA-ASSOC",
+      "name": "管理侧检索次数管理（签约/未签约/试用三Tab：启停、编辑、额度计算链、超额自动停用、25号生成）",
+      "req_refs": ["REQ-025", "REQ-026", "REQ-027", "REQ-006", "REQ-007"],
+      "risk_level": "critical"
+    },
+    {
+      "feature_id": "F-QUOTA-ORG",
+      "name": "业务侧检索次数管理（仅本机构Tab、只读查看）",
+      "req_refs": ["REQ-028"],
+      "risk_level": "low"
+    },
+    {
+      "feature_id": "F-ORG-MGMT",
+      "name": "接入机构管理（签约三态判定、级联停用、API密钥配置）",
+      "req_refs": ["REQ-029"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-ROLE-PAGE",
+      "name": "机构页面管理（角色同步、勾选联动、停用解绑、用户绑定校验）",
+      "req_refs": ["REQ-030"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-COEFF-BILLING",
+      "name": "系数XYZ统计与编辑、调节系数积生成（按笔XYZ/包月XZ）",
+      "req_refs": ["REQ-009", "REQ-010"],
+      "risk_level": "critical"
+    },
+    {
+      "feature_id": "F-CALL-STATS",
+      "name": "调用量统计（日/月/年：有效调用量去重、基础/升级分列、导出）",
+      "req_refs": ["REQ-031"],
+      "risk_level": "medium"
+    },
+    {
+      "feature_id": "F-BILL-DETAIL",
+      "name": "费用单明细（34列、结算折扣5档、包月套餐11档、费用公式、先删后建、批量下载与导出命名）",
+      "req_refs": ["REQ-032", "REQ-011", "REQ-012"],
+      "risk_level": "critical"
+    },
+    {
+      "feature_id": "F-BILL-ORG",
+      "name": "业务侧结算详情（仅本机构、筛选精简、导出规则同管理侧）",
+      "req_refs": ["REQ-033"],
+      "risk_level": "low"
+    },
+    {
+      "feature_id": "F-AUTH-DEFAULT",
+      "name": "登录与暂无权限缺省页（REQ-013可验收部分）",
+      "req_refs": ["REQ-034", "REQ-013"],
+      "risk_level": "medium"
+    },
+    {
+      "feature_id": "F-API-MIGRATE",
+      "name": "接口端产品查询与历史接口迁移（占位契约冒烟与迁移一致性；接口文档待补）",
+      "req_refs": ["REQ-014"],
+      "risk_level": "high"
+    },
+    {
+      "feature_id": "F-NFR",
+      "name": "非功能需求功能化验收（安全基线、兼容性；性能指标验收用例）",
+      "req_refs": ["REQ-035", "REQ-036", "REQ-037"],
+      "risk_level": "medium"
+    }
+  ],
+  "Out_Of_Scope": [
+    {
+      "item": "角色权限矩阵细则验收（REQ-013矩阵部分）",
+      "exclusion_reason": "《角色权限表》未随文档提供，权限矩阵不可枚举验收；可验收部分（暂无权限缺省页）已纳入F-AUTH-DEFAULT（评审报告Q-002）"
+    },
+    {
+      "item": "REQ-014接口契约细节级测试",
+      "exclusion_reason": "接口文档与国密调用设计未提供；本轮按IR占位契约（IC-001~IC-005）做冒烟与迁移一致性级用例，文档补齐后升级契约级用例"
+    },
+    {
+      "item": "性能/压测执行（REQ-035/CON-004/CON-012执行层）",
+      "exclusion_reason": "本轮仅覆盖性能指标的功能化验收用例；真实压测执行（6000笔/秒等）需独立性能测试计划与环境"
+    },
+    {
+      "item": "数据迁移工具与三环境隔离的实施验证（REQ-037实施层）",
+      "exclusion_reason": "属部署实施工序，非本轮功能验收范围；仅保留验收检查点用例"
+    }
+  ],
+  "Critical_Paths": [
+    {
+      "path_id": "CP-01-ENC-UPLOAD",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-REPORT-UPLOAD", "F-PKG-PROCESS"],
+      "description": "enc包上传→包名11项校验→解密/解压/校验→状态机流转与反馈文件→文件明细"
+    },
+    {
+      "path_id": "CP-02-MONTH-TASK",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-TASK-RECORD", "F-REPORT-UPLOAD"],
+      "description": "每月1号上报任务生成→任务记录列表→网页端上报（下载模板/上传）"
+    },
+    {
+      "path_id": "CP-03-DELETE-APPROVAL",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-DELETE-APPROVAL", "F-PKG-PROCESS"],
+      "description": "删除类包（裁决口径：成功数量≠0）→删除审批→次日定时删除→审批状态同步"
+    },
+    {
+      "path_id": "CP-04-QUERY-LIFECYCLE",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-QUERY-BASE", "F-QUERY-UPGRADE", "F-QUOTA-ASSOC"],
+      "description": "查询调用→检索次数扣减（会员优先）→超额次日12:00停用→调整额度→手动启用恢复"
+    },
+    {
+      "path_id": "CP-05-BILLING",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-COEFF-BILLING", "F-CALL-STATS", "F-BILL-DETAIL"],
+      "description": "系数每日汇总→月度调节系数积→有效调用量统计→先删后建生成费用单→批量下载/导出"
+    },
+    {
+      "path_id": "CP-06-ORG-CASCADE",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-ORG-MGMT", "F-ROLE-PAGE"],
+      "description": "停用机构→级联停用用户/接口/角色→启用不级联→角色勾选联动"
+    },
+    {
+      "path_id": "CP-07-API-MIGRATE",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-API-MIGRATE"],
+      "description": "4个历史接口迁移一致性+升级产品接口国密加密（占位契约冒烟级）"
+    },
+    {
+      "path_id": "CP-08-ROLE-PERM-MATRIX",
+      "disposition": "OUT_OF_SCOPE",
+      "exclusion_reason": "权限表未提供（REQ-013，confidence 0.55），无法枚举权限路径；缺省页路径已在CP内由F-AUTH-DEFAULT覆盖"
+    },
+    {
+      "path_id": "CP-09-PERF-EXEC",
+      "disposition": "OUT_OF_SCOPE",
+      "exclusion_reason": "压测执行需独立环境与工具链，本轮仅功能化验收（F-NFR）"
+    }
+  ],
+  "Quality_Gates": [
+    {
+      "gate_name": "requirement_coverage",
+      "threshold": 1.0,
+      "definition": "In-Scope 的每个 req_id 至少有一条可追溯测试用例"
+    },
+    {
+      "gate_name": "transition_coverage",
+      "threshold": 1.0,
+      "definition": "IR 全部状态机迁移被 state_transition 场景覆盖"
+    },
+    {
+      "gate_name": "interface_contract_coverage",
+      "threshold": 1.0,
+      "definition": "IR 每个接口契约至少有一条可追溯用例（含占位契约冒烟用例）"
+    },
+    {
+      "gate_name": "conflict_resolution_rate",
+      "threshold": 1.0,
+      "definition": "全部 PRD 冲突在用例执行前完成 HITL 裁决"
+    },
+    {
+      "gate_name": "case_pass_rate",
+      "threshold": 0.95,
+      "definition": "用例执行通过率"
+    },
+    {
+      "gate_name": "blocking_defects_open",
+      "threshold": 0.0,
+      "definition": "未关闭阻塞级缺陷数为零"
+    }
+  ],
+  "Pyramid_Distribution": {
+    "unit": 0.5,
+    "integration": 0.3,
+    "e2e": 0.2
+  },
+  "Mock_Policy": {
+    "mock_targets": ["third_party_credit_data_source", "national_crypto_encryption_service"],
+    "no_mock_targets": ["database", "billing_batch_job", "query_quota_ledger", "contract_status_daily_job", "quota_monthly_gen_job", "delete_scheduler_job"],
+    "rationale": "外部数据源与国密服务可mock；核心数据层、结算批处理、配额台账、签约状态判定、25号配额生成与次日删除定时任务必须真实执行"
+  }
+}

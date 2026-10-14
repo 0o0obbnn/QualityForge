@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>来源与需求 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="knowledge">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item active" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <div class="search"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><input type="search" aria-label="搜索来源、需求" placeholder="搜索来源、需求…"></div>
+    <button class="icon-btn" onclick="qf.toast('暂无新通知','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5a4 4 0 0 1 4 4v3l1.5 2h-11L4 9.5v-3a4 4 0 0 1 4-4Z"/><path d="M6.5 13a1.6 1.6 0 0 0 3 0"/></svg></button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>来源与需求</h1><div class="sub">导入来源 → 固化 SourceSnapshot → 需求版本化与冲突治理 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-import')">导入来源</button>
+      <button class="btn btn-primary" onclick="qf.openModal('m-new-req')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>新建需求</button>
+    </div>
+
+    <div class="tabs">
+      <button class="on" data-tab="sources">来源快照</button>
+      <button data-tab="reqs">需求文档</button>
+      <button data-tab="conflicts">冲突 (2)</button>
+    </div>
+
+    <div class="tabpane on" id="tab-sources">
+      <div class="panel mt-4">
+        <div class="phead"><h2>来源快照</h2></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>来源</th><th>类型</th><th>版本</th><th>抓取状态</th><th>敏感级</th><th>抓取时间</th></tr></thead>
+          <tbody>
+            <tr onclick="qf.openModal('m-snapshot')"><td><div class="t-title">结算中心需求规格 v2.1.docx</div><div class="t-sub">SS-2026-08-11-003 · 原文摘要 sha256:8c1e…</div></td><td><span class="type-tag">文档</span></td><td class="mono">fetch #3</td><td><span class="status st-done"><span class="d"></span>已固化</span></td><td><span class="badge b-warn">内部</span></td><td class="due">08-11 10:02</td></tr>
+            <tr onclick="qf.openModal('m-snapshot')"><td><div class="t-title">OpenAPI · settlement-api.yaml</div><div class="t-sub">SS-2026-08-10-021 · 22 个 operation</div></td><td><span class="type-tag">OpenAPI</span></td><td class="mono">fetch #7</td><td><span class="status st-done"><span class="d"></span>已固化</span></td><td><span class="badge b-acc">公开</span></td><td class="due">08-10 16:44</td></tr>
+            <tr onclick="qf.openModal('m-snapshot')"><td><div class="t-title">网关故障流量观察 08-08</div><div class="t-sub">SS-2026-08-09-014 · 1,204 条请求</div></td><td><span class="type-tag">流量</span></td><td class="mono">fetch #1</td><td><span class="status st-review"><span class="d"></span>解析中</span></td><td><span class="badge b-err">敏感</span></td><td class="due">08-09 22:18</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="empty-note" hidden><div class="en-title">暂无来源</div>点击「导入来源」添加第一个测试依据</div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-reqs">
+      <div class="panel mt-4">
+        <div class="phead"><h2>需求文档</h2></div>
+        <div class="table-scroll">
+        <table>
+          <thead><tr><th>需求</th><th>当前版本</th><th>解析状态</th><th>审核状态</th><th>业务规则</th></tr></thead>
+          <tbody>
+            <tr onclick="location.href='30-strategies.html'"><td><div class="t-title">结算中心需求规格</div><div class="t-sub">REQ-2026-08-11 · 32 项需求</div></td><td class="mono">V3</td><td><span class="status st-done"><span class="d"></span>已解析</span></td><td><span class="status st-done"><span class="d"></span>已发布</span></td><td>12 条规则</td></tr>
+            <tr onclick="location.href='30-strategies.html'"><td><div class="t-title">对账服务需求</div><div class="t-sub">REQ-2026-07-28 · 18 项需求</div></td><td class="mono">V2</td><td><span class="status st-done"><span class="d"></span>已解析</span></td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td>7 条规则</td></tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="empty-note" hidden><div class="en-title">暂无需求文档</div>导入来源后自动解析生成</div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="tab-conflicts">
+      <div class="panel mt-4">
+        <div class="pbody">
+          <div class="check review" style="margin-bottom:10px"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>DECLARED vs OBSERVED 冲突</b><div class="small muted">OpenAPI 声明 <span class="mono">POST /settlements</span> 响应必填 <span class="mono">fee</span>,但流量观察中 3 条缺失。两套证据并存,禁止自动合并。</div></div><span class="verdict" style="margin-left:auto"><button class="btn btn-sm btn-ghost" onclick="qf.openModal('m-conflict')">处理冲突</button></span></div>
+          <div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>业务规则歧义 · BR-12</b><div class="small muted">"批量退款上限" 在两份需求文档中数值不一致(500 vs 1000 笔)。需人工裁决。</div></div><span class="verdict" style="margin-left:auto"><button class="btn btn-sm btn-ghost" onclick="qf.openModal('m-conflict')">处理冲突</button></span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 导入来源弹窗 -->
+<div class="modal" id="m-import" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>导入来源</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="importForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 来源与需求页「导入来源」按钮 · 文件/URL 导入</div>
+        <div style="border:2px dashed var(--qf-border);border-radius:12px;padding:26px;text-align:center;margin-bottom:14px;background:var(--qf-secondary-surface)">
+          <div class="muted" style="font-size:13px">拖拽文件到此处,或</div>
+          <button type="button" class="btn btn-ghost btn-sm mt-3" onclick="qf.toast('演示: 文件选择器在真实环境弹出','info')">选择文件</button>
+          <div class="small muted mt-3">支持 .md / .docx / .pdf / .yaml(OpenAPI) / .har</div>
+        </div>
+        <div class="field"><label>或粘贴 URL</label><input class="input" type="url" placeholder="https://…/openapi.yaml"></div>
+        <div class="form-row">
+          <div class="field"><label>来源类型</label><select class="input"><option>需求文档</option><option>OpenAPI 契约</option><option>流量观察</option><option>仓库资料</option></select></div>
+          <div class="field"><label>敏感级别</label><select class="input"><option>公开</option><option>内部</option><option>敏感</option></select></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-import')">取消</button>
+        <button type="submit" class="btn btn-primary">开始导入</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 新建需求弹窗 -->
+<div class="modal" id="m-new-req" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>新建需求</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="reqForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「新建需求」按钮 · 表单弹窗</div>
+        <div class="field"><label>需求名称 <span class="req">*</span></label><input class="input" name="name" required placeholder="例如: 退款流程需求"><div class="err">请输入需求名称</div></div>
+        <div class="field"><label>来源快照</label><select class="input"><option>选择已固化的来源…</option><option>SS-2026-08-11-003</option><option>SS-2026-08-10-021</option></select></div>
+        <div class="field"><label>内容</label><textarea class="input" placeholder="需求正文或引用来源原文"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-new-req')">取消</button>
+        <button type="submit" class="btn btn-primary">创建草稿</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 快照详情弹窗 -->
+<div class="modal" id="m-snapshot" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>来源快照详情</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击来源快照行 · 详情查看类弹窗</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">快照 ID</span><span class="mono">SS-2026-08-11-003</span>
+        <span class="muted">原文摘要</span><span class="mono">sha256:8c1e…9f02</span>
+        <span class="muted">获取版本</span><span class="mono">fetch #3</span>
+        <span class="muted">来源定位</span><span>内部 Wiki · 结算中心/需求/v2.1</span>
+        <span class="muted">媒体类型</span><span>docx · 48 页</span>
+        <span class="muted">抓取者</span><span>导入 Agent (AI)</span>
+      </div>
+      <p class="small muted mt-4">SourceSnapshot 不可变;重新抓取将产生新快照,不会覆盖本版本。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-snapshot')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 冲突处理弹窗 -->
+<div class="modal" id="m-conflict" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <form id="conflictForm" novalidate>
+    <div class="modal-head"><h3>处理契约冲突</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 冲突列表「处理冲突」按钮 · 人工裁决类弹窗</div>
+      <div class="src-trace" style="margin-bottom:14px">
+        <span class="src-node confirmed">DECLARED · OpenAPI V7</span><span class="arrow">vs</span>
+        <span class="src-node inferred">OBSERVED · 流量 08-08</span>
+      </div>
+      <p class="body-text small muted">两套证据必须并存保留;裁决结果将写入冲突 WorkItem 与审计记录。</p>
+      <div class="field"><label>裁决方式</label><select class="input"><option>以 DECLARED 为准,观察结果标记为差异</option><option>以 OBSERVED 为准,发起契约修订</option><option>暂不裁决,保持冲突</option></select></div>
+      <div class="field"><label>裁决说明 <span class="req">*</span></label><textarea class="input" name="reason" required placeholder="说明依据"></textarea><div class="err">请填写裁决说明</div></div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-conflict')">取消</button>
+      <button type="submit" class="btn btn-primary">提交裁决</button>
+    </div>
+    </form>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  document.querySelectorAll('.tabs button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.tabs button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    document.querySelectorAll('.tabpane').forEach(function (p) { p.classList.remove('on'); });
+    document.getElementById('tab-' + b.dataset.tab).classList.add('on');
+  }); });
+  qf.bindForm('importForm', function () { qf.closeModal('m-import'); qf.toast('导入任务已创建,解析完成后进入快照列表(演示)','ok'); });
+  qf.bindForm('reqForm', function () { qf.closeModal('m-new-req'); qf.toast('需求草稿已创建(演示)','ok'); });
+</script>
+</body>
+</html>

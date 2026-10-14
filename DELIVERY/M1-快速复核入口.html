@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge M1-F1 快速复核入口</title>
+<style>
+  :root{
+    --bg:#ffffff; --ink:#1a1a1a; --muted:#8a8a8a; --line:#eaeaea;
+    --accent:#c8a96a; --ok:#2f9e6e; --warn:#d97706;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Helvetica Neue",sans-serif;background:var(--bg);color:var(--ink);line-height:1.75;font-size:15px}
+  .wrap{max-width:880px;margin:0 auto;padding:96px 32px 80px}
+  .kicker{font-size:12px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:24px}
+  h1{font-size:34px;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
+  .sub{font-size:15px;color:var(--muted);margin-bottom:72px;max-width:520px}
+  section{margin-bottom:64px}
+  h2{font-size:13px;font-weight:600;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:28px}
+  .verdict{font-size:44px;font-weight:300;letter-spacing:-.02em;margin-bottom:8px}
+  .verdict em{font-style:normal;color:var(--accent)}
+  .metrics{display:flex;gap:48px;flex-wrap:wrap;margin:40px 0}
+  .metric .num{font-size:38px;font-weight:300}
+  .metric .lbl{font-size:12px;color:var(--muted);letter-spacing:.08em;margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:11px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;padding:0 0 14px;border-bottom:1px solid var(--line);font-weight:600}
+  td{padding:16px 0;border-bottom:1px solid var(--line);vertical-align:top}
+  td:first-child{font-weight:600;white-space:nowrap;padding-right:24px}
+  .tag{display:inline-block;font-size:11px;letter-spacing:.06em;padding:3px 10px;border-radius:999px}
+  .tag.done{background:#eef7f1;color:var(--ok)}
+  .tag.todo{background:#fdf6ec;color:var(--warn)}
+  .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted)}
+  .note{font-size:13px;color:var(--muted);margin-top:16px}
+  .steps{list-style:none;counter-reset:step}
+  .steps li{position:relative;padding-left:40px;margin-bottom:28px}
+  .steps li::before{counter-increment:step;content:counter(step,decimal-leading-zero);position:absolute;left:0;top:2px;font-size:13px;color:var(--accent);font-weight:600}
+  .steps .t{font-weight:600;margin-bottom:4px}
+  .steps .d{font-size:13.5px;color:var(--muted)}
+  a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--accent)}
+  a:hover{color:var(--accent)}
+  footer{margin-top:96px;padding-top:24px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">QualityForge · M1 需求与审核收口</p>
+  <h1>快速复核入口</h1>
+  <p class="sub">M1-F1 前端轨实施结果与证据索引。打开即可核对验收条目、运行门禁证据与遗留事项，无需搭建环境。</p>
+
+  <section>
+    <div class="verdict">M1-F1 <em>已完成</em></div>
+    <div class="metrics">
+      <div class="metric"><div class="num">15</div><div class="lbl">审核台最低信息项</div></div>
+      <div class="metric"><div class="num">5</div><div class="lbl">禁用原因类别</div></div>
+      <div class="metric"><div class="num">33</div><div class="lbl">vitest 用例 · 全绿</div></div>
+      <div class="metric"><div class="num">8</div><div class="lbl">Playwright 冒烟 · 全绿</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>验收条目对账</h2>
+    <table>
+      <tr><th>条目</th><th>内容</th><th>证据</th><th>状态</th></tr>
+      <tr><td>前端 1</td><td>审核台呈现 Page-Map §3 最低信息</td><td>ReviewDetail 渲染 15 项；Playwright 冒烟「15 项完整渲染」绿</td><td><span class="tag done">已完成</span></td></tr>
+      <tr><td>前端 2</td><td>批准禁用态渲染可见原因</td><td>DecisionPanel 渲染 5 类原因；vitest 6 用例；Playwright 禁用态+原因冒烟绿</td><td><span class="tag done">已完成</span></td></tr>
+      <tr><td>前端 3</td><td>版本历史视图 + Diff 摘要</td><td>VersionHistory 新旧切换；Playwright 版本切换冒烟绿</td><td><span class="tag done">已完成</span></td></tr>
+      <tr><td>前端 4</td><td>vitest 组件测试 + Playwright 冒烟</td><td>33/33 vitest 绿；8/8 Playwright 绿（含全链旅程与版本正文联动）；CI frontend.yml 已含 Playwright step</td><td><span class="tag done">已完成</span></td></tr>
+      <tr><td>集成</td><td>浏览器端「生成→审核→退回→复核」闭环</td><td>Playwright 冒烟第 4 条覆盖退回后状态变更（mock 模式）</td><td><span class="tag done">已完成</span></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>运行门禁证据</h2>
+    <table>
+      <tr><th>门禁</th><th>结果</th></tr>
+      <tr><td>vitest</td><td class="mono">7 个测试文件 · 33 用例 · 33 passed（22:31 实测）</td></tr>
+      <tr><td>typecheck</td><td class="mono">tsc --noEmit · 无错误</td></tr>
+      <tr><td>build</td><td class="mono">vite build · 376.55 kB js · 2136 模块</td></tr>
+      <tr><td>Playwright</td><td class="mono">8 条冒烟 · 8 passed（含全链旅程、版本正文联动）· 系统 Chrome</td></tr>
+      <tr><td>截图证据</td><td class="mono">4 张界面截图存 DELIVERY/evidence/（队列+15项信息、禁用原因、版本历史、双原因）</td></tr>
+    </table>
+    <p class="note">本地复跑：<span class="mono">cd frontend && npm run test && npm run typecheck && npm run build && npx playwright test</span></p>
+  </section>
+
+  <section>
+    <h2>界面证据</h2>
+    <figure style="margin:0 0 24px">
+      <img src="evidence/01-审核台-队列与15项信息.png" alt="审核台队列与 15 项信息" style="width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption style="font-size:12px;color:var(--muted);margin-top:8px">审核队列 + 审核详情 15 项信息完整渲染 + 版本历史（mock 模式）</figcaption>
+    </figure>
+    <figure style="margin:0 0 24px">
+      <img src="evidence/02-批准禁用原因.png" alt="批准禁用原因" style="width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption style="font-size:12px;color:var(--muted);margin-top:8px">批准按钮禁用态 + 「前置审核未完成」原因可见</figcaption>
+    </figure>
+    <figure style="margin:0 0 24px">
+      <img src="evidence/03-版本历史与Diff摘要.png" alt="版本历史与 Diff 摘要" style="width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption style="font-size:12px;color:var(--muted);margin-top:8px">版本历史 3 个版本行 + Diff 摘要 + 当前版本标识</figcaption>
+    </figure>
+    <figure style="margin:0">
+      <img src="evidence/04-双禁用原因任务.png" alt="双禁用原因任务" style="width:100%;height:auto;border:1px solid var(--line)">
+      <figcaption style="font-size:12px;color:var(--muted);margin-top:8px">摘要不一致 + 职责分离冲突双原因渲染</figcaption>
+    </figure>
+  </section>
+
+  <section>
+    <h2>遗留事项</h2>
+    <table>
+      <tr><th>编号</th><th>内容</th><th>责任人</th><th>状态</th></tr>
+      <tr><td>L1</td><td>契约变更：approveDisabledReason 等禁用原因字段待写入 32-API规范.yaml（墙话题发起，前端 mock 已按假设形态预演）</td><td>lingma + autoclaw</td><td><span class="tag todo">待墙话题</span></td></tr>
+      <tr><td>L2</td><td>来源版本/确定性检查/独立验证/Evidence 数据源在契约层缺失，前端当前以 mock 渲染，真实数据待后端补齐</td><td>lingma</td><td><span class="tag todo">待后端</span></td></tr>
+      <tr><td>L3</td><td>摘要无语义化呈现（仅 hex 串），随 M1-B1 契约变更一并处理</td><td>lingma + autoclaw</td><td><span class="tag todo">待排期</span></td></tr>
+      <tr><td>L4</td><td>N1 落账提交（Makefile + 今日交付物）待用户批准，由 lingma 执行后 P0-1 方可标 CLOSED</td><td>lingma</td><td><span class="tag todo">待用户批准</span></td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2>验收口径（摘录自计划 v1.1）</h2>
+    <ol class="steps">
+      <li><div class="t">审核台 12 项最低信息</div><div class="d">Page-Map §3 原文共 15 项：产出物类型/稳定ID/版本ID/摘要、来源版本、变更Diff、AI/人工作者、确定性检查、独立验证、Evidence、风险、ReviewPolicy、职责分离、历史决定、陈旧状态。</div></li>
+      <li><div class="t">批准禁用原因四类</div><div class="d">权限不足 / 陈旧版本 / 前置审核未完成 / 摘要不一致（+ Page-Map §3 职责分离冲突）。前端禁用不是授权边界，服务端仍校验。</div></li>
+      <li><div class="t">版本历史视图</div><div class="d">新旧版本切换查看，Diff 摘要可见；完整 Diff 归 M2。</div></li>
+      <li><div class="t">vitest + Playwright</div><div class="d">vitest 组件测试覆盖 2/3（已超额）；Playwright 覆盖「生成→审核→退回→复核」冒烟并纳入 frontend workflow。</div></li>
+    </ol>
+  </section>
+
+  <footer>QualityForge · M1 快速复核入口 · 2026-08-17 · 前端轨 autoclaw 交付</footer>
+</div>
+</body>
+</html>

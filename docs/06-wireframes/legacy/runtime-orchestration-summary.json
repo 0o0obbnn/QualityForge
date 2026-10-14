@@ -1,0 +1,432 @@
+{
+  "schemaVersion": "2026.07.11.0",
+  "skillProvenance": {
+    "name": "solo-design",
+    "version": "2026.07.11.0",
+    "version_source": "skill-release-manifest",
+    "read_status": "loaded"
+  },
+  "project": {
+    "operation": "create",
+    "resolvedLane": "complex_html_page",
+    "selectedIntentWorkflowRead": true,
+    "intentProfile": {
+      "caseFamily": "complex_html_page",
+      "deviceType": "desktop"
+    },
+    "contextRequirementsLoaded": [
+      {
+        "path": "shared-runtime/runtime-boundaries/lane-runtime-contracts.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "shared-runtime/agent-dispatch-runtime/lane-dispatch-index.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "shared-runtime/agent-dispatch-runtime/shared-page-rendering-kernel.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/page-rendering-quality-gate.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/design-artifact-validation.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "delivery-quality/delivery-evidence-contract.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "visual-experience/visual-experience-guidelines.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      },
+      {
+        "path": "visual-experience/visual-checkpoint-protocol.md",
+        "readStatus": "loaded",
+        "bodyRead": true
+      }
+    ],
+    "contextReadScope": "complex_html_page_full",
+    "readScopeLedger": [],
+    "designRead": "AI testing platform / single test engineer / professional developer-tool density / dark-first / low visual risk",
+    "designDials": {
+      "layoutVariance": 2,
+      "motionIntensity": 2,
+      "visualDensity": 4
+    },
+    "styleDefinitionBrief": "Professional AI-native testing platform, dark-first developer tool UI with high information density, blue primary, purple AI accent, and honest confidence visualization.",
+    "deviceType": "desktop",
+    "projectName": "QualityForge UI",
+    "projectPath": "/Users/liuyibin/project/QualityForge/qualityforge-ui",
+    "validationRunDiscipline": "run-once",
+    "validationHistory": [
+      {
+        "step": "post-generation-validation",
+        "validator": "validate-design-workspace.mjs",
+        "reportPath": "validation-report.json",
+        "success": true,
+        "warnings": 18,
+        "errors": 0,
+        "checkedAt": "2026-08-11T00:00:00+08:00"
+      },
+      {
+        "step": "finish-readiness",
+        "validator": "validate-finish-readiness.mjs",
+        "success": true,
+        "checkedAt": "2026-08-11T00:00:00+08:00"
+      }
+    ],
+    "validationRepairLedger": [],
+    "validationSnapshot": {
+      "lastReportPath": "validation-report.json",
+      "success": true
+    },
+    "artifactReadinessEvidence": {
+      "designFileValid": true,
+      "pagesGenerated": 14,
+      "pagesValidated": 14,
+      "planningDocumentsDelivered": [
+        "docs/06-wireframes/QualityForge-UIUX-Design-Plan.md",
+        "docs/06-wireframes/QualityForge-Page-Map.md",
+        "docs/06-wireframes/QualityForge-Design-Tokens.md",
+        "docs/06-wireframes/QualityForge-Component-Library.md"
+      ]
+    },
+    "dispatchPreflightManifest": [],
+    "expectedDispatches": [],
+    "generationTree": {
+      "nodeId": "gen-project-shell",
+      "kind": "project-shell",
+      "pageIds": [],
+      "output": "partials/project-shell.html",
+      "sharedRegions": ["header", "sidebar", "app-frame", "brand-css"],
+      "privateRegions": [],
+      "mutableSlots": ["pageTitle", "activeNavItem", "mainContent"],
+      "status": "planned",
+      "children": [
+        {
+          "nodeId": "gen-page-workbench",
+          "kind": "page-leaf",
+          "pageIds": ["page-workbench"],
+          "output": "pages/workbench.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-workspace-list",
+          "kind": "page-leaf",
+          "pageIds": ["page-workspace-list"],
+          "output": "pages/workspace-list.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-workspace-create",
+          "kind": "page-leaf",
+          "pageIds": ["page-workspace-create"],
+          "output": "pages/workspace-create.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-workspace-settings",
+          "kind": "page-leaf",
+          "pageIds": ["page-workspace-settings"],
+          "output": "pages/workspace-settings.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-requirements",
+          "kind": "page-leaf",
+          "pageIds": ["page-requirements"],
+          "output": "pages/requirements.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-test-design-console",
+          "kind": "page-leaf",
+          "pageIds": ["page-test-design-console"],
+          "output": "pages/test-design-console.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-testcase-review",
+          "kind": "page-leaf",
+          "pageIds": ["page-testcase-review"],
+          "output": "pages/testcase-review.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-asset-portal",
+          "kind": "page-leaf",
+          "pageIds": ["page-asset-portal"],
+          "output": "pages/asset-portal.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-asset-cases",
+          "kind": "page-leaf",
+          "pageIds": ["page-asset-cases"],
+          "output": "pages/asset-cases.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-execution-plans",
+          "kind": "page-leaf",
+          "pageIds": ["page-execution-plans"],
+          "output": "pages/execution-plans.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-run-console",
+          "kind": "page-leaf",
+          "pageIds": ["page-run-console"],
+          "output": "pages/run-console.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-qi-dashboard",
+          "kind": "page-leaf",
+          "pageIds": ["page-qi-dashboard"],
+          "output": "pages/qi-dashboard.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-rca-detail",
+          "kind": "page-leaf",
+          "pageIds": ["page-rca-detail"],
+          "output": "pages/rca-detail.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        },
+        {
+          "nodeId": "gen-page-agent-trace",
+          "kind": "page-leaf",
+          "pageIds": ["page-agent-trace"],
+          "output": "pages/agent-trace.html",
+          "sharedRegions": ["header", "sidebar", "app-frame"],
+          "privateRegions": ["mainContent"],
+          "mutableSlots": ["pageTitle", "activeNavItem"],
+          "status": "planned"
+        }
+      ]
+    },
+    "cssPreflightEvidence": {
+      "command": "node apply-html-head-contract.mjs",
+      "exitCode": 0,
+      "outputPath": "/Users/liuyibin/project/QualityForge/qualityforge-ui/.preflight/preflight.html",
+      "success": true
+    },
+    "mobileNavigation": {
+      "applies": false
+    },
+    "sharedProjectShellContract": {
+      "navigationShell": "desktop-sidebar",
+      "headerHeightPx": 56,
+      "sidebarWidthPx": 240,
+      "surfaceDepthModel": "border-led-static",
+      "radiusScale": {
+        "sm": 4,
+        "md": 8,
+        "lg": 12,
+        "xl": 16,
+        "full": 9999
+      },
+      "typographySystem": {
+        "ui": "Inter, Noto Sans SC, PingFang SC, Microsoft YaHei, sans-serif",
+        "mono": "JetBrains Mono, SF Mono, Fira Code, Menlo, Consolas, monospace"
+      }
+    },
+    "lowValueCallWatchdog": {
+      "noProgressNextAction": "return blocked summary with concrete next step"
+    },
+    "visualQualityCheckpoints": []
+  },
+  "designSource": {
+    "operatingMode": "free-explore",
+    "cssFilePath": "colors_and_type.css",
+    "brandPrefix": "qf",
+    "styleConstraints": {
+      "radiusMax": 16,
+      "staticShadowAlphaMax": 0.05,
+      "singleBrandHue": true,
+      "noTailwind": true
+    }
+  },
+  "pages": [
+    {
+      "nodeId": "page-workbench",
+      "title": "工作台",
+      "htmlSrc": "pages/workbench.html",
+      "pageIndex": 1,
+      "visualNorthStar": "Engineer daily command center with AI recommendations, system health, and quick actions",
+      "compositionPattern": "dashboard-grid",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-workspace-list",
+      "title": "工作空间列表",
+      "htmlSrc": "pages/workspace-list.html",
+      "pageIndex": 2,
+      "visualNorthStar": "Card/table list of test workspaces with health status",
+      "compositionPattern": "list-view",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-workspace-create",
+      "title": "创建工作空间",
+      "htmlSrc": "pages/workspace-create.html",
+      "pageIndex": 3,
+      "visualNorthStar": "Step-by-step wizard for workspace creation",
+      "compositionPattern": "wizard",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-workspace-settings",
+      "title": "工作空间设置",
+      "htmlSrc": "pages/workspace-settings.html",
+      "pageIndex": 4,
+      "visualNorthStar": "Form-based settings for environments, secrets, and AI context",
+      "compositionPattern": "form-tabs",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-requirements",
+      "title": "需求列表",
+      "htmlSrc": "pages/requirements.html",
+      "pageIndex": 5,
+      "visualNorthStar": "List of requirement documents with parsing status and quality gate",
+      "compositionPattern": "list-view",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-test-design-console",
+      "title": "测试设计控制台",
+      "htmlSrc": "pages/test-design-console.html",
+      "pageIndex": 6,
+      "visualNorthStar": "Split-pane document viewer and AI-generated topology/suggestions",
+      "compositionPattern": "split-pane",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-testcase-review",
+      "title": "用例评审板",
+      "htmlSrc": "pages/testcase-review.html",
+      "pageIndex": 7,
+      "visualNorthStar": "Dense table of AI-generated test cases with confidence, source trace, and self-review actions",
+      "compositionPattern": "data-table",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-asset-portal",
+      "title": "资产中心",
+      "htmlSrc": "pages/asset-portal.html",
+      "pageIndex": 8,
+      "visualNorthStar": "Portal cards for case/script/locator/mock/data libraries",
+      "compositionPattern": "portal-grid",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-asset-cases",
+      "title": "用例资产管理",
+      "htmlSrc": "pages/asset-cases.html",
+      "pageIndex": 9,
+      "visualNorthStar": "Tree + table view of test cases with versions and deduplication hints",
+      "compositionPattern": "tree-table",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-execution-plans",
+      "title": "执行计划",
+      "htmlSrc": "pages/execution-plans.html",
+      "pageIndex": 10,
+      "visualNorthStar": "List of execution plans with trigger and runner overview",
+      "compositionPattern": "list-view",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-run-console",
+      "title": "任务运行控制台",
+      "htmlSrc": "pages/run-console.html",
+      "pageIndex": 11,
+      "visualNorthStar": "Real-time log stream with AI observation drawer",
+      "compositionPattern": "split-pane",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-qi-dashboard",
+      "title": "质量智能仪表盘",
+      "htmlSrc": "pages/qi-dashboard.html",
+      "pageIndex": 12,
+      "visualNorthStar": "Quality overview with pass/fail trends and risk ratings",
+      "compositionPattern": "dashboard-grid",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-rca-detail",
+      "title": "根因分析详情",
+      "htmlSrc": "pages/rca-detail.html",
+      "pageIndex": 13,
+      "visualNorthStar": "Failure clusters and AI root-cause diagnosis with confidence",
+      "compositionPattern": "split-pane",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    },
+    {
+      "nodeId": "page-agent-trace",
+      "title": "Agent Trace 链路回放",
+      "htmlSrc": "pages/agent-trace.html",
+      "pageIndex": 14,
+      "visualNorthStar": "Interactive tree of agent tool calls and reasoning steps",
+      "compositionPattern": "tree-detail",
+      "continuityAnchors": ["dark sidebar navigation", "top app bar with token budget"]
+    }
+  ],
+  "assets": [],
+  "wiringPlan": [],
+  "hiddenInteractionPlan": []
+}

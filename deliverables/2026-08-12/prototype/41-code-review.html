@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>代码审核 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+<style>.code-pane{font-family:var(--qf-font-mono);font-size:12.5px;line-height:1.8;background:var(--qf-neutral-900);color:var(--qf-neutral-100);border-radius:12px;padding:16px;overflow-x:auto;}</style>
+</head>
+<body data-page="automation">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item active" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button></div>
+    <div class="spacer"></div>
+    <a class="btn btn-sm btn-ghost" href="40-scripts.html">← 返回脚本列表</a>
+  </header>
+  <main>
+    <div class="page-head">
+      <div>
+        <div class="flex"><span class="type-tag">API</span><h1 style="font-size:20px">settlement_api_flow.py · V2</h1></div>
+        <div class="sub">CODE_REVIEW · RT-4841 · AI 生成 + 人工代码审核 · 原型演示数据</div>
+      </div>
+      <div class="spacer"></div>
+      <span class="status st-review"><span class="d"></span>待代码审核</span>
+    </div>
+
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="panel">
+          <div class="phead"><h2>代码 Diff</h2><span class="hint">V1 → V2 · AI 生成</span></div>
+          <div class="pbody" style="padding:0">
+            <div class="code-pane" style="border-radius:0">
+              <div style="color:var(--qf-success-500)">+ def test_refund_idempotency(api):</div>
+              <div style="color:var(--qf-success-500)">+     """重复回调只入账一次 (TC-0225)"""</div>
+              <div style="color:var(--qf-success-500)">+     resp1 = api.post("/settlements/refund", json=payload, idempotency_key=KEY)</div>
+              <div style="color:var(--qf-neutral-500)">      assert resp1.status_code == 200</div>
+              <div style="color:var(--qf-success-500)">+     resp2 = api.post("/settlements/refund", json=payload, idempotency_key=KEY)</div>
+              <div style="color:var(--qf-error-500)">-     assert resp2.status_code == 409</div>
+              <div style="color:var(--qf-success-500)">+     assert resp2.json()["order_no"] == resp1.json()["order_no"]  # 返回首次结果</div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="phead"><h2>检查结果</h2><span class="hint">阻断项不可人工放行</span></div>
+          <div class="pbody">
+            <div class="checks">
+              <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>格式 / 类型 / 依赖锁<span class="verdict">PASS</span></div>
+              <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>契约绑定 · 22 个 operation 引用一致<span class="verdict">PASS</span></div>
+              <div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span>受控试跑 · 删除类操作未在 staging 授权<span class="verdict">REVIEW</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="aside-stack">
+        <div class="mini-card">
+          <h3>审核信息</h3>
+          <div class="row"><span class="k">任务</span><span class="mono">RT-4841</span></div>
+          <div class="row"><span class="k">策略</span><span class="v">CODE_REVIEW</span></div>
+          <div class="row"><span class="k">AI 生成</span><span class="v">自动化 Agent</span></div>
+          <div class="row"><span class="k">绑定用例</span><span class="v">8 个版本</span></div>
+          <div class="row"><span class="k">摘要</span><span class="mono">sha256:5d1e…0a9c</span></div>
+        </div>
+        <div class="mini-card">
+          <h3>关键判断点</h3>
+          <div class="row"><span class="k">幂等断言</span><span class="v" style="color:var(--qf-warning-500)">需确认</span></div>
+          <div class="row"><span class="k">Secret 引用</span><span class="v" style="color:var(--qf-success-600)">无明文</span></div>
+          <div class="row"><span class="k">删除操作</span><span class="v" style="color:var(--qf-error-500)">未授权</span></div>
+        </div>
+        <div class="flex" style="flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="qf.openModal('m-approve-code')">批准 V2</button>
+          <button class="btn btn-ghost" onclick="qf.openModal('m-comment')">评论</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="m-approve-code" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box narrow">
+    <div class="modal-head"><h3>确认批准代码</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「批准 V2」按钮 · 确认提示</div>
+      <p class="body-text">批准绑定摘要 <span class="mono">sha256:5d1e…0a9c</span>。检查 PASS 不等于业务正确,你的批准是最终判断。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-approve-code')">取消</button><button class="btn btn-primary" onclick="qf.closeModal('m-approve-code');qf.toast('代码 V2 已批准(演示)','ok')">确认批准</button></div>
+  </div>
+</div>
+<div class="modal" id="m-comment" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>添加评论</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「评论」按钮</div>
+      <div class="field"><label>评论内容</label><textarea class="input" placeholder="例如: 幂等断言建议补充幂等键格式校验"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('m-comment')">取消</button><button class="btn btn-primary" onclick="qf.closeModal('m-comment');qf.toast('评论已提交,将通知 AI 修订(演示)','ok')">提交</button></div>
+  </div>
+</div>
+<script src="assets/qf-shell.js"></script>
+</body>
+</html>

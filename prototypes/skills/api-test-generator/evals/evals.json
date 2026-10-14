@@ -1,0 +1,33 @@
+{
+  "skill_name": "api-test-generator",
+  "evals": [
+    {
+      "id": 1,
+      "name": "hardcoded-url-must-reject",
+      "prompt": "为 TC-001(GET /api/v1/orders,期望 200)生成的 pytest 脚本中硬编码了 base_url = \"http://localhost:8080\"。已声明 fixture_deps=[\"setup_user_session\"]。运行契约检查。",
+      "expected_output": "必须 REJECT 并给出 code HARDCODED_ENV。必须指出 localhost/http://localhost:8080 是违规字面量。必须解释:硬编码 URL 在开发环境可用,但在 CI 中会静默指向错误环境。必须指示改用 os.environ 配置注入。不得 PASS 该脚本。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "hardcoded-token-must-reject",
+      "prompt": "生成的 pytest 脚本中包含:headers = {\"Authorization\": \"Bearer ghp_abc123xyz\"}。已声明 fixture_deps,所有 expected_results 均有 assert 覆盖。运行契约检查。",
+      "expected_output": "必须 REJECT 并给出 code HARDCODED_SECRET。必须指出 ghp_abc123xyz 匹配 ghp_ 前缀模式。无论其他检查是否通过,HARDCODED_SECRET 本身即独立构成 REJECT。必须建议改用 os.environ 或 secrets manager。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "missing-assert-must-reject",
+      "prompt": "脚本用 assert 覆盖了 ER-001(status==200),但 ER-002(response.body.order_id is not null)没有对应的 assert。已声明 fixture_deps=[\"create_order\"]。无硬编码 URL 或密钥。运行契约检查。",
+      "expected_output": "必须 REJECT 并给出 code UNCOVERED_EXPECTED_RESULT,指向 ER-002。必须解释静默假通过风险:测试执行并通过,却未验证 order_id。verdict 必须是 REJECT,而不是 warning。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "clean-script-must-pass",
+      "prompt": "脚本使用 base_url=os.environ[\"API_BASE_URL\"]、auth_token=os.environ[\"AUTH_TOKEN\"],声明了 fixture_deps=[\"create_user\",\"create_order\"],两个 expected_results(ER-001 status 200、ER-002 body.total 99.9)均有对应 assert 覆盖。运行契约检查。",
+      "expected_output": "必须 PASS。verdict=PASS、total_findings=0、findings=[]。必须确认全部四项检查通过。routing 必须声明该脚本可以执行。",
+      "files": []
+    }
+  ]
+}

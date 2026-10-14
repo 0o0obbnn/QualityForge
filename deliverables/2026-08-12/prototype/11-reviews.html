@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>待我审核 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="board">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板<span class="nav-badge">6</span></button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+
+  <header class="topbar">
+    <div class="ctx">
+      <button class="ctx-btn" onclick="qf.toast('项目切换见工作看板演示','info')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button>
+      <span class="ctx-sep">/</span>
+      <button class="ctx-btn">Release R-2026.08</button>
+    </div>
+    <div class="spacer"></div>
+    <button class="icon-btn" onclick="qf.toast('暂无新通知','info')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5a4 4 0 0 1 4 4v3l1.5 2h-11L4 9.5v-3a4 4 0 0 1 4-4Z"/><path d="M6.5 13a1.6 1.6 0 0 0 3 0"/></svg></button>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>待我审核</h1>
+        <div class="sub">ReviewTask 队列 · 审核决定仅限人工 · 原型演示数据</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-filter')">筛选 <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m4 6 4 4 4-4"/></svg></button>
+    </div>
+
+    <div class="review-layout" style="display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start">
+      <div class="panel">
+        <div class="phead"><h2>审核队列</h2><span class="hint">6 项待审</span></div>
+        <div class="qitem selected" data-idx="0">
+          <div class="flex"><span class="badge b-acc">策略</span><b style="font-size:13px">TestStrategy V2</b></div>
+          <div class="t-sub mt-2 mono">WI-0241 · RT-4832</div>
+          <div class="small mt-2 txt-err">今日 18:00 到期</div>
+        </div>
+        <div class="qitem" data-idx="1" onclick="location.href='32-cases.html'">
+          <div class="flex"><span class="badge b-sec">用例</span><b style="font-size:13px">支付流程用例包 V3</b></div>
+          <div class="t-sub mt-2 mono">WI-0243 · RT-4835</div>
+          <div class="small mt-2 txt-warn">明日 12:00</div>
+        </div>
+        <div class="qitem" data-idx="2" onclick="location.href='31-plans.html'">
+          <div class="flex"><span class="badge b-warn">计划</span><b style="font-size:13px">TestPlan V1</b></div>
+          <div class="t-sub mt-2 mono">WI-0244 · RT-4838</div>
+          <div class="small mt-2" style="color:var(--qf-muted-foreground)">明日 18:00</div>
+        </div>
+        <div class="qitem" data-idx="3" onclick="location.href='41-code-review.html'">
+          <div class="flex"><span class="badge b-gray">代码</span><b style="font-size:13px">API 脚本 · 对账 V2</b></div>
+          <div class="t-sub mt-2 mono">WI-0245 · RT-4841</div>
+          <div class="small mt-2" style="color:var(--qf-muted-foreground)">周四</div>
+        </div>
+        <div class="qitem" data-idx="4" onclick="location.href='62-reports.html'">
+          <div class="flex"><span class="badge b-ok">报告</span><b style="font-size:13px">TestReport 草稿</b></div>
+          <div class="t-sub mt-2 mono">WI-0239 · RT-4844</div>
+          <div class="small mt-2" style="color:var(--qf-muted-foreground)">需签署</div>
+        </div>
+        <div class="qitem" data-idx="5" onclick="location.href='22-knowledge.html'">
+          <div class="flex"><span class="badge b-sec">知识</span><b style="font-size:13px">知识条目 · 幂等模式</b></div>
+          <div class="t-sub mt-2 mono">WI-0250 · RT-4847</div>
+          <div class="small mt-2" style="color:var(--qf-muted-foreground)">本周五</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="panel">
+          <div class="phead" style="flex-wrap:wrap">
+            <div class="flex"><span class="badge b-acc">策略</span><b style="font-size:16px">TestStrategy · Release R-2026.08 <span class="mono muted" style="font-weight:400;font-size:12px">V2</span></h2></div>
+            <a class="btn btn-sm btn-ghost" href="30-strategies.html">打开策略列表</a>
+          </div>
+          <div class="pbody">
+            <div class="kv" style="display:grid;grid-template-columns:130px 1fr;gap:8px 14px;font-size:13.5px">
+              <span class="muted">审核任务</span><b>RT-4832 · SINGLE_REVIEW</b>
+              <span class="muted">产出版本</span><b>TS-2026-0811-0042 · V2</b>
+              <span class="muted">变更摘要</span><span>V2: 补充支付网关故障注入范围,调整退出标准</span>
+              <span class="muted">AI 参与</span><span>策略 Agent · run a9f2c1 · 128s · ¥0.042</span>
+              <span class="muted">来源基线</span><span>Req-2026-08-11 V3 · APIContract V7 · KnowledgeEntry K-104</span>
+            </div>
+            <div class="mono mt-3" style="font-size:12px;color:var(--qf-muted-foreground);background:var(--qf-secondary-surface);border-radius:8px;padding:8px 10px;display:inline-block">contentDigest: sha256:3f9a…c21e</div>
+            <div class="tabs">
+              <button class="on" data-tab="diff">版本 Diff</button>
+              <button data-tab="trace">来源追溯</button>
+              <button data-tab="checks">检查结果</button>
+              <button data-tab="evidence">证据</button>
+            </div>
+            <div class="tabpane on" id="tab-diff">
+              <div class="diff-view">
+                <div class="dhead"><div>V1 (已批准)</div><div>V2 (待审核)</div></div>
+                <div class="diff-line del"><div>范围: 支付流程、对账、风控</div><div>范围: 支付流程、对账、风控、网关故障注入</div></div>
+                <div class="diff-line add"><div>退出标准: 核心用例通过率 ≥ 基线</div><div>退出标准: 核心用例通过率 ≥ 基线, 且网关故障场景全部执行</div></div>
+              </div>
+            </div>
+            <div class="tabpane" id="tab-trace">
+              <div class="src-trace">
+                <span class="src-node confirmed">Req-2026-08-11 V3</span><span class="arrow">→</span>
+                <span class="src-node confirmed">APIContract V7</span><span class="arrow">→</span>
+                <span class="src-node inferred">BusinessRule BR-12</span><span class="arrow">→</span>
+                <span class="src-node confirmed">TestStrategy V2</span>
+              </div>
+              <p class="small muted mt-3">实心 = CONFIRMED 来源 · 虚线 = INFERRED 规则(需人工确认)</p>
+            </div>
+            <div class="tabpane" id="tab-checks">
+              <div class="checks">
+                <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>结构检查 · 范围/风险/方法齐全<span class="verdict">PASS</span></div>
+                <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>来源引用完整 · 每条风险有 SourceTrace<span class="verdict">PASS</span></div>
+                <div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span>独立验证 · 网关风险建议人工复核<span class="verdict">PASS_WITH_REVIEW</span></div>
+              </div>
+            </div>
+            <div class="tabpane" id="tab-evidence">
+              <div class="evidence-links">
+                <a class="ev-link" href="30-strategies.html"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/></svg>策略正文 V2</a>
+                <a class="ev-link" href="20-sources.html"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/></svg>来源需求 V3</a>
+                <a class="ev-link" href="21-api-contracts.html"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>API 契约 V7</a>
+                <a class="ev-link" href="72-trace.html"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>Agent Trace a9f2c1</a>
+              </div>
+            </div>
+            <div class="flex mt-4" style="padding-top:16px;border-top:1px solid var(--qf-border);flex-wrap:wrap">
+              <button class="btn btn-primary" onclick="qf.openModal('m-approve')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 8.5 3 3 7-7"/></svg>批准 V2</button>
+              <button class="btn btn-ghost" onclick="qf.openModal('m-rework')">退回修改</button>
+              <button class="btn btn-danger" onclick="qf.openModal('m-reject')">拒绝</button>
+              <span class="small muted" style="margin-left:auto">决定将绑定 contentDigest 并只追加记录</span>
+            </div>
+            <div class="flex mt-3" style="font-size:12.5px;color:var(--qf-muted-foreground);background:var(--qf-secondary-surface);border-radius:8px;padding:8px 12px">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--qf-warning-500)"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>
+              审核策略: SINGLE_REVIEW · 需要能力 test-strategy.approve · 你的角色 TestLead 已具备
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 批准确认弹窗 -->
+<div class="modal" id="m-approve" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box narrow">
+    <div class="modal-head"><h3>确认批准</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 审核包「批准 V2」按钮 · 确认提示类弹窗</div>
+      <p class="body-text">批准后将绑定当前版本摘要 <span class="mono">sha256:3f9a…c21e</span>,ReviewDecision 只追加不可撤销。批准不代表外部同步或发布完成。</p>
+      <div class="field"><label>审核意见(可选)</label><textarea class="input" placeholder="记录你的判断依据"></textarea></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="qf.closeModal('m-approve')">取消</button>
+      <button class="btn btn-primary" onclick="qf.closeModal('m-approve');qf.toast('已批准 V2 · ReviewDecision 已记录(演示)','ok')">确认批准</button>
+    </div>
+  </div>
+</div>
+
+<!-- 退回修改弹窗 -->
+<div class="modal" id="m-rework" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <form id="reworkForm" novalidate>
+    <div class="modal-head"><h3>退回修改</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 审核包「退回修改」按钮 · 表单类弹窗</div>
+      <div class="field"><label>退回原因 <span class="req">*</span></label>
+        <select class="input" name="reason" required><option value="">请选择原因…</option><option>范围需要调整</option><option>风险判断不认可</option><option>来源引用有误</option><option>其他</option></select>
+        <div class="err">请选择退回原因</div>
+      </div>
+      <div class="field"><label>详细意见 <span class="req">*</span></label><textarea class="input" name="detail" required placeholder="请说明需要修改的内容,AI 将按意见生成新版本"></textarea><div class="err">请填写详细意见</div></div>
+      <p class="small muted">退回将保留 V2 与本次决定,创建新版本 V3 重新走检查与审核。</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-rework')">取消</button>
+      <button type="submit" class="btn btn-primary">提交退回</button>
+    </div>
+    </form>
+  </div>
+</div>
+
+<!-- 拒绝弹窗 -->
+<div class="modal" id="m-reject" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box narrow">
+    <form id="rejectForm" novalidate>
+    <div class="modal-head"><h3>拒绝</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 审核包「拒绝」按钮 · 危险操作确认</div>
+      <p class="body-text">拒绝后该版本进入 <b>REJECTED</b> 状态,工作项可重新创建草稿。此操作同样只追加记录。</p>
+      <div class="field"><label>拒绝原因 <span class="req">*</span></label><textarea class="input" name="reason" required placeholder="将进入审计记录"></textarea><div class="err">请填写拒绝原因</div></div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-reject')">取消</button>
+      <button type="submit" class="btn btn-danger">确认拒绝</button>
+    </div>
+    </form>
+  </div>
+</div>
+
+<!-- 筛选弹窗 -->
+<div class="modal" id="m-filter" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box narrow">
+    <div class="modal-head"><h3>筛选审核队列</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 待我审核页「筛选」按钮</div>
+      <div class="field"><label>产出物类型</label><select class="input"><option>全部</option><option>策略 / 计划 / 用例</option><option>代码</option><option>报告 / 知识</option></select></div>
+      <div class="field"><label>风险等级</label><select class="input"><option>全部</option><option>高</option><option>中</option><option>低</option></select></div>
+      <div class="field"><label>到期时间</label><select class="input"><option>全部</option><option>今日到期</option><option>本周到期</option></select></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-filter');qf.toast('筛选条件已应用(演示)','ok')">应用</button></div>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('reworkForm', function () { qf.closeModal('m-rework'); qf.toast('已退回 · 将创建 V3 重新审核(演示)','ok'); });
+  qf.bindForm('rejectForm', function () { qf.closeModal('m-reject'); qf.toast('已拒绝 · 版本进入 REJECTED(演示)','err'); });
+  document.querySelectorAll('.tabs button').forEach(function (b) { b.addEventListener('click', function () {
+    document.querySelectorAll('.tabs button').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    document.querySelectorAll('.tabpane').forEach(function (p) { p.classList.remove('on'); });
+    document.getElementById('tab-' + b.dataset.tab).classList.add('on');
+  }); });
+</script>
+</body>
+</html>

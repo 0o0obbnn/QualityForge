@@ -1,0 +1,364 @@
+{
+  "meta": {
+    "artifact_kind": "requirement_review_resolution_package",
+    "schema_version": "1.0",
+    "review_method": "AI_DIRECT_SOURCE_REVIEW",
+    "review_scope": "数据上报（管理侧）/任务记录：查询、重置、查看、上报、导出"
+  },
+  "review_id": "RQR-133891CFF060",
+  "new_findings": [
+    {
+      "finding_id": "RQF-D780E4F37C8F",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "certainty": "confirmed",
+      "origin": "semantic_review",
+      "evidence_type": "QUOTE",
+      "requirement_ids": ["REQ-6B359418DA"],
+      "function_ids": ["FUN-F760FD03B6E8"],
+      "atomic_ids": ["AF-0FFB6FF2CD87"],
+      "affected_test_dimensions": ["functional", "field_validation"],
+      "source_refs": ["SRC-89CCC3739EA4:L172-L173"],
+      "evidence": "输入框：请输入法人标识代码，支持模糊搜索",
+      "question": "法人标识代码的模糊搜索是包含、前缀还是其他匹配规则；允许输入哪些字符及最大长度？",
+      "recommendation": "补充匹配算法、输入字符集、长度边界和空值行为，作为查询验收口径。"
+    },
+    {
+      "finding_id": "RQF-9F25CB09C3B9",
+      "code": "INCOMPLETE_REQUIREMENT",
+      "severity": "REVIEW",
+      "certainty": "confirmed",
+      "origin": "semantic_review",
+      "evidence_type": "ABSENCE",
+      "requirement_ids": ["REQ-18419DE16E"],
+      "function_ids": ["FUN-F760FD03B6E8"],
+      "atomic_ids": ["AF-75968071082C"],
+      "affected_test_dimensions": ["functional", "state_transition"],
+      "source_refs": ["SRC-89CCC3739EA4:L204-L207", "SRC-89CCC3739EA4:L287-L290"],
+      "evidence": "重置仅定义为清空筛选条件；在已检查的任务记录列表范围内，未定义重置后是否立即重新查询、是否回到第一页以及列表展示状态。",
+      "inspected_scope": ["SRC-89CCC3739EA4:L133-L293"],
+      "expected_element": "重置后的查询触发规则、分页状态和列表结果",
+      "question": "点击重置后，是否立即按空条件重新查询并回到第一页？",
+      "recommendation": "补充重置前后筛选项、页码和列表结果的可观察状态。"
+    },
+    {
+      "finding_id": "RQF-3086C6D261E5",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "certainty": "confirmed",
+      "origin": "semantic_review",
+      "evidence_type": "QUOTE",
+      "requirement_ids": ["REQ-E9909EA5C5"],
+      "function_ids": ["FUN-F760FD03B6E8"],
+      "atomic_ids": ["AF-E9326399A796"],
+      "affected_test_dimensions": ["functional"],
+      "source_refs": ["SRC-89CCC3739EA4:L279-L281"],
+      "evidence": "点击后将当前筛选条件（仅导出当前已配置的筛选项）和列表数据导出至Excel文件中下载至本地",
+      "question": "“列表数据”是当前分页可见记录，还是当前筛选条件命中的全部记录？",
+      "recommendation": "明确导出记录集合与分页的关系，并定义稳定排序。"
+    },
+    {
+      "finding_id": "RQF-16FC8CDAA682",
+      "code": "INCOMPLETE_REQUIREMENT",
+      "severity": "REVIEW",
+      "certainty": "confirmed",
+      "origin": "semantic_review",
+      "evidence_type": "ABSENCE",
+      "requirement_ids": ["REQ-E9909EA5C5"],
+      "function_ids": ["FUN-F760FD03B6E8"],
+      "atomic_ids": ["AF-E9326399A796"],
+      "affected_test_dimensions": ["functional", "integration"],
+      "source_refs": ["SRC-89CCC3739EA4:L279-L283"],
+      "evidence": "需求给出每次最多导出5万条，但未定义命中记录超过5万时的截断、拒绝、分批或提示行为。",
+      "inspected_scope": ["SRC-89CCC3739EA4:L278-L290"],
+      "expected_element": "超过5万条时的系统行为、用户提示和导出记录选择规则",
+      "question": "筛选结果超过5万条时系统应拒绝、截取前5万条还是分批导出？",
+      "recommendation": "补充超限分支、提示文案及记录选择/排序规则。"
+    },
+    {
+      "finding_id": "RQF-55076DBE5A20",
+      "code": "MISSING_REQUIRED_ACTOR",
+      "severity": "REVIEW",
+      "certainty": "confirmed",
+      "origin": "semantic_review",
+      "evidence_type": "ABSENCE",
+      "requirement_ids": [
+        "REQ-6B359418DA",
+        "REQ-18419DE16E",
+        "REQ-E9909EA5C5",
+        "REQ-AF8BA45F8F",
+        "REQ-AE82BCF0DB"
+      ],
+      "function_ids": ["FUN-F760FD03B6E8"],
+      "atomic_ids": [
+        "AF-0FFB6FF2CD87",
+        "AF-75968071082C",
+        "AF-E9326399A796",
+        "AF-48C312641E1C",
+        "AF-5E1E6AAC39E9"
+      ],
+      "affected_test_dimensions": ["permission"],
+      "source_refs": ["SRC-89CCC3739EA4:L95-L104", "SRC-89CCC3739EA4:L4258-L4260"],
+      "evidence": "本模块仅标注为管理侧；全文说明无权限用户展示缺省页，并将具体功能角色权限引用到未随本次来源提供的《角色权限表》，未给出本批操作的角色矩阵。",
+      "inspected_scope": ["SRC-89CCC3739EA4:L93-L104", "SRC-89CCC3739EA4:L117-L361", "SRC-89CCC3739EA4:L4258-L4260"],
+      "expected_element": "查询、重置、查看、上报、导出的允许角色、拒绝角色及数据权限边界",
+      "question": "管理侧哪些具体角色可执行这五项操作，哪些角色应被拒绝，各角色可见的数据范围是什么？",
+      "recommendation": "提供权威角色权限表，并把功能权限与数据权限映射到本批最小功能。"
+    }
+  ],
+  "assessment_reviews": [
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "ambiguity",
+      "status": "FINDING",
+      "rationale": "法人标识代码“模糊搜索”缺少唯一匹配语义。",
+      "finding_ids": ["RQF-D780E4F37C8F"]
+    },
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "任务记录筛选字段、查询动作和列表展示在本业务切片内未发现相互矛盾的定义。",
+      "source_refs": ["SRC-89CCC3739EA4:L167-L202", "SRC-89CCC3739EA4:L210-L252"]
+    },
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "testability",
+      "status": "FINDING",
+      "rationale": "普通查询路径可观察，但法人标识代码模糊匹配缺少可判定 Oracle。",
+      "finding_ids": ["RQF-D780E4F37C8F"]
+    },
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "completeness",
+      "status": "FINDING",
+      "rationale": "查询条件、结果字段与排序已定义，但法人标识代码输入及匹配边界不完整。",
+      "finding_ids": ["RQF-D780E4F37C8F"]
+    },
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "nfr_measurability",
+      "status": "NOT_APPLICABLE",
+      "rationale": "该条是查询交互与筛选语义，不单独声明非功能指标；性能需求应在文档非功能章节独立追踪。",
+      "source_refs": ["SRC-89CCC3739EA4:L200-L202"]
+    },
+    {
+      "requirement_id": "REQ-6B359418DA",
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "仅能确认管理侧范围，无法确认具体角色和数据权限。",
+      "finding_ids": ["RQF-55076DBE5A20"]
+    },
+
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "ambiguity",
+      "status": "FINDING",
+      "rationale": "“清空筛选条件”没有唯一确定列表和分页的后置状态。",
+      "finding_ids": ["RQF-9F25CB09C3B9"]
+    },
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "六个筛选字段均给出默认不选状态，与重置为清空条件的定义一致。",
+      "source_refs": ["SRC-89CCC3739EA4:L167-L197", "SRC-89CCC3739EA4:L204-L207"]
+    },
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "testability",
+      "status": "FINDING",
+      "rationale": "筛选项清空本身可验证，但重置后的查询、页码和列表状态没有 Oracle。",
+      "finding_ids": ["RQF-9F25CB09C3B9"]
+    },
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "completeness",
+      "status": "FINDING",
+      "rationale": "重置后置行为未完整定义。",
+      "finding_ids": ["RQF-9F25CB09C3B9"]
+    },
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "nfr_measurability",
+      "status": "NOT_APPLICABLE",
+      "rationale": "该条仅定义重置交互，不包含独立非功能指标。",
+      "source_refs": ["SRC-89CCC3739EA4:L204-L207"]
+    },
+    {
+      "requirement_id": "REQ-18419DE16E",
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "仅能确认管理侧范围，无法确认具体角色和数据权限。",
+      "finding_ids": ["RQF-55076DBE5A20"]
+    },
+
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "ambiguity",
+      "status": "FINDING",
+      "rationale": "导出记录范围与超限行为均不唯一。",
+      "finding_ids": ["RQF-3086C6D261E5", "RQF-16FC8CDAA682"]
+    },
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "consistency",
+      "status": "FINDING",
+      "rationale": "导出模板未提供，无法核对正文定义与模板字段、顺序和规则是否一致。",
+      "finding_ids": ["RQF-FFCDD4D2CE26"]
+    },
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "testability",
+      "status": "FINDING",
+      "rationale": "文件名和5万条阈值可观察，但记录集合、超限结果及模板内容缺少完整 Oracle。",
+      "finding_ids": ["RQF-FFCDD4D2CE26", "RQF-3086C6D261E5", "RQF-16FC8CDAA682"]
+    },
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "completeness",
+      "status": "FINDING",
+      "rationale": "缺少附件2，同时未定义列表数据范围与超过5万条的处理。",
+      "finding_ids": ["RQF-FFCDD4D2CE26", "RQF-3086C6D261E5", "RQF-16FC8CDAA682"]
+    },
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "nfr_measurability",
+      "status": "CLEAR",
+      "rationale": "单次导出上限明确量化为5万条；本维度只判断指标是否可测，不代表超限功能行为已完整。",
+      "source_refs": ["SRC-89CCC3739EA4:L283"]
+    },
+    {
+      "requirement_id": "REQ-E9909EA5C5",
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "仅能确认管理侧范围，无法确认导出权限和数据范围。",
+      "finding_ids": ["RQF-55076DBE5A20"]
+    },
+
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "查看动作、目标页面、携带的两个筛选值和展示筛选后列表均有明确描述。",
+      "source_refs": ["SRC-89CCC3739EA4:L267-L268"]
+    },
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "consistency",
+      "status": "CLEAR",
+      "rationale": "目标上报详情页面确有机构名称与上报月份筛选字段，与跳转传值定义一致。",
+      "source_refs": ["SRC-89CCC3739EA4:L267-L268", "SRC-89CCC3739EA4:L409-L419"]
+    },
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "testability",
+      "status": "CLEAR",
+      "rationale": "可观察目标页面、筛选值回填及筛选结果，具备明确验收 Oracle。",
+      "source_refs": ["SRC-89CCC3739EA4:L267-L268", "SRC-89CCC3739EA4:L397-L419"]
+    },
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "completeness",
+      "status": "CLEAR",
+      "rationale": "就列表查看跳转这一最小功能而言，触发、目标、传参和结果均已覆盖。",
+      "source_refs": ["SRC-89CCC3739EA4:L267-L268"]
+    },
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "nfr_measurability",
+      "status": "NOT_APPLICABLE",
+      "rationale": "该条仅定义页面跳转和筛选传值，不包含独立非功能指标。",
+      "source_refs": ["SRC-89CCC3739EA4:L267-L268"]
+    },
+    {
+      "requirement_id": "REQ-AF8BA45F8F",
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "仅能确认管理侧范围，无法确认查看权限及数据范围。",
+      "finding_ids": ["RQF-55076DBE5A20"]
+    },
+
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "ambiguity",
+      "status": "CLEAR",
+      "rationale": "列表上报操作明确触发数据上报弹窗，后续下载、上传、确认和关闭动作已有连续定义。",
+      "source_refs": ["SRC-89CCC3739EA4:L271-L272", "SRC-89CCC3739EA4:L295-L309", "SRC-89CCC3739EA4:L361"]
+    },
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "consistency",
+      "status": "FINDING",
+      "rationale": "数据上报弹窗的文件名校验规则与 toast 口径存在三处冲突，AI 回读原文确认冲突文本客观存在。",
+      "finding_ids": ["RQF-FA96477FC16A", "RQF-434D23C82338", "RQF-8B1199B90002"]
+    },
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "testability",
+      "status": "FINDING",
+      "rationale": "弹窗和基本动作可测试，但三处文件名规则冲突且外部采集标准缺失，无法形成唯一校验 Oracle。",
+      "finding_ids": ["RQF-178F4EF492B6", "RQF-FA96477FC16A", "RQF-434D23C82338", "RQF-8B1199B90002"]
+    },
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "completeness",
+      "status": "FINDING",
+      "rationale": "上报依赖的数据采集标准未随本次来源提供，完整上报校验口径不可获得。",
+      "finding_ids": ["RQF-178F4EF492B6"]
+    },
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "nfr_measurability",
+      "status": "CLEAR",
+      "rationale": "文件包大小上限明确为不超过50M，指标可直接测量；此结论不消除其他功能规则冲突。",
+      "source_refs": ["SRC-89CCC3739EA4:L335", "SRC-89CCC3739EA4:L359"]
+    },
+    {
+      "requirement_id": "REQ-AE82BCF0DB",
+      "dimension": "role_permission",
+      "status": "FINDING",
+      "rationale": "仅能确认管理侧范围，无法确认上报权限及数据范围。",
+      "finding_ids": ["RQF-55076DBE5A20"]
+    }
+  ],
+  "resolutions": [
+    {
+      "finding_id": "RQF-FA96477FC16A",
+      "decision": "CONFIRM",
+      "resolution": "AI 回读 L323 与 L347，确认同一数据上报弹窗对文件名第1至9位给出互斥口径，并确认该冲突影响任务记录的上报入口。",
+      "source_refs": ["SRC-89CCC3739EA4:L323", "SRC-89CCC3739EA4:L347"],
+      "add_requirement_ids": ["REQ-AE82BCF0DB"],
+      "add_function_ids": ["FUN-F760FD03B6E8"],
+      "add_atomic_ids": ["AF-5E1E6AAC39E9"]
+    },
+    {
+      "finding_id": "RQF-434D23C82338",
+      "decision": "CONFIRM",
+      "resolution": "AI 回读 L351 与 L353，确认同一文件名日期字段的年份/年月边界没有形成唯一口径，并确认该冲突影响任务记录的上报入口。",
+      "source_refs": ["SRC-89CCC3739EA4:L351", "SRC-89CCC3739EA4:L353"],
+      "add_requirement_ids": ["REQ-AE82BCF0DB"],
+      "add_function_ids": ["FUN-F760FD03B6E8"],
+      "add_atomic_ids": ["AF-5E1E6AAC39E9"]
+    },
+    {
+      "finding_id": "RQF-8B1199B90002",
+      "decision": "CONFIRM",
+      "resolution": "AI 回读 L331 与 L355，确认校验规则给出具体文件类型枚举而 toast 仅引用未提供的数据字典，当前来源无法形成一致 Oracle，并确认该问题影响任务记录的上报入口。",
+      "source_refs": ["SRC-89CCC3739EA4:L331", "SRC-89CCC3739EA4:L355"],
+      "add_requirement_ids": ["REQ-AE82BCF0DB"],
+      "add_function_ids": ["FUN-F760FD03B6E8"],
+      "add_atomic_ids": ["AF-5E1E6AAC39E9"]
+    },
+    {
+      "finding_id": "RQF-178F4EF492B6",
+      "decision": "CONFIRM",
+      "resolution": "AI 回读数据上报弹窗 L303-L359，确认该上报入口依赖未随本次来源提供的数据采集标准，因此将已确认的资料缺失投影到当前上报需求。",
+      "source_refs": ["SRC-89CCC3739EA4:L303", "SRC-89CCC3739EA4:L313-L359"],
+      "add_requirement_ids": ["REQ-AE82BCF0DB"],
+      "add_function_ids": ["FUN-F760FD03B6E8"],
+      "add_atomic_ids": ["AF-5E1E6AAC39E9"]
+    }
+  ],
+  "source_unit_reviews": []
+}

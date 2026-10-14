@@ -1,0 +1,8 @@
+{
+  "$comment": "安全测试用例数据包。由 scripts/security_check.py 校验。",
+  "in_scope_endpoints": ["来自 strategy In_Scope 的端点"],
+  "permission_rule_ids": ["IR 权限规则 id"],
+  "cases": [{"case_id": "", "target_endpoint": "", "type": "sqli|xss|authorization_bypass", "permission_rule_id": ""}],
+  "report": {"summary": "已脱敏；不含 exploit payload"},
+  "$codes": ["OUT_OF_SCOPE_TARGET", "AUTHZ_WITHOUT_RULE_BINDING", "PLAINTEXT_VULN_DETAIL"]
+}

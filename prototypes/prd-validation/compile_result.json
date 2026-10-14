@@ -1,0 +1,27 @@
+{
+  "skill": "01",
+  "checked_at": "2026-09-06T06:44:04.961175+00:00",
+  "total_findings": 3,
+  "findings": [
+    {
+      "code": "SOURCE_UNAVAILABLE",
+      "severity": "REVIEW",
+      "target": "ROLE-PERMISSION-TABLE",
+      "msg": "source 可用性为 EXPECTED_MISSING；编译置信度受损"
+    },
+    {
+      "code": "SOURCE_UNAVAILABLE",
+      "severity": "REVIEW",
+      "target": "HIST-INTERFACE-CONTRACT",
+      "msg": "source 可用性为 NOT_PROVIDED；编译置信度受损"
+    },
+    {
+      "code": "SOURCE_UNAVAILABLE",
+      "severity": "REVIEW",
+      "target": "V2-INTERFACE-DOC",
+      "msg": "source 可用性为 NOT_PROVIDED；编译置信度受损"
+    }
+  ],
+  "verdict": "PASS_WITH_REVIEW",
+  "routing": "IR 草稿挂起，等待 source 完整性评审"
+}

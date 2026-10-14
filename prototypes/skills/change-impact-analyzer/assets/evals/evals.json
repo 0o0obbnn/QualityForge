@@ -1,0 +1,47 @@
+[
+  {
+    "name": "valid_impact_report",
+    "input": {
+      "max_depth_reached": 2,
+      "graph_available": true,
+      "used_static_fallback": false,
+      "impacted_assets": [
+        {
+          "asset_id": "api-1",
+          "impact_class": "direct"
+        },
+        {
+          "asset_id": "ui-2",
+          "impact_class": "indirect"
+        }
+      ]
+    },
+    "expected_verdict": "PASS"
+  },
+  {
+    "name": "shallow_propagation",
+    "input": {
+      "max_depth_reached": 1,
+      "graph_available": true,
+      "used_static_fallback": false,
+      "impacted_assets": [
+        {
+          "asset_id": "api-1",
+          "impact_class": "direct"
+        }
+      ]
+    },
+    "expected_verdict": "REJECT"
+  },
+  {
+    "name": "silent_static_fallback",
+    "input": {
+      "max_depth_reached": 2,
+      "graph_available": false,
+      "used_static_fallback": true,
+      "degraded_confidence_flagged": false,
+      "impacted_assets": []
+    },
+    "expected_verdict": "REJECT"
+  }
+]

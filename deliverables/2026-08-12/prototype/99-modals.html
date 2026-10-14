@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>弹窗体系 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+<style>
+  .modal-card{background:var(--qf-card);border:1px solid var(--qf-border);border-radius:14px;padding:18px 20px;margin-bottom:14px;}
+  .modal-card h3{font-size:14.5px;margin-bottom:6px;display:flex;align-items:center;gap:8px;}
+  .modal-card .trigger{font-size:12.5px;color:var(--qf-muted-foreground);margin-bottom:10px;}
+  .modal-card .trigger code{font-family:var(--qf-font-mono);font-size:11.5px;background:var(--qf-secondary-surface);padding:1px 6px;border-radius:4px;}
+  .demo-line{display:flex;gap:10px;flex-wrap:wrap;}
+</style>
+</head>
+<body>
+<div class="app" style="grid-template-columns:1fr">
+  <main style="max-width:1100px;margin:0 auto">
+    <div class="page-head">
+      <div><h1>弹窗体系规范</h1><div class="sub">全部弹窗类型 · 结构(遮罩/标题/内容/操作/关闭) · 触发入口 · 与各页面联动</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="phead"><h2>弹窗通用结构</h2><span class="hint">qf-components.css · .modal / .modal-box</span></div>
+      <div class="pbody">
+        <div class="src-trace" style="margin-bottom:12px">
+          <span class="src-node">.modal 遮罩层 rgba(20,18,16,.45)</span><span class="arrow">+</span>
+          <span class="src-node">.modal-box 容器(窄 400 / 默认 520 / 宽 760)</span><span class="arrow">+</span>
+          <span class="src-node">.modal-head 标题区 + 关闭 ×</span><span class="arrow">+</span>
+          <span class="src-node">.modal-body 内容区</span><span class="arrow">+</span>
+          <span class="src-node">.modal-foot 操作区</span>
+        </div>
+        <p class="small muted">关闭方式: ① × 按钮 ② 点击遮罩 ③ ESC 键;打开时锁定页面滚动;移动端弹窗占满宽度。</p>
+      </div>
+    </div>
+
+    <h2 style="font-size:20px;margin:24px 0 12px">弹窗类型清单(10 类 · 全部有实例)</h2>
+
+    <div class="modal-card"><h3>1. 确认提示框 <span class="badge b-acc">确认类</span></h3><div class="trigger">触发入口: <code>11-reviews.html</code> 批准/拒绝 · <code>12-workitem.html</code> 取消任务 · <code>51-execution-monitor.html</code> 取消批次 · <code>81-environments.html</code> Secret 轮换 · <code>62-reports.html</code> 报告签署</div><div class="demo-line"><button class="btn btn-primary btn-sm" onclick="qf.openModal('d1')">批准 V2(实例)</button><button class="btn btn-danger btn-sm" onclick="qf.openModal('d2')">拒绝(实例)</button></div></div>
+
+    <div class="modal-card"><h3>2. 表单弹窗 <span class="badge b-acc">表单类</span></h3><div class="trigger">触发入口: <code>10-board.html</code> 新建工作项 · <code>20-sources.html</code> 导入来源/新建需求 · <code>30-strategies.html</code> 生成策略 · <code>50-execution-plans.html</code> 新建执行计划 · <code>61-defects.html</code> 新建 Defect · <code>70-capabilities.html</code> 新建 Agent/发布 Skill · <code>71-operations.html</code> 发起 Session · <code>81-environments.html</code> 新建环境</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d3')">新建工作项(实例)</button></div></div>
+
+    <div class="modal-card"><h3>3. 加载/成功/失败反馈 <span class="badge b-ok">反馈类</span></h3><div class="trigger">触发入口: <code>01-login.html</code> 登录按钮 loading → 成功 toast · 各表单提交后 toast · <code>51-execution-monitor.html</code> ERROR 原因弹窗</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.toast('操作成功 · 已持久化','ok')">成功 Toast</button><button class="btn btn-ghost btn-sm" onclick="qf.toast('操作失败: 权限不足','err')">失败 Toast</button><button class="btn btn-ghost btn-sm" onclick="qf.toast('进行中…','info')">信息 Toast</button><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d4')">ERROR 原因(实例)</button></div></div>
+
+    <div class="modal-card"><h3>4. 详情查看 <span class="badge b-acc">详情类</span></h3><div class="trigger">触发入口: <code>20-sources.html</code> 快照详情 · <code>21-api-contracts.html</code> 契约/Operation · <code>30-strategies.html</code> 策略详情 · <code>32-cases.html</code> 用例详情 · <code>60-analyses.html</code> 分析详情 · <code>61-defects.html</code> Defect 详情 · <code>70-capabilities.html</code> Skill/Agent/Prompt 详情 · <code>82-governance.html</code> 角色/策略/集成</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d5')">详情弹窗(实例)</button></div></div>
+
+    <div class="modal-card"><h3>5. 图片/内容预览 <span class="badge b-acc">预览类</span></h3><div class="trigger">触发入口: <code>52-evidence.html</code> 证据预览(JSON/日志) · <code>42-assets.html</code> 视觉基线截图</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d6')">证据预览(实例)</button></div></div>
+
+    <div class="modal-card"><h3>6. 登录注册弹窗 <span class="badge b-acc">认证类</span></h3><div class="trigger">触发入口: <code>01-login.html</code> 底部「申请账号」→ 注册表单弹窗;注册内的协议链接 → 协议弹窗</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d7')">注册表单(实例)</button><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d8')">服务协议(实例)</button></div></div>
+
+    <div class="modal-card"><h3>7. 公告/通知 <span class="badge b-acc">公告类</span></h3><div class="trigger">触发入口: <code>10-board.html</code> 顶栏通知铃铛</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d9')">平台公告(实例)</button></div></div>
+
+    <div class="modal-card"><h3>8. 外部写入确认 <span class="badge b-acc">安全类</span></h3><div class="trigger">触发入口: <code>61-defects.html</code> 同步到 JIRA · 每次写入单独批准 + 幂等键</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d10')">外部同步确认(实例)</button></div></div>
+
+    <div class="modal-card"><h3>9. 退回修改/评论 <span class="badge b-acc">协作类</span></h3><div class="trigger">触发入口: <code>11-reviews.html</code> 退回修改 · <code>41-code-review.html</code> 评论</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d11')">退回修改(实例)</button></div></div>
+
+    <div class="modal-card"><h3>10. 选择/配置 <span class="badge b-acc">配置类</span></h3><div class="trigger">触发入口: <code>10-board.html</code> 项目切换/视图设置/账号 · <code>21-api-contracts.html</code> 基线管理 · <code>11-reviews.html</code> 筛选</div><div class="demo-line"><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d12')">项目切换(实例)</button><button class="btn btn-ghost btn-sm" onclick="qf.openModal('d13')">视图设置(实例)</button></div></div>
+
+    <p class="small muted mt-4">移动端: 弹窗 <code>max-width:100%</code> 全宽呈现,操作区按钮换行;全部弹窗支持 ESC 与遮罩点击关闭。</p>
+  </main>
+</div>
+
+<!-- 实例弹窗 -->
+<div class="modal" id="d1" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box narrow"><div class="modal-head"><h3>确认批准</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 1 · 确认提示框</div><p class="body-text">批准绑定摘要 <span class="mono">sha256:3f9a…c21e</span>,ReviewDecision 只追加不可撤销。</p></div><div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('d1')">取消</button><button class="btn btn-primary" onclick="qf.closeModal('d1');qf.toast('已批准(演示)','ok')">确认批准</button></div></div></div>
+<div class="modal" id="d2" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box narrow"><form id="d2f" novalidate><div class="modal-head"><h3>确认拒绝</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 1 · 危险操作</div><p class="body-text">拒绝后版本进入 REJECTED,操作只追加记录。</p><div class="field mt-3"><label>拒绝原因 <span class="req">*</span></label><textarea class="input" name="reason" required placeholder="将进入审计记录"></textarea><div class="err">请填写拒绝原因</div></div></div><div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('d2')">取消</button><button type="submit" class="btn btn-danger">确认拒绝</button></div></form></div></div>
+<div class="modal" id="d3" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><div class="modal-head"><h3>新建工作项</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><form id="d3f" novalidate><div class="modal-body"><div class="modal-tag">类型 2 · 表单弹窗 · 提交后写入 localStorage</div><div class="field"><label>标题 <span class="req">*</span></label><input class="input" name="title" required placeholder="例如: 补充退款场景用例"><div class="err">请输入标题</div></div><div class="form-row"><div class="field"><label>类型</label><select class="input" name="type"><option>用例</option><option>策略</option><option>计划</option><option>执行</option><option>Defect</option><option>知识</option><option>其他</option></select></div><div class="field"><label>优先级</label><select class="input" name="pri"><option>P0</option><option>P1</option><option>P2</option></select></div></div></div><div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('d3')">取消</button><button type="submit" class="btn btn-primary">创建</button></div></form></div></div>
+<div class="modal" id="d4" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box narrow"><div class="modal-head"><h3>ERROR 原因</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 3 · 错误反馈</div><div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span><div><b>RUNNER_CAPABILITY_MISSING</b><div class="small muted">原因、影响、可执行下一步齐全</div></div></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d4')">关闭</button></div></div></div>
+<div class="modal" id="d5" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><div class="modal-head"><h3>策略详情</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 4 · 详情查看</div><div class="kv" style="display:grid;grid-template-columns:100px 1fr;gap:8px 14px;font-size:13.5px"><span class="muted">目标</span><span>验证 R-2026.08 结算链路</span><span class="muted">摘要</span><span class="mono">sha256:3f9a…</span><span class="muted">审核</span><span>RT-4832 · 待审核</span></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d5')">关闭</button></div></div></div>
+<div class="modal" id="d6" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box wide"><div class="modal-head"><h3>证据预览</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 5 · 预览类(JSON/日志/图片)</div><div style="background:var(--qf-neutral-900);color:var(--qf-neutral-100);border-radius:10px;padding:14px;font-family:var(--qf-font-mono);font-size:12px;line-height:1.8">{"status":200, "order_no":"ORD-8821"}</div></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d6')">关闭</button></div></div></div>
+<div class="modal" id="d7" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><form id="d7f" novalidate><div class="modal-head"><h3>申请账号</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 6 · 注册弹窗</div><div class="field"><label>姓名 <span class="req">*</span></label><input class="input" name="name" required placeholder="你的姓名"><div class="err">请输入姓名</div></div><div class="field"><label>工作邮箱 <span class="req">*</span></label><input class="input" type="email" name="email" required placeholder="name@company.com"><div class="err">请输入有效邮箱</div></div></div><div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('d7')">取消</button><button type="submit" class="btn btn-primary">提交申请</button></div></form></div></div>
+<div class="modal" id="d8" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><div class="modal-head"><h3>服务协议</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 6 · 协议弹窗</div><p class="body-text" style="font-size:12.5px;color:var(--qf-muted-foreground);max-height:160px;overflow-y:auto">1. 服务范围… 2. 数据与隐私… 3. 人工责任… (占位协议文本)</p></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d8')">我已阅读</button></div></div></div>
+<div class="modal" id="d9" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><div class="modal-head"><h3>平台公告</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 7 · 公告</div><div class="mini-card" style="border:none;padding:0"><div class="row"><span class="k">08-11</span><span class="v">Release R-2026.08 进入测试期</span></div><div class="row"><span class="k">08-09</span><span class="v">新增 Trace 回放视图</span></div></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d9')">知道了</button></div></div></div>
+<div class="modal" id="d10" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><div class="modal-head"><h3>外部同步确认</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 8 · 外部写入逐次批准</div><div class="mini-card" style="border:none;padding:0"><div class="row"><span class="k">目标</span><span class="v">JIRA · CREATE_ISSUE</span></div><div class="row"><span class="k">幂等键</span><span class="v mono">sync-D0142-001</span></div><div class="row"><span class="k">绑定</span><span class="v mono">D-0142 V1</span></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="qf.closeModal('d10')">取消</button><button class="btn btn-primary" onclick="qf.closeModal('d10');qf.toast('已批准写入(演示)','ok')">批准写入</button></div></div></div>
+<div class="modal" id="d11" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box"><form id="d11f" novalidate><div class="modal-head"><h3>退回修改</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 9 · 协作退回</div><div class="field"><label>退回原因</label><select class="input"><option>范围需要调整</option><option>来源引用有误</option></select></div><div class="field"><label>详细意见 <span class="req">*</span></label><textarea class="input" name="detail" required placeholder="AI 将按意见生成新版本"></textarea><div class="err">请填写详细意见</div></div></div><div class="modal-foot"><button type="button" class="btn btn-ghost" onclick="qf.closeModal('d11')">取消</button><button type="submit" class="btn btn-primary">提交退回</button></div></form></div></div>
+<div class="modal" id="d12" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box narrow"><div class="modal-head"><h3>切换项目</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 10 · 选择类</div><div class="mini-card" style="border:none;padding:0"><div class="row" style="cursor:pointer"><span class="k">结算中心</span><span class="v mono">settlement</span></div><div class="row" style="cursor:pointer"><span class="k">对账服务</span><span class="v mono">recon</span></div></div></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d12')">确定</button></div></div></div>
+<div class="modal" id="d13" role="dialog" aria-modal="true"><div class="mask"></div><div class="modal-box narrow"><div class="modal-head"><h3>视图设置</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div><div class="modal-body"><div class="modal-tag">类型 10 · 配置类</div><div class="field"><label>默认视图</label><select class="input"><option>列表</option><option>看板</option></select></div><label class="check"><input type="checkbox" checked> 显示优先级</label></div><div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('d13')">保存</button></div></div></div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('d2f', function () { qf.closeModal('d2'); qf.toast('已拒绝(演示)','err'); });
+  qf.bindForm('d7f', function () { qf.closeModal('d7'); qf.toast('申请已提交(演示)','ok'); });
+  qf.bindForm('d11f', function () { qf.closeModal('d11'); qf.toast('已退回(演示)','ok'); });
+  qf.bindForm('d3f', function () {
+    var f = document.getElementById('d3f');
+    qf.items.add({ title: f.title.value, type: f.type.value, pri: f.pri.value });
+    qf.closeModal('d3');
+    qf.toast('工作项已创建并持久化(刷新 10-board.html 可复核)', 'ok');
+  });
+</script>
+</body>
+</html>

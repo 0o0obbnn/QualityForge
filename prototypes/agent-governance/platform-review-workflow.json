@@ -1,0 +1,60 @@
+{
+  "schemaVersion": "1.0",
+  "workflowId": "platform-independent-review-v1",
+  "agentId": "qf-platform-reviewer",
+  "description": "平台独立评审的只读固定流程；不属于Gate 0生产DAG。",
+  "maxIterations": 1,
+  "sameSnapshotReplayCreatesNewRun": true,
+  "nodes": [
+    {
+      "id": "freeze_scope",
+      "checkType": "deterministic",
+      "dependsOn": [],
+      "output": "scope-manifest.json",
+      "failureVerdict": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "id": "inventory_evidence",
+      "checkType": "deterministic",
+      "dependsOn": ["freeze_scope"],
+      "output": "evidence-manifest.json",
+      "failureVerdict": "INSUFFICIENT_EVIDENCE"
+    },
+    {
+      "id": "cross_contract_review",
+      "checkType": "independent_analysis",
+      "dependsOn": ["inventory_evidence"],
+      "dimensions": ["REQUIREMENT", "ARCHITECTURE", "CONTRACT"],
+      "output": "findings-contract.json"
+    },
+    {
+      "id": "platform_risk_review",
+      "checkType": "independent_analysis",
+      "dependsOn": ["inventory_evidence"],
+      "dimensions": ["PRODUCT", "SECURITY", "AI_GOVERNANCE", "TESTABILITY", "EXPERIENCE"],
+      "output": "findings-risk.json"
+    },
+    {
+      "id": "acceptance_evidence_review",
+      "checkType": "independent_analysis",
+      "dependsOn": ["inventory_evidence"],
+      "dimensions": ["ACCEPTANCE_EVIDENCE"],
+      "output": "findings-acceptance.json"
+    },
+    {
+      "id": "synthesize_report",
+      "checkType": "advisory_synthesis",
+      "dependsOn": ["cross_contract_review", "platform_risk_review", "acceptance_evidence_review"],
+      "outputs": ["findings.json", "coverage.json", "platform-review-report.md"],
+      "next": "human_disposition"
+    },
+    {
+      "id": "human_disposition",
+      "checkType": "human_checkpoint",
+      "dependsOn": ["synthesize_report"],
+      "requiredActorType": "UserIdentity",
+      "agentMayDecide": false,
+      "decisions": ["ACCEPT", "REQUEST_REMEDIATION", "REJECT_REPORT"]
+    }
+  ]
+}

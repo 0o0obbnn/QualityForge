@@ -1,0 +1,32 @@
+{
+  "code": "\nimport requests, os\n\nBASE_URL = os.environ[\"API_BASE_URL\"]\nAUTH_TOKEN = os.environ[\"AUTH_TOKEN\"]\n\ndef test_get_order():\n    headers = {\"Authorization\": f\"Bearer {AUTH_TOKEN}\"}\n    resp = requests.get(BASE_URL + \"/api/v1/orders/1\", headers=headers)\n    assert resp.status_code == 200\n    assert resp.json()[\"total\"] == 99.9\n",
+  "case_refs": [
+    "TC-004"
+  ],
+  "expected_results": [
+    {
+      "expected_result_id": "ER-001",
+      "field": "status",
+      "value": 200
+    },
+    {
+      "expected_result_id": "ER-002",
+      "field": "body.total",
+      "value": 99.9
+    }
+  ],
+  "fixture_deps": [
+    "create_user",
+    "create_order"
+  ],
+  "asserts": [
+    {
+      "expected_result_id": "ER-001",
+      "expr": "assert resp.status_code == 200"
+    },
+    {
+      "expected_result_id": "ER-002",
+      "expr": "assert resp.json()[\"total\"] == 99.9"
+    }
+  ]
+}

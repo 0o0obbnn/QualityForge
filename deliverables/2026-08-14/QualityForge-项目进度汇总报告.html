@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 项目进度汇总报告 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--red:#a63a3a;--green:#2e7d32;--amber:#8a6d3b;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14.5px;line-height:1.7;}
+  .wrap{max-width:760px;margin:0 auto;padding:40px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:28px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:23px;margin:6px 0 6px;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:17px;margin:36px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  h3{font-size:14.5px;margin:20px 0 8px;font-weight:700;}
+  p{margin:8px 0;}
+  a{color:var(--link);}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.g{background:var(--green);color:#fff;border-color:var(--green);}
+  .tag.y{background:var(--amber);color:#fff;border-color:var(--amber);}
+  .tag.r{background:var(--red);color:#fff;border-color:var(--red);}
+  .tag.b{background:#eee;color:#333;}
+  .verdict{border:1px solid var(--line);padding:14px 16px;margin:14px 0;background:#fafafa;}
+  .verdict b{font-size:15px;}
+  .note{font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:10px 0;}
+  ol,ul{padding-left:22px;margin:8px 0;}
+  li{margin:4px 0;}
+  footer{margin-top:48px;border-top:1px solid var(--line);padding-top:14px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">PROJECT STATUS REPORT · QF-PR-2026-0814</div>
+  <h1>QualityForge 项目进度汇总报告</h1>
+  <div class="meta">数据截止:2026-08-14 13:45 (GMT+8) ｜ 维护责任人:项目负责人(yount) ｜ 配套:<a href="QualityForge-项目进度看板.html">项目进度看板(可筛选)</a></div>
+</header>
+
+<h2>一、总体进度结论</h2>
+<div class="verdict">
+<b>项目处于 V0 → V1 过渡决策点。</b>V0 设计/Gate 0 验证基本达成(约 90%,静态契约层闭环);V1 单 Workspace 试点未开工但规划就绪(Stage 5 已定 M1~M5)。8-13 评审后已启动 P0 整改:<b>48 条台账中 2 条已修复、2 条部分修复、3 条 V1 延期声明、41 条未修复</b>;L1 复扫"假关闭"被纠正(8 项"已关闭"仅 1 项真关闭),审计证据纪律显著改善。
+</div>
+<table>
+  <tr><th>维度</th><th>状态</th><th>关键证据</th></tr>
+  <tr><td>V0 设计/Gate 0</td><td><span class="tag g">基本达成 ~90%</span></td><td>8 模块冻结、四源一致(8-13 修复后)、30 Skill/4 Agent、双 E2E 链、6 份审计文档</td></tr>
+  <tr><td>V1 单 Workspace 试点</td><td><span class="tag r">未开工 0%</span></td><td>Stage 5 VERDICT M1~M5 已定,M1"需求与审核收口"具备动工条件</td></tr>
+  <tr><td>代码工程</td><td><span class="tag y">地基就绪</span></td><td>backend FastAPI v0.3.0(12 项 pytest)、frontend React 19 审核工作台、CI 3 条</td></tr>
+  <tr><td>P0 整改(8-13 后)</td><td><span class="tag y">进行中 12%</span></td><td>已修复 2(002/030)、部分 2(001/048)、延期 3(003/004/028)、未修复 41</td></tr>
+  <tr><td>运行时证据</td><td><span class="tag r">缺口明显</span></td><td>Stage4 仅 22/102 ops、3/8 产出物;真实模型/PostgreSQL 零验证</td></tr>
+</table>
+
+<h2>二、里程碑进度</h2>
+<h3>2.1 V0 设计/Gate 0 — 基本达成(约 90%)</h3>
+<table>
+  <tr><th>V0 目标</th><th>状态</th><th>证据</th></tr>
+  <tr><td>8 模块边界/八类产出物/人工审核契约</td><td><span class="tag g">冻结</span></td><td>05 方案 Gate E 静态复审 PASS + 收口复核 PASS</td></tr>
+  <tr><td>权威源一致(03/04/21/32/33/34/55)</td><td><span class="tag g">一致</span></td><td>L1 复验纠正 8-13;openapi-spec-validator PASS</td></tr>
+  <tr><td>30 Skill + Gate 0 1+3 Agent</td><td><span class="tag g">完成</span></td><td>30/30 evals(103 cases、14 runner)、validate.py 0</td></tr>
+  <tr><td>负例与 Golden 样例、独立审计</td><td><span class="tag g">完成</span></td><td>e2e 双链 + 6 份独立审计文档</td></tr>
+  <tr><td>V0 准出(Blocker/Critical)</td><td><span class="tag y">基本满足</span></td><td>6 Blocker 3 个自然关闭、其余 V1 延期诚实标注</td></tr>
+  <tr><td>开发 Backlog 可拆解</td><td><span class="tag g">完成</span></td><td>Stage 5 VERDICT M1~M5 对照表</td></tr>
+</table>
+<h3>2.2 V1 单 Workspace 试点 — 未开工(0%),规划就绪</h3>
+<p>当前仅有 Stage3/4 纵向切片(22/102 ops、3/8 产出物、确定性 Provider、本地 SQLite)——这是 <b>V0 验证用的工程 Spike,不是 V1 产品</b>(05 §5.13.1 明示)。Stage 5 VERDICT 主线:<b>M1 需求与审核收口 → M2 任务看板工作化 → M3 执行与证据 → M4 分析与报告</b> + 分支 A 真实模型准入(M5)+ 分支 B 质量中心/Defect。M1 前置裁决三项已生效(角色模型、前端栈追认、QF-REQ-001 部分修复)。<b>V1 需 8 模块最小能力 + 八类产出物人工批准——当前仅审核工作台界面存在,其余 7 模块无页面。</b></p>
+<h3>2.3 代码工程 — 地基就绪</h3>
+<table>
+  <tr><th>工程</th><th>状态</th><th>规模</th></tr>
+  <tr><td>backend(FastAPI + SQLite, v0.3.0)</td><td><span class="tag g">可运行</span></td><td>21 源文件、12 项 pytest、Mypy strict PASS</td></tr>
+  <tr><td>frontend(React 19 审核工作台, v0.3.0)</td><td><span class="tag g">可构建</span></td><td>16 文件、vitest、vite build 0 漏洞</td></tr>
+  <tr><td>CI 门禁</td><td><span class="tag y">配置就绪</span></td><td>backend/frontend/skill-eval 三 workflow(实际运行未验证)</td></tr>
+  <tr><td>现场数据库</td><td><span class="tag y">空态</span></td><td>qualityforge.sqlite3 21 张表,业务数据 0 行</td></tr>
+</table>
+
+<h2>三、未解决问题清单(48 条台账 × 当前状态)</h2>
+<h3>3.1 状态统计</h3>
+<table>
+  <tr><th>状态</th><th>数量</th><th>编号</th></tr>
+  <tr><td><span class="tag g">已修复</span></td><td>2</td><td>QF-REQ-002(WorkItemType 枚举)、QF-REQ-030(TestPlan 外键)</td></tr>
+  <tr><td><span class="tag y">部分修复</span></td><td>2</td><td>QF-REQ-001(3/6 字段)、QF-REQ-048(证据纪律改善)</td></tr>
+  <tr><td><span class="tag b">V1 延期声明</span></td><td>3</td><td>QF-REQ-003(CoverageReport API)、QF-REQ-004(ContractCheckResult)、QF-REQ-028(104 表口径)</td></tr>
+  <tr><td><span class="tag r">未修复</span></td><td>41</td><td>其余全部(PRD 已冻结未触碰)</td></tr>
+</table>
+<h3>3.2 当前最高优先级问题</h3>
+<table>
+  <tr><th>编号</th><th>级别</th><th>问题</th><th>状态</th><th>影响</th></tr>
+  <tr><td>QF-REQ-001</td><td>阻断</td><td>WorkItem 关键字段未落四源</td><td><span class="tag y">部分修复,二次假关闭风险</span></td><td>acceptanceCriteria/constraints/agentId 仍缺;L1 纠正报告误报"已修复"</td></tr>
+  <tr><td>QF-REQ-005</td><td>严重</td><td>OpenAPI 60 处 Generic 响应</td><td><span class="tag r">未修复</span></td><td>计数漂移(58→60),客户端契约不可稳定生成</td></tr>
+  <tr><td>QF-REQ-006</td><td>严重</td><td>AI 校准记录无载体</td><td><span class="tag r">未修复</span></td><td>L2/L3 自治无法按契约启用</td></tr>
+  <tr><td>QF-REQ-007</td><td>严重</td><td>05§十一 5 步骤未绑里程碑</td><td><span class="tag r">未修复</span></td><td>V1 准出与进度不可追踪</td></tr>
+  <tr><td>QF-REQ-004</td><td>严重</td><td>契约验证链断裂</td><td><span class="tag b">延期但 V1 义务仍在</span></td><td>测试执行是 V1 必交付模块,延期≠销账</td></tr>
+  <tr><td>QF-REQ-032</td><td>一般</td><td>运行时证据缺口</td><td><span class="tag r">未修复</span></td><td>5/8 产出物无切片证据</td></tr>
+</table>
+<h3>3.3 新暴露问题(8-13 整改后,7 项)</h3>
+<table>
+  <tr><th>编号</th><th>问题</th><th>风险</th></tr>
+  <tr><td>N1</td><td>QF-REQ-001 二次假关闭:纠正报告标"已修复"仅覆盖 3/6 字段</td><td>与报告自身批判的"改一半声称全改"同构</td></tr>
+  <tr><td>N2</td><td>CHANGELOG 违约:35 号最新批次仍为 07-18,8-13 整改未入册</td><td>变更不可追溯</td></tr>
+  <tr><td>N3</td><td>延期声明与 V1 义务冲突(ContractCheckResult)</td><td>V1 验收风险挂账</td></tr>
+  <tr><td>N4</td><td>QF-REQ-005 计数漂移 58→60</td><td>口径需复核并同步 37/54</td></tr>
+  <tr><td>N5</td><td>命名未收敛残余(humanAssigneeId vs assigneeId;role vs relation_type)</td><td>实现期字段分歧</td></tr>
+  <tr><td>N6</td><td>TEST_DESIGN 与 21 号介入点同名</td><td>工具解析上下文混淆</td></tr>
+  <tr><td>N7</td><td>agent 配置脱离版本控制(b11be8c)</td><td>审计无法追溯文件历史</td></tr>
+</table>
+
+<h2>四、风险登记与回滚说明</h2>
+<h3>4.1 风险登记(13 项,高概率×高严重度 3 项)</h3>
+<table>
+  <tr><th>编号</th><th>类别</th><th>风险</th><th>概率</th><th>严重度</th><th>缓解方向</th></tr>
+  <tr><td>QF-RSK-004</td><td>技术</td><td>V1 八模块×八产出物 vs 3/8 证据</td><td>高</td><td>高</td><td>05§十一步骤绑里程碑</td></tr>
+  <tr><td>QF-RSK-005</td><td>技术</td><td>确定性 Provider≠真实模型</td><td>高</td><td>高</td><td>黄金集先行;接入前评测;AC-03 兜底</td></tr>
+  <tr><td>QF-RSK-013</td><td>合规/安全</td><td>真实 LLM 接入=数据出站未评测</td><td>高</td><td>高</td><td>接入前出站评测;无评测前保持 L0</td></tr>
+  <tr><td>QF-RSK-001</td><td>业务</td><td>试点数据未采集,收益不可验证</td><td>中</td><td>高</td><td>采集清单转强制数据字典</td></tr>
+  <tr><td>QF-RSK-010/011/012</td><td>合规/安全</td><td>外部写入校验/Secret/RCE</td><td>中</td><td>高</td><td>批准记录+幂等键;Secret 随 V1;Runner 隔离</td></tr>
+  <tr><td>QF-RSK-003</td><td>业务</td><td>覆盖率分母口径漂移</td><td>中</td><td>高</td><td>补五类覆盖率权威定义</td></tr>
+  <tr><td>其余 5 项</td><td>—</td><td>见台账风险册(002/006/007/008/009)</td><td>低-高</td><td>中</td><td>见台账</td></tr>
+</table>
+<h3>4.2 异常路径与应对</h3>
+<table>
+  <tr><th>异常路径</th><th>风险</th><th>应对</th></tr>
+  <tr><td>数据源缺失(CI 无运行记录)</td><td>中</td><td>以本地报告与源码为准;push 后验证 Actions</td></tr>
+  <tr><td>依赖阻塞(真实模型不可用)</td><td>高</td><td>保持确定性 Provider + L0;接入前完成评测</td></tr>
+  <tr><td>延期风险(5/8 产出物证据缺口)</td><td>高</td><td>M1~M5 对照表逐项验收;未完成环节定义人工替代流程</td></tr>
+  <tr><td>数据库不可用</td><td>低</td><td>本地 SQLite 切片可离线运行(Stage4 已验证)</td></tr>
+</table>
+<h3>4.3 回退方式</h3>
+<ul>
+  <li><b>报告回退</b>:旧版保留于 deliverables/2026-08-14/(文件名带日期),回退即重新发布旧文件并更新引用。</li>
+  <li><b>数据回退</b>:本报告只读汇总,不修改项目数据;汇总错误以 docs/05-audits/current/ 与 git 记录为准重新生成。</li>
+  <li><b>看板回退</b>:看板数据内嵌 HTML,回退即替换为上一版文件。</li>
+</ul>
+
+<h2>五、数据核对说明</h2>
+<table>
+  <tr><th>数据源</th><th>内容</th><th>截止</th><th>核对结果</th></tr>
+  <tr><td>git 提交记录</td><td>9 commits(8-11~8-13),单人 yount</td><td>8-14 13:45</td><td><span class="tag g">一致</span>;8-14 无新 commit</td></tr>
+  <tr><td>docs/05-audits/current/</td><td>6 份审计/验证报告</td><td>8-13 12:27</td><td><span class="tag g">一致</span>;L1 假关闭已被纠正覆盖</td></tr>
+  <tr><td>deliverables/2026-08-13/</td><td>评审报告 + 48 条台账 + 408 条盘点</td><td>8-13</td><td><span class="tag g">一致</span>;状态已按 8-14 核验更新</td></tr>
+  <tr><td>32-API规范.yaml</td><td>78 paths / 102 ops / 80 引用 schemas(定义 32 块)</td><td>8-13 12:35</td><td><span class="tag y">80 vs 32 口径差</span>,建议对齐</td></tr>
+  <tr><td>33-数据库Schema</td><td>104 张表</td><td>8-13 12:22</td><td><span class="tag y">104 vs 89 实体口径已说明未回写</span></td></tr>
+  <tr><td>prototypes/</td><td>30 Skill、80 eval 文件、4 Agent</td><td>8-13</td><td><span class="tag g">一致</span></td></tr>
+  <tr><td>现场数据库</td><td>21 张表,业务 0 行</td><td>8-14 13:46</td><td><span class="tag y">Stage4 演示数据不在现场库</span>,证据以报告+截图为准</td></tr>
+</table>
+<p class="note">已知差异:① QF-REQ-005 计数 58→60(口径未追因,按最新值记录);② 05 方案 GWT 表格 b11be8c 后移除,台账 144 条为评审时点口径;③ 32-API schemas 80(引用)vs 32(定义);④ CI 三 workflow 实际跑绿未验证。</p>
+
+<h2>六、交接维护说明</h2>
+<table>
+  <tr><th>项</th><th>内容</th></tr>
+  <tr><td>维护责任人</td><td>项目负责人(yount);报告由评审工作流生成,可重跑更新</td></tr>
+  <tr><td>下次更新时间</td><td>M1 里程碑验收时(预计 1-2 周内),或出现新 commit/审计文档时</td></tr>
+  <tr><td>更新频率</td><td>里程碑节点更新;重大变更随时更新</td></tr>
+  <tr><td>更新步骤</td><td>① 检查 git log 与 docs/05-audits/current/ 新文件 ② 对照 48 条台账逐条核验(grep 级证据) ③ 更新看板数据与报告 ④ 按日期归档旧版</td></tr>
+  <tr><td>数据源变化</td><td>新增数据源时在"数据核对说明"增加一行并注明置信度</td></tr>
+  <tr><td>回退方式</td><td>旧版按日期保留于 deliverables/,回退即重新发布旧文件</td></tr>
+  <tr><td>后续跟踪建议</td><td>① QF-REQ-001 改判"部分修复"并补 3 字段,防二次假关闭 ② 35-CHANGELOG 补记 8-13 整改批次 ③ M1 开工前完成 QF-REQ-007 里程碑对照表 ④ 真实模型准入前完成数据出站评测</td></tr>
+</table>
+
+<h2>附录 A · 项目时间线</h2>
+<table>
+  <tr><th>时间</th><th>节点</th></tr>
+  <tr><td>07-12~07-14</td><td>原始设计讨论、工程/文档骨架建立</td></tr>
+  <tr><td>07-18</td><td>第一批契约修复(CH-01~28,纯 Python 技术栈)</td></tr>
+  <tr><td>07-23~07-30</td><td>六阶段审计 + <b>总裁决:3.2/5 REVISE_AND_FOCUS,6 Blocker</b></td></tr>
+  <tr><td>07-31~08-04</td><td>修复轮次(B-1/B-2/B-3 契约补全)</td></tr>
+  <tr><td>08-06~08-10</td><td>Skill 审计、全量文档 QA、首份交付物</td></tr>
+  <tr><td>08-11</td><td>首个 git commit + L1 复扫(声称 6 项全关)+ 现状独立复审(Gate E)</td></tr>
+  <tr><td>08-12</td><td>需求重构落地(8 模块)+ Stage3/Stage4 纵向切片 + 收口复核 PASS</td></tr>
+  <tr><td>08-13</td><td>代码提交潮(8 commits)+ <b>P0 整改(a6df550)</b> + <b>需求评审(48 条台账)</b> + <b>L1 假关闭纠正</b> + Stage 5 VERDICT(M1~M5)</td></tr>
+  <tr><td>08-14</td><td>无新 commit;本报告数据截止</td></tr>
+</table>
+
+<h2>附录 B · 数据源清单</h2>
+<ul>
+  <li>git:9 commits(37e734c ~ 7596a39),仅 main 分支</li>
+  <li>docs/05-audits/current/:总裁决、L1 复扫、现状复审、Stage3、Stage4、收口复核、L1 复验纠正、skill-audit、产品评估</li>
+  <li>deliverables/2026-08-13/:评审报告(docx/html)、问题台账 48 条、需求盘点 408 条</li>
+  <li>prototypes/:30 Skill(30/30 evals)、agent-governance(4 Agent/14 Skill/DAG)、e2e 正反双链</li>
+  <li>wall/:对话墙 8-13 启用,4 话题 VERDICT(stage5-planning/frontend-stack/provider-eval-gate/execution-design)</li>
+</ul>
+
+<footer>QualityForge 项目进度汇总报告 v1 · 2026-08-14 · 只读汇总,不修改项目数据 ｜ 数据核对与交接说明见正文第五、六章</footer>
+
+</div>
+</body>
+</html>

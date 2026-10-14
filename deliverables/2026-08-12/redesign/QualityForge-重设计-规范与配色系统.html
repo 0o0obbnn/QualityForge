@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 重设计 · 配色系统与设计规范 V1</title>
+<style>
+  :root{
+    --bg:#FAFAF7; --card:#FFFFFF; --fg:#1D1B18; --muted:#817B6E; --border:#E9E6DE;
+    --accent:#D96C1F; --accent-600:#B8551A; --accent-100:#FDF4EA;
+    --sec:#6B7A5E; --ok:#47875A; --warn:#B98E2A; --err:#C0442F;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--fg); font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif; line-height:1.7; padding:48px 24px;}
+  .wrap{max-width:1060px; margin:0 auto;}
+  header{border-bottom:2px solid var(--fg); padding-bottom:28px; margin-bottom:40px;}
+  .kicker{font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-600); font-weight:600;}
+  h1{font-size:34px; font-weight:600; letter-spacing:-0.02em; margin-top:10px;}
+  .sub{color:var(--muted); margin-top:8px; font-size:15px; max-width:70ch;}
+  h2{font-size:22px; font-weight:600; letter-spacing:-0.01em; margin:52px 0 6px;}
+  h3{font-size:16px; font-weight:600; margin:28px 0 8px;}
+  p.lead{color:var(--muted); font-size:14px; margin-bottom:20px;}
+  .grid{display:grid; gap:16px;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:repeat(3,1fr);}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:900px){.g3,.g4{grid-template-columns:repeat(2,1fr);} .g2{grid-template-columns:1fr;}}
+  @media(max-width:560px){.g3,.g4{grid-template-columns:1fr;}}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px;}
+  .swatch{height:56px; border-radius:10px; border:1px solid var(--border); margin-bottom:10px;}
+  .swatch.sm{height:40px;}
+  .tname{font-family:"JetBrains Mono","SF Mono",Menlo,monospace; font-size:12px; font-weight:600;}
+  .tval{font-family:"JetBrains Mono","SF Mono",Menlo,monospace; font-size:11px; color:var(--muted);}
+  .pct{font-size:12px; color:var(--muted);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px; background:var(--card); border-radius:12px; overflow:hidden;}
+  th{background:#F4F2ED; text-align:left; padding:10px 14px; font-weight:600; font-size:12.5px;}
+  td{padding:10px 14px; border-top:1px solid var(--border); vertical-align:top;}
+  code{font-family:"JetBrains Mono",Menlo,monospace; font-size:12px; background:#F4F2ED; border-radius:4px; padding:1px 6px;}
+  .ban{background:repeating-linear-gradient(45deg,#F7E3DE,#F7E3DE 8px,#FDF4EA 8px,#FDF4EA 16px); border:1px dashed var(--err);}
+  .badge{display:inline-block; font-size:11px; padding:2px 10px; border-radius:999px; font-weight:600; letter-spacing:.04em;}
+  .b-ok{background:#E4EFE6; color:#356B45;} .b-warn{background:#F5EDD8; color:#96701E;} .b-err{background:#F7E3DE; color:#9C3624;} .b-accent{background:var(--accent-100); color:var(--accent-600);} .b-sec{background:#E6E9DF; color:#4C5743;}
+  .callout{border:1px solid var(--border); border-left:3px solid var(--accent); border-radius:10px; padding:16px 20px; background:var(--card); margin:16px 0; font-size:14px;}
+  .callout.red{border-left-color:var(--err);}
+  .ratio-bar{display:flex; height:34px; border-radius:10px; overflow:hidden; border:1px solid var(--border); margin:12px 0 4px;}
+  .rb-seg{display:flex; align-items:center; justify-content:center; font-size:11.5px; color:#fff; font-weight:600; white-space:nowrap;}
+  .legend{font-size:12.5px; color:var(--muted); margin-bottom:24px;}
+  .note{font-size:12.5px; color:var(--muted);}
+  ul.tight{padding-left:20px; margin:8px 0;} ul.tight li{margin-bottom:6px; font-size:14px;}
+  .sample-bar{display:flex; gap:10px; align-items:center; padding:12px 14px; background:var(--card); border:1px solid var(--border); border-radius:12px; margin:8px 0;}
+  .sample-bar .btn{background:var(--accent); color:#fff; border:none; border-radius:8px; padding:8px 16px; font-size:13px; font-weight:600;}
+  .sample-bar .btn.ghost{background:transparent; color:var(--fg); border:1px solid var(--border);}
+  .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:baseline;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">QualityForge · Redesign V1 · 2026-08-12</div>
+  <h1>配色系统与设计规范</h1>
+  <p class="sub">锻炉琥珀 × 暖石墨 · Build 呼吸感极简。全体系色相避开蓝紫禁带(hue 190-320°),含中性色。本文件是重设计的概念说明、禁令对照、完整配色系统与可复用规范。</p>
+</header>
+
+<h2>一、重设计概念说明</h2>
+<p class="lead">这不是"避开蓝紫色换个皮",而是从项目定位重新推导视觉语言。</p>
+
+<div class="grid g2">
+  <div class="card">
+    <h3 style="margin-top:0">项目定位 → 视觉隐喻</h3>
+    <p style="font-size:14px">QualityForge 是"质量的锻造厂":AI 是炉火与锻锤,测试人员是工匠,正式产出物是经过审核的锻件。锻造的视觉符号是<strong>火与铜</strong>,不是冷蓝的"AI 科技感"。</p>
+    <p style="font-size:14px; margin-top:10px"><strong>锻炉琥珀铜</strong>作为单一强调色:主按钮、当前导航、AI 工作中(炉火燃烧中)、关键 CTA。用量克制,只在需要点火的地方出现。</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">用户场景 → 状态识别优先</h3>
+    <p style="font-size:14px">测试平台一天的核心动作是<strong>判断状态</strong>:用例通过了吗、哪里失败、卡在哪、谁在审核。语义色因此成为第一层级:</p>
+    <p style="font-size:14px; margin-top:10px"><span class="dot" style="background:var(--ok)"></span>绿=通过(测试结论)<br><span class="dot" style="background:var(--err)"></span>红=失败/阻断<br><span class="dot" style="background:var(--warn)"></span>金黄=警告/待重评<br><span class="dot" style="background:var(--accent)"></span>铜=进行中/AI 运行</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">品牌气质 → 呼吸感极简(Build)</h3>
+    <p style="font-size:14px">70%+ 留白、微妙字重对比(300-600)、单一强调色、柔和阴影。测试人员每天 8 小时面对工作台,高密度蓝紫仪表盘风格造成视觉疲劳;暖白底+暖石墨文字的呼吸感降低认知负担,让注意力留给内容本身。</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">与旧版的差异 → 暖而非冷</h3>
+    <p style="font-size:14px">旧版整套 token 基于冷色 slate 蓝灰+蓝主色+紫 AI 色,属于"AI 默认蓝紫血统"。新版中性色为暖石墨(色相 30-45°),即使灰度界面也不再发蓝发紫,与所有蓝紫系竞品形成明确反差。</p>
+  </div>
+</div>
+
+<h2>二、颜色禁令对照表</h2>
+<p class="lead">旧版 24 个踩线 token 的替换方案。旧色值以文本列出(不渲染色块),逐项对应新 token。</p>
+
+<table>
+  <tr><th>旧 token (已废弃)</th><th>旧值 (蓝紫)</th><th>问题</th><th>新 token</th><th>新值 (暖)</th></tr>
+  <tr><td><code>--qf-primary-50…900</code></td><td><code>#E6F4FF…#001C33</code> (hue 204-207)</td><td><span class="badge b-err">蓝主色 10 档</span></td><td><code>--qf-accent-50…900</code></td><td><code>#FDF4EA…#47200A</code> (hue 25-28)</td></tr>
+  <tr><td><code>--qf-neutral-50…950</code></td><td><code>#F8FAFC…#020617</code> (hue 210-229)</td><td><span class="badge b-err">蓝灰中性 11 档</span></td><td><code>--qf-neutral-50…950</code></td><td><code>#FAFAF7…#141210</code> (hue 30-45)</td></tr>
+  <tr><td><code>--qf-ai / --qf-ai-dark</code></td><td><code>#673AB7 / #512DA8</code> (hue 258-262)</td><td><span class="badge b-err">AI 紫</span></td><td><code>--qf-secondary-500/700</code></td><td><code>#6B7A5E / #4C5743</code> (hue 95)</td></tr>
+  <tr><td><code>--qf-state-info / -dark</code></td><td><code>#008CFF / #0066CC</code> (hue 207-210)</td><td><span class="badge b-err">信息蓝</span></td><td><code>--qf-info-500</code></td><td><code>#D96C1F</code> (= accent, hue 25)</td></tr>
+  <tr><td>旧页面内嵌 <code>#1AA3FF #4DB8FF #80CCFF #B3E0FF #003866</code></td><td>hue 204-207</td><td><span class="badge b-err">内嵌蓝</span></td><td>accent 系对应档</td><td>hue 25-28</td></tr>
+</table>
+
+<div class="callout red">规则:任何 UI 颜色(含背景、边框、图表、渐变、高亮、hover 态)色相不得落入 190-320°;带蓝紫倾向的低饱和中性色同样禁用。验收以取色脚本扫描为准。</div>
+
+<h2>三、新版完整配色系统</h2>
+
+<h3>3.1 使用比例</h3>
+<div class="ratio-bar">
+  <div class="rb-seg" style="width:82%; background:#1D1B18">中性 82%</div>
+  <div class="rb-seg" style="width:8%; background:#D96C1F">强调 8%</div>
+  <div class="rb-seg" style="width:6%; background:#B98E2A">语义 6%</div>
+  <div class="rb-seg" style="width:2%; background:#6B7A5E">辅助 2%</div>
+  <div class="rb-seg" style="width:2%; background:#9C6B3F">图表 2%</div>
+</div>
+<div class="legend">Build 原则:中性占绝对主体,强调色每屏最多 2 处可见,语义色只出现在状态处。</div>
+
+<h3>3.2 主强调色 · 锻炉琥珀铜 <span class="badge b-accent">hue 25-28° · 占 8%</span></h3>
+<div class="grid g4">
+  <div class="card"><div class="swatch" style="background:#FDF4EA"></div><div class="tname">--qf-accent-50</div><div class="tval">#FDF4EA · 浅底</div></div>
+  <div class="card"><div class="swatch" style="background:#E9AC66"></div><div class="tname">--qf-accent-300</div><div class="tval">#E9AC66 · 琥珀</div></div>
+  <div class="card"><div class="swatch" style="background:#D96C1F"></div><div class="tname">--qf-accent-500</div><div class="tval">#D96C1F · 主强调</div></div>
+  <div class="card"><div class="swatch" style="background:#B8551A"></div><div class="tname">--qf-accent-600</div><div class="tval">#B8551A · 文字用</div></div>
+</div>
+
+<h3>3.3 辅助色 · 墨茶绿 <span class="badge b-sec">hue ~95° · 占 2%</span></h3>
+<div class="grid g4">
+  <div class="card"><div class="swatch" style="background:#E6E9DF"></div><div class="tname">--qf-secondary-100</div><div class="tval">#E6E9DF · AI 浅底</div></div>
+  <div class="card"><div class="swatch" style="background:#A9B39B"></div><div class="tname">--qf-secondary-300</div><div class="tval">#A9B39B</div></div>
+  <div class="card"><div class="swatch" style="background:#6B7A5E"></div><div class="tname">--qf-secondary-500</div><div class="tval">#6B7A5E · AI 点缀</div></div>
+  <div class="card"><div class="swatch" style="background:#4C5743"></div><div class="tname">--qf-secondary-700</div><div class="tval">#4C5743</div></div>
+</div>
+<p class="note">AI 相关元素(生成标记、Trace 标签)以墨茶绿+文字标签区分,不再用紫色。</p>
+
+<h3>3.4 中性色 · 暖石墨 <span class="badge b-warn">hue 30-45° · 占 82%</span></h3>
+<div class="grid g4">
+  <div class="card"><div class="swatch" style="background:#FAFAF7;border-color:#E9E6DE"></div><div class="tname">--qf-neutral-50</div><div class="tval">#FAFAF7 · 背景</div></div>
+  <div class="card"><div class="swatch" style="background:#F4F2ED;border-color:#E9E6DE"></div><div class="tname">--qf-neutral-100</div><div class="tval">#F4F2ED · 表面</div></div>
+  <div class="card"><div class="swatch" style="background:#E9E6DE;border-color:#D8D4C8"></div><div class="tname">--qf-neutral-200</div><div class="tval">#E9E6DE · 边框</div></div>
+  <div class="card"><div class="swatch" style="background:#817B6E"></div><div class="tname">--qf-neutral-500</div><div class="tval">#817B6E · 弱文字</div></div>
+  <div class="card"><div class="swatch" style="background:#47433B"></div><div class="tname">--qf-neutral-700</div><div class="tval">#47433B</div></div>
+  <div class="card"><div class="swatch" style="background:#2F2C27"></div><div class="tname">--qf-neutral-800</div><div class="tval">#2F2C27 · 深表面</div></div>
+  <div class="card"><div class="swatch" style="background:#1D1B18"></div><div class="tname">--qf-neutral-900</div><div class="tval">#1D1B18 · 主文字/暖炭</div></div>
+  <div class="card"><div class="swatch" style="background:#141210"></div><div class="tname">--qf-neutral-950</div><div class="tval">#141210</div></div>
+</div>
+
+<h3>3.5 语义色 <span class="badge b-ok">测试结论 · 占 6%</span></h3>
+<div class="grid g4">
+  <div class="card"><div class="swatch" style="background:#47875A"></div><div class="tname">成功</div><div class="tval">#47875A · 通过/在线 (hue 140)</div></div>
+  <div class="card"><div class="swatch" style="background:#C0442F"></div><div class="tname">失败</div><div class="tval">#C0442F · 失败/阻断 (hue 8)</div></div>
+  <div class="card"><div class="swatch" style="background:#B98E2A"></div><div class="tname">警告</div><div class="tval">#B98E2A · 警告/待重评 (hue 44)</div></div>
+  <div class="card"><div class="swatch" style="background:#D96C1F"></div><div class="tname">信息/进行中</div><div class="tval">#D96C1F · = 强调铜 (hue 25)</div></div>
+</div>
+<p class="note">绿/红/金黄/铜四态与测试语义一一对应;对比度:正文场景均使用 600 档深色值保证 WCAG AA。</p>
+
+<h3>3.6 数据可视化色板 <span class="badge b-accent">全部 hue ≤160°</span></h3>
+<div class="grid g3">
+  <div class="card"><div class="swatch" style="background:#D96C1F"></div><div class="tname">chart-1 琥珀</div><div class="tval">#D96C1F</div></div>
+  <div class="card"><div class="swatch" style="background:#4E7A5A"></div><div class="tname">chart-2 墨绿</div><div class="tval">#4E7A5A</div></div>
+  <div class="card"><div class="swatch" style="background:#C0442F"></div><div class="tname">chart-3 暖红</div><div class="tval">#C0442F</div></div>
+  <div class="card"><div class="swatch" style="background:#B98E2A"></div><div class="tname">chart-4 金黄</div><div class="tval">#B98E2A</div></div>
+  <div class="card"><div class="swatch" style="background:#8A8378"></div><div class="tname">chart-5 暖灰</div><div class="tval">#8A8378</div></div>
+  <div class="card"><div class="swatch" style="background:#9C6B3F"></div><div class="tname">chart-6 赭石</div><div class="tval">#9C6B3F</div></div>
+</div>
+
+<h2>四、可复用设计规范 (Token)</h2>
+<div class="grid g2">
+  <div class="card">
+    <h3 style="margin-top:0">字体</h3>
+    <ul class="tight">
+      <li>UI/正文:<code>--qf-font-ui</code> Avenir Next / PingFang SC / Noto Sans SC</li>
+      <li>等宽(编号/代码/时间):<code>--qf-font-mono</code> JetBrains Mono / SF Mono</li>
+      <li>字重策略:300(大标题呼吸感)/ 400 正文 / 500 强调 / 600 按钮与标签,全站不超过 4 档</li>
+      <li>字号:xs 12 · sm 13 · base 14 · md 16 · lg 20 · xl 26 · 2xl 34</li>
+      <li>大写标签 letter-spacing ≥ .06em;大标题 -0.02em</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">间距 / 圆角 / 阴影</h3>
+    <ul class="tight">
+      <li>8pt 节奏:<code>4/8/12/16/20/24/32/40/48/64</code></li>
+      <li>组内 8-12px,组间 32-48px(Build 呼吸感的关键)</li>
+      <li>圆角:6(sm)/ 10(md)/ 14(lg)/ 9999(胶囊),克制不用大圆角</li>
+      <li>阴影:α≤0.06 的暖色阴影(<code>rgba(29,27,24,…)</code>),不用冷灰黑阴影</li>
+      <li>焦点环:<code>0 0 0 3px rgba(217,108,31,0.25)</code></li>
+    </ul>
+  </div>
+</div>
+
+<h3>状态与组件配色规则</h3>
+<table>
+  <tr><th>组件/状态</th><th>用色</th><th>说明</th></tr>
+  <tr><td>主按钮 / 当前导航 / 关键 CTA</td><td>accent-500, hover accent-600</td><td>强调色每屏 ≤2 处可见</td></tr>
+  <tr><td>次按钮 / 卡片 / 表格底</td><td>neutral-0 / neutral-100</td><td>边框 neutral-200</td></tr>
+  <tr><td>通过 / 失败 / 警告 / 进行中</td><td>绿 / 红 / 金 / 铜</td><td>必须同时有图标或文字,不只靠颜色</td></tr>
+  <tr><td>AI 生成标记 / Trace 标签</td><td>secondary-500 + 文字"AI"</td><td>替代旧紫色,与业务状态不混淆</td></tr>
+  <tr><td>图表</td><td>chart-1…6</td><td>同图 ≤4 色,禁用蓝紫序列</td></tr>
+  <tr><td>链接</td><td>accent-600 下划线</td><td>对比度 ≥ 4.5:1</td></tr>
+</table>
+
+<h2>五、新旧并排对比(结构级)</h2>
+<table>
+  <tr><th>维度</th><th>旧版(蓝紫血统)</th><th>新版(Build · 暖)</th></tr>
+  <tr><td>主色</td><td>蓝 <code>#008CFF</code>,10 档</td><td>锻炉琥珀铜 <code>#D96C1F</code>,10 档</td></tr>
+  <tr><td>中性色</td><td>Slate 蓝灰(210-229°)</td><td>暖石墨(30-45°),不泛蓝</td></tr>
+  <tr><td>AI 标识</td><td>紫 <code>#673AB7</code></td><td>墨茶绿 <code>#6B7A5E</code> + 文字标签</td></tr>
+  <tr><td>进行中状态</td><td>蓝</td><td>铜(炉火燃烧中)</td></tr>
+  <tr><td>主题</td><td>暗色默认</td><td>亮色默认(Build 呼吸感),暗色变体可选</td></tr>
+  <tr><td>密度</td><td>高密度信息铺满</td><td>70%+ 留白,组间 32-48px</td></tr>
+</table>
+
+<div class="callout">完整 token 文件:<code>QualityForge-重设计-DesignTokens.css</code>(可直接被实现方引入);取色验证与验收记录见独立校验脚本与验收文档。</div>
+
+</div>
+</body>
+</html>

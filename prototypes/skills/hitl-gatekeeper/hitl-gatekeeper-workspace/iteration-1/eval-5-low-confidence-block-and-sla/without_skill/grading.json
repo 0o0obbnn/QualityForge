@@ -1,0 +1,22 @@
+{
+  "eval_id": 5,
+  "eval_name": "low-confidence-block-and-sla",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "decision_is_BLOCK_HUMAN",
+      "passed": true
+    },
+    {
+      "text": "severity_is_required_not_forced",
+      "passed": false
+    },
+    {
+      "text": "sla_is_48h_not_4h",
+      "passed": false
+    }
+  ],
+  "pass_rate": 0.333,
+  "passed": 1,
+  "total": 3
+}

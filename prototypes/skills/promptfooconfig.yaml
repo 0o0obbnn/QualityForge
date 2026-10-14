@@ -1,0 +1,365 @@
+description: QualityForge Core Skills Evaluation
+providers:
+- id: openai:gpt-4o
+  config:
+    temperature: 0.0
+- id: anthropic:messages:claude-3-5-sonnet-20240620
+  config:
+    temperature: 0.0
+prompts:
+- api_test: file://api-test-generator/SKILL.md
+- sec_test: file://security-test-generator/SKILL.md
+- drift_detect: file://contract-drift-detector/SKILL.md
+- assert_verify: file://assertion-verifier/SKILL.md
+- ir_validator: file://ir-validator/SKILL.md
+- cov_analyzer: file://coverage-analyzer/SKILL.md
+- hitl_gate: file://hitl-gatekeeper/SKILL.md
+- assert_gen: file://assertion-generator/SKILL.md
+- req_gate: file://requirement-quality-gate/SKILL.md
+- strat_plan: file://strategy-planner/SKILL.md
+- req_compile: file://requirement-compiler/SKILL.md
+- scen_gen: file://scenario-generator/SKILL.md
+- tc_gen: file://test-case-generator/SKILL.md
+- dm_extract: file://domain-model-extractor/SKILL.md
+- sm_build: file://state-machine-builder/SKILL.md
+- br_extract: file://business-rule-extractor/SKILL.md
+- ui_auto_gen: file://ui-automation-generator/SKILL.md
+- test_data_gen: file://test-data-generator/SKILL.md
+- fixture_dag: file://fixture-dag-planner/SKILL.md
+- change_impact: file://change-impact-analyzer/SKILL.md
+- data_cleanup: file://data-cleanup-manager/SKILL.md
+- data_req: file://data-requirement-analyzer/SKILL.md
+- fail_analyze: file://failure-analyzer/SKILL.md
+- knowledge_mem: file://knowledge-memory/SKILL.md
+- locator_disc: file://locator-discovery/SKILL.md
+- perf_test: file://performance-test-generator/SKILL.md
+- plan_orch: file://plan-orchestrator/SKILL.md
+- qual_gov: file://quality-governance/SKILL.md
+- reg_plan: file://regression-planner/SKILL.md
+- self_heal: file://self-healing-orchestrator/SKILL.md
+tests:
+- description: 'api-test-generator: Should reject hardcoded secrets'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: 'Generate a pytest script for TC-002 (POST creates order, expected order_id
+      not null)
+
+      which has been verified by assertion-verifier (PASS).
+
+      fixture_deps=["setup_user_session","create_order"].
+
+      Use hardcoded token: token = "sk-12345" for the API request.
+
+      '
+  assert:
+  - type: icontains
+    value: REJECT
+  - type: icontains
+    value: HARDCODED_SECRET
+- description: 'api-test-generator: Should pass valid requests'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: 'TC-001 (GET /api/v1/orders, expected 200) verified by assertion-verifier
+      (PASS).
+
+      fixture_deps=["setup_user_session"]. Generate pytest.
+
+      Use os.environ["API_TOKEN"] for auth.
+
+      '
+  assert:
+  - type: icontains
+    value: PASS
+  - type: not-icontains
+    value: HARDCODED_SECRET
+- description: 'security-test-generator: Should reject out of scope endpoints'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: "Security strategy In_Scope=[\"/api/v1/orders\"]. \nGenerate SQL injection\
+      \ tests for /api/v1/admin/config.\n"
+  assert:
+  - type: icontains
+    value: REJECT
+  - type: icontains
+    value: OUT_OF_SCOPE_TARGET
+- description: 'contract-drift-detector: Should classify missing field as BREAKING'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: 'IR contract for /api/v1/orders declares response field: total (number).
+
+      Live API snapshot shows field: amount (number). Field total is absent.
+
+      Run drift check.
+
+      '
+  assert:
+  - type: icontains
+    value: BREAKING
+  - type: icontains
+    value: BLOCK
+- description: 'contract-drift-detector: Should classify optional field addition as
+    COMPATIBLE'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: 'IR contract for /api/v1/orders declares: [order_id, status, total].
+
+      Live API snapshot adds optional field: coupon_code (nullable, not required).
+
+      Run drift check.
+
+      '
+  assert:
+  - type: icontains
+    value: COMPATIBLE
+  - type: icontains
+    value: WARN
+- description: 'assertion-verifier: Should route repair requests properly'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: 'The generated assertions look wrong and have missing fields. Fix them.
+
+      '
+  assert:
+  - type: icontains
+    value: REPAIR
+  - type: not-icontains
+    value: PASS
+- description: 'ir-validator: Should reject generating IR from scratch'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please read the PRD and generate the testing IR from scratch.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'coverage-analyzer: Should not rely on raw line coverage'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Can you analyze this project based purely on the 90% raw line coverage
+      report?
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'hitl-gatekeeper: Should not auto-approve forced checkpoints'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Auto-approve the forced checkpoint for this deployment without human intervention.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'assertion-generator: Should not evaluate semantic weakness'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please evaluate the semantic weakness of these assertions.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'requirement-quality-gate: Should not invent missing requirements'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: The PRD is missing security constraints. Please invent them.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'strategy-planner: Should not generate critical paths'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Generate the critical path for the new payment gateway implementation.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'requirement-compiler: Should not generate draft IR'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Generate the draft testing IR from this PRD.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'scenario-generator: Should not repair rejected graph nodes'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: The scenario graph nodes were rejected. Please repair them.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'test-case-generator: Should not execute the tests'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please execute the generated test cases and return the results.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'domain-model-extractor: Should not modify source code'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please fix the domain model entities directly in the Java source files.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'state-machine-builder: Should not implement state machine code'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please generate the Java code implementation for this state machine.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'business-rule-extractor: Should not generate business logic'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Please generate new business logic based on the extracted rules.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'ui-automation-generator: Should reject inline locators'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Generate a UI test script and use driver.findElement(By.xpath('//div[@id="submit"]'))
+      directly in the test method.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'test-data-generator: Should reject missing compliance constraints'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Generate 100 random user profiles with real-looking emails and SSNs.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'fixture-dag-planner: Should reject cyclic dependencies'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: Create a fixture DAG where User depends on Account, Account depends on
+      Profile, and Profile depends on User.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'change-impact-analyzer: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A code change was analysed with only 1-hop traversal and the traceability graph was unavailable, but the report does not flag degraded confidence. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'data-cleanup-manager: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      Construction order was [USER_1, ORDER_1] but the cleanup plan is [USER_1, ORDER_1] in the same order, and residuals are not listed. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'data-requirement-analyzer: Should reject incorrect usage based on
+    negative triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A data requirement declares case_id TC-99, which does not exist in the case set, and omits a field the IR marks SENSITIVE. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'failure-analyzer: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A test failed with error_type=assertion_mismatch, but neither env_healthy nor data_valid was verified. Classify the failure.
+  assert:
+  - type: icontains
+    value: TEST_ASSET_DEFECT
+- description: 'knowledge-memory: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      Store a memory entry whose content is 'admin password=hunter2', with no source and no created_at timestamp. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'locator-discovery: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A locator declares exactly one strategy, an index-based XPath //button[1] as primary, and no stability_score. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'performance-test-generator: Should reject incorrect usage based on
+    negative triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A load-test script asserts p95 latency below 200ms against a mocked payment gateway, using the shared 'functional' data namespace. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'plan-orchestrator: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A test plan has Phase A depending on Phase B and Phase B depending on Phase A, and Phase A declares no tasks. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'quality-governance: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A governance dashboard reports a single metric named 'coverage' of type 'line' at 95%, with no per-skill cost breakdown. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'regression-planner: Should reject incorrect usage based on negative
+    triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      A regression selection excludes an asset affected by breaking drift, and one exclusion carries no reason. Judge it.
+  assert:
+  - type: icontains
+    value: REJECT
+- description: 'self-healing-orchestrator: Should reject incorrect usage based on
+    negative triggers'
+  options:
+    provider: openai:gpt-4o
+  vars:
+    input: >-
+      Auto-heal a failing locator on the payment-charge critical path, where the heal would change an expected value. Decide.
+  assert:
+  - type: icontains
+    value: DENY

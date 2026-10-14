@@ -1,0 +1,81 @@
+{
+  "test_cases": [
+    {
+      "name": "Test Valid Subset Selection",
+      "input": {
+        "all_impacted_assets": ["TC-1", "TC-2", "TC-3", "TC-4"],
+        "selected_assets": ["TC-1", "TC-2"],
+        "exclusions": [
+          {"asset_id": "TC-3", "reason": "unrelated module, no traceability edge"},
+          {"asset_id": "TC-4", "reason": "covered by TC-1 equivalence class"}
+        ],
+        "breaking_drift_assets": [],
+        "high_risk_assets": ["TC-1"],
+        "total_suite_size": 40
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Test Rejects Full Regression Default",
+      "input": {
+        "all_impacted_assets": ["TC-1", "TC-2"],
+        "selected_assets": [
+          "TC-1", "TC-2", "TC-3", "TC-4", "TC-5", "TC-6",
+          "TC-7", "TC-8", "TC-9", "TC-10", "TC-11", "TC-12"
+        ],
+        "exclusions": [],
+        "breaking_drift_assets": [],
+        "high_risk_assets": [],
+        "total_suite_size": 12
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["FULL_REGRESSION_DEFAULT"]
+    },
+    {
+      "name": "Test Breaking Drift Never Excluded",
+      "input": {
+        "all_impacted_assets": ["TC-1", "TC-2"],
+        "selected_assets": ["TC-1"],
+        "exclusions": [{"asset_id": "TC-2", "reason": "deemed low value"}],
+        "breaking_drift_assets": ["TC-2"],
+        "high_risk_assets": [],
+        "total_suite_size": 40
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["BREAKING_DRIFT_EXCLUDED"]
+    },
+    {
+      "name": "Test Exclusion Without Reason",
+      "input": {
+        "all_impacted_assets": ["TC-1", "TC-2"],
+        "selected_assets": ["TC-1"],
+        "exclusions": [{"asset_id": "TC-2"}],
+        "breaking_drift_assets": [],
+        "high_risk_assets": [],
+        "total_suite_size": 40
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["EXCLUSION_WITHOUT_REASON"]
+    },
+    {
+      "name": "Test Impacted Asset Silently Dropped",
+      "input": {
+        "all_impacted_assets": ["TC-1", "TC-2", "TC-3"],
+        "selected_assets": ["TC-1"],
+        "exclusions": [],
+        "breaking_drift_assets": [],
+        "high_risk_assets": [],
+        "total_suite_size": 40
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["IMPACTED_ASSET_UNACCOUNTED"]
+    },
+    {
+      "name": "Test Empty Selection Is Not A Clean Pass",
+      "input": {},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["EMPTY_SELECTION_PACKET"]
+    }
+  ]
+}

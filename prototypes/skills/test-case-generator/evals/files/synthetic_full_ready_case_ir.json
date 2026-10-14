@@ -1,0 +1,367 @@
+{
+  "meta": {
+    "schema_version": "1.0",
+    "artifact_kind": "test_case_ir",
+    "artifact_id": "TCIR-SYN-FULL-001",
+    "generated_at": "2026-09-27T00:00:00+08:00",
+    "lifecycle_status": "ACCEPTED"
+  },
+  "source_artifacts": {
+    "test_design_input": "evals/files/synthetic_full_ready_test_design_input.json",
+    "test_design_input_sha256": "aea081eec8386076ea4244aae967f0dadbea038da29581c646750e6a2c8e37fa",
+    "graph_snapshot_id": "GRAPH-SYN-2026A"
+  },
+  "generation_scope": {
+    "mode": "FULL_READY_SCOPE",
+    "policy": "READY_DIMENSIONS_ONLY",
+    "selected_test_design_item_ids": ["TDI-SYN-01", "TDI-SYN-02"],
+    "excluded_dimensions": [
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "permission",
+        "status": "BLOCKED",
+        "reasons": ["执行角色与数据范围未在需求中声明"]
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "sorting",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "state_transition",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "integration",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-01",
+        "dimension": "nfr",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-02",
+        "dimension": "permission",
+        "status": "REVIEW_REQUIRED",
+        "reasons": ["取消权限仅提及报修人，数据范围与拒绝行为待澄清"]
+      },
+      {
+        "test_design_item_id": "TDI-SYN-02",
+        "dimension": "field_validation",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-02",
+        "dimension": "sorting",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-02",
+        "dimension": "integration",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      },
+      {
+        "test_design_item_id": "TDI-SYN-02",
+        "dimension": "nfr",
+        "status": "NOT_APPLICABLE",
+        "reasons": []
+      }
+    ]
+  },
+  "data_requirements": [
+    {
+      "data_requirement_id": "DR-SYN-011",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "设备编号",
+      "field_usage_id": "FUSE-SYN-011",
+      "value_class": "VALID",
+      "purpose": "提供满足字段规则的合法设备编号",
+      "constraint_rule_ids": ["RULE-SYN-012"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "data_requirement_id": "DR-SYN-012",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "紧急程度",
+      "field_usage_id": "FUSE-SYN-012",
+      "value_class": "VALID",
+      "purpose": "选择需求声明的合法枚举值",
+      "constraint_rule_ids": ["RULE-SYN-013"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "data_requirement_id": "DR-SYN-013",
+      "test_design_item_id": "TDI-SYN-01",
+      "business_name": "设备编号",
+      "field_usage_id": "FUSE-SYN-011",
+      "value_class": "INVALID",
+      "purpose": "构造违反格式规则的设备编号以验证拒绝路径",
+      "constraint_rule_ids": ["RULE-SYN-012"],
+      "provenance_type": "TEST_DERIVATION"
+    },
+    {
+      "data_requirement_id": "DR-SYN-021",
+      "test_design_item_id": "TDI-SYN-02",
+      "business_name": "工单状态",
+      "field_usage_id": "FUSE-SYN-021",
+      "value_class": "STATE_SETUP",
+      "purpose": "准备待受理与已受理两种状态的报修单以覆盖状态前置",
+      "constraint_rule_ids": ["RULE-SYN-021"],
+      "provenance_type": "REQUIREMENT_FACT"
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "TC-SYN01-001",
+      "title": "提交合法报修单生成工单编号",
+      "module": "报修管理",
+      "function_name": "报修单管理",
+      "minimum_function": "提交报修单",
+      "objective": "验证合法输入的报修单提交成功并生成唯一工单编号",
+      "priority": "P1",
+      "test_level": "SYSTEM",
+      "test_techniques": ["REQUIREMENT_BASED"],
+      "covered_dimensions": ["functional"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-SYN-2026A",
+        "test_design_item_id": "TDI-SYN-01",
+        "atomic_id": "AF-SYN-01",
+        "requirement_ids": ["REQ-SYN-01"],
+        "rule_ids": ["RULE-SYN-011"],
+        "field_usage_ids": ["FUSE-SYN-011", "FUSE-SYN-012"],
+        "evidence_ids": ["EVD-SYN-011"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "API_AUTOMATION"],
+        "fixture_category": "Static"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-001",
+          "description": "用户已登录并进入报修管理模块",
+          "provenance_type": "REQUIREMENT_FACT",
+          "source_refs": ["EVD-SYN-011"]
+        }
+      ],
+      "data_requirement_refs": ["DR-SYN-011", "DR-SYN-012"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "填写合法设备编号与紧急程度“中”，提交报修单",
+          "target": "提交报修单",
+          "data_requirement_refs": ["DR-SYN-011", "DR-SYN-012"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-101",
+              "description": "系统提示提交成功并展示生成的唯一工单编号",
+              "oracle_type": "BUSINESS_RULE",
+              "oracle_rule_ids": ["RULE-SYN-011"],
+              "oracle_evidence_ids": ["EVD-SYN-011"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "TC-SYN01-002",
+      "title": "非法设备编号与紧急程度被拒绝",
+      "module": "报修管理",
+      "function_name": "报修单管理",
+      "minimum_function": "提交报修单",
+      "objective": "验证设备编号格式与紧急程度枚举的字段校验拒绝路径",
+      "priority": "P1",
+      "test_level": "SYSTEM",
+      "test_techniques": ["EQUIVALENCE_PARTITION", "BOUNDARY_VALUE"],
+      "covered_dimensions": ["field_validation"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-SYN-2026A",
+        "test_design_item_id": "TDI-SYN-01",
+        "atomic_id": "AF-SYN-01",
+        "requirement_ids": ["REQ-SYN-01"],
+        "rule_ids": ["RULE-SYN-012", "RULE-SYN-013"],
+        "field_usage_ids": ["FUSE-SYN-011", "FUSE-SYN-012"],
+        "evidence_ids": ["EVD-SYN-012", "EVD-SYN-013"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "API_AUTOMATION"],
+        "fixture_category": "Static"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-002",
+          "description": "用户已进入报修单提交页面",
+          "provenance_type": "TEST_DERIVATION",
+          "source_refs": ["FUSE-SYN-011"]
+        }
+      ],
+      "data_requirement_refs": ["DR-SYN-013", "DR-SYN-012"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "填写 7 位设备编号并提交报修单",
+          "target": "设备编号校验",
+          "data_requirement_refs": ["DR-SYN-013"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-102",
+              "description": "系统拒绝提交并提示设备编号必须为 8 位字母数字",
+              "oracle_type": "FIELD_RULE",
+              "oracle_rule_ids": ["RULE-SYN-012"],
+              "oracle_evidence_ids": ["EVD-SYN-012"],
+              "machine_checkable": true
+            }
+          ]
+        },
+        {
+          "step_no": 2,
+          "action": "紧急程度选择枚举之外的“紧急”并提交报修单",
+          "target": "紧急程度校验",
+          "data_requirement_refs": ["DR-SYN-012"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-103",
+              "description": "系统拒绝提交并提示紧急程度取值非法",
+              "oracle_type": "FIELD_RULE",
+              "oracle_rule_ids": ["RULE-SYN-013"],
+              "oracle_evidence_ids": ["EVD-SYN-013"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "TC-SYN02-001",
+      "title": "取消待受理报修单成功",
+      "module": "报修管理",
+      "function_name": "报修单管理",
+      "minimum_function": "取消报修单",
+      "objective": "验证报修人取消待受理报修单后工单状态变更为已取消",
+      "priority": "P1",
+      "test_level": "SYSTEM",
+      "test_techniques": ["REQUIREMENT_BASED"],
+      "covered_dimensions": ["functional"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-SYN-2026A",
+        "test_design_item_id": "TDI-SYN-02",
+        "atomic_id": "AF-SYN-02",
+        "requirement_ids": ["REQ-SYN-02"],
+        "rule_ids": ["RULE-SYN-021"],
+        "field_usage_ids": ["FUSE-SYN-021"],
+        "evidence_ids": ["EVD-SYN-021"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "UI_AUTOMATION"],
+        "fixture_category": "Dynamic"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-003",
+          "description": "存在报修人创建的待受理报修单",
+          "provenance_type": "TEST_DERIVATION",
+          "source_refs": ["FUSE-SYN-021"]
+        }
+      ],
+      "data_requirement_refs": ["DR-SYN-021"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "报修人对待受理报修单执行取消",
+          "target": "取消报修单",
+          "data_requirement_refs": ["DR-SYN-021"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-104",
+              "description": "工单状态变更为已取消并提示取消成功",
+              "oracle_type": "STATE",
+              "oracle_rule_ids": ["RULE-SYN-021"],
+              "oracle_evidence_ids": ["EVD-SYN-021"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "TC-SYN02-002",
+      "title": "已受理报修单不可取消",
+      "module": "报修管理",
+      "function_name": "报修单管理",
+      "minimum_function": "取消报修单",
+      "objective": "验证非待受理状态的报修单执行取消被拒绝",
+      "priority": "P2",
+      "test_level": "SYSTEM",
+      "test_techniques": ["STATE_TRANSITION"],
+      "covered_dimensions": ["state_transition"],
+      "traceability": {
+        "graph_snapshot_id": "GRAPH-SYN-2026A",
+        "test_design_item_id": "TDI-SYN-02",
+        "atomic_id": "AF-SYN-02",
+        "requirement_ids": ["REQ-SYN-02"],
+        "rule_ids": ["RULE-SYN-021"],
+        "field_usage_ids": ["FUSE-SYN-021"],
+        "evidence_ids": ["EVD-SYN-021"]
+      },
+      "execution": {
+        "semantics": "DETERMINISTIC",
+        "candidate_channels": ["MANUAL", "UI_AUTOMATION"],
+        "fixture_category": "Dynamic"
+      },
+      "preconditions": [
+        {
+          "precondition_id": "PRE-004",
+          "description": "存在状态为已受理的报修单",
+          "provenance_type": "TEST_DERIVATION",
+          "source_refs": ["FUSE-SYN-021"]
+        }
+      ],
+      "data_requirement_refs": ["DR-SYN-021"],
+      "steps": [
+        {
+          "step_no": 1,
+          "action": "对已受理报修单执行取消",
+          "target": "取消报修单",
+          "data_requirement_refs": ["DR-SYN-021"],
+          "expected_results": [
+            {
+              "oracle_id": "ORC-105",
+              "description": "系统拒绝取消并提示仅待受理状态的报修单可以取消",
+              "oracle_type": "STATE",
+              "oracle_rule_ids": ["RULE-SYN-021"],
+              "oracle_evidence_ids": ["EVD-SYN-021"],
+              "machine_checkable": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "input_item_count": 3,
+    "selected_item_count": 2,
+    "no_ready_item_count": 1,
+    "ready_dimension_count": 4,
+    "covered_ready_dimension_count": 4,
+    "case_count": 4
+  },
+  "acceptance": {
+    "verdict": "PASS",
+    "publishable": true,
+    "scope": "READY_DIMENSIONS_ONLY",
+    "reasons": []
+  }
+}

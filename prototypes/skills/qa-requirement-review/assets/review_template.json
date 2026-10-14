@@ -1,0 +1,15 @@
+{
+  "meta": {"schema_version":"1.0","artifact_kind":"requirement_quality_review","review_mode":"full","lifecycle_status":"DRAFT","generated_at":"<ISO-8601>"},
+  "review_id": "RQR-<stable-id>",
+  "source_ids": [],
+  "sources": [],
+  "source_units": [],
+  "source_unit_dispositions": [],
+  "requirements": [],
+  "assessments": [],
+  "requirement_assessments": [],
+  "findings": [],
+  "test_points": [],
+  "coverage": {"requirement_count":0,"requirement_assessment_count":0,"expected_requirement_assessment_count":0,"source_unit_disposition_count":0,"unresolved_source_unit_count":0,"source_coverage":{"claim":"full","relevant_units":0,"processed_units":0,"review_required_units":0,"skipped_units":0,"unavailable_units":0,"uncovered_ranges":[]}},
+  "audit": {"verdict":"NOT_RUN","downstream_eligible":false,"errors":[],"warnings":[]}
+}

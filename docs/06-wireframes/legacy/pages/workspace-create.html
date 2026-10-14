@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建工作空间 - QualityForge</title>
+    <style id="theme-vars">
+/* QualityForge UI Design Tokens */
+/* Primary path: dark mode default, light mode via .light class or media query */
+
+:root {
+  /* Brand primary scale - single identity hue */
+  --qf-primary-50: #e6f4ff;
+  --qf-primary-100: #b3e0ff;
+  --qf-primary-200: #80ccff;
+  --qf-primary-300: #4db8ff;
+  --qf-primary-400: #1aa3ff;
+  --qf-primary-500: #008cff;
+  --qf-primary-600: #0070cc;
+  --qf-primary-700: #005499;
+  --qf-primary-800: #003866;
+  --qf-primary-900: #001c33;
+
+  /* Neutral scale */
+  --qf-neutral-0: #ffffff;
+  --qf-neutral-50: #f8fafc;
+  --qf-neutral-100: #f1f5f9;
+  --qf-neutral-200: #e2e8f0;
+  --qf-neutral-300: #cbd5e1;
+  --qf-neutral-400: #94a3b8;
+  --qf-neutral-500: #64748b;
+  --qf-neutral-600: #475569;
+  --qf-neutral-700: #334155;
+  --qf-neutral-800: #1e293b;
+  --qf-neutral-900: #0f172a;
+  --qf-neutral-950: #020617;
+
+  /* Semantic state colors */
+  --qf-state-success: #4caf50;
+  --qf-state-success-dark: #2e7d32;
+  --qf-state-warning: #ff9800;
+  --qf-state-warning-dark: #ed6c02;
+  --qf-state-error: #f44336;
+  --qf-state-error-dark: #d32f2f;
+  --qf-state-info: #008cff;
+  --qf-state-info-dark: #0066cc;
+
+  /* AI accent */
+  --qf-ai: #673ab7;
+  --qf-ai-dark: #512da8;
+
+  /* Radius scale - restrained */
+  --qf-radius-sm: 4px;
+  --qf-radius-md: 8px;
+  --qf-radius-lg: 12px;
+  --qf-radius-xl: 16px;
+  --qf-radius-full: 9999px;
+
+  /* Spacing scale */
+  --qf-space-1: 4px;
+  --qf-space-2: 8px;
+  --qf-space-3: 12px;
+  --qf-space-4: 16px;
+  --qf-space-5: 20px;
+  --qf-space-6: 24px;
+  --qf-space-8: 32px;
+  --qf-space-10: 40px;
+  --qf-space-12: 48px;
+
+  /* Typography */
+  --qf-font-ui: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, sans-serif;
+  --qf-font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+
+  --qf-text-xs: 12px;
+  --qf-text-sm: 13px;
+  --qf-text-base: 14px;
+  --qf-text-md: 16px;
+  --qf-text-lg: 20px;
+  --qf-text-xl: 24px;
+
+  --qf-weight-regular: 400;
+  --qf-weight-medium: 500;
+  --qf-weight-semibold: 600;
+  --qf-weight-bold: 700;
+
+  --qf-leading-none: 1;
+  --qf-leading-tight: 1.25;
+  --qf-leading-snug: 1.4;
+  --qf-leading-normal: 1.6;
+
+  /* Static shadow alpha <= 0.05 */
+  --qf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --qf-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
+  --qf-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.05);
+
+  /* Floating layer shadows can be stronger */
+  --qf-shadow-float: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+  /* Transitions */
+  --qf-transition-fast: 120ms ease;
+  --qf-transition-base: 200ms ease;
+
+  /* Dark mode default */
+  --qf-background: var(--qf-neutral-900);
+  --qf-foreground: var(--qf-neutral-50);
+  --qf-card: var(--qf-neutral-800);
+  --qf-card-foreground: var(--qf-neutral-50);
+  --qf-popover: var(--qf-neutral-800);
+  --qf-popover-foreground: var(--qf-neutral-50);
+  --qf-primary: var(--qf-primary-500);
+  --qf-primary-foreground: var(--qf-neutral-0);
+  --qf-secondary: var(--qf-neutral-700);
+  --qf-secondary-foreground: var(--qf-neutral-50);
+  --qf-muted: var(--qf-neutral-800);
+  --qf-muted-foreground: var(--qf-neutral-400);
+  --qf-border: var(--qf-neutral-700);
+  --qf-input: var(--qf-neutral-700);
+  --qf-ring: var(--qf-primary-500);
+  --qf-radius-small: var(--qf-radius-sm);
+  --qf-radius-medium: var(--qf-radius-md);
+  --qf-radius-large: var(--qf-radius-lg);
+}
+
+.light,
+html.light,
+[data-theme="light"] {
+  --qf-background: var(--qf-neutral-100);
+  --qf-foreground: var(--qf-neutral-950);
+  --qf-card: var(--qf-neutral-0);
+  --qf-card-foreground: var(--qf-neutral-950);
+  --qf-popover: var(--qf-neutral-0);
+  --qf-popover-foreground: var(--qf-neutral-950);
+  --qf-primary: var(--qf-primary-600);
+  --qf-primary-foreground: var(--qf-neutral-0);
+  --qf-secondary: var(--qf-neutral-200);
+  --qf-secondary-foreground: var(--qf-neutral-900);
+  --qf-muted: var(--qf-neutral-200);
+  --qf-muted-foreground: var(--qf-neutral-600);
+  --qf-border: var(--qf-neutral-300);
+  --qf-input: var(--qf-neutral-300);
+  --qf-ring: var(--qf-primary-600);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not(.dark):not([data-theme="dark"]) {
+    --qf-background: var(--qf-neutral-100);
+    --qf-foreground: var(--qf-neutral-950);
+    --qf-card: var(--qf-neutral-0);
+    --qf-card-foreground: var(--qf-neutral-950);
+    --qf-popover: var(--qf-neutral-0);
+    --qf-popover-foreground: var(--qf-neutral-950);
+    --qf-primary: var(--qf-primary-600);
+    --qf-primary-foreground: var(--qf-neutral-0);
+    --qf-secondary: var(--qf-neutral-200);
+    --qf-secondary-foreground: var(--qf-neutral-900);
+    --qf-muted: var(--qf-neutral-200);
+    --qf-muted-foreground: var(--qf-neutral-600);
+    --qf-border: var(--qf-neutral-300);
+    --qf-input: var(--qf-neutral-300);
+    --qf-ring: var(--qf-primary-600);
+  }
+}
+
+/* Legacy semantic aliases consumed by apply-html-head-contract.mjs */
+:root {
+  --color-background: var(--qf-background);
+  --color-foreground: var(--qf-foreground);
+  --color-card: var(--qf-card);
+  --color-card-foreground: var(--qf-card-foreground);
+  --color-popover: var(--qf-popover);
+  --color-popover-foreground: var(--qf-popover-foreground);
+  --color-primary: var(--qf-primary);
+  --color-primary-foreground: var(--qf-primary-foreground);
+  --color-secondary: var(--qf-secondary);
+  --color-secondary-foreground: var(--qf-secondary-foreground);
+  --color-muted: var(--qf-muted);
+  --color-muted-foreground: var(--qf-muted-foreground);
+  --color-border: var(--qf-border);
+  --color-input: var(--qf-input);
+  --color-ring: var(--qf-ring);
+  --radius-small: var(--qf-radius-sm);
+  --radius-medium: var(--qf-radius-md);
+  --radius-large: var(--qf-radius-lg);
+}
+
+/* Base typography */
+.qf-text-xs { font-size: var(--qf-text-xs); line-height: var(--qf-leading-normal); }
+.qf-text-sm { font-size: var(--qf-text-sm); line-height: var(--qf-leading-normal); }
+.qf-text-base { font-size: var(--qf-text-base); line-height: var(--qf-leading-normal); }
+.qf-text-md { font-size: var(--qf-text-md); line-height: var(--qf-leading-snug); }
+.qf-text-lg { font-size: var(--qf-text-lg); line-height: var(--qf-leading-tight); }
+.qf-text-xl { font-size: var(--qf-text-xl); line-height: var(--qf-leading-tight); }
+
+.qf-font-ui { font-family: var(--qf-font-ui); }
+.qf-font-mono { font-family: var(--qf-font-mono); }
+
+.qf-regular { font-weight: var(--qf-weight-regular); }
+.qf-medium { font-weight: var(--qf-weight-medium); }
+.qf-semibold { font-weight: var(--qf-weight-semibold); }
+.qf-bold { font-weight: var(--qf-weight-bold); }
+
+/* Status helpers */
+.qf-status-pass { color: var(--qf-state-success); }
+.qf-status-warn { color: var(--qf-state-warning); }
+.qf-status-fail { color: var(--qf-state-error); }
+.qf-status-info { color: var(--qf-state-info); }
+.qf-status-ai { color: var(--qf-ai); }
+
+.qf-bg-pass { background-color: rgba(76, 175, 80, 0.12); }
+.qf-bg-warn { background-color: rgba(255, 152, 0, 0.12); }
+.qf-bg-fail { background-color: rgba(244, 67, 54, 0.12); }
+.qf-bg-ai { background-color: rgba(103, 58, 183, 0.12); }
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.1/dist/index.global.js"></script>
+    <script src="https://unpkg.com/lucide@1.8.0/dist/umd/lucide.min.js"></script>
+    <style type="text/tailwindcss">
+  @theme inline {
+    --color-background: var(--qf-background);
+    --color-foreground: var(--qf-foreground);
+    --color-card: var(--qf-card);
+    --color-card-foreground: var(--qf-card-foreground);
+    --color-popover: var(--qf-popover);
+    --color-popover-foreground: var(--qf-popover-foreground);
+    --color-primary: var(--qf-primary);
+    --color-primary-foreground: var(--qf-primary-foreground);
+    --color-secondary: var(--qf-secondary);
+    --color-secondary-foreground: var(--qf-secondary-foreground);
+    --color-muted: var(--qf-muted);
+    --color-muted-foreground: var(--qf-muted-foreground);
+    --color-border: var(--qf-border);
+    --color-input: var(--qf-input);
+    --color-ring: var(--qf-ring);
+    --radius-sm: var(--qf-radius-sm);
+    --radius-md: var(--qf-radius-md);
+    --radius-lg: var(--qf-radius-lg);
+    --radius-xl: var(--qf-radius-xl);
+  }
+  @layer base {
+    body { background: var(--qf-background); color: var(--qf-foreground); }
+    td, th { @apply break-words; word-break: break-all; word-break: auto-phrase; }
+    th { @apply whitespace-nowrap; }
+  }
+    </style>
+    <style id="semantic-token-fallback">
+      .bg-background { background-color: var(--qf-background); }
+      .text-background { color: var(--qf-background); }
+      .border-background { border-color: var(--qf-background); }
+      .ring-background { --tw-ring-color: var(--qf-background); }
+      .bg-foreground { background-color: var(--qf-foreground); }
+      .text-foreground { color: var(--qf-foreground); }
+      .border-foreground { border-color: var(--qf-foreground); }
+      .ring-foreground { --tw-ring-color: var(--qf-foreground); }
+      .bg-card { background-color: var(--qf-card); }
+      .text-card { color: var(--qf-card); }
+      .border-card { border-color: var(--qf-card); }
+      .ring-card { --tw-ring-color: var(--qf-card); }
+      .bg-card-foreground { background-color: var(--qf-card-foreground); }
+      .text-card-foreground { color: var(--qf-card-foreground); }
+      .border-card-foreground { border-color: var(--qf-card-foreground); }
+      .ring-card-foreground { --tw-ring-color: var(--qf-card-foreground); }
+      .bg-popover { background-color: var(--qf-popover); }
+      .text-popover { color: var(--qf-popover); }
+      .border-popover { border-color: var(--qf-popover); }
+      .ring-popover { --tw-ring-color: var(--qf-popover); }
+      .bg-popover-foreground { background-color: var(--qf-popover-foreground); }
+      .text-popover-foreground { color: var(--qf-popover-foreground); }
+      .border-popover-foreground { border-color: var(--qf-popover-foreground); }
+      .ring-popover-foreground { --tw-ring-color: var(--qf-popover-foreground); }
+      .bg-primary { background-color: var(--qf-primary); }
+      .text-primary { color: var(--qf-primary); }
+      .border-primary { border-color: var(--qf-primary); }
+      .ring-primary { --tw-ring-color: var(--qf-primary); }
+      .bg-primary-foreground { background-color: var(--qf-primary-foreground); }
+      .text-primary-foreground { color: var(--qf-primary-foreground); }
+      .border-primary-foreground { border-color: var(--qf-primary-foreground); }
+      .ring-primary-foreground { --tw-ring-color: var(--qf-primary-foreground); }
+      .bg-secondary { background-color: var(--qf-secondary); }
+      .text-secondary { color: var(--qf-secondary); }
+      .border-secondary { border-color: var(--qf-secondary); }
+      .ring-secondary { --tw-ring-color: var(--qf-secondary); }
+      .bg-secondary-foreground { background-color: var(--qf-secondary-foreground); }
+      .text-secondary-foreground { color: var(--qf-secondary-foreground); }
+      .border-secondary-foreground { border-color: var(--qf-secondary-foreground); }
+      .ring-secondary-foreground { --tw-ring-color: var(--qf-secondary-foreground); }
+      .bg-muted { background-color: var(--qf-muted); }
+      .text-muted { color: var(--qf-muted); }
+      .border-muted { border-color: var(--qf-muted); }
+      .ring-muted { --tw-ring-color: var(--qf-muted); }
+      .bg-muted-foreground { background-color: var(--qf-muted-foreground); }
+      .text-muted-foreground { color: var(--qf-muted-foreground); }
+      .border-muted-foreground { border-color: var(--qf-muted-foreground); }
+      .ring-muted-foreground { --tw-ring-color: var(--qf-muted-foreground); }
+      .bg-border { background-color: var(--qf-border); }
+      .text-border { color: var(--qf-border); }
+      .border-border { border-color: var(--qf-border); }
+      .ring-border { --tw-ring-color: var(--qf-border); }
+      .bg-input { background-color: var(--qf-input); }
+      .text-input { color: var(--qf-input); }
+      .border-input { border-color: var(--qf-input); }
+      .ring-input { --tw-ring-color: var(--qf-input); }
+      .bg-ring { background-color: var(--qf-ring); }
+      .text-ring { color: var(--qf-ring); }
+      .border-ring { border-color: var(--qf-ring); }
+      .ring-ring { --tw-ring-color: var(--qf-ring); }
+    </style>
+    <style>
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      [data-icon] {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        -webkit-mask-position: center;
+        mask-position: center;
+        background-color: currentColor;
+      }
+    </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">QF</div>
+        <div class="brand-name">QualityForge</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">工作台</div>
+        <a href="workbench.html" class="nav-item " data-dom-id="nav-workbench"><span class="nav-icon">□</span> 工作台</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">测试工程</div>
+        <a href="workspace-list.html" class="nav-item active" data-dom-id="nav-workspace"><span class="nav-icon">◧</span> 工作空间</a>
+        <a href="requirements.html" class="nav-item " data-dom-id="nav-testdesign"><span class="nav-icon">◎</span> 测试设计</a>
+        <a href="asset-portal.html" class="nav-item " data-dom-id="nav-asset"><span class="nav-icon">▣</span> 测试资产</a>
+        <a href="execution-plans.html" class="nav-item " data-dom-id="nav-execution"><span class="nav-icon">▶</span> 测试执行</a>
+        <a href="qi-dashboard.html" class="nav-item " data-dom-id="nav-intelligence"><span class="nav-icon">◈</span> 质量智能</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">AI 能力</div>
+        <a href="agent-trace.html" class="nav-item " data-dom-id="nav-agent"><span class="nav-icon">◉</span> Agent Trace</a>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="workspace-selector">
+            <span class="status-dot"></span>
+            <span>订单系统-V2.0</span>
+            <span>▼</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="token-budget">
+            <span>Token 预算</span>
+            <div class="token-bar"><div class="token-fill"></div></div>
+            <span>42%</span>
+          </div>
+          <button class="icon-btn" data-dom-id="btn-search">🔍</button>
+          <button class="icon-btn" data-dom-id="btn-help">?</button>
+          <button class="icon-btn" data-dom-id="btn-profile">👤</button>
+        </div>
+      </header>
+      <main class="content">
+        
+<div class="page-header">
+  <h1 class="page-title">创建工作空间</h1>
+  <div class="page-subtitle">四步完成测试空间初始化</div>
+</div>
+<div class="card" style="max-width:720px;">
+  <div style="display:flex;gap:8px;margin-bottom:24px;">
+    <div style="flex:1;padding:12px;background:var(--qf-primary);color:var(--qf-primary-foreground);border-radius:var(--qf-radius-md);text-align:center;font-size:13px;font-weight:600;">1. 基础信息</div>
+    <div style="flex:1;padding:12px;background:var(--qf-muted);border-radius:var(--qf-radius-md);text-align:center;font-size:13px;color:var(--qf-muted-foreground);">2. 技术栈</div>
+    <div style="flex:1;padding:12px;background:var(--qf-muted);border-radius:var(--qf-radius-md);text-align:center;font-size:13px;color:var(--qf-muted-foreground);">3. 环境配置</div>
+    <div style="flex:1;padding:12px;background:var(--qf-muted);border-radius:var(--qf-radius-md);text-align:center;font-size:13px;color:var(--qf-muted-foreground);">4. AI 上下文</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div>
+      <label style="display:block;font-size:13px;color:var(--qf-muted-foreground);margin-bottom:6px;">空间名称</label>
+      <input type="text" placeholder="例如：订单系统-V2.0" style="width:100%;padding:10px 12px;background:var(--qf-background);border:1px solid var(--qf-border);border-radius:var(--qf-radius-md);color:var(--qf-foreground);">
+    </div>
+    <div>
+      <label style="display:block;font-size:13px;color:var(--qf-muted-foreground);margin-bottom:6px;">被测系统描述</label>
+      <textarea placeholder="简要描述被测系统业务范围" style="width:100%;padding:10px 12px;background:var(--qf-background);border:1px solid var(--qf-border);border-radius:var(--qf-radius-md);color:var(--qf-foreground);min-height:80px;"></textarea>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;">
+      <button class="btn btn-ghost" data-dom-id="btn-cancel-create">取消</button>
+      <button class="btn btn-primary" data-dom-id="btn-next-step">下一步</button>
+    </div>
+  </div>
+</div>
+
+      </main>
+    </div>
+  </div>
+
+    <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--qf-font-ui);
+      background: var(--qf-background);
+      color: var(--qf-foreground);
+      font-size: var(--qf-text-base);
+      line-height: var(--qf-leading-normal);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px;
+      background: var(--qf-card);
+      border-right: 1px solid var(--qf-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+    .sidebar-header {
+      height: 56px;
+      padding: 0 var(--qf-space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-3);
+      border-bottom: 1px solid var(--qf-border);
+    }
+    .logo {
+      width: 28px; height: 28px;
+      background: var(--qf-primary);
+      border-radius: var(--qf-radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: var(--qf-weight-bold);
+      color: var(--qf-primary-foreground);
+      font-size: var(--qf-text-xs);
+    }
+    .brand-name { font-weight: var(--qf-weight-semibold); font-size: var(--qf-text-md); }
+    .nav-section { padding: var(--qf-space-3) 0; }
+    .nav-label {
+      padding: 0 var(--qf-space-4);
+      font-size: var(--qf-text-xs);
+      color: var(--qf-muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--qf-space-2);
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-3);
+      padding: 10px var(--qf-space-4);
+      margin: 0 var(--qf-space-2);
+      border-radius: var(--qf-radius-md);
+      color: var(--qf-muted-foreground);
+      text-decoration: none;
+      font-size: var(--qf-text-sm);
+      transition: background var(--qf-transition-fast), color var(--qf-transition-fast);
+    }
+    .nav-item:hover { background: var(--qf-muted); color: var(--qf-foreground); }
+    .nav-item.active { background: rgba(0, 140, 255, 0.12); color: var(--qf-primary); }
+    .nav-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+    .main { flex: 1; margin-left: 240px; display: flex; flex-direction: column; }
+    .topbar {
+      height: 56px;
+      background: var(--qf-card);
+      border-bottom: 1px solid var(--qf-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--qf-space-6);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-left { display: flex; align-items: center; gap: var(--qf-space-4); }
+    .workspace-selector {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      padding: var(--qf-space-2) var(--qf-space-3);
+      background: var(--qf-muted);
+      border-radius: var(--qf-radius-md);
+      font-size: var(--qf-text-sm);
+      cursor: pointer;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: var(--qf-radius-full); background: var(--qf-state-success); }
+    .topbar-right { display: flex; align-items: center; gap: var(--qf-space-4); }
+    .token-budget {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      font-size: var(--qf-text-xs);
+      color: var(--qf-muted-foreground);
+    }
+    .token-bar {
+      width: 96px;
+      height: 6px;
+      background: var(--qf-muted);
+      border-radius: var(--qf-radius-full);
+      overflow: hidden;
+    }
+    .token-fill {
+      height: 100%;
+      width: 42%;
+      background: var(--qf-primary);
+      border-radius: var(--qf-radius-full);
+    }
+    .icon-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--qf-radius-md);
+      background: transparent;
+      border: 1px solid var(--qf-border);
+      color: var(--qf-muted-foreground);
+      cursor: pointer;
+    }
+    .icon-btn:hover { background: var(--qf-muted); color: var(--qf-foreground); }
+    .content { flex: 1; padding: var(--qf-space-6); overflow: auto; }
+    .page-header { margin-bottom: var(--qf-space-6); }
+    .page-title { font-size: var(--qf-text-xl); font-weight: var(--qf-weight-semibold); }
+    .page-subtitle { font-size: var(--qf-text-sm); color: var(--qf-muted-foreground); margin-top: var(--qf-space-1); }
+    .card {
+      background: var(--qf-card);
+      border: 1px solid var(--qf-border);
+      border-radius: var(--qf-radius-lg);
+      padding: var(--qf-space-5);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      padding: 8px var(--qf-space-4);
+      border-radius: var(--qf-radius-md);
+      font-size: var(--qf-text-sm);
+      font-weight: var(--qf-weight-medium);
+      cursor: pointer;
+      border: none;
+      transition: opacity var(--qf-transition-fast);
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: var(--qf-primary); color: var(--qf-primary-foreground); }
+    .btn-secondary { background: var(--qf-secondary); color: var(--qf-secondary-foreground); }
+    .btn-ghost { background: transparent; color: var(--qf-muted-foreground); border: 1px solid var(--qf-border); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--qf-radius-full);
+      font-size: var(--qf-text-xs);
+      font-weight: var(--qf-weight-medium);
+    }
+    .badge-pass { background: var(--qf-bg-pass); color: var(--qf-state-success); }
+    .badge-warn { background: var(--qf-bg-warn); color: var(--qf-state-warning); }
+    .badge-fail { background: var(--qf-bg-fail); color: var(--qf-state-error); }
+    .badge-ai { background: var(--qf-bg-ai); color: var(--qf-ai); }
+    .confidence {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--qf-radius-full);
+      font-size: var(--qf-text-xs);
+      font-weight: var(--qf-weight-semibold);
+    }
+    .confidence-high { background: var(--qf-bg-pass); color: var(--qf-state-success); }
+    .confidence-medium { background: var(--qf-bg-warn); color: var(--qf-state-warning); }
+    .confidence-low { background: var(--qf-bg-fail); color: var(--qf-state-error); }
+    .source-trace {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--qf-primary);
+      font-size: var(--qf-text-xs);
+      cursor: pointer;
+    }
+    .source-trace:hover { text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--qf-text-sm); }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--qf-border); }
+    th { color: var(--qf-muted-foreground); font-weight: var(--qf-weight-medium); font-size: var(--qf-text-xs); text-transform: uppercase; letter-spacing: 0.3px; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+  </style>
+</body>
+</html>

@@ -1,0 +1,333 @@
+{
+  "data": [
+    {
+      "id": "page-workbench",
+      "title": "工作台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 0,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-1d14e5bb",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/workbench.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workspace-list",
+      "title": "工作空间列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 480,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-01a1071e",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/workspace-list.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workspace-create",
+      "title": "创建工作空间",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 960,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-c9c02ab1",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/workspace-create.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-workspace-settings",
+      "title": "工作空间设置",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 1440,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-6b5e5e9a",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/workspace-settings.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-requirements",
+      "title": "需求列表",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 1920,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-07f206d7",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/requirements.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-test-design-console",
+      "title": "测试设计控制台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 2400,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-188a931f",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/test-design-console.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-testcase-review",
+      "title": "用例评审板",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 2880,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-615b90d7",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/testcase-review.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-asset-portal",
+      "title": "资产中心",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 3360,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-35a31ddd",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/asset-portal.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-asset-cases",
+      "title": "用例资产管理",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 3840,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-110bdb5d",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/asset-cases.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-execution-plans",
+      "title": "执行计划",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 4320,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-f4ffe65b",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/execution-plans.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-run-console",
+      "title": "任务运行控制台",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 4800,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-17f8b0df",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/run-console.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-qi-dashboard",
+      "title": "质量智能仪表盘",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 5280,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-7ece74cb",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/qi-dashboard.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-rca-detail",
+      "title": "根因分析详情",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 5760,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-9108e590",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/rca-detail.html",
+        "interactions": []
+      }
+    },
+    {
+      "id": "page-agent-trace",
+      "title": "Agent Trace 链路回放",
+      "type": "page",
+      "version": 1,
+      "createdAt": 1754908800000,
+      "canvasData": {
+        "x": 6240,
+        "y": 0,
+        "group": 0,
+        "layoutSnapshot": {
+          "version": 1,
+          "contentHeight": 900,
+          "viewportWidth": 1440,
+          "sourceHash": "fnv1a-b207feb9",
+          "measuredAt": 1786416505411
+        }
+      },
+      "devMetadata": {
+        "htmlSrc": "pages/agent-trace.html",
+        "interactions": []
+      }
+    }
+  ],
+  "config": {
+    "autoLayout": true,
+    "deviceType": "desktop",
+    "projectName": "QualityForge UI",
+    "designLibrary": null,
+    "visualEditorEnabled": false
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "ir_version": "1.0.1",
+  "requirements": [
+    {
+      "req_id": "Q-RV-101",
+      "title": "Submit a formal artifact for human review",
+      "description": "An immutable TestCaseVersion must create a ReviewTask bound to its version and content digest.",
+      "validation_status": "VALIDATED",
+      "source_trace": "12-PRD-TestAsset.md#AC-02",
+      "confidence": 0.82
+    },
+    {
+      "req_id": "Q-RV-102",
+      "title": "Only an authorized human can approve",
+      "description": "Approval requires an active UserIdentity, matching digest, scoped capability and separation of duties.",
+      "validation_status": "VALIDATED",
+      "source_trace": "34-认证授权设计.md#5",
+      "confidence": 0.88
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "R-RV-101",
+      "condition": "TestCaseVersion.status == DRAFT",
+      "action": "Submit creates a ReviewTask and moves the version to PENDING_REVIEW",
+      "source": "12-PRD-TestAsset.md#AC-02",
+      "source_trace": "12-PRD-TestAsset.md#AC-02",
+      "confidence": 0.84
+    },
+    {
+      "rule_id": "R-RV-102",
+      "condition": "ReviewTask.status == OPEN and actor_type == USER and digest_matches == true and authorization == ALLOW",
+      "action": "An APPROVE decision may move the exact TestCaseVersion to APPROVED",
+      "source": "34-认证授权设计.md#5",
+      "source_trace": "34-认证授权设计.md#5",
+      "confidence": 0.86
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-TCV-101",
+      "name": "TestCaseVersion",
+      "fields": [
+        {"name": "id", "type": "uuid", "sensitivity_level": "INTERNAL"},
+        {"name": "status", "type": "enum", "sensitivity_level": "INTERNAL"},
+        {"name": "content_digest", "type": "sha256", "sensitivity_level": "INTERNAL"}
+      ]
+    }
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-TCV-101",
+      "entity_id": "ENT-TCV-101",
+      "initial_state": "DRAFT",
+      "states": ["DRAFT", "PENDING_REVIEW", "APPROVED"],
+      "transitions": [
+        {"from": "DRAFT", "to": "PENDING_REVIEW", "trigger": "submit_for_review", "guard": "immutable version and digest exist"},
+        {"from": "PENDING_REVIEW", "to": "APPROVED", "trigger": "approve", "guard": "authorized human, digest match and policy satisfied"}
+      ],
+      "terminal_states": {"APPROVED": true}
+    }
+  ],
+  "interface_contracts": [
+    {
+      "contract_id": "IFC-RV-CREATE",
+      "endpoint": "/api/v1/review-tasks",
+      "method": "POST",
+      "request_schema": {"properties": {"artifactType": {}, "artifactId": {}, "artifactVersionId": {}, "contentDigest": {}, "policyType": {}}},
+      "response_schema": {"properties": {"status": {}, "code": {}, "traceId": {}}}
+    },
+    {
+      "contract_id": "IFC-RV-DECIDE",
+      "endpoint": "/api/v1/review-tasks/{reviewTaskId}/decisions",
+      "method": "POST",
+      "request_schema": {"properties": {"decision": {}, "contentDigest": {}}},
+      "response_schema": {"properties": {"status": {}, "code": {}, "traceId": {}}}
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_id": "C-RV-101",
+      "target": "ENT-TCV-101.status",
+      "expression": "in {DRAFT, PENDING_REVIEW, APPROVED}",
+      "source_trace": "04-核心领域模型.md#state-machines"
+    }
+  ]
+}

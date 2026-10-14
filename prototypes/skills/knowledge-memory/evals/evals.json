@@ -1,0 +1,7 @@
+{
+  "skill_name": "knowledge-memory",
+  "evals": [
+    {"id": 1, "name": "accept-sourced-memory", "prompt": "校验一条带有时间戳、显式 SourceSnapshot 引用且内容安全的 memory candidate。", "expected_output": "PASS;该 candidate 仍可评审,不会自动发布。", "files": []},
+    {"id": 2, "name": "reject-sensitive-memory", "prompt": "校验一条包含密码字面量且没有溯源时间戳的 memory candidate。", "expected_output": "REJECT,给出 sensitive-content 和 missing-audit findings。", "files": []}
+  ]
+}

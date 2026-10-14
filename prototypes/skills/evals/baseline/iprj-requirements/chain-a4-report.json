@@ -1,0 +1,16 @@
+{
+  "skill": "04",
+  "checked_at": "2026-09-06T05:44:48.272610+00:00",
+  "total_state_machines": 1,
+  "total_findings": 1,
+  "findings": [
+    {
+      "code": "UNREACHABLE_STATE",
+      "severity": "REJECT",
+      "target": "SM-DEL-001:PENDING_DELETE",
+      "msg": "状态 'PENDING_DELETE' 无法从 'PENDING_APPROVAL' 到达"
+    }
+  ],
+  "verdict": "REJECT",
+  "routing": "PASS -> 状态机可进入融合；REJECT -> 重新抽取被标记的状态机"
+}

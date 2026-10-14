@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API 契约 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="knowledge">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item active" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <div class="search"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="7" cy="7" r="4.5"/><path d="m10.5 10.5 3 3"/></svg><input type="search" aria-label="搜索契约、operation" placeholder="搜索契约、operation…"></div>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>API 契约</h1><div class="sub">APIContract 稳定根 + 不可变版本 · DECLARED / OBSERVED 分层 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="qf.openModal('m-baseline')">管理基线</button>
+      <button class="btn btn-primary" onclick="qf.toast('契约导入走来源导入入口(演示)','info')">导入契约</button>
+    </div>
+
+    <div class="two-col">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="panel">
+          <div class="phead"><h2>契约列表</h2><span class="hint">2 个契约 · 22 + 14 个 operation</span></div>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>契约</th><th>当前版本</th><th>状态</th><th>Operation</th><th>基线</th></tr></thead>
+            <tbody>
+              <tr onclick="qf.openModal('m-contract')"><td><div class="t-title">settlement-api</div><div class="t-sub">结算服务 · owningTeam: 支付组</div></td><td class="mono">V7</td><td><span class="status st-done"><span class="d"></span>已发布</span></td><td class="mono">22</td><td class="small" style="color:var(--qf-success-600)">已锁定</td></tr>
+              <tr onclick="qf.openModal('m-contract')"><td><div class="t-title">reconciliation-api</div><div class="t-sub">对账服务 · owningTeam: 数据组</div></td><td class="mono">V4</td><td><span class="status st-review"><span class="d"></span>待审核</span></td><td class="mono">14</td><td class="small muted">未锁定</td></tr>
+            </tbody>
+          </table>
+        <div class="empty-note" hidden><div class="en-title">暂无契约</div>导入 OpenAPI 或流量后显示</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="phead"><h2>Operation · settlement-api V7</h2><span class="hint">点击行查看详情</span></div>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>方法</th><th>路径</th><th>来源</th><th>稳定性</th></tr></thead>
+            <tbody>
+              <tr onclick="qf.openModal('m-op')"><td><span class="badge b-sec">POST</span></td><td class="mono">/settlements</td><td><span class="badge b-acc">DECLARED</span></td><td><span class="status st-done"><span class="d"></span>稳定</span></td></tr>
+              <tr onclick="qf.openModal('m-op')"><td><span class="badge b-acc">GET</span></td><td class="mono">/settlements/{id}</td><td><span class="badge b-acc">DECLARED</span></td><td><span class="status st-done"><span class="d"></span>稳定</span></td></tr>
+              <tr onclick="qf.openModal('m-op')"><td><span class="badge b-ok">POST</span></td><td class="mono">/settlements/{id}/refund</td><td><span class="badge b-warn">MERGED</span></td><td><span class="status st-review"><span class="d"></span>漂移检测</span></td></tr>
+            </tbody>
+          </table>
+        <div class="empty-note" hidden><div class="en-title">暂无 Operation</div>导入契约后自动解析</div>
+        <div class="pagination"><span class="pg-info">共 22 个 Operation · 第 1/8 页</span><button disabled>‹</button><button class="on">1</button><button>2</button><button>3</button><button>›</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="aside-stack">
+        <div class="mini-card">
+          <h3>Release 契约基线</h3>
+          <div class="row"><span class="k">用途</span><span class="v">TEST_DESIGN</span></div>
+          <div class="row"><span class="k">settlement-api</span><span class="mono">V7 · 摘要 3f9a…</span></div>
+          <div class="row"><span class="k">reconciliation-api</span><span class="mono">V4 · 摘要 7b21…</span></div>
+          <div class="row"><span class="k">批准人</span><span class="v">李测试</span></div>
+        </div>
+        <div class="mini-card">
+          <h3>漂移检测</h3>
+          <div class="row"><span class="k">最近扫描</span><span class="v">08-11 23:00</span></div>
+          <div class="row"><span class="k">差异</span><span class="v" style="color:var(--qf-warning-500)">1 处 breaking</span></div>
+          <div class="row"><span class="k">建议</span><span class="v muted">发起影响分析</span></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- 契约详情弹窗 -->
+<div class="modal" id="m-contract" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>settlement-api · V7</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击契约行 · 版本详情</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">规范化摘要</span><span class="mono">sha256:3f9a…c21e</span>
+        <span class="muted">解析器</span><span>openapi-parser v2.1</span>
+        <span class="muted">校验状态</span><span class="status st-done"><span class="d"></span>PASSED</span>
+        <span class="muted">变更摘要</span><span>V7: 新增 refund 响应码 409;fee 字段改为可选</span>
+        <span class="muted">破坏级别</span><span class="badge b-warn">MINOR</span>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-contract')">关闭</button></div>
+  </div>
+</div>
+
+<!-- Operation 详情弹窗 -->
+<div class="modal" id="m-op" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3><span class="badge b-ok">POST</span> /settlements/{id}/refund</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 点击 Operation 行</div>
+      <div class="kv" style="display:grid;grid-template-columns:110px 1fr;gap:8px 14px;font-size:13.5px">
+        <span class="muted">stableKey</span><span class="mono">op-refund-batch</span>
+        <span class="muted">请求体</span><span>RefundRequest (refs/request-body)</span>
+        <span class="muted">响应码</span><span class="mono">200 / 400 / 409</span>
+        <span class="muted">安全要求</span><span class="mono">oauth2: settlement.write</span>
+        <span class="muted">来源指针</span><span class="mono">paths./settlements/{id}/refund.post</span>
+      </div>
+      <p class="small muted mt-4">漂移检测: OBSERVED 流量中 409 响应体缺少 <span class="mono">retryAfter</span> 字段,已记录差异。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-op')">关闭</button></div>
+  </div>
+</div>
+
+<!-- 基线管理弹窗 -->
+<div class="modal" id="m-baseline" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>管理契约基线</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「管理基线」按钮 · 基线配置弹窗</div>
+      <div class="field"><label>基线用途</label><select class="input"><option>TEST_DESIGN</option><option>MOCK</option><option>CONTRACT_ANALYSIS</option></select></div>
+      <div class="field"><label>绑定契约版本</label><label class="check" style="display:block;margin-bottom:8px"><input type="checkbox" checked> settlement-api V7 <span class="mono muted">3f9a…</span></label><label class="check"><input type="checkbox" checked> reconciliation-api V4 <span class="mono muted">7b21…</span></label></div>
+      <p class="small muted">基线创建后不可变;契约新版本不会自动替换历史基线。</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="qf.closeModal('m-baseline')">取消</button>
+      <button class="btn btn-primary" onclick="qf.closeModal('m-baseline');qf.toast('基线已锁定(演示)','ok')">锁定基线</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+</body>
+</html>

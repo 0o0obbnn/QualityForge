@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="forgeGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F2CD9E"/>
+      <stop offset="45%" stop-color="#D96C1F"/>
+      <stop offset="100%" stop-color="#B8551A"/>
+    </linearGradient>
+    <linearGradient id="sparkGold" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D96C1F"/>
+      <stop offset="100%" stop-color="#F2CD9E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ============================================================
+       QualityForge 标志 · 「Q 之锻」(V2 修正)
+       环形: 270° 完整闭环 + 右上 90° 缺口(质量被锻造击穿的开口)
+       楔子: 锐利凿形, 从环心斜切指向缺口(锻造之力, 避开播放键联想)
+       星火: 收拢紧贴缺口外缘, 沿缺口方向上升(品质淬炼升华)
+       ============================================================ -->
+
+  <!-- 环形(右上开口)· 琥珀金属渐变 -->
+  <circle cx="256" cy="256" r="150"
+          fill="none"
+          stroke="url(#forgeGold)"
+          stroke-width="46"
+          stroke-dasharray="706.9 235.6"
+          stroke-dashoffset="91.5"
+          stroke-linecap="butt"/>
+
+  <!-- 楔子(锻造凿形)· 深炭 · 锐角指向缺口 -->
+  <polygon points="372,232 246,336 264,140"
+           fill="#1D1B18" stroke="#1D1B18" stroke-width="6" stroke-linejoin="round"/>
+
+  <!-- 星火(品质升华)· 紧贴缺口外缘上升 -->
+  <polygon points="440,208 449,217 440,226 431,217" fill="url(#sparkGold)"/>
+</svg>

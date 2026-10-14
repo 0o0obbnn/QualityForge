@@ -1,0 +1,10 @@
+{
+  "skill": "requirement-quality-gate",
+  "checked_at": "2026-09-06T06:41:38.660131+00:00",
+  "review_id": "CTRL-PASS",
+  "verdict": "PASS",
+  "reject_findings": 0,
+  "review_findings": 0,
+  "findings": [],
+  "routing": "需求评审可进入融合"
+}

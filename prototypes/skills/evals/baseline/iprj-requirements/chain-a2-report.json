@@ -1,0 +1,21 @@
+{
+  "skill": "01",
+  "checked_at": "2026-09-06T05:44:18.974238+00:00",
+  "total_findings": 2,
+  "findings": [
+    {
+      "code": "DEFAULT_CONFIDENCE",
+      "severity": "REJECT",
+      "target": "RULE-002",
+      "msg": "confidence 0.5 疑似默认值；需要补充 rationale"
+    },
+    {
+      "code": "MISSING_SOURCE_TRACE",
+      "severity": "REJECT",
+      "target": "ENT-INSTITUTION-001",
+      "msg": "编译出的元素缺少 source_trace"
+    }
+  ],
+  "verdict": "REJECT",
+  "routing": "重新编译"
+}

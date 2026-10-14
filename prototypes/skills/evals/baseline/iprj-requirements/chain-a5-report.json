@@ -1,0 +1,49 @@
+{
+  "skill": "05",
+  "checked_at": "2026-09-06T06:01:23.888133+00:00",
+  "ir_version_seen": "1.0.0",
+  "verdict": "REJECT",
+  "findings_by_family": {
+    "schema": 3,
+    "provenance": 0,
+    "confidence": 0,
+    "conflict": 0,
+    "reachability": 1,
+    "entity": 0
+  },
+  "total_findings": 4,
+  "reject_findings": 4,
+  "review_findings": 0,
+  "findings": [
+    {
+      "family": "schema",
+      "code": "MISSING_REQUIRED_FIELD",
+      "severity": "REJECT",
+      "target": "interface_contracts:<no contract_id>",
+      "msg": "缺少必填字段 'contract_id'"
+    },
+    {
+      "family": "schema",
+      "code": "MISSING_REQUIRED_FIELD",
+      "severity": "REJECT",
+      "target": "interface_contracts:<no contract_id>",
+      "msg": "缺少必填字段 'contract_id'"
+    },
+    {
+      "family": "schema",
+      "code": "MISSING_REQUIRED_FIELD",
+      "severity": "REJECT",
+      "target": "interface_contracts:<no contract_id>",
+      "msg": "缺少必填字段 'contract_id'"
+    },
+    {
+      "family": "reachability",
+      "code": "DEAD_END_NONTERMINAL",
+      "severity": "REJECT",
+      "target": "state_machines:SM-DEL-001:REJECTED",
+      "msg": "state 'REJECTED' 是死端且非终态"
+    }
+  ],
+  "skill28_review_tasks": [],
+  "routing": "暂缓"
+}

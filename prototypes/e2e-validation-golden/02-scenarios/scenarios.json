@@ -1,0 +1,8 @@
+[
+  {"scenario_id": "S-rv-101", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "facet": "normal", "title": "Submit an immutable version with a matching digest"},
+  {"scenario_id": "S-rv-102", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "facet": "abnormal", "title": "Reject a review request without artifactVersionId"},
+  {"scenario_id": "S-rv-103", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "facet": "boundary", "title": "Approve the exact version at the review deadline"},
+  {"scenario_id": "S-rv-104", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "facet": "permission", "title": "Reject approval from an AgentIdentity"},
+  {"scenario_id": "S-rv-105", "req_id": "Q-RV-101", "rule_id": "R-RV-101", "facet": "state_transition", "transition_ref": "SM-TCV-101:DRAFT->PENDING_REVIEW", "title": "Draft enters human review"},
+  {"scenario_id": "S-rv-106", "req_id": "Q-RV-102", "rule_id": "R-RV-102", "facet": "state_transition", "transition_ref": "SM-TCV-101:PENDING_REVIEW->APPROVED", "title": "Authorized human approves the matching version"}
+]

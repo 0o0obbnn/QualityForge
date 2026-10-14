@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualityForge 原型 · 第二轮视觉审计报告(design-review) · 2026-08-12</title>
+<style>
+  :root{--bg:#FAFAF7;--card:#FFFFFF;--fg:#1D1B18;--muted:#625D52;--border:#E9E6DE;--accent:#B8551A;--accent-100:#FDF4EA;--ok:#47875A;--ok-100:#E4EFE6;--warn:#96701E;--warn-100:#F5EDD8;--err:#C0442F;--err-100:#F7E3DE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;padding:40px 24px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{border-bottom:2px solid var(--fg);padding-bottom:24px;margin-bottom:32px;}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  h1{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin-top:10px;}
+  .sub{color:var(--muted);margin-top:8px;font-size:15px;}
+  h2{font-size:21px;font-weight:600;margin:40px 0 6px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border-radius:12px;overflow:hidden;margin:10px 0 18px;}
+  th{background:#F4F2ED;text-align:left;padding:9px 12px;font-weight:600;font-size:12px;}
+  td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top;}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr);}}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .metric .v{font-size:28px;font-weight:300;letter-spacing:-0.02em;}
+  .metric .k{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .b-ok{background:var(--ok-100);color:#356B45;} .b-acc{background:var(--accent-100);color:var(--accent);}
+  .callout{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;background:var(--card);margin:14px 0;font-size:14px;}
+  code{font-family:"JetBrains Mono",Menlo,monospace;font-size:12px;background:#F4F2ED;border-radius:4px;padding:1px 6px;}
+  ul.tight{padding-left:20px;margin:6px 0;} ul.tight li{margin-bottom:4px;font-size:13.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Visual Audit #2 · design-review · 2026-08-12</div>
+  <h1>第二轮视觉审计报告</h1>
+  <p class="sub">对象: 27 页原型 · 方法: 全站一致性扫描(间距/字号/圆角/颜色/对齐)+ 原子修复 + before/after 证据</p>
+</header>
+
+<div class="metrics">
+  <div class="metric"><div class="v">23</div><div class="k">原子修复数(13 个文件)</div></div>
+  <div class="metric"><div class="v">0</div><div class="k">硬编码颜色残留</div></div>
+  <div class="metric"><div class="v">0</div><div class="k">非 token 字号残留</div></div>
+  <div class="metric"><div class="v">0</div><div class="k">越界圆角/6-7px 间距残留</div></div>
+</div>
+
+<h2>一、审计发现与修复(before → after)</h2>
+<table>
+  <tr><th>类别</th><th>before</th><th>after</th><th>涉及文件</th></tr>
+  <tr><td>内联字号越界</td><td>11px(退出登录/安全微文案)、15px(页面 h2×4)、18px(99-modals h2)、22px(登录标题/事实锚/41 h1)</td><td>全站归一到 token 档 12/13/14/16/20/26/34</td><td>01-login / 10-board / 11-reviews / 30 / 31 / 50 / 99-modals / 41-code-review</td></tr>
+  <tr><td>圆角漂移</td><td>7px / 9px(登录页密码切换、品牌标)</td><td>8px / 10px(token 档)</td><td>01-login</td></tr>
+  <tr><td>间距非 8pt</td><td>6px(kv gap/digest 标签/margin)、7px(81-environments row padding×5)</td><td>8px(全站 4px 步进节奏)</td><td>11-reviews / 32-cases / 81-environments</td></tr>
+  <tr><td>硬编码颜色</td><td>0(首轮已清)</td><td>0</td><td>—</td></tr>
+  <tr><td>移动端字号</td><td>15px 按钮</td><td>16px(防 iOS 缩放)</td><td>01-login</td></tr>
+</table>
+
+<h2>二、验证证据(复扫)</h2>
+<ul class="tight">
+  <li>6/7px 间距残留: 0;非 token 字号: 0;越界圆角: 0</li>
+  <li>结构: 27 页全部闭合,script/style 配对</li>
+  <li>取色: 禁蓝紫 0 违例</li>
+  <li>冒烟: 登录页 6/6(此前已验,本轮无功能改动)</li>
+</ul>
+
+<h2>三、结论</h2>
+<div class="callout">第二轮审计确认原型处于「token 纪律一致」状态:视觉细节全部归一到设计系统(8pt 节奏、字号档位、圆角档位、单强调色),无硬编码颜色、无 AI 套味残留。23 处原子修复均为微调级(1-2px/字号档位),无结构性改动,风险极低。修复前(第一轮走查后)的状态与修复后差异见上表 before/after 列,可逐项回溯。</div>
+</div>
+</body>
+</html>

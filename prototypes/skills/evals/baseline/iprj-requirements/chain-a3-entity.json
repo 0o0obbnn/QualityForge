@@ -1,0 +1,23 @@
+{
+  "entities": [
+    {
+      "entity_id": "ENT-INSTITUTION-001",
+      "name": "接入机构",
+      "fields": [
+        {"name": "institution_name", "type": "string"},
+        {"name": "social_credit_code", "type": "string"},
+        {"name": "status", "type": "string"},
+        {"name": "billing_org_id", "type": "string", "references": "ENT-BILLING-999"}
+      ]
+    },
+    {
+      "entity_id": "ENT-REPORTING-TASK",
+      "name": "上报任务",
+      "fields": [
+        {"name": "task_month", "type": "string"},
+        {"name": "institution_id", "type": "string", "references": "ENT-INSTITUTION-001"},
+        {"name": "report_count", "type": "integer"}
+      ]
+    }
+  ]
+}

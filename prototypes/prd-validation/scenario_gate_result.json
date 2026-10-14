@@ -1,0 +1,21 @@
+{
+  "skill": "08",
+  "checked_at": "2026-09-06T06:55:53.216033+00:00",
+  "total_scenarios": 32,
+  "verdict": "PASS",
+  "facet_distribution": {
+    "abnormal": 6,
+    "boundary": 4,
+    "normal": 11,
+    "permission": 2,
+    "state_transition": 9
+  },
+  "transitions_in_ir": 9,
+  "transitions_covered": 9,
+  "transitions_missing": [],
+  "total_findings": 0,
+  "reject_findings": 0,
+  "review_findings": 0,
+  "findings": [],
+  "routing": "就绪"
+}

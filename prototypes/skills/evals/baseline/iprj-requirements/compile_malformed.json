@@ -1,0 +1,26 @@
+{
+  "declared_sources": [
+    {"source_id": "iprj-prd.md", "availability": "AVAILABLE"},
+    {"source_id": "iprj-oss-trace.md", "availability": "AVAILABLE"}
+  ],
+  "ir_draft": {
+    "requirements": [
+      {
+        "req_id": "REQ-NEG-1",
+        "title": "无 source_trace 的需求",
+        "source_trace": "",
+        "confidence": 0.5
+      },
+      {
+        "req_id": "REQ-NEG-2",
+        "title": "冲突但只保留单版本",
+        "source_trace": "iprj-prd.md:结算管理",
+        "conflict": true,
+        "conflict_refs": ["iprj-prd.md:旧版结算页面"]
+      }
+    ],
+    "business_rules": [],
+    "constraints": [],
+    "entities": []
+  }
+}

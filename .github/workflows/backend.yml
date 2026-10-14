@@ -1,0 +1,36 @@
+name: backend
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-test-contract:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Lint (ruff)
+        run: uv run ruff check src tests
+
+      - name: Type check (mypy strict)
+        run: uv run mypy src
+
+      - name: Test (pytest)
+        run: uv run pytest -v
+
+      - name: Contract (OpenAPI validator)
+        run: uv run openapi-spec-validator ../docs/04-architecture/32-API规范.yaml

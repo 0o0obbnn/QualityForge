@@ -1,0 +1,33 @@
+{
+  "skill_name": "business-rule-extractor",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-inferred-without-human-route",
+      "prompt": "一条 inferred rule 具备 condition/action/source 和 confidence 0.99,但 validation_status=VALIDATED。校验它。",
+      "expected_output": "REJECT 并给出 INFERRED_RULE_MISSING_REVIEW_ROUTE,因为每条 inferred rule 无论 confidence 多高都必须经过人工评审。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-free-text-rule",
+      "prompt": "一条 sourced rule 只有散文描述,没有 condition/action 结构。",
+      "expected_output": "REJECT 并给出 UNSTRUCTURED_RULE;散文无法定义确定性的测试边界。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "route-unstructureable-rule",
+      "prompt": "一条 rule 被标记为 unstructureable,但 validation_status 不是 NEED_HUMAN_REVIEW。",
+      "expected_output": "REJECT 并给出 RULE_FORCED_INTO_SHAPE,并路由到人工评审,而不是凭空编造结构。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "reject-nonnumeric-inferred-confidence",
+      "prompt": "一条 inferred rule 的 confidence 以字符串 '0.99' 提供。校验它。",
+      "expected_output": "REJECT 并给出 INVALID_INFERRED_CONFIDENCE;inferred confidence 必须是 [0,1] 区间内的有限非布尔数值。",
+      "files": []
+    }
+  ]
+}

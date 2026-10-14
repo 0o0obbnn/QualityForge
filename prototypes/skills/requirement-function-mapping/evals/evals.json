@@ -1,0 +1,33 @@
+{
+  "skill_name": "requirement-function-mapping",
+  "evals": [
+    {
+      "id": 0,
+      "name": "extract-minimum-functions",
+      "prompt": "按 references/extraction-contract.md 对以下合成 PRD 片段执行功能提取，说明模块、功能、最小功能的识别结果与证据绑定方式：「A.2 借阅管理：读者可借阅在馆图书（选择取书点），可续借未逾期借阅。页面标题：借阅中心。按钮：借阅、续借。」",
+      "expected_output": "识别两个最小功能（借阅在馆图书、续借未逾期借阅），各具单一触发、动作和可观察结果；页面标题与按钮文本不单独成为最小功能，按钮行为归并到对应最小功能；模块使用规范化业务名称的稳定 module_id，并通过 relations 表达 contains 层级；每个已确认事实绑定 source_id、locator 和 quote，实体 ID 基于归一化业务语义，不依赖行号或章节编号。",
+      "files": ["references/extraction-contract.md"]
+    },
+    {
+      "id": 1,
+      "name": "two-pass-field-direction-separation",
+      "prompt": "合成片段中“应还日期”同时出现在系统计算的录入表单、借阅列表展示和催还通知三种位置。按 references/extraction-contract.md 的两遍字段与方向分离不变量，给出 field_occurrences 到归一后字段使用的过程与结果形态。",
+      "expected_output": "第一遍保留全部未合并的 field_occurrences，第二遍按业务对象、上下文、方向和语义归一为字段使用；系统计算的派生值、列表展示值与通知引用保持方向分离并以字段血缘关联，不把派生值与原值合并成单一使用；usages/direction 取值符合契约枚举，每条绑定至少一条证据，仅为推断时标注 status=inferred 并列入待确认。",
+      "files": ["references/extraction-contract.md"]
+    },
+    {
+      "id": 2,
+      "name": "test-design-input-ready-gating",
+      "prompt": "合成图谱中一个最小功能的 dimension_eligibility 为 functional=READY、field_validation=READY、permission=BLOCKED（存在 REJECT finding）、其余维度 NOT_APPLICABLE。按 references/test-design-input-contract.md 说明编译 test_design_input 2.0 时哪些维度进入正式用例生成，fact_policy 与 acceptance 如何声明。",
+      "expected_output": "仅 functional 与 field_validation 以 READY 暴露给正式生成；permission BLOCKED 保留原因与 finding_ids，不生成正式用例；fact_policy.formal_case_dimensions=READY_ONLY 且 assumptions_allowed=false；包内存在 READY 维度时 acceptance.verdict=PARTIAL_PASS、downstream_eligible=true、scope=READY_DIMENSIONS_ONLY，且不得把局部 READY 描述为需求全文已确认范围。",
+      "files": ["references/test-design-input-contract.md"]
+    },
+    {
+      "id": 3,
+      "name": "process-candidate-and-evidence-boundary",
+      "prompt": "合成正文只有时序线索「借阅申请先由馆员审核，然后进入取书准备」，未给出完整步骤与异常分支。按 references/typed-graph-contract.md 说明该流程的落位与相关事实的状态边界。",
+      "expected_output": "流程进入 business_flow_candidates[] 且状态固定为 review_required，保留原文、所属功能和待确认问题，确认步骤、顺序和异常分支后才能升级为正式 business_flows；无法核验的事实保持 inferred 或 unresolved，不根据常识补全；领域常识只能形成待澄清问题，不升级为已确认需求；候选与缺口保留在图谱中，不通过静默删除换取结构通过。",
+      "files": ["references/typed-graph-contract.md"]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "skill_name": "performance-test-generator",
+  "evals": [
+    {"id": 1, "name": "accept-real-dependency-performance-check", "prompt": "校验一个使用真实受控依赖、并在 performance 命名空间中断言性能的 performance script。", "expected_output": "确定性契约检查 PASS。", "files": []},
+    {"id": 2, "name": "reject-mock-performance-claim", "prompt": "校验一个在依赖被 mock 的情况下断言接近生产环境性能的脚本。", "expected_output": "REJECT 并给出 MOCK_DEP_PERF_ASSERT。", "files": []}
+  ]
+}

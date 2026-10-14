@@ -1,0 +1,26 @@
+{
+  "eval_id": 5,
+  "eval_name": "eval-5-no-mutants-is-hard-reject",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "verdict_is_REJECT",
+      "passed": true
+    },
+    {
+      "text": "total_zero_means_gate_did_not_run",
+      "passed": true
+    },
+    {
+      "text": "high_risk_gate_mandatory",
+      "passed": true
+    },
+    {
+      "text": "missing_gate_is_failed_gate",
+      "passed": true
+    }
+  ],
+  "passed": 4,
+  "total": 4,
+  "pass_rate": 1.0
+}

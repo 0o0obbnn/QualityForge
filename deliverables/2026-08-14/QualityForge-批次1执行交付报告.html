@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 批次 1 执行交付报告 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--accent:#1f3a5f;--green:#2e7d32;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:900px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  .kicker{font-size:12px;color:var(--muted);letter-spacing:1px;}
+  h1{font-size:22px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:30px 0 10px;padding-left:10px;border-left:3px solid var(--ink);font-weight:700;}
+  p{margin:8px 0;}
+  table{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;white-space:nowrap;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.g{background:var(--green);color:#fff;border-color:var(--green);}
+  .tag.y{background:#8a6d3b;color:#fff;border-color:#8a6d3b;}
+  .tag.b{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .gate{background:#eef3f8;border:1px solid #c8d4e0;padding:10px 14px;margin:12px 0;}
+  .gate b{color:var(--accent);}
+  a{color:var(--link);}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">BATCH 1 DELIVERY · QF-FIX-2026-0814</div>
+  <h1>QualityForge 批次 1 执行交付报告(P0 契约断层)</h1>
+  <div class="meta">2026-08-14 ｜ 依据:修复方案 v2.0 ｜ 覆盖:QF-REQ-001 / B2-1/2/3 / QF-REQ-005 / QF-REQ-007 / CHANGELOG 批次十六 ｜ 验证:OpenAPI validator PASS + grep 证据</div>
+</header>
+
+<h2>一、执行总览</h2>
+<table>
+  <tr><th>整改项</th><th>状态</th><th>关键动作</th><th>验证证据</th></tr>
+  <tr><td>QF-REQ-001 WorkItem 字段(阻断)</td><td><span class="tag g">已修复(6/6)</span></td><td>04 §3.1 补 3 字段;32 WorkItem/WorkItemCreate required+properties;33 t_work_item 补 3 列</td><td>grep:04=2 / 32=7 / 33=2</td></tr>
+  <tr><td>B2-1 CoverageReport 拆分(严重)</td><td><span class="tag g">已应用</span></td><td>12-PRD AC-03 改写;15-PRD 补行×3;05 §5.12.7 加注;04 实体加注</td><td>四源裁决标记 1/3/1/2</td></tr>
+  <tr><td>B2-2 ContractCheckResult(严重)</td><td><span class="tag g">已应用</span></td><td>14-PRD 功能行+AC-05;15-PRD 披露字段;32 补 2 schema</td><td>grep 14/15/32 各≥1</td></tr>
+  <tr><td>B2-3 校准记录载体(严重)</td><td><span class="tag g">已应用</span></td><td>33 建 t_calibration_record+索引;32 补 /ai/calibrations+2 schema;16-PRD 引用</td><td>grep 33=2 / 32=3 / 16=1</td></tr>
+  <tr><td>QF-REQ-005 核心链收敛(严重)</td><td><span class="tag g">已收敛(残留 0)</span></td><td>23 个 operation 切专用响应;18 实体骨架 schema;21 响应定义;修复 4 处 create 引用错误</td><td>validator PASS;核心链 Generic 38→0</td></tr>
+  <tr><td>QF-REQ-007 里程碑对照表(严重)</td><td><span class="tag g">已产出</span></td><td>M1~M5×步骤×验收×Owner×DoD;104 表逐表标注</td><td>104 行实算实标;V1 必需 79 张</td></tr>
+  <tr><td>CHANGELOG 批次十六</td><td><span class="tag g">已入册</span></td><td>35 号追加批次十六(6 大项)</td><td>grep=1</td></tr>
+</table>
+
+<h2>二、M1 开工信号核验(四项)</h2>
+<div class="gate">
+<b>信号 1 · QF-REQ-001 四源 6/6 落齐并改判</b> ✅ 三源 grep 实证(04/32/33),对照整改建议 6/6 打勾,纠正报告待项目方改判<br>
+<b>信号 2 · B2-1/2/3 应用后 make contract PASS</b> ✅ openapi-spec-validator PASS(32 号契约)<br>
+<b>信号 3 · QF-REQ-005 核心链响应契约收敛</b> ✅ 核心链 Generic 残留 38→0;非核心链 37 处保持 KNOWN_DEFERRED<br>
+<b>信号 4 · QF-REQ-007 对照表+建表清单发布</b> ✅ 已产出(见交付物),104 表与 33 比对一致
+</div>
+<p><b>结论:四项开工信号全部达成,批次 1 文档部分完成。M1 具备开工条件</b>(运行时验证与 PG 冒烟属工程侧,见待裁决项)。</p>
+
+<h2>三、里程碑对照表要点(完整 104 表清单见交付物)</h2>
+<table>
+  <tr><th>里程碑</th><th>对应 05§十一</th><th>需建表</th><th>核心链契约收敛义务</th></tr>
+  <tr><td>M1 需求与审核收口</td><td>① 批改→新版本→二次复核</td><td>54 张(47 是+7 部分)</td><td>策略/计划/用例 16 ops</td></tr>
+  <tr><td>M2 任务看板工作化</td><td>② 分派/优先级/SLA/Diff</td><td>1 张(能力里程碑,复用 M1 字段)</td><td>看板 10 ops</td></tr>
+  <tr><td>M3 执行与证据</td><td>③ AutomationScript 闭环</td><td>15 张(13 是+2 部分)</td><td>执行域 ops</td></tr>
+  <tr><td>M4 分析与报告</td><td>④ 四类产出物运行证据</td><td>18 张(15 是+3 部分)</td><td>质量域 ops</td></tr>
+  <tr><td>M5 真实模型准入</td><td>⑤ 黄金集评测</td><td>4 张(Eval 表)</td><td>—</td></tr>
+</table>
+<p>统计:V1 必需 79 张(75.96%)、部分 13 张(12.50%)、否 12 张(11.54%);V1 涉及 92/104 = <b>88.46%</b>。关键发现:M2 是能力里程碑而非建表里程碑(分派/SLA/Diff 字段在 M1 建表时已落地)。</p>
+
+<h2>四、待裁决项(对照表 Agent 发现,3 项)</h2>
+<table>
+  <tr><th>#</th><th>事项</th><th>建议</th></tr>
+  <tr><td>1</td><td>V1 落地数据库 Profile(SQLite 继续 or 目标 PG)——无现成 VERDICT</td><td>M1 开工前按 B2-7 裁决执行:V1 SQLite + M1/M2 门禁加 PG 冒烟</td></tr>
+  <tr><td>2</td><td>t_quality_gate 标注"V2+ 否"(V1 不自动阻断)</td><td>接受(V1 门禁以人工审核为主,与 05 §5.13.3 一致)</td></tr>
+  <tr><td>3</td><td>TestSuite 三表按"部分"处理(05 §5.13.3 未点名)</td><td>接受(TestSuite 非 V1 主链,降级为部分)</td></tr>
+</table>
+
+<h2>五、遗留与下一步</h2>
+<ul>
+  <li><b>批次 2(27 条)</b>:M1 期间并行,准出前置——按映射表推进</li>
+  <li><b>QF-REQ-005 非核心链 37 处</b>:随批次 3/4 模块开发收敛</li>
+  <li><b>纠正报告改判</b>:L1 纠正报告 QF-REQ-001 行需项目方补记"已修复(6/6,2026-08-14 批次十六)"</li>
+  <li><b>工程侧</b>:M1 开工信号已齐,可进入 M1 开发(ENG 侧)</li>
+</ul>
+
+<footer>批次 1 执行交付报告 · QF-FIX-2026-0814 ｜ 验证:OpenAPI validator PASS + 全部 grep 证据可复现 ｜ 关联:修复方案 v2.0 / 里程碑对照表 / CHANGELOG 批次十六</footer>
+
+</div>
+</body>
+</html>

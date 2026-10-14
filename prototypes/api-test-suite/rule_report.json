@@ -1,0 +1,9 @@
+{
+  "skill": "02",
+  "checked_at": "2026-09-05T11:35:11.568877+00:00",
+  "total_rules": 50,
+  "total_findings": 0,
+  "findings": [],
+  "verdict": "PASS",
+  "routing": "PASS -> 规则可进入融合；REJECT -> 重新抽取被标记的规则"
+}

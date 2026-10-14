@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 开发计划与方案 v1.0 · 评估报告</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1c2430; --muted:#68738a;
+    --line:#e4e8ef; --blue:#2563eb; --blue-bg:#eef4ff;
+    --red:#dc2626; --red-bg:#fef2f2; --amber:#d97706; --amber-bg:#fffbeb;
+    --green:#059669; --green-bg:#ecfdf5; --slate-bg:#f1f5f9;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;font-size:15px}
+  .wrap{max-width:960px;margin:0 auto;padding:40px 24px 64px}
+  header.top{border-bottom:2px solid var(--line);padding-bottom:20px;margin-bottom:28px}
+  .kicker{font-size:12px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;margin-bottom:6px}
+  h1{font-size:26px;font-weight:700;letter-spacing:-.01em}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .meta span{background:var(--slate-bg);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12.5px;color:var(--muted)}
+  section{margin-bottom:34px}
+  h2{font-size:18px;font-weight:700;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--blue)}
+  .verdict{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;border-radius:14px;padding:24px 26px;display:flex;flex-wrap:wrap;gap:20px;align-items:center}
+  .verdict .badge{background:#22c55e;color:#06210f;font-weight:700;border-radius:8px;padding:6px 14px;font-size:15px;white-space:nowrap}
+  .verdict .txt{flex:1;min-width:260px;font-size:14.5px;color:#dbe4ff}
+  .verdict .txt strong{color:#fff}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+  .metric{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center}
+  .metric .num{font-size:30px;font-weight:800;letter-spacing:-.02em}
+  .metric .lbl{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .m-red .num{color:var(--red)} .m-amber .num{color:var(--amber)} .m-blue .num{color:var(--blue)} .m-green .num{color:var(--green)}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;font-size:13.5px;margin-bottom:12px}
+  th{background:var(--slate-bg);text-align:left;padding:10px 12px;font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;border-radius:6px;padding:2px 9px;font-size:12px;font-weight:700;white-space:nowrap}
+  .t-p0{background:var(--red-bg);color:var(--red);border:1px solid #fecaca}
+  .t-p1{background:var(--amber-bg);color:var(--amber);border:1px solid #fde68a}
+  .t-p2{background:var(--slate-bg);color:var(--muted);border:1px solid var(--line)}
+  .issue{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .issue.p0{border-left:4px solid var(--red)}
+  .issue.p1{border-left:4px solid var(--amber)}
+  .issue.p2{border-left:4px solid #94a3b8}
+  .issue h3{font-size:15.5px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .issue .body{font-size:13.5px;color:#3a4457}
+  .issue .row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .issue .row .k{color:var(--muted);font-size:12.5px;font-weight:600;white-space:nowrap;min-width:52px}
+  .issue .row .v{font-size:13.5px}
+  .ev{background:var(--slate-bg);border-radius:6px;padding:2px 8px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:#4b5563}
+  .timeline{margin-top:10px}
+  .step{display:flex;gap:14px;position:relative;padding-bottom:18px}
+  .step::before{content:"";position:absolute;left:15px;top:34px;bottom:0;width:2px;background:var(--line)}
+  .step:last-child::before{display:none}
+  .marker{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;z-index:1}
+  .marker.warn{background:var(--amber)} .marker.danger{background:var(--red)}
+  .step .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;flex:1}
+  .step .card .t{font-weight:700;font-size:14px;margin-bottom:4px}
+  .step .card .d{font-size:13px;color:#3a4457}
+  .pros{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+  .pro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .pro .t{font-weight:700;font-size:14px;color:var(--green);margin-bottom:6px}
+  .pro .d{font-size:13px;color:#3a4457}
+  .rec{background:var(--blue-bg);border:1px solid #c7dbff;border-radius:12px;padding:18px 20px}
+  .rec ol{margin-left:20px;font-size:13.5px;color:#24304a}
+  .rec li{margin-bottom:8px}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+  .note{font-size:12.5px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">Assessment Report · 开发计划评估</div>
+  <h1>QualityForge 开发计划与方案 v1.0 · 评估报告</h1>
+  <div class="meta">
+    <span>评估日期：2026-08-17</span>
+    <span>评估对象：开发计划与方案 v1.0 + M1 实施计划 v1.0</span>
+    <span>核验方式：计划全文精读 + 代码仓库 / Makefile / 治理文档 / 评审报告交叉验证</span>
+  </div>
+</header>
+
+<section>
+  <div class="verdict">
+    <div class="badge">结论：通过（附整改项）</div>
+    <div class="txt">计划与 Stage 5 VERDICT、需求全量评审的治理脉络高度一致，范围控制务实、验收强调证据、反「假关闭」机制清晰，是<strong>治理成熟度很高的开发计划</strong>。但存在 <strong>2 项 P0</strong>：前端测试未接入质量门禁、需求评审放行条件（6 项 Major 整改方案冻结）未完整承接，须在动工前裁决；另有 3 项 P1 需在对应里程碑开工前闭环。</div>
+  </div>
+  <div class="metrics">
+    <div class="metric m-green"><div class="num">8.2/10</div><div class="lbl">综合评分</div></div>
+    <div class="metric m-red"><div class="num">2</div><div class="lbl">P0 · 动工前裁决</div></div>
+    <div class="metric m-amber"><div class="num">3</div><div class="lbl">P1 · 里程碑开工前闭环</div></div>
+    <div class="metric m-blue"><div class="num">5</div><div class="lbl">P2 · 执行期跟踪</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>评估维度评分</h2>
+  <table>
+    <tr><th>维度</th><th>评分</th><th>依据</th></tr>
+    <tr><td>治理一致性与需求承接</td><td>8/10</td><td>逐条对照 Stage 5 VERDICT C1–C8，共识全部落位；但需求评审「放行三条件」仅承接了第一条（6 开放决策），6 Major 整改方案冻结缺失</td></tr>
+    <tr><td>范围控制与务实性</td><td>9/10</td><td>「明确不做」清单带重启条件（WebSocket / LLM-judge / 调度框架）；86 个 operation 增量实现不追全量；分支 A/B 条件明确</td></tr>
+    <tr><td>可执行性与门禁闭环</td><td>7/10</td><td>PR 门禁命令具体、TDD 纵向切片清晰；但前端测试（vitest/Playwright）未接入 make test，门禁承诺不完整</td></tr>
+    <tr><td>风险管理</td><td>8/10</td><td>风险与里程碑前置债绑定，反「假关闭」双重落账回应了 L1 教训；但风险无概率/影响分级与负责人</td></tr>
+    <tr><td>验收标准质量</td><td>9/10</td><td>证据验收而非日历验收；V1 总验收六类证据齐备；指标只建基线不承诺目标值，符合 22 号文档 §6</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>问题清单（共 10 项，已合并去重）</h2>
+
+  <div class="issue p0">
+    <h3><span class="tag t-p0">P0-1</span>前端测试未接入质量门禁，PR 级门禁承诺不成立</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">计划 §3.4 定义 PR 门禁为 <span class="ev">make lint && make contract && make test</span>；WP-2 明确要求编写 vitest 组件测试与 Playwright 冒烟（审核台 12 项信息、禁用原因渲染）。但 Makefile 的 <span class="ev">test</span> target 仅覆盖「后端测试 + Skill eval + Agent 治理校验」，<span class="ev">frontend</span> target 只是类型检查与构建——计划 §3.4 承诺的本地 PR 门禁链不含任何前端测试；CI 的 frontend.yml 虽已跑 vitest，但 Playwright 冒烟在 make 与 CI 均无落点（此表述经协调人 qoder 复核修正，2026-08-17）。M2 是前端最重的里程碑（7 类看板视图 + 8 模块导航），其回归防线在计划承诺的门禁链中缺位。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">Makefile test/frontend target</span>；<span class="ev">.github/workflows/frontend.yml（vitest 已在 CI，Playwright 无）</span>；<span class="ev">计划 §3.4、M1 WP-2</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">Makefile 增加 <span class="ev">test-frontend</span>（vitest run）并纳入 test 聚合或 PR 门禁清单；§3.5 的 GitHub Actions「frontend」workflow 明确含 vitest + Playwright 步骤，门禁文字同步修订。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p0">
+    <h3><span class="tag t-p0">P0-2</span>需求评审「放行三条件」只承接了一条，6 Major 整改方案冻结未落位</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">需求全量评审报告 L265–267 的 PASS_WITH_ACTIONS 放行条件是三条：① 关闭 6 项开放决策（计划 M1 WP-3 ✓）；② 3 项高风险形成书面对策并纳入版本规划（R2 由分支 A+M5 承接、R3 由 C1/C3 承接，但未在计划中显式标注为「R1/R2/R3 对策落位清单」）；③ 冻结 6 项 Major（D1–D6）整改方案——计划全文无此条目，D1 命名漂移「机械重命名」完全缺失。计划同时引用评审报告与 VERDICT 为依据，放行条件未完整挂账即存在审核闭环缺口。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">需求全量评审报告 L82 / L265–267</span>；对照 <span class="ev">计划 §一/§四/§五</span>（无 D1–D6 冻结条目）</span></div>
+      <div class="row"><span class="k">建议</span><span class="v">M1 WP-3 扩展为「放行三条件关闭」：6 开放决策 + R1–R3 对策落位清单（引用计划对应章节即可）+ D1–D6 整改方案冻结（可只冻结方案、执行排入后续里程碑），并请用户对 O1（定性成功标准）明确裁决。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p1">
+    <h3><span class="tag t-p1">P1-1</span>现有测试基线薄弱，M1 改造前缺少 characterization 测试</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">当前 22 个已实现 operation 仅有 15 个测试函数（5 个文件），planning_workflow 的「生成→审核→批改→新版本→二次复核」核心链路覆盖极薄。M1 WP-1 要直接改造该服务的退回分支与版本递增逻辑，TDD 只约束新代码，改造前的既有行为没有基线测试保护，回归风险高。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">backend/tests/ 5 文件 15 用例（grep 实测）</span>；<span class="ev">M1 实施计划 WP-1</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">WP-0 增补既有 planning 链路的 characterization 测试（先固化现状行为再改造）；同时给 auth/planning 现有 22 个 operation 的 happy-path 补一轮契约对齐测试。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p1">
+    <h3><span class="tag t-p1">P1-2</span>M2 前端工作量与现状鸿沟未被估算，单人力假设未做容量检验</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">计划 §六.3 默认「单人 + AI 结对」，但 M2 要求从当前单页审核工作台（App.tsx + 少量组件）构建 7 类看板视图 + 八模块导航骨架 + 路由体系，是纯新增的规模化前端工程。计划对此没有任何规模/复杂度估算，也没有里程碑间的吞吐校验；验收按证据不按日历是合理设计，但「可行但时间未知」与「工作量超单人力容量」需要区分。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">frontend/src/ 仅 App.tsx、api.ts、types.ts、statusBadge.ts（实测）</span>；对照 <span class="ev">计划 §四 M2 验收 1–2</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">M2 开工前的 writing-plans 输出中增加 T-shirt 规模估算（S/M/L）与容量声明（如「M2 预计 N 个 WP，按 2 天/WP 节奏」）；若超容量，先收缩 M2 范围为「1 类视图 + 导航骨架」的纵向切片，其余视图递延。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p1">
+    <h3><span class="tag t-p1">P1-3</span>分支 A「并行开工」与单人结对假设冲突，无执行主体划分</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">计划 §二规定分支 A 自 M1 起并行开工（Provider 四项接口 + 坏 provider 防御测试），但 §六.3 的人力假设是单人 + AI 结对。单人力下「并行线」实质是串行抢占——谁来写坏 provider 防御测试、验收归 M5 意味着交付压力后置堆积，存在 M5 前突击风险。计划未定义并行线的执行主体（AI 主导 + 人审？）与节奏约束。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">计划 §二「并行线」vs §六.3「单人 + AI 结对」</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">明确分支 A 为「AI 主导实现 + 里程碑末人审合入」的低抢占模式；或规定分支 A 的 WP 优先队列位置（如每里程碑完成主链切片后投入固定比例）；M5 前置 1 个里程碑（M4 起）冻结分支 A 代码，避免验收突击。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p2">
+    <h3><span class="tag t-p2">P2-1</span>黄金集样本增长无速率跟踪，统计阈值可能长期不启用</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">评估集样本增长源＝Stage 4 人审决定（N=10 起步，≥30 启用 85% 统计阈值）。若试点审核量低，样本积累缓慢，M5 之后评估将长期停留在「结构判分零容忍」单一形态。计划未定义样本积累速率的跟踪机制或达量时间观察点。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">计划 §3.3-B 末尾、§四 M5</span>；<span class="ev">VERDICT C8</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">在 M3/M4 证据包中增加「回放样本数」计数项，每里程碑报告一次；样本数长期停滞时在墙上触发讨论（是否引入受控人工构造负例）。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p2">
+    <h3><span class="tag t-p2">P2-2</span>验收标准大量外链 GWT/章节编号，权威载体不自包含</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">§四 M1–M4 的验收标准多处引用 GWT-5.5.12-2/3、05 §5.13.6、Page-Map §3 等外部编号，计划自称「权威载体」但验收语义依赖多文档跳转拼装。文档版本若漂移，验收解读存在分歧空间。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">计划 §四 M1 验收 1、M3 验收 2、M4 验收 1</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">每个里程碑验收证据包附「验收口径速查」——把被引用条目的关键句摘录进验收记录，引用与摘录并存，避免跳转解读。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p2">
+    <h3><span class="tag t-p2">P2-3</span>「commit 哈希 + CHANGELOG 双落账」实际是双提交闭环，模式未书面化</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">git log 实测显示既有惯例为「内容提交 → 哈希回填提交」两段式（如「批次二十七回填：CHANGELOG 哈希回填 f98f9d5」），每条关闭至少 2 个 commit。计划 §3.5 只写了「双重落账」的结果要求，未描述这一两段式操作模式与门禁时序（回填提交本身是否也要过三重门禁）。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">git log --oneline（回填提交模式）</span>；<span class="ev">计划 §3.5</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">§3.5 补一段「双落账操作序」：内容提交（过门禁）→ 回填提交（docs-only，免全量测试但过 lint）→ PR 合入。把既有惯例固化为明文，减少每次关闭的决策成本。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p2">
+    <h3><span class="tag t-p2">P2-4</span>M3 三条隔离验证用例缺威胁模型定义</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">§四 M3 验收 3 只写「agent 无法绕过 digest 直写证据状态」，未定义绕过的具体路径集合（直写 sqlite_store？伪造 contentDigest 字段？重放旧摘要？）。到 M3 实施计划再补，可能造成测试设计口径漂移。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">计划 §四 M3 验收 3</span>；<span class="ev">VERDICT §六.2（收敛条件）</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">M3 开工前的实施计划中列明 3 条用例各自对应的绕过向量与预期 fail-closed 行为，作为测试设计输入。</span></div>
+    </div>
+  </div>
+
+  <div class="issue p2">
+    <h3><span class="tag t-p2">P2-5</span>V1 总验收「运行类」证据在单机 SQLite 形态下未定义最薄口径</h3>
+    <div class="body">
+      <div class="row"><span class="k">问题</span><span class="v">§四 V1 总验收要求六类证据中含运行（容量/延迟/恢复/成本/可观测）。其中「恢复」在 SQLite 单机 + 进程内串行形态下的最薄证据形态（如异常退出后数据完整性校验？）未定义；C3 只承诺「并发回归与最薄性能基线」，恢复类证据无承接处。</span></div>
+      <div class="row"><span class="k">证据</span><span class="v"><span class="ev">计划 §四 V1 总验收 3</span>；对照 <span class="ev">§二 并行线（C3）</span></span></div>
+      <div class="row"><span class="k">建议</span><span class="v">在 C3 改造的实施计划中同时定义「最薄恢复证据」口径（如进程强杀后重启的完整性校验用例），避免总验收时临时造证据。</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>里程碑风险焦点</h2>
+  <div class="timeline">
+    <div class="step">
+      <div class="marker danger">M1</div>
+      <div class="card">
+        <div class="t">需求与审核收口 · 前置债最重</div>
+        <div class="d">风险：P0-1（门禁不含前端测试，WP-2 验收失效）+ P0-2（放行条件未完整挂账）+ P1-1（改造前无基线测试）。动工前须先裁决 P0-1/P0-2。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="marker warn">M2</div>
+      <div class="card">
+        <div class="t">看板工作化 · 工作量最重</div>
+        <div class="d">风险：P1-2（单页前端 → 7 视图 + 8 导航的规模鸿沟未估算）。开工前 writing-plans 须做规模估算与范围收缩预案。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="marker">M3</div>
+      <div class="card">
+        <div class="t">执行与证据 · 安全边界最硬</div>
+        <div class="d">风险：P2-4（隔离验证威胁模型未定义）；C3 存储改造是硬前置，须在 M3 前完成并有并发回归。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="marker">M4</div>
+      <div class="card">
+        <div class="t">分析与报告 · 口径最易混</div>
+        <div class="d">风险：五类覆盖率口径互不推导（D5 背景）；P2-1（样本积累速率开始可观测）。</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="marker warn">M5</div>
+      <div class="card">
+        <div class="t">真实模型准入 · 依赖后置堆积</div>
+        <div class="d">风险：P1-3（分支 A 并行线与单人假设冲突，交付可能后置突击）；P2-1（统计阈值启用依赖样本 ≥30）。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>计划的突出优点</h2>
+  <div class="pros">
+    <div class="pro"><div class="t">治理脉络完整闭合</div><div class="d">逐条承接 VERDICT C1–C8 与三项用户裁决，硬约束写明「违反即 fail-closed」；里程碑×主链×验收证据×前置债四维映射清晰。</div></div>
+    <div class="pro"><div class="t">范围纪律强</div><div class="d">「明确不做」六项全部带重启条件而非永久否决；86 个 operation 按需增量实现，拒绝横铺；指标只建基线不承诺目标值，符合防口号化设计。</div></div>
+    <div class="pro"><div class="t">反「假关闭」机制具体</div><div class="d">commit 哈希 + CHANGELOG 双落账直击 L1 教训（8 项假关闭仅 1 项真关闭）；验收按证据不按日历；禁止未提交改动声称已修复。</div></div>
+    <div class="pro"><div class="t">评估闸门双层互补且务实</div><div class="d">确定性层归 make test、LLM 判分层归 make eval，判分 v0 用 promptfoo icontains，本轮零 LLM-judge——与既有工具链实证（promptfooconfig.yaml 已存在）吻合。</div></div>
+    <div class="pro"><div class="t">Git 规范可落地</div><div class="d">主干 + 短命分支、Conventional Commits、≤400 行/PR、force-push 禁令、标签与 CHANGELOG 互引闭环，均与仓库现状（单一 main、批次化 CHANGELOG）兼容。</div></div>
+    <div class="pro"><div class="t">事实基线准确</div><div class="d">22/108 operation、30 Skill 原型、0 Blocker/6 Major/3 高风险、三项前置裁决状态等关键数字与仓库实测一致，未发现夸大或粉饰。</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>建议的下一步（按优先级）</h2>
+  <div class="rec">
+    <ol>
+      <li><strong>动工前裁决 P0-2</strong>：把需求评审放行三条件完整挂入 M1（扩展 WP-3 为「放行条件关闭包」，D1–D6 冻结方案 + R1–R3 对策落位清单），O1 提请用户裁决。</li>
+      <li><strong>动工前关闭 P0-1</strong>：Makefile 增 test-frontend 并纳入 PR 门禁；§3.5 CI workflow 定义同步修订；计划升版 v1.1 记录这两处修订。</li>
+      <li><strong>M1 内补 P1-1</strong>：WP-0 增加既有 planning 链路 characterization 测试，先固化现状行为再进入 WP-1 改造。</li>
+      <li><strong>M2 开工前处理 P1-2</strong>：writing-plans 输出规模估算与容量声明；超容量时收缩为最小纵向切片。</li>
+      <li><strong>M1 内处理 P1-3</strong>：在 §二 并行线补充分支 A 的执行主体与低抢占节奏，M4 起冻结分支 A 变更。</li>
+      <li><strong>P2 五项随里程碑执行跟踪</strong>：样本积累计数（M3 起每里程碑报告）、验收口径速查（每个验收证据包）、双落账操作序书面化（§3.5 补段）、M3 威胁模型（实施计划输入）、最薄恢复证据口径（C3 实施计划）。</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  评估人：产品设计师 ｜ 评估方法：计划全文精读 + 仓库实测交叉验证（operation 数、测试数、Makefile target、git log、评审报告原文对照）
+</footer>
+
+</div>
+</body>
+</html>

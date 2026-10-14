@@ -1,0 +1,8 @@
+{
+  "skill_name": "ui-automation-generator",
+  "evals": [
+    {"id": 1, "name": "accept-pom-locator-reference", "prompt": "校验一个使用已注册 locator 和显式 wait 策略的 UI script。", "expected_output": "PASS;Page Object 边界、locator 引用和 wait 均合法。", "files": []},
+    {"id": 2, "name": "reject-inline-xpath", "prompt": "校验一个包含内联绝对 XPath 字面量的 UI script。", "expected_output": "REJECT;locator 必须注册并版本化,而不是内嵌在测试逻辑里。", "files": []},
+    {"id": 3, "name": "reject-missing-wait", "prompt": "校验一个 wait 策略为空的交互。", "expected_output": "REJECT;每个交互都必须有确定性的 wait 策略。", "files": []}
+  ]
+}

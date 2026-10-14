@@ -1,0 +1,21 @@
+{
+  "$comment": "Fixture DAG 契约。在任何构建运行前由 scripts/dag_check.py 校验。PASS 输出中的 topological_order 即构建顺序；teardown 为其逆序（LIFO）。",
+  "dag_id": "<唯一 DAG 标识符>",
+  "baseline_refs": ["本图可引用的 baseline id，用于版本关联"],
+  "nodes": [
+    {
+      "node_id": "<图内唯一>",
+      "creates": "<本节点构建的内容：entity + instance>",
+      "depends_on": ["必须先完成的其他 node_id"],
+      "teardown": "<逆向操作：delete / stop / rollback>",
+      "scope": "session | module | function",
+      "type": "Static | Dynamic | Hybrid",
+      "baseline_ref": "<仅 Static 使用：引用的 baseline 实例>"
+    }
+  ],
+  "$checker_codes": [
+    "CYCLE_DETECTED", "MISSING_TEARDOWN", "BASELINE_NOT_DECLARED",
+    "DANGLING_DEPENDENCY", "MISSING_NODE_ID", "DUPLICATE_NODE_ID",
+    "MISSING_SCOPE", "INVALID_SCOPE", "MISSING_TYPE", "INVALID_TYPE"
+  ]
+}

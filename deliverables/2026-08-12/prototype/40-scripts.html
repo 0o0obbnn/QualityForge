@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>自动化工作台 · QualityForge</title>
+<link rel="stylesheet" href="assets/qf-tokens.css">
+<link rel="stylesheet" href="assets/qf-components.css">
+</head>
+<body data-page="automation">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="mark"><svg viewBox="0 0 16 16" width="15" height="15" fill="none"><path d="M3 12.5 8 3l5 9.5H3Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></span>QualityForge</div>
+    <div class="nav-group">工作</div>
+    <button class="nav-item" data-nav="board" onclick="location.href='10-board.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2.5" width="12" height="11" rx="2"/><path d="M2 6h12M5.5 9h2M5.5 11.5h4"/></svg>任务看板</button>
+    <div class="nav-group">测试</div>
+    <button class="nav-item" data-nav="knowledge" onclick="location.href='20-sources.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3l2 1.5"/></svg>知识与契约</button>
+    <button class="nav-item" data-nav="planning" onclick="location.href='30-strategies.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 4h10M3 8h10M3 12h6"/><circle cx="13" cy="12" r="1.6"/></svg>测试规划与设计</button>
+    <button class="nav-item active" data-nav="automation" onclick="location.href='40-scripts.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12.5V3.5h8v9H4Z"/><path d="M6 6h4M6 8.5h4"/></svg>自动化工作台</button>
+    <button class="nav-item" data-nav="execution" onclick="location.href='50-execution-plans.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2.5 13.5h11M4 13.5V8l4-3 4 3v5.5"/></svg>测试执行</button>
+    <button class="nav-item" data-nav="quality" onclick="location.href='60-analyses.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/><path d="M8 7v3M8 12.2v.3"/></svg>质量中心</button>
+    <div class="nav-group">平台</div>
+    <button class="nav-item" data-nav="agent" onclick="location.href='70-capabilities.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.4"/><path d="M8 2.8v2M8 11.2v2M2.8 8h2M11.2 8h2"/></svg>AI Agent 中心</button>
+    <button class="nav-item" data-nav="platform" onclick="location.href='80-workspaces.html'"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2"/></svg>平台管理</button>
+  </aside>
+  <header class="topbar">
+    <div class="ctx"><button class="ctx-btn"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 5.5 8 2l6 3.5v8h-4.5V10h-3v3.5H2v-8Z"/></svg>示例项目 · 结算中心</button><span class="ctx-sep">/</span><button class="ctx-btn">Release R-2026.08</button></div>
+    <div class="spacer"></div>
+    <div class="avatar"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16"><circle cx="8" cy="5.6" r="2.6"/><path d="M3.5 13.5c.6-2.4 2.4-3.6 4.5-3.6s3.9 1.2 4.5 3.6"/></svg></div>
+  </header>
+  <main>
+    <div class="page-head">
+      <div><h1>自动化工作台</h1><div class="sub">AutomationScript 版本化 + 用例绑定 + 代码检查 · 原型演示数据</div></div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" onclick="location.href='42-assets.html'">配套资产</button>
+      <button class="btn btn-primary" onclick="qf.openModal('m-gen-script')"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 3v10M3 8h10"/></svg>生成脚本</button>
+    </div>
+
+    <div class="panel">
+      <div class="phead"><h2>脚本列表</h2><span class="hint">Web / API · 版本化正式产出物</span></div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>脚本</th><th>类型</th><th>版本</th><th>绑定用例</th><th>检查</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr onclick="location.href='41-code-review.html'"><td><div class="t-title">settlement_api_flow.py</div><div class="t-sub">pytest · Python 3.12 · 依赖锁 2f81…</div></td><td><span class="type-tag">API</span></td><td class="mono">V2</td><td>8 个 TestCaseVersion</td><td><span class="badge b-ok">全部通过</span></td><td><span class="status st-review"><span class="d"></span>待代码审核</span></td></tr>
+          <tr onclick="location.href='41-code-review.html'"><td><div class="t-title">refund_flow_test.py</div><div class="t-sub">pytest · Python 3.12 · 依赖锁 7c19…</div></td><td><span class="type-tag">API</span></td><td class="mono">V1</td><td>5 个 TestCaseVersion</td><td><span class="badge b-warn">2 项警告</span></td><td><span class="status st-backlog"><span class="d"></span>草稿</span></td></tr>
+          <tr onclick="location.href='41-code-review.html'"><td><div class="t-title">checkout_page_ui.py</div><div class="t-sub">Selenium · Python 3.12</div></td><td><span class="type-tag">Web</span></td><td class="mono">V3</td><td>12 个 TestCaseVersion</td><td><span class="badge b-ok">全部通过</span></td><td><span class="status st-done"><span class="d"></span>已批准</span></td></tr>
+        </tbody>
+      </table>
+        <div class="empty-note" hidden><div class="en-title">暂无脚本</div>点击「生成脚本」创建第一个自动化脚本</div>
+      </div>
+    </div>
+
+    <div class="grid g3 mt-6">
+      <div class="card"><h2 style="font-size:14px;margin-bottom:8px">用例绑定</h2><p class="small muted">1 个脚本版本可覆盖多个 TestCaseVersion;1 个用例可有多种自动化实现。绑定带 coverageType 标注。</p><button class="btn btn-sm btn-ghost mt-3" onclick="qf.openModal('m-bind')">管理绑定</button></div>
+      <div class="card"><h2 style="font-size:14px;margin-bottom:8px">代码检查</h2><p class="small muted">格式 / 类型 / 静态安全 / 依赖 / 契约绑定 / 受控试跑。检查 PASS 不替代代码批准。</p><button class="btn btn-sm btn-ghost mt-3" onclick="qf.openModal('m-checks')">查看检查项</button></div>
+      <div class="card"><h2 style="font-size:14px;margin-bottom:8px">Secret 隔离</h2><p class="small muted">脚本只引用 secretRef;日志与 Trace 不出现明文。未授权 Secret 时生成模板但不试跑。</p><button class="btn btn-sm btn-ghost mt-3" onclick="qf.toast('Secret 管理见平台管理(演示)','info')">查看规范</button></div>
+    </div>
+  </main>
+</div>
+
+<!-- 生成脚本弹窗 -->
+<div class="modal" id="m-gen-script" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>生成脚本草稿</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <form id="genScriptForm" novalidate>
+      <div class="modal-body">
+        <div class="modal-tag">触发入口: 「生成脚本」按钮</div>
+        <div class="field"><label>脚本名称 <span class="req">*</span></label><input class="input" required placeholder="例如: settlement_api_flow"><div class="err">请输入脚本名称</div></div>
+        <div class="field"><label>自动化类型</label><select class="input"><option>API</option><option>Web</option></select></div>
+        <div class="field"><label>绑定用例</label><select class="input"><option>已批准用例包 · 支付流程 (8 条)</option><option>手动选择</option></select></div>
+        <label class="check"><input type="checkbox" checked> 自动生成断言与契约绑定</label>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-ghost" onclick="qf.closeModal('m-gen-script')">取消</button>
+        <button type="submit" class="btn btn-primary">生成草稿</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 绑定管理弹窗 -->
+<div class="modal" id="m-bind" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box wide">
+    <div class="modal-head"><h3>用例绑定管理</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「管理绑定」按钮 · 多对多绑定编辑</div>
+      <div class="table-scroll">
+      <table>
+        <thead><tr><th>脚本版本</th><th>用例版本</th><th>覆盖类型</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">settlement_api_flow V2</td><td class="mono">TC-0221 V3</td><td><span class="badge b-acc">SMOKE</span></td><td><button class="btn btn-sm btn-ghost" onclick="qf.toast('已移除绑定(演示)','info')">移除</button></td></tr>
+          <tr><td class="mono">settlement_api_flow V2</td><td class="mono">TC-0222 V2</td><td><span class="badge b-sec">REGRESSION</span></td><td><button class="btn btn-sm btn-ghost" onclick="qf.toast('已移除绑定(演示)','info')">移除</button></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <button class="btn btn-sm btn-ghost mt-3" onclick="qf.toast('添加绑定表单(演示)','info')">+ 添加绑定</button>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-bind')">完成</button></div>
+  </div>
+</div>
+
+<!-- 检查项弹窗 -->
+<div class="modal" id="m-checks" role="dialog" aria-modal="true">
+  <div class="mask"></div>
+  <div class="modal-box">
+    <div class="modal-head"><h3>代码检查项</h3><button class="modal-close" aria-label="关闭"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 4 8 8M12 4l-8 8"/></svg></button></div>
+    <div class="modal-body">
+      <div class="modal-tag">触发入口: 「查看检查项」按钮</div>
+      <div class="checks">
+        <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>格式与静态检查 (ruff)<span class="verdict">PASS</span></div>
+        <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>依赖锁与安全扫描<span class="verdict">PASS</span></div>
+        <div class="check pass"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="m3 8.5 3 3 7-7"/></svg></span>契约绑定一致性<span class="verdict">PASS</span></div>
+        <div class="check review"><span class="ic"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2.5 13.5 13.5h-11L8 2.5Z"/></svg></span>受控试跑 · 2 项警告<span class="verdict">REVIEW</span></div>
+      </div>
+      <p class="small muted mt-3">阻断检查失败不能人工备注放行。</p>
+    </div>
+    <div class="modal-foot"><button class="btn btn-primary" onclick="qf.closeModal('m-checks')">关闭</button></div>
+  </div>
+</div>
+
+<script src="assets/qf-shell.js"></script>
+<script>
+  qf.bindForm('genScriptForm', function () { qf.closeModal('m-gen-script'); qf.toast('脚本草稿已生成,进入代码审核(演示)','ok'); });
+</script>
+</body>
+</html>

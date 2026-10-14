@@ -1,0 +1,40 @@
+{
+  "skill_name": "coverage-analyzer",
+  "evals": [
+    {
+      "id": 1,
+      "name": "rejected-assertions-cannot-inflate-coverage",
+      "prompt": "一个批次包含 1 条 PASS 和 3 条 REJECT 的 assertion-verifier verdict。计算 assertion coverage 和 gate verdict。",
+      "expected_output": "Assertion 分子=1、分母=4、coverage=0.25、reject=3,assertion verdict 为 FAIL,整体 GATE_FAILURE。REJECT 不贡献已验证分子,但仍是分母责任,并独立阻断 assertion gate。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "missing-verdict-is-unverified",
+      "prompt": "存在四条必需的 assertion,但 verifier 结果只有三条:2 条 PASS、1 条 REPAIR。计算 assertion coverage。",
+      "expected_output": "缺失的 assertion 视为未验证。分子=2、分母=4、unverified=1、repair=1、coverage=0.5。缺失的证据不会从分母中消失。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "empty-dimension-is-not-perfect-coverage",
+      "prompt": "物化 snapshot 中没有任何 rule、scenario、transition 或 assertion。该 phase 能通过覆盖率吗?",
+      "expected_output": "不能。每个维度都是 0/0 -> 0.0,无论数值阈值如何都不通过。只有经过评审的显式 not_applicable_dimensions 声明才能跳过空维度;否则空证据属于物化缺陷或上游契约缺陷。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "name": "reject-unbound-or-duplicate-verdict-evidence",
+      "prompt": "一条必需的 assertion 没有唯一 verdict,同时存在多余的 PASS 行和重复的 verdict ID。",
+      "expected_output": "GATE_FAILURE。多余或重复的 verdict 行属于证据错误,不贡献已验证分子,也不能虚增那条必需 assertion 的覆盖率。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "name": "compare-before-rounding",
+      "prompt": "精确的 assertion coverage 为 2124/2500=0.8496,阈值为 0.85。显示值四舍五入后为 0.850。",
+      "expected_output": "FAIL,因为 gate 用未舍入的比值 0.8496 与 0.85 比较。保留三位小数的舍入仅用于展示。",
+      "files": []
+    }
+  ]
+}

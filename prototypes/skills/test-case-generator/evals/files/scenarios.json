@@ -1,0 +1,6 @@
+{
+  "scenarios": [
+    {"scenario_id": "S-pay-normal", "req_id": "Q-pay", "rule_id": "R-pay-001"},
+    {"scenario_id": "S-refund-after-ship", "req_id": "Q-refund", "rule_id": "R-refund-001"}
+  ]
+}

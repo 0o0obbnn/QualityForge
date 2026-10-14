@@ -1,0 +1,22 @@
+{
+  "review_id": "RQR-001",
+  "source_ids": ["prd.md"],
+  "assessments": [
+    {"dimension": "ambiguity", "status": "FINDING", "rationale": "发现主观的时效性措辞。", "finding_ids": ["RQF-001"]},
+    {"dimension": "consistency", "status": "CLEAR", "rationale": "所提供的来源中未发现相互冲突的陈述。", "finding_ids": []},
+    {"dimension": "testability", "status": "CLEAR", "rationale": "已陈述可观察的结果。", "finding_ids": []},
+    {"dimension": "completeness", "status": "CLEAR", "rationale": "已对参与者、触发条件、结果和异常进行评估。", "finding_ids": []},
+    {"dimension": "nfr_measurability", "status": "CLEAR", "rationale": "不存在范围内的 NFR 陈述。", "finding_ids": []},
+    {"dimension": "role_permission", "status": "CLEAR", "rationale": "不存在角色敏感的需求。", "finding_ids": []}
+  ],
+  "findings": [
+    {
+      "finding_id": "RQF-001",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": ["prd.md§4"],
+      "evidence": "系统应及时响应",
+      "question": "适用的可度量响应时间目标是多少？"
+    }
+  ]
+}

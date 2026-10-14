@@ -1,0 +1,10 @@
+{
+  "$comment": "UI 自动化脚本契约。由 scripts/ui_check.py 校验。",
+  "locator_refs": ["引用的 locator id"],
+  "known_locator_ids": ["locator 库中的全部 id"],
+  "interactions": [{"interaction_id": "", "wait_strategy": "visible|clickable|network_idle|custom", "code": ""}],
+  "test_logic_in_page_object": false,
+  "page_object_in_test": false,
+  "code": "生成的 Playwright/Selenium 代码",
+  "$codes": ["INLINE_XPATH_LITERAL", "MISSING_WAIT_STRATEGY", "POM_VIOLATION", "LOCATOR_NOT_IN_LIBRARY"]
+}

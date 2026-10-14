@@ -1,0 +1,21 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [{"req_id": "Q-pay"}, {"req_id": "Q-refund"}],
+  "business_rules": [{"rule_id": "R-pay-001"}, {"rule_id": "R-refund-001"}],
+  "interface_contracts": [
+    {"contract_id": "IFC-1", "endpoint": "/orders", "method": "POST"},
+    {"contract_id": "IFC-2", "endpoint": "/refunds", "method": "POST"}
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-ORD",
+      "entity_id": "ENT-ORD",
+      "states": ["PENDING", "PAID", "SHIPPED", "REFUNDED"],
+      "transitions": [
+        {"from": "PENDING", "to": "PAID"},
+        {"from": "PAID", "to": "SHIPPED"},
+        {"from": "SHIPPED", "to": "REFUNDED"}
+      ]
+    }
+  ]
+}

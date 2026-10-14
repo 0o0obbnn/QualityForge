@@ -1,0 +1,26 @@
+{
+  "skill_name": "requirement-quality-gate",
+  "evals": [
+    {
+      "id": 1,
+      "name": "reject-unassessed-dimension",
+      "prompt": "评审的 assessment 中遗漏了 role_permission。它能进入 IR fusion 吗?",
+      "expected_output": "REJECT 并给出 MISSING_QUALITY_DIMENSION。缺失评估不等于 CLEAR。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "reject-downgraded-conflict",
+      "prompt": "一个 CROSS_SOURCE_CONFLICT 被标记为 REVIEW 以规避阻断。",
+      "expected_output": "REJECT 并给出 INVALID_SEVERITY_FOR_CODE。跨源冲突不得降级到 REJECT 以下。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "review-evidence-bound-ambiguity",
+      "prompt": "所有维度均已评估;一条 AMBIGUOUS_LANGUAGE finding 带有声明的 source ref、证据和澄清问题。",
+      "expected_output": "PASS_WITH_REVIEW 并挂起等待澄清。不得发明阈值。",
+      "files": []
+    }
+  ]
+}

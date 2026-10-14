@@ -1,0 +1,35 @@
+{
+ "$comment": "校验报告契约。由 IR 校验步骤针对每个 IR 草稿产出。verdict 驱动路由：PASS -> 发布到 Traceability Graph，L2+ 可消费；PASS_WITH_REVIEW -> 发布并附加 skill28_review_tasks；REJECT -> 扣留，路由回 IR 编译步骤，L2+ 不得消费。",
+ "skill": "05",
+ "checked_at": "<ISO-8601 UTC>",
+ "ir_version_seen": "1.0.0",
+ "verdict": "PASS | PASS_WITH_REVIEW | REJECT",
+ "findings_by_family": {
+ "schema": 0,
+ "provenance": 0,
+ "confidence": 0,
+ "conflict": 0,
+ "reachability": 0,
+ "entity": 0
+ },
+ "total_findings": 0,
+ "reject_findings": 0,
+ "review_findings": 0,
+ "findings": [
+ {
+ "family": "schema | provenance | confidence | conflict | reachability | entity",
+ "code": "参见 references/validation_rules.md#finding-codes",
+ "severity": "REJECT | REVIEW",
+ "target": "<class>:<id> 或 <class>:<id>.<field>",
+ "msg": "人类可读"
+ }
+ ],
+ "skill28_review_tasks": {
+  "$comment": "仅 REVIEW 级别条目。REJECT 条目路由到 IR 编译步骤返工，而非人工评审。该列表附加在已发布的 IR 上，由人工评审套用自身的路由策略。",
+ "$present_only_when_verdict_is_PASS_WITH_REVIEW": true,
+ "items": [
+ {"target": "", "code": "", "msg": ""}
+ ]
+ },
+ "routing": "人类可读的说明，描述该 verdict 将 IR 送往何处"
+}

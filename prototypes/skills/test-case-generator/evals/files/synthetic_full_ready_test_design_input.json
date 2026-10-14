@@ -1,0 +1,334 @@
+{
+  "meta": {
+    "schema_version": "2.0",
+    "artifact_kind": "test_design_input",
+    "artifact_id": "TDI-SYN-FULL-001",
+    "generated_at": "2026-09-27T00:00:00+08:00"
+  },
+  "source_artifacts": {
+    "typed_graph": "SYNTH-TYPED-GRAPH-001",
+    "review_snapshot": "SYNTH-REVIEW-SNAPSHOT-001"
+  },
+  "graph_snapshot_id": "GRAPH-SYN-2026A",
+  "fact_policy": {
+    "formal_case_dimensions": "READY_ONLY",
+    "assumptions_allowed": false
+  },
+  "acceptance": {
+    "verdict": "PARTIAL_PASS",
+    "downstream_eligible": true,
+    "scope": "READY_DIMENSIONS_ONLY",
+    "source_review_scope": "PARTIAL_REVIEW_PROJECTION"
+  },
+  "evidence_registry": [
+    {
+      "evidence_id": "EVD-SYN-011",
+      "source_id": "SRC-SYN-PRD-01",
+      "locator": "§2.1 报修管理/提交报修单",
+      "quote": "用户提交报修单后，系统生成唯一工单编号并提示提交成功"
+    },
+    {
+      "evidence_id": "EVD-SYN-012",
+      "source_id": "SRC-SYN-PRD-01",
+      "locator": "§2.1 报修管理/字段说明",
+      "quote": "设备编号为 8 位字母数字"
+    },
+    {
+      "evidence_id": "EVD-SYN-013",
+      "source_id": "SRC-SYN-PRD-01",
+      "locator": "§2.1 报修管理/字段说明",
+      "quote": "紧急程度分为低、中、高三级"
+    },
+    {
+      "evidence_id": "EVD-SYN-021",
+      "source_id": "SRC-SYN-PRD-01",
+      "locator": "§2.2 报修管理/取消报修单",
+      "quote": "报修人可以取消待受理的报修单，取消后工单状态变更为已取消"
+    },
+    {
+      "evidence_id": "EVD-SYN-031",
+      "source_id": "SRC-SYN-PRD-01",
+      "locator": "§2.3 报修管理/查询报修单",
+      "quote": "用户可以按设备编号和提交日期范围查询报修单"
+    }
+  ],
+  "rule_registry": [
+    {
+      "rule_id": "RULE-SYN-011",
+      "kind": "business",
+      "node_id": "AF-SYN-01",
+      "text": "提交成功后系统生成唯一工单编号",
+      "evidence_ids": ["EVD-SYN-011"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "rule_id": "RULE-SYN-012",
+      "kind": "field_format",
+      "node_id": "FLD-SYN-011",
+      "text": "设备编号必须为 8 位字母数字",
+      "evidence_ids": ["EVD-SYN-012"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "rule_id": "RULE-SYN-013",
+      "kind": "enumeration",
+      "node_id": "FLD-SYN-012",
+      "text": "紧急程度只能为低、中、高之一",
+      "evidence_ids": ["EVD-SYN-013"],
+      "provenance_type": "REQUIREMENT_FACT"
+    },
+    {
+      "rule_id": "RULE-SYN-021",
+      "kind": "state",
+      "node_id": "AF-SYN-02",
+      "text": "只有待受理状态的报修单可以取消，取消后状态变更为已取消",
+      "evidence_ids": ["EVD-SYN-021"],
+      "provenance_type": "REQUIREMENT_FACT"
+    }
+  ],
+  "items": [
+    {
+      "test_design_item_id": "TDI-SYN-01",
+      "item_kind": "functional",
+      "function_id": "FUN-SYN-01",
+      "atomic_id": "AF-SYN-01",
+      "module": "报修管理",
+      "title": "提交报修单",
+      "action": "填写设备编号与紧急程度后提交报修单",
+      "graph_snapshot_id": "GRAPH-SYN-2026A",
+      "requirement_ids": ["REQ-SYN-01"],
+      "preconditions": [
+        {
+          "precondition_id": "PRE-SYN-011",
+          "description": "用户已登录并进入报修管理模块",
+          "evidence_ids": ["EVD-SYN-011"]
+        }
+      ],
+      "operation_rule_ids": ["RULE-SYN-011"],
+      "field_usages": [
+        {
+          "field_usage_id": "FUSE-SYN-011",
+          "field_id": "FLD-SYN-011",
+          "business_name": "设备编号",
+          "usages": ["input", "validation"],
+          "direction": "write",
+          "rule_ids": ["RULE-SYN-012"],
+          "evidence_ids": ["EVD-SYN-012"]
+        },
+        {
+          "field_usage_id": "FUSE-SYN-012",
+          "field_id": "FLD-SYN-012",
+          "business_name": "紧急程度",
+          "usages": ["input", "validation"],
+          "direction": "write",
+          "rule_ids": ["RULE-SYN-013"],
+          "evidence_ids": ["EVD-SYN-013"]
+        }
+      ],
+      "outputs": [
+        {
+          "output_id": "OUT-SYN-011",
+          "description": "系统生成的唯一工单编号",
+          "evidence_ids": ["EVD-SYN-011"]
+        }
+      ],
+      "state_changes": [],
+      "branches": [],
+      "evidence_ids": ["EVD-SYN-011", "EVD-SYN-012", "EVD-SYN-013"],
+      "eligible_dimensions": ["functional", "field_validation"],
+      "excluded_finding_ids": ["FIND-SYN-011"],
+      "relation_context": [],
+      "flow_context": [],
+      "dimension_eligibility": {
+        "functional": { "status": "READY", "reasons": [], "finding_ids": [] },
+        "field_validation": {
+          "status": "READY",
+          "reasons": [],
+          "finding_ids": []
+        },
+        "sorting": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无排序规则"],
+          "finding_ids": []
+        },
+        "state_transition": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能不引起状态变更"],
+          "finding_ids": []
+        },
+        "permission": {
+          "status": "BLOCKED",
+          "reasons": ["执行角色与数据范围未在需求中声明"],
+          "finding_ids": ["FIND-SYN-011"]
+        },
+        "integration": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无外部系统集成"],
+          "finding_ids": []
+        },
+        "nfr": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["正文未声明适用的非功能要求"],
+          "finding_ids": []
+        }
+      }
+    },
+    {
+      "test_design_item_id": "TDI-SYN-02",
+      "item_kind": "functional",
+      "function_id": "FUN-SYN-02",
+      "atomic_id": "AF-SYN-02",
+      "module": "报修管理",
+      "title": "取消报修单",
+      "action": "报修人取消待受理的报修单",
+      "graph_snapshot_id": "GRAPH-SYN-2026A",
+      "requirement_ids": ["REQ-SYN-02"],
+      "preconditions": [
+        {
+          "precondition_id": "PRE-SYN-021",
+          "description": "存在报修人创建的待受理报修单",
+          "evidence_ids": ["EVD-SYN-021"]
+        }
+      ],
+      "operation_rule_ids": ["RULE-SYN-021"],
+      "field_usages": [
+        {
+          "field_usage_id": "FUSE-SYN-021",
+          "field_id": "FLD-SYN-021",
+          "business_name": "工单状态",
+          "usages": ["display"],
+          "direction": "read",
+          "rule_ids": ["RULE-SYN-021"],
+          "evidence_ids": ["EVD-SYN-021"]
+        }
+      ],
+      "outputs": [],
+      "state_changes": [
+        {
+          "state_change_id": "STC-SYN-021",
+          "from_state": "待受理",
+          "to_state": "已取消",
+          "rule_ids": ["RULE-SYN-021"],
+          "evidence_ids": ["EVD-SYN-021"]
+        }
+      ],
+      "branches": [],
+      "evidence_ids": ["EVD-SYN-021"],
+      "eligible_dimensions": ["functional", "state_transition"],
+      "excluded_finding_ids": ["FIND-SYN-021"],
+      "relation_context": [],
+      "flow_context": [],
+      "dimension_eligibility": {
+        "functional": { "status": "READY", "reasons": [], "finding_ids": [] },
+        "field_validation": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无字段校验规则"],
+          "finding_ids": []
+        },
+        "sorting": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无排序规则"],
+          "finding_ids": []
+        },
+        "state_transition": {
+          "status": "READY",
+          "reasons": [],
+          "finding_ids": []
+        },
+        "permission": {
+          "status": "REVIEW_REQUIRED",
+          "reasons": ["取消权限仅提及报修人，数据范围与拒绝行为待澄清"],
+          "finding_ids": ["FIND-SYN-021"]
+        },
+        "integration": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无外部系统集成"],
+          "finding_ids": []
+        },
+        "nfr": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["正文未声明适用的非功能要求"],
+          "finding_ids": []
+        }
+      }
+    },
+    {
+      "test_design_item_id": "TDI-SYN-03",
+      "item_kind": "functional",
+      "function_id": "FUN-SYN-03",
+      "atomic_id": "AF-SYN-03",
+      "module": "报修管理",
+      "title": "查询报修单",
+      "action": "按设备编号与提交日期范围查询报修单",
+      "graph_snapshot_id": "GRAPH-SYN-2026A",
+      "requirement_ids": ["REQ-SYN-03"],
+      "preconditions": [],
+      "operation_rule_ids": [],
+      "field_usages": [
+        {
+          "field_usage_id": "FUSE-SYN-031",
+          "field_id": "FLD-SYN-011",
+          "business_name": "设备编号",
+          "usages": ["query"],
+          "direction": "read",
+          "rule_ids": [],
+          "evidence_ids": ["EVD-SYN-031"]
+        }
+      ],
+      "outputs": [],
+      "state_changes": [],
+      "branches": [],
+      "evidence_ids": ["EVD-SYN-031"],
+      "eligible_dimensions": [],
+      "excluded_finding_ids": ["FIND-SYN-031", "FIND-SYN-032", "FIND-SYN-033"],
+      "relation_context": [],
+      "flow_context": [],
+      "dimension_eligibility": {
+        "functional": {
+          "status": "REVIEW_REQUIRED",
+          "reasons": ["查询结果展示范围与分页规则评审未完成"],
+          "finding_ids": ["FIND-SYN-031"]
+        },
+        "field_validation": {
+          "status": "REVIEW_REQUIRED",
+          "reasons": ["日期范围校验规则评审未完成"],
+          "finding_ids": ["FIND-SYN-032"]
+        },
+        "sorting": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无排序规则"],
+          "finding_ids": []
+        },
+        "state_transition": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能不引起状态变更"],
+          "finding_ids": []
+        },
+        "permission": {
+          "status": "REVIEW_REQUIRED",
+          "reasons": ["可见数据范围未评审完成"],
+          "finding_ids": ["FIND-SYN-033"]
+        },
+        "integration": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["该最小功能无外部系统集成"],
+          "finding_ids": []
+        },
+        "nfr": {
+          "status": "NOT_APPLICABLE",
+          "reasons": ["正文未声明适用的非功能要求"],
+          "finding_ids": []
+        }
+      }
+    }
+  ],
+  "coverage": {
+    "item_count": 3,
+    "dimension_status_counts": {
+      "READY": 4,
+      "REVIEW_REQUIRED": 4,
+      "BLOCKED": 1,
+      "NOT_APPLICABLE": 12
+    }
+  }
+}

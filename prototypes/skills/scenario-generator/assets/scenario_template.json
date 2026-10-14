@@ -1,0 +1,19 @@
+{
+  "$comment": "对照已发布 Testing IR 校验的场景图节点。",
+  "scenario_id": "S-{module}-{NNN}",
+  "req_id": "<已存在的 IR requirement id>",
+  "rule_id": "<已存在的 IR business-rule id>",
+  "facet": "normal | abnormal | boundary | state_transition | permission",
+  "title": "简短的测试意图",
+  "transition_ref": "<仅 state_transition 使用：sm_id:from->to>",
+  "$checker_codes": [
+    "INVALID_SCENARIO",
+    "REQUIREMENT_NOT_IN_IR",
+    "RULE_NOT_IN_IR",
+    "INVALID_FACET",
+    "INVALID_IR_TRANSITION",
+    "INVALID_TRANSITION_REF",
+    "TRANSITION_UNCOVERED",
+    "EMPTY_FACET"
+  ]
+}

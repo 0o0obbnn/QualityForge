@@ -1,0 +1,14 @@
+﻿case_id,module,function_name,minimum_function,title,objective,priority,test_level,test_techniques,covered_dimensions,execution_semantics,candidate_channels,fixture_category,preconditions,test_steps,expected_results,data_requirements,traceability,case_status
+TC-SYN01-001,报修管理,报修单管理,提交报修单,提交合法报修单生成工单编号,验证合法输入的报修单提交成功并生成唯一工单编号,P1,SYSTEM,REQUIREMENT_BASED,functional,DETERMINISTIC,"MANUAL
+API_AUTOMATION",Static,PRE-001: 用户已登录并进入报修管理模块 [REQUIREMENT_FACT],"1. 填写合法设备编号与紧急程度“中”，提交报修单｜目标=提交报修单｜数据=DR-SYN-011,DR-SYN-012","1.1 系统提示提交成功并展示生成的唯一工单编号｜来源=RULE-SYN-011,EVD-SYN-011｜机器可判定=是","DR-SYN-011: 设备编号｜VALID｜提供满足字段规则的合法设备编号
+DR-SYN-012: 紧急程度｜VALID｜选择需求声明的合法枚举值","snapshot=GRAPH-SYN-2026A; item=TDI-SYN-01; atomic=AF-SYN-01; req=REQ-SYN-01; rule=RULE-SYN-011; field=FUSE-SYN-011,FUSE-SYN-012; evidence=EVD-SYN-011",PASS
+TC-SYN01-002,报修管理,报修单管理,提交报修单,非法设备编号与紧急程度被拒绝,验证设备编号格式与紧急程度枚举的字段校验拒绝路径,P1,SYSTEM,"EQUIVALENCE_PARTITION
+BOUNDARY_VALUE",field_validation,DETERMINISTIC,"MANUAL
+API_AUTOMATION",Static,PRE-002: 用户已进入报修单提交页面 [TEST_DERIVATION],"1. 填写 7 位设备编号并提交报修单｜目标=设备编号校验｜数据=DR-SYN-013
+2. 紧急程度选择枚举之外的“紧急”并提交报修单｜目标=紧急程度校验｜数据=DR-SYN-012","1.1 系统拒绝提交并提示设备编号必须为 8 位字母数字｜来源=RULE-SYN-012,EVD-SYN-012｜机器可判定=是
+2.1 系统拒绝提交并提示紧急程度取值非法｜来源=RULE-SYN-013,EVD-SYN-013｜机器可判定=是","DR-SYN-013: 设备编号｜INVALID｜构造违反格式规则的设备编号以验证拒绝路径
+DR-SYN-012: 紧急程度｜VALID｜选择需求声明的合法枚举值","snapshot=GRAPH-SYN-2026A; item=TDI-SYN-01; atomic=AF-SYN-01; req=REQ-SYN-01; rule=RULE-SYN-012,RULE-SYN-013; field=FUSE-SYN-011,FUSE-SYN-012; evidence=EVD-SYN-012,EVD-SYN-013",PASS
+TC-SYN02-001,报修管理,报修单管理,取消报修单,取消待受理报修单成功,验证报修人取消待受理报修单后工单状态变更为已取消,P1,SYSTEM,REQUIREMENT_BASED,functional,DETERMINISTIC,"MANUAL
+UI_AUTOMATION",Dynamic,PRE-003: 存在报修人创建的待受理报修单 [TEST_DERIVATION],1. 报修人对待受理报修单执行取消｜目标=取消报修单｜数据=DR-SYN-021,"1.1 工单状态变更为已取消并提示取消成功｜来源=RULE-SYN-021,EVD-SYN-021｜机器可判定=是",DR-SYN-021: 工单状态｜STATE_SETUP｜准备待受理与已受理两种状态的报修单以覆盖状态前置,snapshot=GRAPH-SYN-2026A; item=TDI-SYN-02; atomic=AF-SYN-02; req=REQ-SYN-02; rule=RULE-SYN-021; field=FUSE-SYN-021; evidence=EVD-SYN-021,PASS
+TC-SYN02-002,报修管理,报修单管理,取消报修单,已受理报修单不可取消,验证非待受理状态的报修单执行取消被拒绝,P2,SYSTEM,STATE_TRANSITION,state_transition,DETERMINISTIC,"MANUAL
+UI_AUTOMATION",Dynamic,PRE-004: 存在状态为已受理的报修单 [TEST_DERIVATION],1. 对已受理报修单执行取消｜目标=取消报修单｜数据=DR-SYN-021,"1.1 系统拒绝取消并提示仅待受理状态的报修单可以取消｜来源=RULE-SYN-021,EVD-SYN-021｜机器可判定=是",DR-SYN-021: 工单状态｜STATE_SETUP｜准备待受理与已受理两种状态的报修单以覆盖状态前置,snapshot=GRAPH-SYN-2026A; item=TDI-SYN-02; atomic=AF-SYN-02; req=REQ-SYN-02; rule=RULE-SYN-021; field=FUSE-SYN-021; evidence=EVD-SYN-021,PASS

@@ -1,0 +1,68 @@
+{
+  "test_cases": [
+    {
+      "name": "Test Valid Governance Report",
+      "input": {
+        "metrics": [
+          {"name": "effective_coverage", "type": "effective", "value": 0.88}
+        ],
+        "cost_breakdown": {"requirement-compiler": 12.5, "coverage-analyzer": 3.0},
+        "budgets": {"requirement-compiler": 20.0, "coverage-analyzer": 5.0},
+        "budget_alerts": {},
+        "strategy_amended": false,
+        "metric_definitions_source": "canonical"
+      },
+      "expected_verdict": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "Test Raw Line Coverage Rejection",
+      "input": {
+        "metrics": [
+          {"name": "line_coverage", "type": "line", "value": 0.95}
+        ],
+        "cost_breakdown": {"requirement-compiler": 12.5},
+        "budgets": {"requirement-compiler": 20.0},
+        "budget_alerts": {},
+        "strategy_amended": false,
+        "metric_definitions_source": "canonical"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["RAW_LINE_COVERAGE_REPORTED"]
+    },
+    {
+      "name": "Test Silent Budget Overrun Rejection",
+      "input": {
+        "metrics": [
+          {"name": "effective_coverage", "type": "effective", "value": 0.9}
+        ],
+        "cost_breakdown": {"requirement-compiler": 45.0},
+        "budgets": {"requirement-compiler": 20.0},
+        "budget_alerts": {},
+        "strategy_amended": false,
+        "metric_definitions_source": "canonical"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["BUDGET_OVERRUN_SILENT"]
+    },
+    {
+      "name": "Test Advisory Only Violation",
+      "input": {
+        "metrics": [
+          {"name": "effective_coverage", "type": "effective", "value": 0.9}
+        ],
+        "cost_breakdown": {"requirement-compiler": 12.5},
+        "strategy_amended": true,
+        "metric_definitions_source": "canonical"
+      },
+      "expected_verdict": "REJECT",
+      "expected_findings": ["STRATEGY_AMENDED_BY_DASHBOARD"]
+    },
+    {
+      "name": "Test Empty Dashboard Is Not A Clean Pass",
+      "input": {},
+      "expected_verdict": "REJECT",
+      "expected_findings": ["COST_NOT_DECOMPOSED", "NO_METRICS_REPORTED"]
+    }
+  ]
+}

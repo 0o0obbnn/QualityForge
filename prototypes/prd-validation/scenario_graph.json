@@ -1,0 +1,240 @@
+{
+  "graph_id": "SG-PRD-V2-20260811",
+  "ir_ref": "testing_ir.json",
+  "strategy_ref": "strategy_contract.json",
+  "scenarios": [
+    {
+      "scenario_id": "S-PKG-001",
+      "req_id": "REQ-003",
+      "rule_id": "BR-001",
+      "facet": "state_transition",
+      "title": "月度任务上报：采集成功，上报包 等待处理→正在处理",
+      "transition_ref": "SM-001:等待处理->正在处理"
+    },
+    {
+      "scenario_id": "S-PKG-002",
+      "req_id": "REQ-003",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "非删除类包校验通过：正在处理→处理完毕无反馈",
+      "transition_ref": "SM-001:正在处理->处理完毕无反馈"
+    },
+    {
+      "scenario_id": "S-PKG-003",
+      "req_id": "REQ-003",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "解密/解压/校验失败生成反馈文件：正在处理→处理完毕有反馈",
+      "transition_ref": "SM-001:正在处理->处理完毕有反馈"
+    },
+    {
+      "scenario_id": "S-PKG-004",
+      "req_id": "REQ-003",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "处理过程异常：正在处理→处理异常",
+      "transition_ref": "SM-001:正在处理->处理异常"
+    },
+    {
+      "scenario_id": "S-PKG-005",
+      "req_id": "REQ-003",
+      "rule_id": "BR-001",
+      "facet": "state_transition",
+      "title": "重新采集从失败节点续跑：处理异常→等待处理",
+      "transition_ref": "SM-001:处理异常->等待处理"
+    },
+    {
+      "scenario_id": "S-APR-001",
+      "req_id": "REQ-004",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "删除审批通过：待审批→审批通过",
+      "transition_ref": "SM-002:待审批->审批通过"
+    },
+    {
+      "scenario_id": "S-APR-002",
+      "req_id": "REQ-004",
+      "rule_id": "BR-002",
+      "facet": "state_transition",
+      "title": "删除审批不通过（备注必填）：待审批→审批不通过",
+      "transition_ref": "SM-002:待审批->审批不通过"
+    },
+    {
+      "scenario_id": "S-QRY-001",
+      "req_id": "REQ-007",
+      "rule_id": "BR-003",
+      "facet": "state_transition",
+      "title": "调用量超额，次日12:00自动停用：启用→停用",
+      "transition_ref": "SM-003:启用->停用"
+    },
+    {
+      "scenario_id": "S-QRY-002",
+      "req_id": "REQ-006",
+      "rule_id": "BR-003",
+      "facet": "state_transition",
+      "title": "停用后手动启用（已用量<最大调用量）：停用→启用",
+      "transition_ref": "SM-003:停用->启用"
+    },
+    {
+      "scenario_id": "S-UPLOAD-001",
+      "req_id": "REQ-001",
+      "rule_id": "BR-001",
+      "facet": "normal",
+      "title": "27位包名满足11项规则，上传成功进入处理队列"
+    },
+    {
+      "scenario_id": "S-TASK-001",
+      "req_id": "REQ-002",
+      "rule_id": "BR-001",
+      "facet": "normal",
+      "title": "每月1号为启用状态接入机构自动生成本月上报任务"
+    },
+    {
+      "scenario_id": "S-DEL-001",
+      "req_id": "REQ-005",
+      "rule_id": "BR-002",
+      "facet": "normal",
+      "title": "审批通过后次日定时任务自动删除数据"
+    },
+    {
+      "scenario_id": "S-QRY-003",
+      "req_id": "REQ-008",
+      "rule_id": "BR-004",
+      "facet": "normal",
+      "title": "机构用户查询同时记录查询记录与检索次数"
+    },
+    {
+      "scenario_id": "S-COEF-001",
+      "req_id": "REQ-010",
+      "rule_id": "BR-005",
+      "facet": "normal",
+      "title": "每月1日按结算协议机构数量生成上月月度调节系数"
+    },
+    {
+      "scenario_id": "S-COEF-002",
+      "req_id": "REQ-010",
+      "rule_id": "BR-006",
+      "facet": "normal",
+      "title": "按笔结算：调节系数积=数据贡献量系数X×调用量系数Y×质量系数Z"
+    },
+    {
+      "scenario_id": "S-BILL-001",
+      "req_id": "REQ-011",
+      "rule_id": "BR-007",
+      "facet": "normal",
+      "title": "结算调用量=有效调用量−会员免费调用量"
+    },
+    {
+      "scenario_id": "S-BILL-002",
+      "req_id": "REQ-011",
+      "rule_id": "BR-008",
+      "facet": "normal",
+      "title": "包月套餐外调用量=有效调用量−包月调用量−会员免费调用量"
+    },
+    {
+      "scenario_id": "S-BILL-003",
+      "req_id": "REQ-012",
+      "rule_id": "BR-009",
+      "facet": "normal",
+      "title": "生成费用单：先删除M-1月系数积与费用单明细，再重新生成"
+    },
+    {
+      "scenario_id": "S-UPLOAD-002",
+      "req_id": "REQ-001",
+      "rule_id": "BR-001",
+      "facet": "abnormal",
+      "title": "包名组织机构代码位非法，实时校验拦截并提示（裁决口径）"
+    },
+    {
+      "scenario_id": "S-UPLOAD-003",
+      "req_id": "REQ-001",
+      "rule_id": "BR-001",
+      "facet": "abnormal",
+      "title": "enc包超过50M，上传被拒绝（CON-002）"
+    },
+    {
+      "scenario_id": "S-DEL-002",
+      "req_id": "REQ-004",
+      "rule_id": "BR-002",
+      "facet": "abnormal",
+      "title": "删除类包成功数量=0，不触发删除审批（裁决口径B）"
+    },
+    {
+      "scenario_id": "S-QRY-004",
+      "req_id": "REQ-007",
+      "rule_id": "BR-003",
+      "facet": "abnormal",
+      "title": "停用执行前提升配额，次日不触发停用"
+    },
+    {
+      "scenario_id": "S-BILL-004",
+      "req_id": "REQ-012",
+      "rule_id": "BR-009",
+      "facet": "abnormal",
+      "title": "生成费用单在删除阶段后失败，核查M-1月数据状态（回滚未定义，PRD缺口）"
+    },
+    {
+      "scenario_id": "S-COEF-003",
+      "req_id": "REQ-009",
+      "rule_id": "BR-006",
+      "facet": "abnormal",
+      "title": "系数映射仅原型图无文字定义，按系数说明表核查XYZ取值（待澄清项）"
+    },
+    {
+      "scenario_id": "S-UPLOAD-004",
+      "req_id": "REQ-001",
+      "rule_id": "BR-001",
+      "facet": "boundary",
+      "title": "包名日期位恰为1990-01-01（含边界，裁决：不早于1990年含）"
+    },
+    {
+      "scenario_id": "S-UPLOAD-005",
+      "req_id": "REQ-001",
+      "rule_id": "BR-001",
+      "facet": "boundary",
+      "title": "enc包大小恰为50M（CON-002边界，<=50M应通过）"
+    },
+    {
+      "scenario_id": "S-QRY-005",
+      "req_id": "REQ-007",
+      "rule_id": "BR-003",
+      "facet": "boundary",
+      "title": "调用量恰等于最大调用量（边界不算超额，不触发停用）"
+    },
+    {
+      "scenario_id": "S-QRY-006",
+      "req_id": "REQ-008",
+      "rule_id": "BR-004",
+      "facet": "boundary",
+      "title": "查询明细上限200条与最近1年时间边界（CON-003）"
+    },
+    {
+      "scenario_id": "S-PERM-001",
+      "req_id": "REQ-008",
+      "rule_id": "BR-004",
+      "facet": "permission",
+      "title": "协会用户仅记录查询记录、不记录检索次数（用户类型权限差异）"
+    },
+    {
+      "scenario_id": "S-APR-003",
+      "req_id": "REQ-004",
+      "rule_id": "BR-002",
+      "facet": "permission",
+      "title": "无审批权限用户不能操作删除审批（权限矩阵待补，占位场景）"
+    },
+    {
+      "scenario_id": "S-API-001",
+      "req_id": "REQ-014",
+      "rule_id": "BR-004",
+      "facet": "normal",
+      "title": "接口端基础产品查询响应参数与网页端一致（契约占位，接口文档待补）"
+    },
+    {
+      "scenario_id": "S-API-002",
+      "req_id": "REQ-014",
+      "rule_id": "BR-004",
+      "facet": "normal",
+      "title": "升级产品调用接口国密通道连通性（契约占位，接口文档待补）"
+    }
+  ]
+}

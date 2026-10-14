@@ -1,0 +1,25 @@
+{
+  "$comment": "实体提取数据包，在 IR 融合前校验。",
+  "entities": [
+    {
+      "entity_id": "ENT-TC-001",
+      "name": "TestCase",
+      "fields": [
+        {"name": "id", "type": "uuid"},
+        {"name": "workspace_id", "type": "uuid", "references": "ENT-WS-001"},
+        {"name": "current_version_id", "type": "uuid", "references": "ENT-TCV-001"}
+      ]
+    }
+  ],
+  "$checker_codes": [
+    "INVALID_ENTITY_PACKET",
+    "EMPTY_ENTITY_SET",
+    "DUPLICATE_ENTITY_ID",
+    "EMPTY_ENTITY_FIELDS",
+    "DUPLICATE_FIELD_NAME",
+    "UNTYPED_FIELD",
+    "AMBIGUOUS_ENTITY_REF",
+    "INVALID_ENTITY_REF",
+    "DANGLING_ENTITY_REF"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$comment": "测试计划契约。执行前由 scripts/plan_check.py 校验。PASS 输出中的 phase_order 即执行顺序；每个 Phase 的 exit_gate 在推进前检查。",
+  "plan_id": "<唯一计划标识符>",
+  "phases": [
+    {
+      "phase_id": "P0",
+      "name": "IR 发布",
+      "depends_on_phases": [],
+      "entry_gate": "PRD 可用",
+      "exit_gate": "IR 已校验并发布",
+      "tasks": [
+        {"task_id": "T0-1", "description": "从 PRD 编译 IR", "phase_dependency": null}
+      ]
+    },
+    {
+      "phase_id": "P1",
+      "name": "测试设计",
+      "depends_on_phases": ["P0"],
+      "entry_gate": "P0 exit_gate 已通过",
+      "exit_gate": "coverage >= 0.85",
+      "tasks": [
+        {"task_id": "T1-1", "description": "生成场景", "phase_dependency": "P0"},
+        {"task_id": "T1-2", "description": "生成用例", "phase_dependency": "P0"}
+      ]
+    }
+  ],
+  "$checker_codes": [
+    "PHASE_CYCLE", "MISSING_ENTRY_GATE", "MISSING_EXIT_GATE",
+    "BACKWARD_CROSS_PHASE_DEP", "EMPTY_PHASE", "MISSING_PHASE_ID"
+  ]
+}

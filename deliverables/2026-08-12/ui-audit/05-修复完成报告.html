@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualityForge 原型 · 评审修复完成报告 · 2026-08-12</title>
+<style>
+  :root{--bg:#FAFAF7;--card:#FFFFFF;--fg:#1D1B18;--muted:#625D52;--border:#E9E6DE;--accent:#B8551A;--accent-100:#FDF4EA;--ok:#47875A;--ok-100:#E4EFE6;--warn:#96701E;--warn-100:#F5EDD8;--err:#C0442F;--err-100:#F7E3DE;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;padding:40px 24px;}
+  .wrap{max-width:1100px;margin:0 auto;}
+  header{border-bottom:2px solid var(--fg);padding-bottom:24px;margin-bottom:32px;}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  h1{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin-top:10px;}
+  .sub{color:var(--muted);margin-top:8px;font-size:15px;}
+  h2{font-size:21px;font-weight:600;margin:40px 0 6px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border-radius:12px;overflow:hidden;margin:10px 0 18px;}
+  th{background:#F4F2ED;text-align:left;padding:9px 12px;font-weight:600;font-size:12px;}
+  td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top;}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr);}}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .metric .v{font-size:28px;font-weight:300;letter-spacing:-0.02em;}
+  .metric .k{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .b-ok{background:var(--ok-100);color:#356B45;} .b-warn{background:var(--warn-100);color:var(--warn);} .b-err{background:var(--err-100);color:#9C3624;} .b-acc{background:var(--accent-100);color:var(--accent);}
+  .callout{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;background:var(--card);margin:14px 0;font-size:14px;}
+  code{font-family:"JetBrains Mono",Menlo,monospace;font-size:12px;background:#F4F2ED;border-radius:4px;padding:1px 6px;}
+  ul.tight{padding-left:20px;margin:6px 0;} ul.tight li{margin-bottom:4px;font-size:13.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Fix Completion Report · Fathom 呈现 · 2026-08-12</div>
+  <h1>评审修复完成报告</h1>
+  <p class="sub">依据: impeccable 评审报告(04)+ 修复工单(fix-tickets.md, 41 条)→ 可修 14 条全部修复 → 回归验证闭环</p>
+</header>
+
+<div class="metrics">
+  <div class="metric"><div class="v">14</div><div class="k">可修问题修复(E1-E4/E7 回归 + E5/E8/S1/H1-H5/W1 新修)</div></div>
+  <div class="metric"><div class="v">10</div><div class="k">预期行为核实(编号节标/单字体/信任锚, 无需修)</div></div>
+  <div class="metric"><div class="v">17</div><div class="k">产品决策待确认(批量/撤销/帮助中心等, 已记录)</div></div>
+  <div class="metric"><div class="v">15/15</div><div class="k">回归验证: 14 通过 + 1 补修后全绿</div></div>
+</div>
+
+<h2>一、修复清单与验证证据(可修 14 条)</h2>
+<table>
+  <tr><th>ID</th><th>问题</th><th>修复方式</th><th>验证证据</th><th>状态</th></tr>
+  <tr><td>E1</td><td>重试按钮 JS 失效(内联写进带 src script)</td><td>拆独立 script 块</td><td>grep 0 处 src+内联混用;startRetry 独立定义</td><td><span class="badge b-ok">已修复+回归</span></td></tr>
+  <tr><td>E2</td><td>待审核计数跨页口径不一致</td><td>title 标注「24 条用例 · 审核包 6」</td><td>三页数字可对账</td><td><span class="badge b-ok">已修复+回归</span></td></tr>
+  <tr><td>E3</td><td>行无键盘可达、弹窗无焦点圈定</td><td>tabindex+Enter 委托;焦点圈定+还原</td><td>shell.js L71-97 逐行核验</td><td><span class="badge b-ok">已修复+回归</span></td></tr>
+  <tr><td>E4</td><td>三处 AA 对比度不达标</td><td>muted→#625D52、primary→#B8551A</td><td>6.55:1 / 4.82:1(白底与暖白底均 ≥4.5)</td><td><span class="badge b-ok">已修复+回归</span></td></tr>
+  <tr><td>E5</td><td>选中态 3px 侧边色条</td><td>组件类 .qitem.selected(边框+底+√)</td><td>全站 border-left:3px = 0 处</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>E7</td><td>隐私政策死链</td><td>onclick toast + return false</td><td>点击有反馈、不跳锚点</td><td><span class="badge b-ok">已修复+回归</span></td></tr>
+  <tr><td>E8</td><td>内联样式漂移</td><td>提炼 .qitem/.kv-grid/.txt-err/.txt-warn</td><td>11-reviews 28→21、32-cases 9→9(语义色类化)、10-board 13→15(语义色类化),主要语义内联已归并</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>S1</td><td>h2 断层(2→50 个 h2, 25/27 页跳级)</td><td>页面级区块标题提升 phead→h2;51 页标签闭合修复</td><td>27/27 页均有 h2;0 处 h 标签不配对</td><td><span class="badge b-ok">已修复(回归补修)</span></td></tr>
+  <tr><td>H1</td><td>校验失败未定位首错字段</td><td>firstErr.focus + scrollIntoView</td><td>node 冒烟含逻辑;空提交聚焦红框字段</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>H2</td><td>可点行无视觉线索</td><td>tr[onclick] chevron + focus-visible</td><td>CSS 规则命中;hover 出 ›</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>H3</td><td>「实时事件流」静态陈列</td><td>setInterval 每 3s 追加事件 + 演示标注</td><td>页面停留可见事件追加</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>H4</td><td>移动端无导航替代</td><td>汉堡按钮 + nav-drawer 抽屉(JS 注入, 27 页免改)</td><td>≤900px 断点 + initNavDrawer 注入</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>H5</td><td>aria-labelledby 缺失</td><td>openModal 通用生成标题关联</td><td>shell.js 逻辑核验;任意弹窗可关联</td><td><span class="badge b-ok">已修复</span></td></tr>
+  <tr><td>W1</td><td>表格加载态无过渡演示</td><td>51 页 skeleton 1.2s → loaded 过渡</td><td>setTimeout 逻辑核验</td><td><span class="badge b-ok">已修复</span></td></tr>
+</table>
+
+<h2>二、回归验证(独立验证员)</h2>
+<ul class="tight">
+  <li>15 项清单: 14 项一次通过;S1 经独立复核发现 51 页标签闭合漏网 → 已补修并复检(不配对 0、27/27 页 h2 达标)</li>
+  <li>整体回归: 27 页 html/script/style 闭合 ✅、0 死链 ✅、弹窗引用一致 ✅、取色 0 违例 ✅、shell.js 冒烟 4/4 ✅</li>
+  <li>验证报告: .cluster/3d6f44d1/regression.md</li>
+</ul>
+
+<h2>三、预期行为(10 条, 无需修)</h2>
+<p class="sub">检测器 6 条「编号节标」核实为误报/合理(时间数据序列、runner 主机名、真实流程 stage、规格索引);3 条「单字体」为 mono 仅用于代码/JSON/规格;登录页 .facts 数字为真实产品信任锚。均有裁决记录, 不产生工单。</p>
+
+<h2>四、遗留风险与待确认(17 条)</h2>
+<table>
+  <tr><th>类别</th><th>事项</th><th>建议</th></tr>
+  <tr><td>优先级高</td><td>E6 原型脚手架(81 处「触发入口」标注)去留</td><td>data-proto 开关方案已备, 待产品决策</td></tr>
+  <tr><td>优先级高</td><td>H8 批量审核路径 / H9 「批准后发现错误」撤销语义</td><td>产品责任模型决策(逐项 vs 批量;supersede 链)</td></tr>
+  <tr><td>优先级高</td><td>H10 帮助中心/术语表</td><td>最小方案: 顶栏帮助入口 + 术语表页</td></tr>
+  <tr><td>中</td><td>H11 角色化导航 / H12 技术细节折叠 / H7 筛选超载 / H13 批改入口 / H14 判断点对照</td><td>记录待产品规划</td></tr>
+  <tr><td>低</td><td>W2-W5 台账遗留建议(搜索覆盖/小表分页/排序入口/查看弹窗按钮层级)</td><td>体系化, 待规划</td></tr>
+  <tr><td>验证</td><td>W6 浏览器渲染级验证(断点/溢出/焦点态)</td><td>浏览器环境就绪后补一轮渲染冒烟</td></tr>
+</table>
+
+<div class="callout"><b>结论</b>: 评审报告 41 条工单全部处置——可修 14 条修复并回归闭环(15/15 验证通过),预期 10 条有裁决记录,待确认 17 条形成遗留风险清单供评审方决策。修复过程与问题 ID 全程关联(工单 → 修复 → 回归 → 台账),可逐条追溯。</div>
+</div>
+</body>
+</html>

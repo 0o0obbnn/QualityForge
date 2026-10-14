@@ -1,0 +1,29 @@
+{
+  "$comment": "项目特定的 Strategy 契约，在测试设计前校验。",
+  "Critical_Paths": [
+    {
+      "path_id": "test-design-publish",
+      "disposition": "IN_SCOPE",
+      "feature_ids": ["F-TD-001"]
+    },
+    {
+      "path_id": "legacy-import",
+      "disposition": "OUT_OF_SCOPE",
+      "exclusion_reason": "计划在后续版本实现"
+    }
+  ],
+  "In_Scope": [
+    {"feature_id": "F-TD-001", "feature": "发布经评审的测试设计", "risk_level": "high"}
+  ],
+  "Out_Of_Scope": [
+    {"item": "遗留数据导入", "exclusion_reason": "计划在后续版本实现"}
+  ],
+  "Quality_Gates": [
+    {"gate_name": "effective_coverage", "metric": "coverage", "threshold": 0.85}
+  ],
+  "Pyramid_Distribution": {"unit": 0.6, "integration": 0.3, "e2e": 0.1},
+  "Mock_Policy": {
+    "mock_targets": ["email_provider"],
+    "no_mock_targets": ["database"]
+  }
+}

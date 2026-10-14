@@ -1,0 +1,19 @@
+{
+  "declared_sources": [
+    {"source_id": "iprj-prd.md", "availability": "AVAILABLE"}
+  ],
+  "ir_draft": {
+    "requirements": [
+      {
+        "req_id": "REQ-IPRJ-001",
+        "title": "任务记录列表按上报月份倒序展示",
+        "source_trace": "iprj-prd.md:数据上报（管理侧）:任务记录",
+        "confidence": 0.8,
+        "confidence_rationale": "业务规则1明确每月1号自动生成任务，列表排序规则明确。"
+      }
+    ],
+    "business_rules": [],
+    "constraints": [],
+    "entities": []
+  }
+}

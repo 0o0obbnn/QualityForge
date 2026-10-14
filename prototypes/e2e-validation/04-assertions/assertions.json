@@ -1,0 +1,29 @@
+[
+  {
+    "assertion_id": "A-001",
+    "rule_id": "R-TD-001",
+    "req_id": "Q-TD-001",
+    "contract_id": "IFC-PARSE",
+    "target": "response.status",
+    "expression": "eq",
+    "expected": "PARSED"
+  },
+  {
+    "assertion_id": "A-002",
+    "rule_id": "R-TD-002",
+    "req_id": "Q-TD-002",
+    "contract_id": "IFC-GENCASES",
+    "target": "response.cases",
+    "expression": "notnull",
+    "expected": "non-empty"
+  },
+  {
+    "assertion_id": "A-003",
+    "rule_id": "R-TD-003",
+    "req_id": "Q-TD-003",
+    "contract_id": "IFC-REVIEW-DECISION",
+    "target": "response.code",
+    "expression": "eq",
+    "expected": "FORBIDDEN"
+  }
+]

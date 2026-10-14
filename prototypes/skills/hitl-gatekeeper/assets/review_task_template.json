@@ -1,0 +1,26 @@
+{
+  "$comment": "由确定性路由发出的 ReviewTask 请求。正式 artifact 需要精确的不可变 version 绑定和人工 ReviewDecision。",
+  "review_id": "RVW-<10hex>",
+  "severity": "forced | required",
+  "status": "OPEN",
+  "event_type": "critical_path | contract_mutation | breaking_drift | healing_overrun | ambiguity_flag | inference",
+  "asset_type": "test_strategy | test_plan | test_case | automation_script | result_analysis | defect | test_report | knowledge_entry | requirement | rule | scenario | case | assertion | locator | fixture | contract",
+  "artifact_id": "<稳定的 artifact id>",
+  "artifact_version_id": "<不可变的 version id>",
+  "content_digest": "<sha256 hex>",
+  "policy_type": "SINGLE_REVIEW | FOUR_EYES | CODE_REVIEW | EXTERNAL_WRITE | REPORT_SIGNOFF | KNOWLEDGE_PUBLISH",
+  "source_trace": "<来源或 skill trace>",
+  "proposed_action": "<自然语言描述的动作>",
+  "confidence": null,
+  "ir_element_id": null,
+  "must_present": [
+    "artifact_id",
+    "artifact_version_id",
+    "content_digest",
+    "policy_type",
+    "source_trace",
+    "proposed_action"
+  ],
+  "$allowed_human_decisions": ["APPROVE", "REQUEST_CHANGES", "REJECT"],
+  "$machine_decision_note": "BLOCK_HUMAN 是路由而非审批。Agent 与 Service 身份无法处理该任务。"
+}

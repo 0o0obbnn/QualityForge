@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge B2 裁决执行状态 · 2026-08-14</title>
+<style>
+  :root{--ink:#111;--muted:#555;--line:#ddd;--bg:#fff;--link:#0000EE;--green:#2e7d32;--amber:#8a6d3b;--blue:#1f3a5f;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.7;}
+  .wrap{max-width:860px;margin:0 auto;padding:36px 24px 80px;}
+  header{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:22px;}
+  h1{font-size:21px;margin:6px 0;font-weight:700;}
+  .meta{font-size:12.5px;color:var(--muted);}
+  h2{font-size:16px;margin:28px 0 10px;padding-left:10px;border-left:3px solid var(--ink);}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin:10px 0;}
+  th{text-align:left;border-bottom:2px solid var(--ink);padding:6px 8px;font-size:12px;}
+  td{border-bottom:1px solid var(--line);padding:7px 8px;vertical-align:top;}
+  .tag{display:inline-block;padding:0 7px;font-size:11px;font-weight:600;border:1px solid var(--line);border-radius:2px;white-space:nowrap;}
+  .tag.g{background:var(--green);color:#fff;border-color:var(--green);}
+  .tag.y{background:var(--amber);color:#fff;border-color:var(--amber);}
+  .tag.b{background:var(--blue);color:#fff;border-color:var(--blue);}
+  a{color:var(--link);}
+  .note{font-size:12.5px;color:var(--muted);border-left:3px solid var(--line);padding-left:10px;margin:10px 0;}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>QualityForge B2 裁决执行状态</h1>
+  <div class="meta">裁决:2026-08-14 全部按推荐方案执行 ｜ 11 项 ｜ 低风险项已落盘,契约联动项草案就绪</div>
+</header>
+
+<h2>一、裁决状态总览(11 项)</h2>
+<table>
+  <tr><th>编号</th><th>裁决(推荐方案)</th><th>执行状态</th><th>落点</th></tr>
+  <tr><td>B2-1</td><td>CoverageReport 拆分:设计覆盖分析归 12(中间产物)+ 执行覆盖报告归 15(正式产出物)</td><td><span class="tag y">草案就绪(6 处修改)</span></td><td>12/15-PRD、05§5.12.7、04、32(随质量模块开工)</td></tr>
+  <tr><td>B2-2</td><td>ContractCheckResult 完整承接(14/15-PRD 补需求+AC+披露,32 补 schema)</td><td><span class="tag y">草案就绪(4 处修改)</span></td><td>14/15-PRD、32</td></tr>
+  <tr><td>B2-3</td><td>校准记录结构化载体(33 建表 + 32 注册 API + 16-PRD 引用)</td><td><span class="tag y">草案就绪(3 处修改)</span></td><td>33、32、16-PRD</td></tr>
+  <tr><td>B2-4</td><td>V1 手工外部同步走 DefectSyncAttempt+批准记录(执行者为人,契约不降级)</td><td><span class="tag g">已落盘</span></td><td>15-PRD §4、22 §3</td></tr>
+  <tr><td>B2-5</td><td>按 M1~M5 里程碑产出增量建表清单</td><td><span class="tag b">待产出</span></td><td>新文档(随 Stage5 执行)</td></tr>
+  <tr><td>B2-6</td><td>补证顺序:M3 执行与证据 → M4 分析与报告;Defect 可提前</td><td><span class="tag g">已记录</span></td><td>执行包 §B2-5/6/7,并入 V1 排期</td></tr>
+  <tr><td>B2-7</td><td>V1 用 SQLite,M1/M2 门禁加 PG 冒烟验收点(104 表迁移+RLS+并发)</td><td><span class="tag g">已记录</span></td><td>执行包 §B2-5/6/7,并入 V1 排期</td></tr>
+  <tr><td>B2-8</td><td>V1 沙箱量化验收口径(非 root/只读工作目录/零外网/超时 120s/产出白名单)</td><td><span class="tag g">已落盘</span></td><td>13-PRD §3</td></tr>
+  <tr><td>B2-9</td><td>CI/Webhook 触发归 V2,V1 只做手工+计划</td><td><span class="tag g">已落盘</span></td><td>14-PRD §2、18-PRD §2</td></tr>
+  <tr><td>B2-10</td><td>ReviewDecision 声明为 ReviewAssignment.decision+AuthorizationDecision 投影,统一措辞</td><td><span class="tag g">已落盘</span></td><td>04 §3.3 加注、03 L318 措辞统一</td></tr>
+  <tr><td>B2-11</td><td>TEST_DESIGN 同名:03 术语表加注"按上下文区分"</td><td><span class="tag b">待补注</span></td><td>03 术语表(与 B2-1 应用批同批执行)</td></tr>
+</table>
+
+<h2>二、已落盘修改清单(7 处,已验证)</h2>
+<table>
+  <tr><th>文件</th><th>位置</th><th>修改内容</th><th>验证</th></tr>
+  <tr><td>03-术语表</td><td>L318 迁移表</td><td>manualVerified 目标 ReviewTask/ReviewDecision → ReviewTask/ReviewAssignment(B2-10)</td><td>grep ✓</td></tr>
+  <tr><td>04-核心领域模型</td><td>§3.3 开头</td><td>加 ReviewDecision 投影说明(B2-10)</td><td>grep ✓</td></tr>
+  <tr><td>13-PRD</td><td>§3 关键规则</td><td>加试运行沙箱量化验收口径(B2-8)</td><td>grep ✓</td></tr>
+  <tr><td>14-PRD</td><td>§2 触发行</td><td>触发改 V1 手工/计划、V2 Webhook/Pipeline(B2-9)</td><td>grep ✓</td></tr>
+  <tr><td>18-PRD</td><td>§2 迁移规则</td><td>加 CI/Webhook 属 V2 的版本边界(B2-9)</td><td>grep ✓</td></tr>
+  <tr><td>15-PRD</td><td>§4 关键规则</td><td>加 V1 手工同步走 DefectSyncAttempt+批准(B2-4)</td><td>grep ✓</td></tr>
+  <tr><td>22-MVP规划</td><td>§3 质量行</td><td>加手工同步仍须落批准记录+回执(B2-4)</td><td>grep ✓</td></tr>
+</table>
+
+<h2>三、下一步(待应用/排期)</h2>
+<ol>
+  <li><b>契约联动项(B2-1/2/3)</b>:按执行包的可粘贴草案应用(12/14/15/16-PRD + 05/04 + 32/33),应用后跑 <code>make contract</code> + L1 一致性扫描</li>
+  <li><b>B2-11 加注</b>:随 B2-1 应用批在 03 术语表补 TEST_DESIGN 同名注记</li>
+  <li><b>B2-5 建表清单</b>:随 Stage5 M1 排期产出《V1 里程碑建表清单》</li>
+  <li><b>B2-6/7 排期</b>:已记录,并入 V1 执行计划(补证顺序 M3→M4;PG 冒烟作 M1/M2 门禁)</li>
+  <li><b>35-CHANGELOG</b>:追加"批次十二:2026-08-14 B2 裁决整改"条目(含本次 7 处落盘 + 后续应用批)</li>
+</ol>
+<p class="note">说明:低风险项已由我直接落盘(用户授权"全部按推荐方案执行");契约联动项涉及四源联动与 YAML/DDL 修改,已给出可粘贴草案,建议按执行包验证清单应用(可要求我代为应用并跑验证)。</p>
+
+<footer>
+  关联交付:<a href="QualityForge-待裁决清单-B2-11项.html">待裁决清单</a> ｜ <a href="QualityForge-B2裁决整改执行包.md">整改执行包(含可粘贴草案)</a> ｜ <a href="QualityForge-项目进度看板.html">项目进度看板</a>
+</footer>
+
+</div>
+</body>
+</html>

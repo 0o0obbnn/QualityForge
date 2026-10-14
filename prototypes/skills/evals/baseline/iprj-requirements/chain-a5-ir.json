@@ -1,0 +1,71 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {
+      "req_id": "REQ-001",
+      "title": "每月1号生成上报任务",
+      "description": "每月1号凌晨自动生成本月上报任务",
+      "validation_status": "PENDING",
+      "source_trace": "iprj-prd.md:数据上报(管理侧):任务记录",
+      "confidence": 0.9
+    },
+    {
+      "req_id": "REQ-002",
+      "title": "删除数据审批通过后次日自动删除",
+      "description": "删除类型数据包需审批，通过后次日定时删除",
+      "validation_status": "PENDING",
+      "source_trace": "iprj-prd.md:审批管理:删除审批",
+      "confidence": 0.95
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-INSTITUTION-001",
+      "name": "接入机构",
+      "fields": [
+        {"name": "institution_name", "type": "string", "sensitivity_level": "INTERNAL"},
+        {"name": "social_credit_code", "type": "string", "sensitivity_level": "SENSITIVE"},
+        {"name": "status", "type": "string", "sensitivity_level": "PUBLIC", "sensitivity_rationale": "启用状态面向列表展示"}
+      ]
+    }
+  ],
+  "business_rules": [
+    {
+      "rule_id": "RULE-001",
+      "condition": "institution.status == ENABLED",
+      "action": "include in monthly reporting task",
+      "source": "iprj-prd.md:数据上报(管理侧)",
+      "source_trace": "iprj-prd.md:数据上报(管理侧):任务记录",
+      "confidence": 0.85
+    },
+    {
+      "rule_id": "RULE-002",
+      "condition": "instance.query_usage > max_query_quota",
+      "action": "next_day_noon_suspend_query_service",
+      "source": "iprj-prd.md:检索次数管理(管理侧)",
+      "source_trace": "iprj-prd.md:检索次数管理(管理侧):签约机构",
+      "confidence": 0.8,
+      "validation_status": "NEED_HUMAN_REVIEW"
+    }
+  ],
+  "state_machines": [
+    {
+      "sm_id": "SM-DEL-001",
+      "entity_id": "ENT-INSTITUTION-001",
+      "initial_state": "PENDING_APPROVAL",
+      "states": ["PENDING_APPROVAL", "APPROVED", "REJECTED", "PENDING_DELETE"],
+      "transitions": [
+        {"from": "PENDING_APPROVAL", "to": "APPROVED", "guard": "approval_passed"},
+        {"from": "PENDING_APPROVAL", "to": "REJECTED", "guard": "approval_failed"},
+        {"from": "APPROVED", "to": "PENDING_DELETE", "guard": null}
+      ],
+      "terminal_states": ["PENDING_DELETE"]
+    }
+  ],
+  "interface_contracts": [
+    {"endpoint": "/api/approval/delete", "method": "POST", "summary": "提交删除审批"},
+    {"endpoint": "/api/approval/list", "method": "GET", "summary": "删除审批列表"},
+    {"endpoint": "/api/reporting/generate", "method": "POST", "summary": "生成上报任务"}
+  ],
+  "constraints": []
+}

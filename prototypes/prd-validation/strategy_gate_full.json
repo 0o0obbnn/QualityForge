@@ -1,0 +1,10 @@
+{
+  "skill": "06",
+  "checked_at": "2026-09-06T08:06:43.291754+00:00",
+  "verdict": "PASS",
+  "total_findings": 0,
+  "reject_count": 0,
+  "review_count": 0,
+  "findings": [],
+  "routing": "strategy 就绪；gate 是下游覆盖率检查的基准"
+}

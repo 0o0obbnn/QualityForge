@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QualityForge 原型组件级走查报告 · 2026-08-12</title>
+<style>
+  :root{--bg:#FAFAF7;--card:#FFFFFF;--fg:#1D1B18;--muted:#817B6E;--border:#E9E6DE;--accent:#D96C1F;--accent-600:#B8551A;--accent-100:#FDF4EA;--ok:#47875A;--ok-100:#E4EFE6;--warn:#B98E2A;--warn-100:#F5EDD8;--err:#C0442F;--err-100:#F7E3DE;--sec:#6B7A5E;--sec-100:#E6E9DF;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--fg);font-family:"Avenir Next","PingFang SC","Noto Sans SC",-apple-system,sans-serif;line-height:1.7;padding:40px 24px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  header{border-bottom:2px solid var(--fg);padding-bottom:24px;margin-bottom:32px;}
+  .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-600);font-weight:600;}
+  h1{font-size:32px;font-weight:600;letter-spacing:-0.02em;margin-top:10px;}
+  .sub{color:var(--muted);margin-top:8px;font-size:15px;}
+  h2{font-size:21px;font-weight:600;margin:40px 0 6px;}
+  h3{font-size:15.5px;font-weight:600;margin:22px 0 8px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;background:var(--card);border-radius:12px;overflow:hidden;margin:10px 0 18px;}
+  th{background:#F4F2ED;text-align:left;padding:9px 12px;font-weight:600;font-size:12px;}
+  td{padding:9px 12px;border-top:1px solid var(--border);vertical-align:top;}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:900px){.metrics{grid-template-columns:repeat(2,1fr);}}
+  .metric{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
+  .metric .v{font-size:28px;font-weight:300;letter-spacing:-0.02em;}
+  .metric .k{font-size:12.5px;color:var(--muted);margin-top:2px;}
+  .badge{display:inline-block;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .b-ok{background:var(--ok-100);color:#356B45;} .b-warn{background:var(--warn-100);color:#96701E;} .b-err{background:var(--err-100);color:#9C3624;} .b-acc{background:var(--accent-100);color:var(--accent-600);}
+  .callout{border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:14px 18px;background:var(--card);margin:14px 0;font-size:14px;}
+  .callout.warn{border-left-color:var(--warn);}
+  code{font-family:"JetBrains Mono",Menlo,monospace;font-size:12px;background:#F4F2ED;border-radius:4px;padding:1px 6px;}
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;}
+  @media(max-width:800px){.cmp{grid-template-columns:1fr;}}
+  .cmp .side{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:13px;}
+  .cmp .side h4{font-size:13px;margin-bottom:8px;}
+  .cmp .before h4{color:var(--err);} .cmp .after h4{color:var(--ok);}
+  ul.tight{padding-left:20px;margin:6px 0;} ul.tight li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">Component Audit Report · 2026-08-12</div>
+  <h1>原型组件级全量走查报告</h1>
+  <p class="sub">走查对象: deliverables/2026-08-12/prototype/ 27 页 · 方法: 4 路独立 Agent 分线扫描 + 复核交叉核验 · 判据: ui-ux-pro-max 启发式 + craft 工艺规则(state-coverage / form-validation / accessibility-baseline)</p>
+</header>
+
+<div class="metrics">
+  <div class="metric"><div class="v">66</div><div class="k">走查问题(去重)</div></div>
+  <div class="metric"><div class="v">15</div><div class="k">严重级: 高</div></div>
+  <div class="metric"><div class="v">22</div><div class="k">严重级: 中</div></div>
+  <div class="metric"><div class="v">29</div><div class="k">严重级: 低</div></div>
+</div>
+
+<h2>一、四条走查线统计</h2>
+<table>
+  <tr><th>走查线</th><th>问题数</th><th>高</th><th>中</th><th>低</th><th>核心发现</th></tr>
+  <tr><td>A 搜索框与字段</td><td>21</td><td>11</td><td>5</td><td>5</td><td>校验逻辑系统性缺口(2 条)、弹窗表单校验失效(9 条)、搜索框键盘类型(5 个)</td></tr>
+  <tr><td>B 列表与表格</td><td>27</td><td>2</td><td>8</td><td>17</td><td>数据量声明与展示不一致(2 处)、空态覆盖 26/30、全站无排序入口</td></tr>
+  <tr><td>C 弹窗与浮层</td><td>6</td><td>0</td><td>2</td><td>4</td><td>aria 声明缺失(13 个)、2 个弹窗缺操作区</td></tr>
+  <tr><td>D 交互状态</td><td>15</td><td>2</td><td>7</td><td>6</td><td>表单 hover 缺失、列表加载态(skeleton)完全缺失、状态"定义存在但 0 渲染"</td></tr>
+</table>
+
+<h2>二、修复执行摘要</h2>
+<table>
+  <tr><th>修复面</th><th>内容</th><th>涉及文件</th></tr>
+  <tr><td>共享组件库</td><td>补 .input:hover、.tabs/.viewswitch hover+disabled、.btn-soft.loading、.btn:disabled:hover、.qf-skeleton 加载态、SVG 图表色类、全局 h2 层级</td><td>qf-components.css</td></tr>
+  <tr><td>校验引擎</td><td>bindForm 升级: required + pattern + minlength + type=email/url 全量 validity 校验</td><td>qf-shell.js</td></tr>
+  <tr><td>弹窗表单</td><td>11-reviews 退回/拒绝、20-sources 冲突裁决、42-assets 新建资产、82-governance 新建角色、99-modals d2/d7/d11 全部补 form + required + 错误提示</td><td>5 个页面</td></tr>
+  <tr><td>搜索框与类型</td><td>5 个搜索框补 type=search + aria-label;邀请成员→email;Endpoint→url;日期/期望实际补 aria-label</td><td>6 个页面</td></tr>
+  <tr><td>弹窗结构</td><td>全站 82 个弹窗补 role=dialog+aria-modal;10-board 两个弹窗补操作区;99-modals 关闭按钮补 aria-label</td><td>全站</td></tr>
+  <tr><td>列表表格</td><td>4 处补分页(236/14/27/22 条口径)、18 处空态、2 张表补 .table-scroll、审计表去伪可点</td><td>12 个页面</td></tr>
+  <tr><td>状态演示</td><td>表格选中态(10-board)、禁用 chip、loading 按钮演示(30/51)、skeleton 演示(51)、错误态演示(99-modals)</td><td>4 个页面</td></tr>
+</table>
+
+<h2>三、优化前后对比(抽查)</h2>
+<div class="cmp">
+  <div class="side before">
+    <h4>走查前</h4>
+    <ul class="tight">
+      <li>5 个搜索框: 无 type=search / 无 aria-label</li>
+      <li>9 个必填字段: 校验与错误提示失效(非 form 弹窗)</li>
+      <li>30 张表: 仅 1 张有分页、仅 4 张有空态、0 张有加载态</li>
+      <li>82 个弹窗: 13 个无 aria、2 个缺操作区</li>
+      <li>表单控件: 无 hover 态、无骨架屏组件</li>
+      <li>选中态/禁用态/错误态: 定义存在但 0 渲染</li>
+    </ul>
+  </div>
+  <div class="side after">
+    <h4>优化后</h4>
+    <ul class="tight">
+      <li>5/5 搜索框: type=search + aria-label ✅</li>
+      <li>必填字段: form + required + err 全链路校验(validity 引擎)✅</li>
+      <li>30 张表: 5 处分页、18 处空态、skeleton 加载组件 ✅</li>
+      <li>82 个弹窗: role=dialog + aria-modal 全覆盖、操作区齐全 ✅</li>
+      <li>表单 hover / 骨架屏 / 图表取色(随主题)✅</li>
+      <li>选中/禁用/loading/错误态均有真实渲染演示 ✅</li>
+    </ul>
+  </div>
+</div>
+
+<h2>四、修复后全量验证</h2>
+<table>
+  <tr><th>验证项</th><th>结果</th><th>证据</th></tr>
+  <tr><td>取色扫描(禁蓝紫)</td><td><span class="badge b-ok">0 违例</span></td><td>verify_palette.py 全目录扫描通过</td></tr>
+  <tr><td>页面结构</td><td><span class="badge b-ok">27/27 通过</span></td><td>html/style/script 闭合配对</td></tr>
+  <tr><td>内部链接</td><td><span class="badge b-ok">0 断链</span></td><td>全部跨页跳转有效</td></tr>
+  <tr><td>弹窗引用</td><td><span class="badge b-ok">82/82 有效</span></td><td>openModal ↔ 定义一致</td></tr>
+  <tr><td>交互绑定</td><td><span class="badge b-ok">521+ 处</span></td><td>筛选/视图/Tab/分页/弹窗/表单/loading</td></tr>
+</table>
+
+<div class="callout warn">体系化建议(已记录待确认,未擅改): ① 全站表格排序入口(sortable 表头) ② 列表页搜索覆盖扩展 ③ 弹窗焦点陷阱/aria-labelledby 深度实现 ④ 纯查看弹窗 primary 按钮语义降级。这些涉及信息架构与交互模式决策,按约束「不擅自改变核心 IA」记录在台账,待用户确认。</div>
+</div>
+</body>
+</html>

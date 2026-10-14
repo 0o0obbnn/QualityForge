@@ -1,0 +1,8 @@
+{
+  "skill_name": "change-impact-analyzer",
+  "evals": [
+    {"id": 1, "name": "accept-two-level-impact", "prompt": "校验一份基于图数据的 impact report,其传播深度达到 2 层,且包含直接和间接资产。", "expected_output": "PASS;该 report 覆盖了要求的两个传播层级,且未使用 fallback。", "files": []},
+    {"id": 2, "name": "reject-shallow-propagation", "prompt": "校验一份在 depth 1 直接依赖后就停止的 impact report。", "expected_output": "REJECT,因为缺少必需的间接传播证据。", "files": []},
+    {"id": 3, "name": "reject-silent-fallback", "prompt": "图数据不可用,使用了静态 fallback 且没有降级置信度标记。校验该 report。", "expected_output": "REJECT;fallback 必须披露,不确定性必须路由到评审。", "files": []}
+  ]
+}

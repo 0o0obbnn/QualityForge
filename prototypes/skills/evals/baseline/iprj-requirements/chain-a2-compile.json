@@ -1,0 +1,52 @@
+{
+  "declared_sources": [
+    {"source_id": "iprj-prd.md", "availability": "AVAILABLE"}
+  ],
+  "ir_draft": {
+    "requirements": [
+      {
+        "req_id": "REQ-001",
+        "title": "每月1号生成上报任务",
+        "source_trace": "iprj-prd.md:数据上报(管理侧):任务记录",
+        "confidence": 0.9,
+        "confidence_rationale": "业务规则1原文明确每月1号凌晨自动生成。"
+      },
+      {
+        "req_id": "REQ-002",
+        "title": "删除数据需审批通过后次日自动删除",
+        "source_trace": "iprj-prd.md:审批管理:删除审批",
+        "confidence": 0.95,
+        "confidence_rationale": "功能概述明确审批通过后次日定时任务删除。"
+      }
+    ],
+    "business_rules": [
+      {
+        "rule_id": "RULE-001",
+        "condition": "institution.status == ENABLED",
+        "action": "纳入每月上报任务生成机构范围",
+        "source": "iprj-prd.md:数据上报(管理侧):任务记录",
+        "source_trace": "iprj-prd.md:数据上报(管理侧):任务记录",
+        "confidence": 0.85,
+        "confidence_rationale": "规则2明确启用状态接入机构。"
+      },
+      {
+        "rule_id": "RULE-002",
+        "condition": "instance.query_usage > max_query_quota",
+        "action": "next_day_noon_suspend_query_service",
+        "source": "iprj-prd.md:检索次数管理(管理侧):签约机构",
+        "source_trace": "iprj-prd.md:检索次数管理(管理侧):签约机构",
+        "confidence": 0.5,
+        "confidence_rationale": "",
+        "inferred": true
+      }
+    ],
+    "constraints": [],
+    "entities": [
+      {
+        "entity_id": "ENT-INSTITUTION-001",
+        "name": "接入机构",
+        "fields": []
+      }
+    ]
+  }
+}

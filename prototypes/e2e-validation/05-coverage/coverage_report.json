@@ -1,0 +1,136 @@
+{
+  "skill": "12",
+  "checked_at": "2026-08-11T15:53:10.859314+00:00",
+  "overall_verdict": "GATE_FAILURE",
+  "dimensions": {
+    "rule": {
+      "dimension": "rule",
+      "numerator": 3,
+      "denominator": 4,
+      "coverage": 0.75,
+      "missing": [
+        "R-TD-004"
+      ],
+      "threshold": 1.0,
+      "verdict": "FAIL"
+    },
+    "scenario": {
+      "dimension": "scenario",
+      "numerator": 3,
+      "denominator": 9,
+      "coverage": 0.333,
+      "missing": [
+        "S-td-002",
+        "S-td-003",
+        "S-td-005",
+        "S-td-006",
+        "S-td-008",
+        "S-td-009"
+      ],
+      "threshold": 0.7,
+      "verdict": "FAIL"
+    },
+    "state": {
+      "dimension": "state",
+      "numerator": 1,
+      "denominator": 4,
+      "coverage": 0.25,
+      "missing": [
+        "SM-DTC:GENERATING->PENDING_REVIEW",
+        "SM-DTC:PENDING_REVIEW->APPROVED",
+        "SM-DTC:PENDING_REVIEW->DRAFT"
+      ],
+      "threshold": 0.9,
+      "verdict": "FAIL"
+    },
+    "assertion": {
+      "dimension": "assertion",
+      "numerator": 2,
+      "denominator": 3,
+      "coverage": 0.667,
+      "passed": 2,
+      "repair": 0,
+      "reject": 1,
+      "unverified": 0,
+      "missing_verdict_ids": [],
+      "duplicate_verdict_ids": [],
+      "duplicate_required_ids": [],
+      "unexpected_verdict_ids": [],
+      "malformed_verdict_count": 0,
+      "malformed_assertion_count": 0,
+      "evidence_errors": 0,
+      "threshold": 0.85,
+      "verdict": "FAIL"
+    }
+  },
+  "thresholds_used": {
+    "rule": 1.0,
+    "scenario": 0.7,
+    "state": 0.9,
+    "assertion": 0.85
+  },
+  "gate_failures": [
+    {
+      "dimension": "rule",
+      "coverage": 0.75,
+      "threshold": 1.0,
+      "gap": 0.25,
+      "missing_count": 1,
+      "missing_sample": [
+        "R-TD-004"
+      ],
+      "blocking_rejections": 0,
+      "evidence_errors": 0,
+      "configuration_error": false,
+      "empty_denominator": false
+    },
+    {
+      "dimension": "scenario",
+      "coverage": 0.333,
+      "threshold": 0.7,
+      "gap": 0.367,
+      "missing_count": 6,
+      "missing_sample": [
+        "S-td-002",
+        "S-td-003",
+        "S-td-005",
+        "S-td-006",
+        "S-td-008",
+        "S-td-009"
+      ],
+      "blocking_rejections": 0,
+      "evidence_errors": 0,
+      "configuration_error": false,
+      "empty_denominator": false
+    },
+    {
+      "dimension": "state",
+      "coverage": 0.25,
+      "threshold": 0.9,
+      "gap": 0.65,
+      "missing_count": 3,
+      "missing_sample": [
+        "SM-DTC:GENERATING->PENDING_REVIEW",
+        "SM-DTC:PENDING_REVIEW->APPROVED",
+        "SM-DTC:PENDING_REVIEW->DRAFT"
+      ],
+      "blocking_rejections": 0,
+      "evidence_errors": 0,
+      "configuration_error": false,
+      "empty_denominator": false
+    },
+    {
+      "dimension": "assertion",
+      "coverage": 0.667,
+      "threshold": 0.85,
+      "gap": 0.183,
+      "missing_count": 0,
+      "missing_sample": [],
+      "blocking_rejections": 1,
+      "evidence_errors": 0,
+      "configuration_error": false,
+      "empty_denominator": false
+    }
+  ],
+  "routing": "Phase blocked; route to human review"
+}

@@ -1,0 +1,26 @@
+{
+  "eval_id": 6,
+  "eval_name": "eval-6-effective-coverage-not-line-coverage",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "must_report_effective_coverage",
+      "passed": true
+    },
+    {
+      "text": "rejected_not_counted",
+      "passed": true
+    },
+    {
+      "text": "line_coverage_unacceptable",
+      "passed": true
+    },
+    {
+      "text": "cites_false_coverage_or_meta_ach",
+      "passed": true
+    }
+  ],
+  "passed": 4,
+  "total": 4,
+  "pass_rate": 1.0
+}

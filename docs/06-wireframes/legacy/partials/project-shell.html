@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{PAGE_TITLE}} - QualityForge</title>
+  <link rel="stylesheet" href="../colors_and_type.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--qf-font-ui);
+      background: var(--qf-background);
+      color: var(--qf-foreground);
+      font-size: var(--qf-text-base);
+      line-height: var(--qf-leading-normal);
+      min-height: 100vh;
+    }
+    .app { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px;
+      background: var(--qf-card);
+      border-right: 1px solid var(--qf-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 50;
+    }
+    .sidebar-header {
+      height: 56px;
+      padding: 0 var(--qf-space-4);
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-3);
+      border-bottom: 1px solid var(--qf-border);
+    }
+    .logo {
+      width: 28px; height: 28px;
+      background: var(--qf-primary);
+      border-radius: var(--qf-radius-md);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: var(--qf-weight-bold);
+      color: var(--qf-primary-foreground);
+      font-size: var(--qf-text-xs);
+    }
+    .brand-name { font-weight: var(--qf-weight-semibold); font-size: var(--qf-text-md); }
+    .nav-section { padding: var(--qf-space-3) 0; }
+    .nav-label {
+      padding: 0 var(--qf-space-4);
+      font-size: var(--qf-text-xs);
+      color: var(--qf-muted-foreground);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--qf-space-2);
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-3);
+      padding: 10px var(--qf-space-4);
+      margin: 0 var(--qf-space-2);
+      border-radius: var(--qf-radius-md);
+      color: var(--qf-muted-foreground);
+      text-decoration: none;
+      font-size: var(--qf-text-sm);
+      transition: background var(--qf-transition-fast), color var(--qf-transition-fast);
+    }
+    .nav-item:hover { background: var(--qf-muted); color: var(--qf-foreground); }
+    .nav-item.active { background: rgba(0, 140, 255, 0.12); color: var(--qf-primary); }
+    .nav-icon { width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+    .main { flex: 1; margin-left: 240px; display: flex; flex-direction: column; }
+    .topbar {
+      height: 56px;
+      background: var(--qf-card);
+      border-bottom: 1px solid var(--qf-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--qf-space-6);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    .topbar-left { display: flex; align-items: center; gap: var(--qf-space-4); }
+    .workspace-selector {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      padding: var(--qf-space-2) var(--qf-space-3);
+      background: var(--qf-muted);
+      border-radius: var(--qf-radius-md);
+      font-size: var(--qf-text-sm);
+      cursor: pointer;
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: var(--qf-radius-full); background: var(--qf-state-success); }
+    .topbar-right { display: flex; align-items: center; gap: var(--qf-space-4); }
+    .token-budget {
+      display: flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      font-size: var(--qf-text-xs);
+      color: var(--qf-muted-foreground);
+    }
+    .token-bar {
+      width: 96px;
+      height: 6px;
+      background: var(--qf-muted);
+      border-radius: var(--qf-radius-full);
+      overflow: hidden;
+    }
+    .token-fill {
+      height: 100%;
+      width: 42%;
+      background: var(--qf-primary);
+      border-radius: var(--qf-radius-full);
+    }
+    .icon-btn {
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--qf-radius-md);
+      background: transparent;
+      border: 1px solid var(--qf-border);
+      color: var(--qf-muted-foreground);
+      cursor: pointer;
+    }
+    .icon-btn:hover { background: var(--qf-muted); color: var(--qf-foreground); }
+    .content { flex: 1; padding: var(--qf-space-6); overflow: auto; }
+    .page-header { margin-bottom: var(--qf-space-6); }
+    .page-title { font-size: var(--qf-text-xl); font-weight: var(--qf-weight-semibold); }
+    .page-subtitle { font-size: var(--qf-text-sm); color: var(--qf-muted-foreground); margin-top: var(--qf-space-1); }
+    .card {
+      background: var(--qf-card);
+      border: 1px solid var(--qf-border);
+      border-radius: var(--qf-radius-lg);
+      padding: var(--qf-space-5);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--qf-space-2);
+      padding: 8px var(--qf-space-4);
+      border-radius: var(--qf-radius-md);
+      font-size: var(--qf-text-sm);
+      font-weight: var(--qf-weight-medium);
+      cursor: pointer;
+      border: none;
+      transition: opacity var(--qf-transition-fast);
+    }
+    .btn:hover { opacity: 0.9; }
+    .btn-primary { background: var(--qf-primary); color: var(--qf-primary-foreground); }
+    .btn-secondary { background: var(--qf-secondary); color: var(--qf-secondary-foreground); }
+    .btn-ghost { background: transparent; color: var(--qf-muted-foreground); border: 1px solid var(--qf-border); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--qf-radius-full);
+      font-size: var(--qf-text-xs);
+      font-weight: var(--qf-weight-medium);
+    }
+    .badge-pass { background: var(--qf-bg-pass); color: var(--qf-state-success); }
+    .badge-warn { background: var(--qf-bg-warn); color: var(--qf-state-warning); }
+    .badge-fail { background: var(--qf-bg-fail); color: var(--qf-state-error); }
+    .badge-ai { background: var(--qf-bg-ai); color: var(--qf-ai); }
+    .confidence {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: var(--qf-radius-full);
+      font-size: var(--qf-text-xs);
+      font-weight: var(--qf-weight-semibold);
+    }
+    .confidence-high { background: var(--qf-bg-pass); color: var(--qf-state-success); }
+    .confidence-medium { background: var(--qf-bg-warn); color: var(--qf-state-warning); }
+    .confidence-low { background: var(--qf-bg-fail); color: var(--qf-state-error); }
+    .source-trace {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--qf-primary);
+      font-size: var(--qf-text-xs);
+      cursor: pointer;
+    }
+    .source-trace:hover { text-decoration: underline; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--qf-text-sm); }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--qf-border); }
+    th { color: var(--qf-muted-foreground); font-weight: var(--qf-weight-medium); font-size: var(--qf-text-xs); text-transform: uppercase; letter-spacing: 0.3px; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">QF</div>
+        <div class="brand-name">QualityForge</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">工作台</div>
+        <a href="workbench.html" class="nav-item {{ACTIVE_WORKBENCH}}" data-dom-id="nav-workbench"><span class="nav-icon">□</span> 工作台</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">测试工程</div>
+        <a href="workspace-list.html" class="nav-item {{ACTIVE_WORKSPACE}}" data-dom-id="nav-workspace"><span class="nav-icon">◧</span> 工作空间</a>
+        <a href="requirements.html" class="nav-item {{ACTIVE_TESTDESIGN}}" data-dom-id="nav-testdesign"><span class="nav-icon">◎</span> 测试设计</a>
+        <a href="asset-portal.html" class="nav-item {{ACTIVE_ASSET}}" data-dom-id="nav-asset"><span class="nav-icon">▣</span> 测试资产</a>
+        <a href="execution-plans.html" class="nav-item {{ACTIVE_EXECUTION}}" data-dom-id="nav-execution"><span class="nav-icon">▶</span> 测试执行</a>
+        <a href="qi-dashboard.html" class="nav-item {{ACTIVE_INTELLIGENCE}}" data-dom-id="nav-intelligence"><span class="nav-icon">◈</span> 质量智能</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">AI 能力</div>
+        <a href="agent-trace.html" class="nav-item {{ACTIVE_AGENT}}" data-dom-id="nav-agent"><span class="nav-icon">◉</span> Agent Trace</a>
+      </div>
+    </aside>
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="workspace-selector">
+            <span class="status-dot"></span>
+            <span>订单系统-V2.0</span>
+            <span>▼</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="token-budget">
+            <span>Token 预算</span>
+            <div class="token-bar"><div class="token-fill"></div></div>
+            <span>42%</span>
+          </div>
+          <button class="icon-btn" data-dom-id="btn-search">🔍</button>
+          <button class="icon-btn" data-dom-id="btn-help">?</button>
+          <button class="icon-btn" data-dom-id="btn-profile">👤</button>
+        </div>
+      </header>
+      <main class="content">
+        {{MAIN_CONTENT}}
+      </main>
+    </div>
+  </div>
+</body>
+</html>

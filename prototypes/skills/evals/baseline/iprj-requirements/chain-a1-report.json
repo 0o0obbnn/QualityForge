@@ -1,0 +1,73 @@
+{
+  "skill": "requirement-quality-gate",
+  "checked_at": "2026-09-06T05:44:01.424478+00:00",
+  "review_id": "iprj-chain-a1",
+  "verdict": "REJECT",
+  "reject_findings": 5,
+  "review_findings": 1,
+  "findings": [
+    {
+      "finding_id": "CHAIN-01",
+      "code": "AMBIGUOUS_LANGUAGE",
+      "severity": "REVIEW",
+      "source_refs": [
+        "iprj-prd.md:结算管理:系数XYZ"
+      ],
+      "evidence": "章节名'系数XYZ'的XYZ语义无公式定义。",
+      "question": "系数XYZ的命名与计算公式是什么？"
+    },
+    {
+      "finding_id": "CHAIN-02",
+      "code": "CROSS_SOURCE_CONFLICT",
+      "severity": "REJECT",
+      "source_refs": [
+        "iprj-prd.md:数据上报:任务记录",
+        "iprj-prd.md:检索次数管理:签约机构"
+      ],
+      "evidence": "上报每月1号生成任务，检索次数每月25号判定签约机构，两处月份归属口径不一致。",
+      "question": "上报任务与检索次数配额在日历月内的时间边界是否冲突？"
+    },
+    {
+      "finding_id": "CHAIN-03",
+      "code": "UNTESTABLE_ACCEPTANCE_CRITERIA",
+      "severity": "REJECT",
+      "source_refs": [
+        "iprj-prd.md:检索次数管理:签约机构"
+      ],
+      "evidence": "签约机构判定依赖结算起始时间落入查询月份周期，但周期边界算法未给出。",
+      "question": "请给出签约机构判定的月份边界公式。"
+    },
+    {
+      "finding_id": "CHAIN-04",
+      "code": "MISSING_REQUIRED_ACTOR",
+      "severity": "REJECT",
+      "source_refs": [
+        "iprj-prd.md:结算详情(业务侧)"
+      ],
+      "evidence": "业务侧各角色对结算明细的可见字段未逐角色定义。",
+      "question": "请逐角色明确结算详情的可见字段。"
+    },
+    {
+      "finding_id": "CHAIN-05",
+      "code": "UNMEASURABLE_NFR",
+      "severity": "REJECT",
+      "source_refs": [
+        "iprj-prd.md:非功能需求"
+      ],
+      "evidence": "成功率99.9%与响应≤500ms的统计窗口采样口径未定义。",
+      "question": "请定义NFR统计窗口与采样方式。"
+    },
+    {
+      "finding_id": "CHAIN-06",
+      "code": "ROLE_PERMISSION_CONFLICT",
+      "severity": "REJECT",
+      "source_refs": [
+        "iprj-prd.md:检索次数管理(业务侧)",
+        "iprj-prd.md:检索次数管理(管理侧)"
+      ],
+      "evidence": "同名检索次数管理在业务侧/管理侧权限边界未声明。",
+      "question": "业务侧与管理侧检索次数管理权限差异是什么？"
+    }
+  ],
+  "routing": "阻断需求融合"
+}

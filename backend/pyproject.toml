@@ -1,0 +1,71 @@
+[project]
+name = "qualityforge-backend"
+version = "0.3.0"
+description = "QualityForge Stage 4 local SQLite planning and human-review vertical slice"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "PyJWT>=2.9.0",
+    "pydantic>=2.7.0",
+    "pydantic-settings>=2.3.0",
+    "langgraph>=1.0,<2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "openapi-spec-validator>=0.7.2",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qf"]
+
+# ===== uv 配置 =====
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "openapi-spec-validator>=0.7.2",
+]
+
+# ===== Ruff 配置 =====
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "A", "C4", "SIM"]
+
+# FastAPI 的 Depends()/File() 在默认参数中是标准模式；Pydantic 用 camelCase 对齐 API 契约
+[tool.ruff.lint.per-file-ignores]
+"src/qf/api/**/*.py" = ["B008"]
+"src/qf/db/**/*.py" = ["B008"]
+"src/qf/schemas/**/*.py" = ["N815"]  # camelCase 字段名对齐 32-YAML API 契约
+"tests/**/*.py" = ["B008"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["qf"]
+
+# ===== mypy 配置 =====
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = ["pydantic.mypy"]
+
+# ===== pytest 配置 =====
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

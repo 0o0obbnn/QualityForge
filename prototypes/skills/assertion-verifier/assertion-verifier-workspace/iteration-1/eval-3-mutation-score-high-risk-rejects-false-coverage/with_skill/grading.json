@@ -1,0 +1,26 @@
+{
+  "eval_id": 3,
+  "eval_name": "eval-3-mutation-score-high-risk-rejects-false-coverage",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "verdict_is_REJECT",
+      "passed": true
+    },
+    {
+      "text": "score_0.8_below_0.85",
+      "passed": true
+    },
+    {
+      "text": "calls_it_false_coverage",
+      "passed": true
+    },
+    {
+      "text": "not_counted_as_effective_coverage",
+      "passed": true
+    }
+  ],
+  "passed": 4,
+  "total": 4,
+  "pass_rate": 1.0
+}

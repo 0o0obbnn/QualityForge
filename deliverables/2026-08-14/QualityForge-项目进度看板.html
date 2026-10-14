@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QualityForge 项目进度看板 · 2026-08-14</title>
+<style>
+  :root{
+    --ink:#111; --muted:#555; --line:#ddd; --bg:#fff;
+    --link:#0000EE; --block:#a63a3a; --sev:#b46a2e; --gen:#6a6a6a;
+    --fix:#2e7d32; --part:#8a6d3b; --defer:#1f6fb2; --open:#a63a3a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif; font-size:14px; line-height:1.65;}
+  .wrap{max-width:960px; margin:0 auto; padding:32px 20px 64px;}
+  header{border-bottom:2px solid var(--ink); padding-bottom:14px; margin-bottom:22px;}
+  h1{font-size:22px; font-weight:700;}
+  .meta{color:var(--muted); font-size:12.5px; margin-top:4px;}
+  h2{font-size:16px; font-weight:700; margin:30px 0 10px; padding-left:10px; border-left:3px solid var(--ink);}
+  .summary{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:14px 0;}
+  .sum{background:#f6f6f6; border:1px solid var(--line); padding:10px 12px;}
+  .sum .n{font-size:20px; font-weight:700;}
+  .sum .l{font-size:11.5px; color:var(--muted); margin-top:2px;}
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0 16px;}
+  .filters select{font:inherit; padding:4px 8px; border:1px solid var(--line); background:#fff; cursor:pointer;}
+  .filters label{font-size:12.5px; color:var(--muted); align-self:center;}
+  .legend{font-size:12px; color:var(--muted); margin:8px 0 14px;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  th{text-align:left; border-bottom:2px solid var(--ink); padding:6px 8px; font-size:12px; white-space:nowrap;}
+  td{border-bottom:1px solid var(--line); padding:7px 8px; vertical-align:top;}
+  tr:hover td{background:#fafafa;}
+  .tag{display:inline-block; padding:0 7px; font-size:11px; font-weight:600; border:1px solid var(--line); border-radius:2px; white-space:nowrap;}
+  .tag.block{background:var(--block); color:#fff; border-color:var(--block);}
+  .tag.sev{background:var(--sev); color:#fff; border-color:var(--sev);}
+  .tag.gen{background:#eee; color:#333;}
+  .tag.sug{background:#f3f3f3; color:#777;}
+  .tag.fix{background:var(--fix); color:#fff; border-color:var(--fix);}
+  .tag.part{background:var(--part); color:#fff; border-color:var(--part);}
+  .tag.defer{background:var(--defer); color:#fff; border-color:var(--defer);}
+  .tag.open{background:#fff; color:var(--open); border-color:var(--open);}
+  .tag.mile{background:var(--ink); color:#fff; border-color:var(--ink);}
+  a{color:var(--link); text-decoration:underline;}
+  .empty{color:var(--muted); padding:24px; text-align:center;}
+  .count-line{font-size:12px; color:var(--muted); margin:4px 0 10px;}
+  .milestones{margin:12px 0;}
+  .mile{border:1px solid var(--line); margin-bottom:8px;}
+  .mile-h{display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:#f6f6f6; cursor:pointer; font-weight:600; font-size:13px;}
+  .mile-h .st{font-size:11.5px; font-weight:400;}
+  .mile-b{padding:10px 12px; display:none;}
+  .mile-b.open{display:block;}
+  .bar{height:8px; background:#eee; margin-top:6px; position:relative;}
+  .bar>div{height:100%; background:var(--ink);}
+  footer{margin-top:40px; border-top:1px solid var(--line); padding-top:12px; font-size:12px; color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>QualityForge 项目进度看板</h1>
+  <div class="meta">数据截止:2026-08-14 13:45 (GMT+8) ｜ 数据源:git 提交记录、docs/05-audits/current/、8-13 评审台账 ｜ 维护说明见《项目进度汇总报告》</div>
+</header>
+
+<div class="summary" id="summary"></div>
+
+<h2>一、里程碑进度</h2>
+<div class="milestones" id="milestones"></div>
+
+<h2>二、未解决问题清单(48 条台账 × 当前状态)</h2>
+<div class="filters">
+  <label>筛选:</label>
+  <select id="f-status"><option value="all">全部状态</option></select>
+  <select id="f-level"><option value="all">全部级别</option></select>
+  <select id="f-module"><option value="all">全部模块</option></select>
+</div>
+<div class="legend">状态:已修复 / 部分修复 / 未修复 / V1延期声明 / 建议项 ｜ 级别:阻断 / 严重 / 一般 / 建议</div>
+<div class="count-line" id="count"></div>
+<table id="issues">
+  <thead><tr><th>编号</th><th>级别</th><th>状态</th><th>模块</th><th>问题摘要</th><th>整改建议</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+<h2>三、风险登记(13 项)</h2>
+<table id="risks">
+  <thead><tr><th>编号</th><th>类别</th><th>风险</th><th>概率</th><th>严重度</th><th>缓解方向</th></tr></thead>
+  <tbody></tbody>
+</table>
+
+<footer>
+  QualityForge 项目进度看板 · 2026-08-14 ｜ 生成依据:<a href="QualityForge-项目进度汇总报告.html">项目进度汇总报告</a> ｜ 本看板为只读汇总,不修改任何项目数据
+</footer>
+</div>
+
+<script>
+const DATA = {
+ "summary": [
+  {
+   "n": "V0 ~90%",
+   "l": "V0 设计/Gate 0 基本达成(静态契约层闭环)"
+  },
+  {
+   "n": "V1 0%",
+   "l": "V1 单 Workspace 试点未开工,Stage 5 规划 M1~M5 就绪"
+  },
+  {
+   "n": "48 条",
+   "l": "评审问题台账:已修复 2 / 部分 2 / 延期声明 3 / 未修复 41"
+  },
+  {
+   "n": "9 commits",
+   "l": "git 共 9 个提交(8-11~8-13,单人 yount)"
+  },
+  {
+   "n": "22/102 ops",
+   "l": "Stage4 运行时覆盖 22 个 operation(其余显式延期)"
+  },
+  {
+   "n": "3/8 产出物",
+   "l": "运行时证据覆盖 TestStrategy/TestPlan/TestCase 审核"
+  },
+  {
+   "n": "30 Skill",
+   "l": "30/30 evals.json(103 cases、14 确定性 runner)"
+  },
+  {
+   "n": "13 项风险",
+   "l": "业务 3 / 技术 4 / 范围 2 / 合规安全 4(3 项高概率高严重)"
+  }
+ ],
+ "milestones": [
+  {
+   "name": "V0 设计/Gate 0 验证",
+   "status": "基本达成 ~90%",
+   "pct": 90,
+   "detail": "8 模块边界冻结 · 四源一致(8-13 修复后) · 30 Skill/4 Agent · 双 E2E 链 · 6 份审计文档",
+   "desc": "静态契约层闭环完成:05 方案 Gate E 静态复审 PASS、收口复核 PASS、L1 假关闭已纠正(8-13)、QF-REQ-001/002/030 已修复。剩余少量文档级开放项(L1-006 计数口径、CHANGELOG 未追加)。"
+  },
+  {
+   "name": "V1 单 Workspace 试点",
+   "status": "未开工 0%(规划就绪)",
+   "pct": 5,
+   "detail": "Stage 5 VERDICT M1~M5 已定 · M1 需求与审核收口具备动工条件 · 8 模块中 7 模块无页面",
+   "desc": "仅 Stage3/4 纵向切片(22/102 ops、3/8 产出物、确定性 Provider、本地 SQLite),属 V0 验证用 Spike,非 V1 产品。M1(批改→新版本→二次复核)是下一里程碑。"
+  },
+  {
+   "name": "代码工程",
+   "status": "地基就绪",
+   "pct": 40,
+   "detail": "backend FastAPI v0.3.0(12 项 pytest) · frontend React 19(审核工作台) · CI 3 条 · Makefile 统一",
+   "desc": "backend SQLite 纵向切片 + frontend 审核工作台已提交;CI 门禁(ruff/mypy/pytest/validator/typecheck/vitest/build)与 Makefile 统一命令已就绪;frontend 仅认证+审核两界面。"
+  },
+  {
+   "name": "P0 整改(8-13 评审后)",
+   "status": "进行中 12%",
+   "pct": 12,
+   "detail": "48 条台账:已修复 2 · 部分修复 2 · 延期声明 3 · 未修复 41",
+   "desc": "a6df550 修复 QF-REQ-002/030,部分修复 QF-REQ-001(3/6 字段);L1 假关闭纠正报告发布;其余 41 条未触碰(PRD 已冻结)。QF-REQ-001 存在二次假关闭风险,需改判并补齐。"
+  }
+ ],
+ "issues": [
+  {
+   "id": "QF-REQ-001",
+   "level": "阻断",
+   "status": "部分修复",
+   "module": "任务看板",
+   "title": "WorkItem 关键字段未落四源(仅 objective/requiresReview/lockVersion 已补,acceptanceCriteria/constraints/agentId 仍缺;L1 纠正报告误报已修复)",
+   "action": "补齐剩余 3 字段到 04/32/33;追加 CHANGELOG;重跑 L1 扫描;纠正报告改判为部分修复"
+  },
+  {
+   "id": "QF-REQ-002",
+   "level": "严重",
+   "status": "已修复",
+   "module": "任务看板",
+   "title": "WorkItemType 枚举三方冲突(以 05 为准收敛为 11 值)",
+   "action": "a6df550 已修:04 L116 / 32 L748/774 / 33 L332 CHECK 四源一致;注意 TEST_DESIGN 与 21 号介入点同名"
+  },
+  {
+   "id": "QF-REQ-003",
+   "level": "严重",
+   "status": "V1延期声明",
+   "module": "质量分析与缺陷",
+   "title": "CoverageReport 契约链断裂(API 侧已显式延期;PRD15 承接行与唯一写入标注未补)",
+   "action": "质量分析模块开工时补 PRD15 需求行+AC+32 schema;挂账跟踪"
+  },
+  {
+   "id": "QF-REQ-004",
+   "level": "严重",
+   "status": "V1延期声明",
+   "module": "测试执行",
+   "title": "执行→分析契约验证链断裂(ContractCheckResult 延到测试执行模块开发时补,但测试执行是 V1 必交付模块)",
+   "action": "V1 验收前必须补;延期≠销账,挂账跟踪"
+  },
+  {
+   "id": "QF-REQ-005",
+   "level": "严重",
+   "status": "未修复",
+   "module": "API 契约",
+   "title": "OpenAPI 成功响应过度通用化(现计数 60 处 Generic:26 List+34 Object,评审口径 58)",
+   "action": "核心链响应契约收敛;统一 58/60 计数口径;37/54 同步"
+  },
+  {
+   "id": "QF-REQ-006",
+   "level": "严重",
+   "status": "未修复",
+   "module": "AI Agent中心",
+   "title": "AI 校准记录无结构化载体无实例(t_eval_* 无 threshold/fallback 列,无注册 API)",
+   "action": "33 补校准表/字段;32 补注册 API;建立真实模型 Golden Set"
+  },
+  {
+   "id": "QF-REQ-007",
+   "level": "严重",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "05 §十一 五个后续步骤未绑定版本里程碑与验收门",
+   "action": "建步骤↔版本↔验收证据对照表"
+  },
+  {
+   "id": "QF-REQ-008",
+   "level": "一般",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "reviewStatus 枚举孤立偏离(05 §5.6.2 仍 8 值 REWORK,权威 9 值 CHANGES_REQUESTED+STALE)",
+   "action": "05 §5.6.2 回改 9 值"
+  },
+  {
+   "id": "QF-REQ-009",
+   "level": "一般",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "WorkItem 状态机迁移集合不一致(04 §11.1 缺 IN_PROGRESS→DONE 等)+双重权威声明",
+   "action": "以 05 迁移表补齐 04 状态图;消除双重权威"
+  },
+  {
+   "id": "QF-REQ-010",
+   "level": "一般",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "WorkItemRun 枚举冲突(SUCCESS/TIMEOUT vs SUCCEEDED)+tokenUsage/cost 无列",
+   "action": "统一枚举;补成本字段或声明来源"
+  },
+  {
+   "id": "QF-REQ-011",
+   "level": "一般",
+   "status": "未修复",
+   "module": "质量分析与缺陷",
+   "title": "15-PRD 命名漂移(ExternalSyncAttempt/approvalReviewTaskId vs 权威 DefectSyncAttempt/approvalId)",
+   "action": "统一命名"
+  },
+  {
+   "id": "QF-REQ-012",
+   "level": "一般",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "ReviewTask agentSessionId 必填 vs 无此字段;COMMENT 落库未决",
+   "action": "32 改可选;COMMENT 口径裁决"
+  },
+  {
+   "id": "QF-REQ-013",
+   "level": "一般",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "PRD 版本范围未逐项标注 MUST/SHOULD/LATER(PRD 已冻结)",
+   "action": "V1 开工时逐能力标注版本归属"
+  },
+  {
+   "id": "QF-REQ-014",
+   "level": "一般",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "10-PRD 状态链 REWORK→DONE 与 05 §5.5.4 不符",
+   "action": "10-PRD 状态链修正"
+  },
+  {
+   "id": "QF-REQ-015",
+   "level": "一般",
+   "status": "未修复",
+   "module": "测试执行",
+   "title": "PRD14 误用 APIContractBaseline 作执行冻结对象(应为 ExecutionContractBaseline)",
+   "action": "PRD14 术语修正"
+  },
+  {
+   "id": "QF-REQ-016",
+   "level": "一般",
+   "status": "未修复",
+   "module": "测试执行",
+   "title": "ExecutionContractBaseline 冻结内容/基线撤销触发未入 PRD14",
+   "action": "PRD14 §5 补基线撤销异常+AC"
+  },
+  {
+   "id": "QF-REQ-017",
+   "level": "一般",
+   "status": "未修复",
+   "module": "AI Agent中心",
+   "title": "16-PRD 未承接 21§6.1 降级触发(校准过期/跌破门槛/误放误阻)",
+   "action": "PRD16 补降级触发闭环"
+  },
+  {
+   "id": "QF-REQ-018",
+   "level": "一般",
+   "status": "未修复",
+   "module": "平台管理",
+   "title": "17-PRD 无 SupportAccessGrant/紧急访问(break-glass)需求",
+   "action": "PRD17 补紧急访问需求+AC"
+  },
+  {
+   "id": "QF-REQ-019",
+   "level": "一般",
+   "status": "未修复",
+   "module": "平台管理",
+   "title": "17-PRD 无 AI 作用列(CONFIG_ASSIST 介入点未承接)",
+   "action": "PRD17 补 AI/系统作用列"
+  },
+  {
+   "id": "QF-REQ-020",
+   "level": "一般",
+   "status": "未修复",
+   "module": "文档/导航",
+   "title": "37 §2 操作数偏差(看板 9≠10、AI 6≠8、平台 17≠22)",
+   "action": "37 按 32 实算修正"
+  },
+  {
+   "id": "QF-REQ-021",
+   "level": "一般",
+   "status": "未修复",
+   "module": "文档/导航",
+   "title": "01 §2 误用废弃别名 Requirement(权威 RequirementDocument)",
+   "action": "改为 RequirementDocument"
+  },
+  {
+   "id": "QF-REQ-022",
+   "level": "一般",
+   "status": "未修复",
+   "module": "测试执行",
+   "title": "ExecutionBatch 无契约载体(18-PRD/14-PRD 仍使用)",
+   "action": "删除 Batch 表述或显式建模"
+  },
+  {
+   "id": "QF-REQ-023",
+   "level": "一般",
+   "status": "未修复",
+   "module": "AI 治理",
+   "title": "独立验证环节缺专门载体(三层证据第二层无法验收)",
+   "action": "21 号补独立验证介入点定义;16-PRD 承接"
+  },
+  {
+   "id": "QF-REQ-024",
+   "level": "一般",
+   "status": "未修复",
+   "module": "测试策划与设计",
+   "title": "五类覆盖率口径无权威定义",
+   "action": "补五类口径+计算规则+样例,试点前冻结"
+  },
+  {
+   "id": "QF-REQ-025",
+   "level": "一般",
+   "status": "未修复",
+   "module": "质量分析与缺陷",
+   "title": "V1 手工外部同步与 EXTERNAL_WRITE 验收衔接未定义",
+   "action": "定义手工模式批准记录与回执结构"
+  },
+  {
+   "id": "QF-REQ-026",
+   "level": "一般",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "无全局指标口径数据字典",
+   "action": "建指标数据字典,映射 20-NFR metricKey"
+  },
+  {
+   "id": "QF-REQ-027",
+   "level": "一般",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "V1 看板无效率指标采集载体(退出条件基线无产品载体)",
+   "action": "V1 看板补指标采集能力"
+  },
+  {
+   "id": "QF-REQ-028",
+   "level": "一般",
+   "status": "V1延期声明",
+   "module": "数据库",
+   "title": "104 表未按 V1 裁剪(已有计数口径说明:聚合根以字段表呈现)",
+   "action": "产出 V1 表清单与裁剪决策;明确 104 vs 89 计数规则"
+  },
+  {
+   "id": "QF-REQ-029",
+   "level": "一般",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "05 §8 指标基线义务仅 3/10 PRD 落地",
+   "action": "8 个业务 PRD 补指标承接段"
+  },
+  {
+   "id": "QF-REQ-030",
+   "level": "一般",
+   "status": "已修复",
+   "module": "测试策划与设计",
+   "title": "C-1/L1-004 关闭证据时点错位(TestPlan 丢失 requirement_document_id)",
+   "action": "a6df550 已修:33 L779 FK + 04 §5.2 + 32 L970 三源补入"
+  },
+  {
+   "id": "QF-REQ-031",
+   "level": "一般",
+   "status": "未修复",
+   "module": "数据库",
+   "title": "多态溯源无外键(artifact_id/source_trace_edge 悬空引用)",
+   "action": "应用层拦截+运行时负向测试;评估部分 FK 化"
+  },
+  {
+   "id": "QF-REQ-032",
+   "level": "一般",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "运行时证据缺口(Stage4 仍 22/102 ops、3/8 产出物,8-13 后无新证据)",
+   "action": "按 M1~M5 里程碑补齐 5 类产出物切片"
+  },
+  {
+   "id": "QF-REQ-033",
+   "level": "一般",
+   "status": "未修复",
+   "module": "Skill 原型",
+   "title": "Skill eval 是结构校验非效果评测(44 个 evals.json 均确定性)",
+   "action": "区分结构校验/效果评测口径"
+  },
+  {
+   "id": "QF-REQ-034",
+   "level": "一般",
+   "status": "未修复",
+   "module": "基础设施",
+   "title": "SQLite 原型≠PostgreSQL(RLS/并发/恢复未验证)",
+   "action": "V1 前 PG 冒烟:104 表迁移+RLS+并发"
+  },
+  {
+   "id": "QF-REQ-035",
+   "level": "一般",
+   "status": "未修复",
+   "module": "文档/导航",
+   "title": "PRD 文件名与模块内容错位(54 索引无映射表)",
+   "action": "54 索引加显式映射表"
+  },
+  {
+   "id": "QF-REQ-036",
+   "level": "一般",
+   "status": "未修复",
+   "module": "AI 治理",
+   "title": "21 号 21 个介入点未与 API/DB 三方对账",
+   "action": "建三方对账表,进 L1 扫描基线"
+  },
+  {
+   "id": "QF-REQ-037",
+   "level": "建议",
+   "status": "未修复",
+   "module": "任务看板",
+   "title": "WorkItemArtifact role vs relation_type 命名未统一",
+   "action": "API 层统一命名与取值"
+  },
+  {
+   "id": "QF-REQ-038",
+   "level": "建议",
+   "status": "未修复",
+   "module": "测试策划与设计",
+   "title": "BLOCK_HUMAN 术语无来源标注;10-PRD 混入 HTTP 409 细节",
+   "action": "术语标注来源;HTTP 细节移出需求"
+  },
+  {
+   "id": "QF-REQ-039",
+   "level": "建议",
+   "status": "未修复",
+   "module": "自动化测试开发",
+   "title": "V1 沙箱验收口径未定义(非 root/只读根/零外网如何证明)",
+   "action": "补 V1 沙箱验收量化口径"
+  },
+  {
+   "id": "QF-REQ-040",
+   "level": "建议",
+   "status": "未修复",
+   "module": "知识库",
+   "title": "11-PRD AC-01 摘要匹配依赖主观判断",
+   "action": "补抽样比例/比对方式"
+  },
+  {
+   "id": "QF-REQ-041",
+   "level": "建议",
+   "status": "未修复",
+   "module": "AI Agent中心",
+   "title": "16-PRD L0-L3 未引用 21 权威源",
+   "action": "显式引用 21 号 SSOT"
+  },
+  {
+   "id": "QF-REQ-042",
+   "level": "建议",
+   "status": "未修复",
+   "module": "测试执行",
+   "title": "Pipeline 触发版本归属不明(V1/V2 矛盾仍在)",
+   "action": "明确 CI 触发归属"
+  },
+  {
+   "id": "QF-REQ-043",
+   "level": "建议",
+   "status": "未修复",
+   "module": "测试执行",
+   "title": "V1 重试次数上限未写明",
+   "action": "V1 重试上限写入 PRD"
+  },
+  {
+   "id": "QF-REQ-044",
+   "level": "建议",
+   "status": "未修复",
+   "module": "AI Agent中心",
+   "title": "platform-review-agent.json 无路径/校验方式",
+   "action": "文件路径与校验契约化"
+  },
+  {
+   "id": "QF-REQ-045",
+   "level": "建议",
+   "status": "未修复",
+   "module": "跨模块",
+   "title": "ReviewDecision 概念未实体化(04/33 无独立实体)",
+   "action": "说明投影关系或补实体"
+  },
+  {
+   "id": "QF-REQ-046",
+   "level": "建议",
+   "status": "未修复",
+   "module": "文档/导航",
+   "title": "03 §13.8/13.9 小节编号重复",
+   "action": "重排编号"
+  },
+  {
+   "id": "QF-REQ-047",
+   "level": "建议",
+   "status": "未修复",
+   "module": "知识库",
+   "title": "知识回流 V1/V2 措辞不一致",
+   "action": "澄清 V1 知识候选链路交付边界"
+  },
+  {
+   "id": "QF-REQ-048",
+   "level": "建议",
+   "status": "部分修复",
+   "module": "审计治理",
+   "title": "修复证据链依赖内部自述(L1 纠正报告已规范化 grep 级证据;第三方核验未引入)",
+   "action": "关键关闭项引入独立复审"
+  }
+ ],
+ "risks": [
+  {
+   "id": "QF-RSK-001",
+   "cat": "业务",
+   "desc": "V1 试点未严格采集效率/质量数据,收益主张无法验证",
+   "prob": "中",
+   "sev": "高",
+   "mit": "采集清单转强制数据字典(关联 026/027)"
+  },
+  {
+   "id": "QF-RSK-002",
+   "cat": "业务",
+   "desc": "单 Workspace 单人试点结论外推为团队协作价值",
+   "prob": "中",
+   "sev": "中",
+   "mit": "试点报告强制声明边界"
+  },
+  {
+   "id": "QF-RSK-003",
+   "cat": "业务",
+   "desc": "覆盖率分母口径漂移,质量指标可操纵",
+   "prob": "中",
+   "sev": "高",
+   "mit": "补五类覆盖率权威定义(024)"
+  },
+  {
+   "id": "QF-RSK-004",
+   "cat": "技术",
+   "desc": "V1 八模块×八产出物 vs 当前 3/8 证据;延期或缩范围",
+   "prob": "高",
+   "sev": "高",
+   "mit": "05§十一步骤绑里程碑(007/032)"
+  },
+  {
+   "id": "QF-RSK-005",
+   "cat": "技术",
+   "desc": "确定性 Provider≠真实模型;正确性/延迟/成本/出站未评测",
+   "prob": "高",
+   "sev": "高",
+   "mit": "黄金集先行;接入前评测;AC-03 兜底(006)"
+  },
+  {
+   "id": "QF-RSK-006",
+   "cat": "技术",
+   "desc": "SQLite 原型≠PostgreSQL RLS/并发/恢复",
+   "prob": "中",
+   "sev": "中",
+   "mit": "V1 前 PG 冒烟(034)"
+  },
+  {
+   "id": "QF-RSK-007",
+   "cat": "技术",
+   "desc": "V2 外部集成若 V1 未保留数据结构,集成成本剧增",
+   "prob": "低-中",
+   "sev": "中",
+   "mit": "V1 手工同步保留 Link/SyncAttempt(025)"
+  },
+  {
+   "id": "QF-RSK-008",
+   "cat": "范围",
+   "desc": "V1 最小入口颗粒度未冻结,边界漂移",
+   "prob": "高",
+   "sev": "中",
+   "mit": "按 05§5.13.7 标注 MUST/SHOULD/LATER(013)"
+  },
+  {
+   "id": "QF-RSK-009",
+   "cat": "范围",
+   "desc": "V2 项提前拉入 V1 补全闭环体验",
+   "prob": "中",
+   "sev": "中",
+   "mit": "执行 05§5.13.7 变更规则,走 53 号审计"
+  },
+  {
+   "id": "QF-RSK-010",
+   "cat": "合规/安全",
+   "desc": "外部写入 approvalId↔payloadDigest 校验被简化",
+   "prob": "中",
+   "sev": "高",
+   "mit": "V1 手工模式也走批准记录+幂等键(025)"
+  },
+  {
+   "id": "QF-RSK-011",
+   "cat": "合规/安全",
+   "desc": "Secret 双信封原型期无实现,V1 凭证体系延期",
+   "prob": "中",
+   "sev": "高",
+   "mit": "Secret 服务随 V1 交付,禁止明文回退"
+  },
+  {
+   "id": "QF-RSK-012",
+   "cat": "合规/安全",
+   "desc": "AutomationScript RCE + Skill 供应链",
+   "prob": "中",
+   "sev": "高",
+   "mit": "Runner 容器化隔离+零默认外网+依赖锁"
+  },
+  {
+   "id": "QF-RSK-013",
+   "cat": "合规/安全",
+   "desc": "真实 LLM 接入=测试数据出站,脱敏未评测",
+   "prob": "高",
+   "sev": "高",
+   "mit": "接入前出站评测;无评测前保持 L0"
+  }
+ ]
+};
+
+function el(tag, cls, text){const e=document.createElement(tag); if(cls)e.className=cls; if(text!=null)e.textContent=text; return e;}
+
+function renderSummary(){
+  const s=DATA.summary; const box=document.getElementById('summary');
+  s.forEach(x=>{const d=el('div','sum'); const n=el('div','n',x.n); const l=el('div','l',x.l); d.append(n,l); box.append(d);});
+}
+
+function renderMilestones(){
+  const box=document.getElementById('milestones');
+  DATA.milestones.forEach(m=>{
+    const d=el('div','mile');
+    const h=el('div','mile-h'); const t=el('span',null,m.name+' — '+m.status); const st=el('span','st',m.detail);
+    h.append(t,st); h.onclick=()=>b.classList.toggle('open');
+    const b=el('div','mile-b'); const bar=el('div','bar'); const fill=el('div'); fill.style.width=m.pct+'%'; bar.append(fill);
+    b.append(el('div',null,m.desc)); b.append(bar);
+    d.append(h,b); box.append(d);
+  });
+}
+
+function initFilters(){
+  const iss=DATA.issues;
+  const st=new Set(), lv=new Set(), md=new Set();
+  iss.forEach(i=>{st.add(i.status); lv.add(i.level); md.add(i.module);});
+  fill('f-status',st,'全部状态'); fill('f-level',lv,'全部级别'); fill('f-module',md,'全部模块');
+  function fill(id,set,all){const s=document.getElementById(id); s.append(el('option',null,all)); [...set].sort().forEach(v=>{const o=el('option',null,v); o.value=v; s.append(o);});}
+  ['f-status','f-level','f-module'].forEach(id=>document.getElementById(id).addEventListener('change',renderIssues));
+}
+
+function renderIssues(){
+  const f=id=>document.getElementById(id).value;
+  const fs=f('f-status'), fl=f('f-level'), fm=f('f-module');
+  const list=DATA.issues.filter(i=>(fs==='all'||i.status===fs)&&(fl==='all'||i.level===fl)&&(fm==='all'||i.module===fm));
+  const tb=document.querySelector('#issues tbody'); tb.innerHTML='';
+  list.forEach(i=>{
+    const tr=el('tr');
+    tr.append(td(i.id)); tr.append(td(tag(i.level,'tag '+lvcls(i.level))));
+    tr.append(td(tag(i.status,'tag '+stcls(i.status)))); tr.append(td(i.module));
+    tr.append(td(i.title)); tr.append(td(i.action));
+    tb.append(tr);
+  });
+  document.getElementById('count').textContent='当前显示 '+list.length+' / '+DATA.issues.length+' 条';
+  function td(t){const c=el('td'); c.textContent=t; return c;}
+  function tag(t,cls){const s=el('span','tag '+cls,t); return s;}
+  function lvcls(l){return l==='阻断'?'block':l==='严重'?'sev':l==='一般'?'gen':'sug';}
+  function stcls(s){return s==='已修复'?'fix':s==='部分修复'?'part':(s==='V1延期声明'||s==='建议项')?'defer':'open';}
+}
+
+function renderRisks(){
+  const tb=document.querySelector('#risks tbody');
+  DATA.risks.forEach(r=>{
+    const tr=el('tr');
+    [r.id,r.cat,r.desc,r.prob,r.sev,r.mit].forEach(t=>{const c=el('td'); c.textContent=t; tr.append(c);});
+    tb.append(tr);
+  });
+}
+
+renderSummary(); renderMilestones(); initFilters(); renderIssues(); renderRisks();
+</script>
+</body>
+</html>

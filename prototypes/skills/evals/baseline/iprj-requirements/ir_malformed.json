@@ -1,0 +1,40 @@
+{
+  "ir_version": "1.0.0",
+  "requirements": [
+    {
+      "req_id": "REQ-BAD-1",
+      "title": "缺 confidence 和 source_trace",
+      "description": "缺字段的需求",
+      "validation_status": "PENDING"
+    },
+    {
+      "req_id": "REQ-BAD-2",
+      "title": "未解决冲突",
+      "description": "conflict=true 但 resolution_status 未 RESOLVED",
+      "validation_status": "PENDING",
+      "source_trace": "iprj-prd.md:结算管理",
+      "confidence": 0.8,
+      "conflict": true,
+      "resolution_status": "OPEN"
+    }
+  ],
+  "entities": [
+    {
+      "entity_id": "ENT-BAD-001",
+      "name": "空实体",
+      "fields": []
+    }
+  ],
+  "business_rules": [],
+  "state_machines": [
+    {
+      "sm_id": "SM-BAD-001",
+      "entity_id": "ENT-INSTITUTION-001",
+      "initial_state": "ENABLED",
+      "states": ["ENABLED"],
+      "transitions": []
+    }
+  ],
+  "interface_contracts": [],
+  "constraints": []
+}
